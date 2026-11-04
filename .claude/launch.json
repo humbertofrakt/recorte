@@ -1,0 +1,161 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "editor",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5173"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "site",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "--port",
+        "5174"
+      ],
+      "port": 5174,
+      "url": "http://localhost:5174"
+    },
+    {
+      "name": "programa",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "programa/servidor.mjs",
+        "--sem-navegador"
+      ],
+      "port": 5180
+    },
+    {
+      "name": "editor-5205",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5205",
+        "--strictPort"
+      ],
+      "port": 5205
+    },
+    {
+      "name": "editor-5204",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5204",
+        "--strictPort"
+      ],
+      "port": 5204
+    },
+    {
+      "name": "editor-5208",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5208",
+        "--strictPort"
+      ],
+      "port": 5208
+    },
+    {
+      "name": "editor-5209",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5209",
+        "--strictPort"
+      ],
+      "port": 5209
+    },
+    {
+      "name": "editor-5207",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5207",
+        "--strictPort"
+      ],
+      "port": 5207
+    },
+    {
+      "name": "editor-5202",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5202",
+        "--strictPort"
+      ],
+      "port": 5202
+    },
+    {
+      "name": "editor-5201",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5201",
+        "--strictPort"
+      ],
+      "port": 5201
+    },
+    {
+      "name": "programa-5325",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "set PORTA=5325&& node programa/servidor.mjs --sem-navegador"
+      ],
+      "port": 5325
+    },
+    {
+      "name": "fotos-arquivo-5204",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "backup/fotos-rodada-final/arquivo/servidor-fotos.mjs"
+      ],
+      "port": 5204
+    },
+    {
+      "name": "editor-5439",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5439",
+        "--strictPort"
+      ],
+      "port": 5439
+    },
+    {
+      "name": "editor-5560",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "editor",
+        "--port",
+        "5560",
+        "--strictPort"
+      ],
+      "port": 5560
+    }
+  ]
+}

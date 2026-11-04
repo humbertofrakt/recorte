@@ -1,0 +1,84 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "desenho troca de osso"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "mao",
+      "parent": "root",
+      "x": 50,
+      "y": 100,
+      "length": 10
+    },
+    {
+      "name": "costas",
+      "parent": "root",
+      "x": -20,
+      "y": 120,
+      "rotation": 90,
+      "length": 30
+    }
+  ],
+  "slots": [
+    {
+      "name": "espada",
+      "bone": "mao",
+      "attachment": "espada"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "espada": {
+          "espada": {
+            "type": "region",
+            "width": 40,
+            "height": 10,
+            "path": "espada",
+            "x": 20
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "guardar",
+      "duration": 1.0,
+      "loop": false,
+      "timelines": [
+        {
+          "type": "slot",
+          "target": "espada",
+          "property": "bone",
+          "keys": [
+            {
+              "time": 0,
+              "value": null
+            },
+            {
+              "time": 0.5,
+              "value": "costas",
+              "transform": {
+                "x": 10,
+                "y": 0,
+                "rotation": -90,
+                "scaleX": 1,
+                "scaleY": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

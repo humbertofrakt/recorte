@@ -1,0 +1,64 @@
+{
+  "probe": {
+    "times": [
+      0.5
+    ],
+    "measure": [
+      "particles"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.5,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 1,
+            "index": 3,
+            "birth": 0,
+            "life": 1,
+            "age": 0.5,
+            "x": 55.142784,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 1,
+            "index": 2,
+            "birth": 0,
+            "life": 1,
+            "age": 0.5,
+            "x": 277.824748,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 1,
+            "index": 1,
+            "birth": 0,
+            "life": 1,
+            "age": 0.5,
+            "x": 125.138962,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 1,
+            "index": 0,
+            "birth": 0,
+            "life": 1,
+            "age": 0.5,
+            "x": 31.809551,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    }
+  ]
+}

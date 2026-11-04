@@ -1,0 +1,120 @@
+{
+  "probe": {
+    "animation": "transformar",
+    "times": [
+      0.25,
+      0.75
+    ],
+    "measure": [
+      "bones",
+      "slots",
+      "drawOrder",
+      "vertices"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "body": null,
+      "bones": {
+        "root": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 0.0,
+          "worldY": 0.0
+        },
+        "tronco": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 10.0,
+          "worldY": 100.0
+        },
+        "braco": {
+          "a": 0.92388,
+          "b": -0.382683,
+          "c": 0.382683,
+          "d": 0.92388,
+          "worldX": 10.0,
+          "worldY": 100.0
+        }
+      },
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "visible": true
+        }
+      },
+      "drawOrder": [
+        "corpo"
+      ],
+      "vertices": {
+        "corpo/corpo": [
+          0.0,
+          80.0,
+          20.0,
+          80.0,
+          20.0,
+          120.0,
+          0.0,
+          120.0
+        ]
+      }
+    },
+    {
+      "time": 0.75,
+      "body": "lobisomem.bone",
+      "bones": {
+        "root": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 0.0,
+          "worldY": 0.0
+        },
+        "tronco": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 30.0,
+          "worldY": 120.0
+        },
+        "rabo": {
+          "a": 0.707107,
+          "b": -0.707107,
+          "c": 0.707107,
+          "d": 0.707107,
+          "worldX": 20.0,
+          "worldY": 120.0
+        }
+      },
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "visible": true
+        }
+      },
+      "drawOrder": [
+        "corpo"
+      ],
+      "vertices": {
+        "corpo/corpo": [
+          15.0,
+          90.0,
+          45.0,
+          90.0,
+          45.0,
+          150.0,
+          15.0,
+          150.0
+        ]
+      }
+    }
+  ]
+}

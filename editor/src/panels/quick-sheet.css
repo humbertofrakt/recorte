@@ -1,0 +1,183 @@
+/* ------------------------------------------------------------------ */
+/* quick-sheet.css — lote A6, plano arrumação (v11.2)                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A ficha rápida — as seis linhas e o disco do ângulo.
+ *
+ * Estes blocos moravam em `panels.css`, com os de todos os painéis. Vieram
+ * para cá sem mudar um seletor, na mesma ordem entre si; o `main.ts` carrega
+ * este arquivo logo depois do `panels.css`.
+ */
+
+/* ------------------------------------------------------------------ */
+/* A ficha rápida — a Object Properties do Spriter (lote 22)           */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Seis linhas, sempre as mesmas, sempre no alto.
+ *
+ * O painel de baixo mostra tudo o que o formato tem, na ordem do formato —
+ * que não é a ordem em que se trabalha: a rotação de um osso fica na terceira
+ * seção, abaixo de nome, cor, ícone e comprimento. Nada some; esta ficha só
+ * traz para cima o que se mexe o dia inteiro.
+ */
+.ficha {
+  /* Apertado de novo na prova de altura (13/09/2026): a ficha ganhou a
+     sétima linha (Imagem, lote 60) depois de "apertada de propósito" para
+     seis, e ninguém tinha voltado a medir. */
+  padding: 4px 10px 6px;
+  border-bottom: 2px solid var(--painel-linha);
+  background: var(--painel-campo);
+}
+
+.ficha-titulo {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--painel-texto-fraco);
+}
+
+/* Duas colunas: o nome à esquerda, o controle à direita, sempre alinhadas. */
+/*
+ * Apertada de propósito: as seis linhas têm que caber SEM rolar.
+ *
+ * Medido em 1440×900 com a coluna em 260px: com 36px por linha a sexta — o
+ * alfa, com a barra — ficava abaixo da dobra, e uma ficha que precisa de
+ * rolagem para mostrar seis campos não é uma ficha rápida.
+ */
+.ficha-grade {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 1px 10px;
+  align-items: center;
+}
+
+.ficha-nome {
+  white-space: nowrap;
+  color: var(--painel-texto);
+}
+
+/*
+ * Um par (X/Y, Escala X/Escala Y) numa linha só — prova de altura,
+ * 13/09/2026. `grid-column: 1 / -1` faz o par ocupar a largura das DUAS
+ * colunas de `.ficha-grade`, e por dentro ele tem as suas quatro.
+ */
+.ficha-par {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: 2px 8px;
+}
+
+/* Dois campos na mesma linha têm metade da largura de um só. */
+.ficha-par .ficha-campo {
+  width: 100%;
+  min-width: 0;
+}
+
+.ficha-controle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ficha-campo {
+  width: 64px;
+  min-height: 22px;
+  padding: 1px 6px;
+  font: inherit;
+  text-align: right;
+  color: var(--painel-texto);
+  background: var(--painel-fundo);
+  border: 2px solid var(--painel-linha);
+  border-radius: 6px;
+}
+
+/* Rodada 43, lote 3 (doc 59): o número que uma regra segura — borda de aviso. */
+.ficha-campo.ficha-presa {
+  border-color: #d98a00;
+}
+
+/* Rodada 43, lote 4: na linha do Ângulo o campo é mais estreito, para o
+   "mundo -104°" caber ao lado do disco (cortava em "mundo -10"). */
+.ficha-controle:has(.ficha-mundo) .ficha-campo {
+  width: 50px;
+}
+
+/* Rodada 43, lote 2: o giro no mundo, só para ler, ao lado do disco. */
+.ficha-mundo {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--painel-texto-fraco);
+}
+
+/* Rodada 43, lote 2: o rótulo que se arrasta mostra a seta de lado. */
+.ficha-nome.rotulo-arrasta,
+.prop-rotulo.rotulo-arrasta {
+  cursor: ew-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+/* Rodada 43, lote 1: a unidade do número (px, °, ×, %), em cinza, ao lado. */
+.ficha-unidade {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--painel-texto-fraco);
+}
+
+.ficha-barra {
+  flex: 1 1 auto;
+  min-width: 60px;
+  accent-color: var(--painel-realce);
+}
+
+/* A linha que não existe para este alvo: vazia, com o traço e a dica. */
+.ficha-vazia .ficha-sem {
+  color: var(--painel-texto-fraco);
+}
+
+/*
+ * O **disco** do ângulo.
+ *
+ * Girar é um gesto de girar. Um campo de número para o ângulo obriga a pensar
+ * em graus antes de pensar na pose, e é o controle que o Spriter tem e nós não
+ * tínhamos.
+ */
+.ficha-disco {
+  flex: 0 0 auto;
+  cursor: grab;
+  touch-action: none;
+}
+
+.ficha-disco:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+.ficha-disco-aro {
+  fill: var(--painel-fundo);
+  stroke: var(--painel-linha);
+  stroke-width: 2;
+}
+
+.ficha-disco-agulha {
+  stroke: var(--painel-realce);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+/* K8 (P24): com animação aberta o campo mostra o QUADRO; a base vem ao lado,
+   em cinza e menor, só quando é outra. */
+.ficha-base {
+  color: var(--painel-texto-fraco);
+  font-size: 0.85em;
+  white-space: nowrap;
+}

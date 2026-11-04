@@ -1,0 +1,8 @@
+{
+  "probe": { "skins": ["vestida"], "animation": "acenar", "times": [0, 0.5], "measure": ["drawOrder"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,   "drawOrder": ["corpo", "braco", "capa"] },
+    { "time": 0.5, "drawOrder": ["braco", "corpo", "capa"] }
+  ]
+}

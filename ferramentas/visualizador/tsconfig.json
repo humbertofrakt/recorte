@@ -1,0 +1,18 @@
+{
+  "//": "Gera dist/ (JavaScript) a partir de runtime/src para o visualizador rodar em servidor estático.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Node",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "declaration": false,
+    "sourceMap": false,
+    "rootDir": "../../runtime/src",
+    "outDir": "dist",
+    "types": []
+  },
+  "include": ["../../runtime/src/**/*.ts"]
+}

@@ -1,0 +1,40 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "pacote"
+  },
+  "assets": {
+    "atlases": [
+      "entrada.atlas.json"
+    ]
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "corpo",
+      "bone": "root",
+      "attachment": "corpo"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": {
+          "corpo": {
+            "type": "region",
+            "path": "recorte"
+          }
+        }
+      }
+    }
+  ]
+}

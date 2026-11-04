@@ -1,0 +1,114 @@
+{
+  "probe": {
+    "times": [
+      0.25,
+      0.6,
+      0.9
+    ],
+    "measure": [
+      "drawList"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "drawList": [
+        {
+          "piece": "aura/bola_a/bola_a",
+          "clips": []
+        },
+        {
+          "piece": "aura/anel/anel",
+          "clips": []
+        },
+        {
+          "piece": "perna/perna",
+          "clips": []
+        },
+        {
+          "piece": "tronco/tronco",
+          "clips": []
+        },
+        {
+          "piece": "cabeca/cabeca",
+          "clips": []
+        },
+        {
+          "piece": "aura/brilho/brilho",
+          "clips": []
+        },
+        {
+          "piece": "aura/bola_b/bola_b",
+          "clips": []
+        }
+      ]
+    },
+    {
+      "time": 0.6,
+      "drawList": [
+        {
+          "piece": "aura/anel/anel",
+          "clips": []
+        },
+        {
+          "piece": "perna/perna",
+          "clips": []
+        },
+        {
+          "piece": "tronco/tronco",
+          "clips": []
+        },
+        {
+          "piece": "cabeca/cabeca",
+          "clips": []
+        },
+        {
+          "piece": "aura/brilho/brilho",
+          "clips": []
+        },
+        {
+          "piece": "aura/bola_a/bola_a",
+          "clips": []
+        },
+        {
+          "piece": "aura/bola_b/bola_b",
+          "clips": []
+        }
+      ]
+    },
+    {
+      "time": 0.9,
+      "drawList": [
+        {
+          "piece": "perna/perna",
+          "clips": []
+        },
+        {
+          "piece": "tronco/tronco",
+          "clips": []
+        },
+        {
+          "piece": "cabeca/cabeca",
+          "clips": []
+        },
+        {
+          "piece": "aura/bola_a/bola_a",
+          "clips": []
+        },
+        {
+          "piece": "aura/anel/anel",
+          "clips": []
+        },
+        {
+          "piece": "aura/brilho/brilho",
+          "clips": []
+        },
+        {
+          "piece": "aura/bola_b/bola_b",
+          "clips": []
+        }
+      ]
+    }
+  ]
+}

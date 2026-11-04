@@ -1,0 +1,25 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "fisica", "referenceScale": 100 },
+  "bones": [
+    { "name": "root" },
+    { "name": "base", "parent": "root", "y": 100 },
+    { "name": "haste", "parent": "base", "length": 50 }
+  ],
+  "slots": [],
+  "constraints": [
+    { "type": "physics", "name": "balanco", "bone": "haste",
+      "x": 1, "y": 1, "rotation": 1,
+      "inertia": 0.5, "strength": 100, "damping": 1, "mass": 1,
+      "gravity": 10, "wind": 0, "limit": 5000, "fps": 60 }
+  ],
+  "animations": [
+    {
+      "name": "correr",
+      "duration": 1,
+      "timelines": [
+        { "type": "bone", "target": "base", "property": "x",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 1, "value": 200 } ] }
+      ] }
+  ]
+}

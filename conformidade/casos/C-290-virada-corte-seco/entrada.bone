@@ -1,0 +1,114 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "homem"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "tronco",
+      "parent": "root",
+      "y": 100,
+      "length": 60
+    },
+    {
+      "name": "braco",
+      "parent": "tronco",
+      "length": 30
+    }
+  ],
+  "slots": [
+    {
+      "name": "corpo",
+      "bone": "tronco",
+      "attachment": "corpo"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": {
+          "corpo": {
+            "type": "region",
+            "width": 20,
+            "height": 40,
+            "path": "homem"
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "transformar",
+      "duration": 1.0,
+      "loop": false,
+      "timelines": [
+        {
+          "type": "body",
+          "keys": [
+            {
+              "time": 0.5,
+              "value": "lobisomem.bone"
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "tronco",
+          "property": "x",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1.0,
+              "value": 40
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1.0,
+              "value": 90
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "rabo",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1.0,
+              "value": 60
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

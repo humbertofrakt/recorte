@@ -1,0 +1,13 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "ik1-stretch" },
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root", "length": 50 },
+    { "name": "alvo", "parent": "root", "x": 60, "y": 80 }
+  ],
+  "slots": [],
+  "constraints": [
+    { "type": "ik", "name": "ik", "bones": ["osso"], "target": "alvo", "stretch": true }
+  ]
+}

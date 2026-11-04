@@ -1,0 +1,43 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.1.0",
+    "created": "2026-10-07T08:15:26.330Z",
+    "modified": "2026-10-07T08:16:53.177Z"
+  },
+  "skeleton": {
+    "name": "draco",
+    "fps": 30,
+    "referenceScale": 100
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {}
+    }
+  ],
+  "animations": [],
+  "extensions": {
+    "RECORTE_editor_state": {
+      "selection": {
+        "bones": [],
+        "slots": [],
+        "attachments": [],
+        "constraints": [],
+        "vertices": [],
+        "parameters": [],
+        "variables": []
+      }
+    }
+  },
+  "extensionsUsed": [
+    "RECORTE_editor_state"
+  ]
+}

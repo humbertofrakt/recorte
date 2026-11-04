@@ -1,0 +1,300 @@
+/* ------------------------------------------------------------------ */
+/* rules.css — lote A6, plano arrumação (v11.2)                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A aba Regras — o ícone do tipo, a cadeia e o alvo, a força numa barra.
+ *
+ * Estes blocos moravam em `panels.css`, com os de todos os painéis. Vieram
+ * para cá sem mudar um seletor, na mesma ordem entre si; o `main.ts` carrega
+ * este arquivo logo depois do `panels.css`.
+ */
+
+/* ------------------------------------------------------------------ */
+/* A aba Regras — anotação 13, lote 28                                  */
+/* ------------------------------------------------------------------ */
+
+/*
+ * *"Entendi as 5 regras. Mas não sei como usar, e está escondido."*
+ *
+ * Elas eram a última seção da Árvore, abaixo de dezoito ossos e vinte e três
+ * slots. Viraram aba, com o desenho da lista de regras do Spine
+ * (`constraints_tree.png`): um **ícone por tipo**, que é o que faz cinco
+ * linhas se lerem de relance.
+ */
+.regras {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.regras-lista {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.regras-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 3px 12px 3px 6px;
+  cursor: pointer;
+}
+
+.regras-linha:hover {
+  background: var(--painel-hover);
+}
+
+.regras-linha-escolhida {
+  background: var(--painel-realce-fraco);
+  box-shadow: inset 3px 0 0 var(--painel-realce);
+}
+
+/* Desligada: força zero. Ela continua na lista, e continua guardando o valor. */
+.regras-linha-desligada .regras-nome,
+.regras-linha-desligada .regras-detalhe {
+  opacity: 0.55;
+}
+
+/*
+ * A regra com nome errado dentro.
+ *
+ * A alça dela na cena só aparece quando o alvo e os ossos existem: um nome
+ * torto fazia a regra **sumir sem uma palavra**. Aqui ela fica, em vermelho, e
+ * a linha de baixo diz qual nome não existe.
+ */
+.regras-linha-erro {
+  box-shadow: inset 3px 0 0 #c62828;
+}
+
+.regras-linha-erro .regras-detalhe {
+  color: #c62828;
+}
+
+.regras-acao {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--painel-texto-fraco);
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.regras-acao:hover {
+  border-color: var(--painel-linha);
+}
+
+.regras-acao:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+.regras-acao-ligada {
+  color: var(--painel-realce);
+}
+
+/*
+ * O ícone do tipo.
+ *
+ * A cor ajuda, mas quem carrega a informação é a FORMA: oito por cento dos
+ * homens não separam vermelho de verde, e uma lista que só se lê pela cor é
+ * uma lista que uma pessoa em cada doze não lê.
+ */
+.regras-tipo {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.regras-tipo-ik { color: #d24500; }
+.regras-tipo-transform { color: #1a4fd8; }
+.regras-tipo-path { color: #00696f; }
+.regras-tipo-physics { color: #7a5c00; }
+.regras-tipo-driver { color: #6a2f9c; }
+
+.regras-nomes {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.regras-nome {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Embaixo do nome: a cadeia e o alvo, `leg → shin → foot_target`. */
+.regras-detalhe {
+  font-size: 13px;
+  color: var(--painel-texto-fraco);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*
+ * A força numa barra, como no Spine.
+ *
+ * Um número de 0 a 1 num campo de texto não se ajusta de olho — e ajustar de
+ * olho é exatamente o que se faz com uma força.
+ */
+.regras-forca {
+  /* Rodada 47, lote 4: era 64 px, e o nome da regra ("hair_physics",
+     "cape_follow") saía cortado mesmo em 1920 — a coluna é a mesma 258 px
+     em toda tela. A barra anda pelo teclado a cada tecla (R8), e o número
+     exato mora em Propriedades. */
+  flex: 0 0 44px;
+  width: 44px;
+  margin: 0;
+  accent-color: var(--painel-realce);
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   Porta D3 — os parâmetros na mesma aba das regras (§8.1)
+   -------------------------------------------------------------------------- */
+
+/* O título de cada metade da lista: Parâmetros em cima, Regras embaixo. */
+.regras-secao {
+  padding: 6px 8px 2px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--texto-fraco, #8a8a8a);
+  list-style: none;
+}
+
+/* A linha do parâmetro é a da regra sem o olho: não há o que ligar e desligar
+   num número — o que o desliga é apagar a regra Comando que o lê. */
+.regras-linha-parametro .regras-forca:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Porta D6: a física existe, está ligada no arquivo, e o interruptor da tela
+   parou de simular. Meio-tom, e a linha embaixo diz por extenso. */
+.regras-linha-parada .regras-tipo {
+  opacity: 0.5;
+}
+
+/* --------------------------------------------------------------------------
+   Porta G9/P15 — variáveis e marcas, com o jeito de desligar (Q23)
+   -------------------------------------------------------------------------- */
+
+/* Desligada, a seção continua ocupando UMA linha que diz que está desligada e
+   quantas o arquivo tem escondidas. Sumir de vez seria mentir por omissão. */
+.regras-desligado {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.regras-marca-acoes {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+
+/* As duas metades da §8.5, separadas: "inteira" é `animation.tags`, "daqui" é
+   a chave da timeline `tag`. Palavra curta, e o nome inteiro na dica. */
+.regras-marca-acao {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   A barra apertada — medição de 18/09/2026, fecho do degrau 12 parte `C`
+   -------------------------------------------------------------------------- */
+
+/*
+ * A aba passou a **rolar** em 1280×720, faltando 10 px, e a culpa é toda da
+ * barra: com os quatro botões novos da física e os quatro das variáveis e
+ * etiquetas ela foi a **doze**, quebrou em quatro linhas e tomou 215 px de um
+ * painel de 226 — sobravam 11 px para a lista.
+ *
+ * A saída **não é tirar botão nem encurtar nome**: a régua do Humberto é que
+ * ícone sozinho não se lê, e esconder função para ganhar número é o oposto do
+ * que este degrau inteiro fez. A saída é o recheio, e ela já tem precedente
+ * nesta casa: a barra da Árvore fez o mesmo no lote dela, pelo mesmo motivo
+ * ("sete controles, quatro linhas, 127 px de faixa"), e os valores aqui são
+ * os de lá.
+ *
+ * O alvo do clique continua de 36 px de altura — acima dos 30 da Árvore e
+ * bem acima do mínimo que um dedo ou um mouse precisam.
+ */
+.regras .painel-barra {
+  gap: 6px;
+  padding: 8px;
+  align-items: center;
+}
+
+.regras .painel-barra .painel-botao {
+  min-height: 30px;
+  padding: 4px 6px;
+}
+
+.regras .painel-barra .painel-botao-icone {
+  padding: 3px 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Rodada final, lote 1 (28/09/2026) — o lápis e a lixeira da etiqueta
+   -------------------------------------------------------------------------- */
+
+/* Um pouco menores que o olho da regra: são dois, e a linha da etiqueta já
+   leva os dois interruptores. O alvo continua acima de 24 px. */
+.regras-marca-editar {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+
+.regras-marca-editar .regras-acao {
+  width: 26px;
+  height: 26px;
+}
+
+/* "inteira" e "daqui" herdavam os 30 px de largura do `.regras-acao` e
+   quebravam letra por letra ("int / eir / a"). O defeito é do degrau 12 e
+   ficava escondido: a lista não se refazia ao abrir uma animação, e a linha
+   mostrava "abra uma animação" no lugar dos dois. A foto do lote 1 pegou. */
+.regras-marca-acao {
+  width: auto;
+  white-space: nowrap;
+}
+
+.regras-linha-marca {
+  gap: 6px;
+}
+
+/* Rodada 47, lote 6d (doc 90; o detalhe do conferente): as seções dobram no título. */
+.regras-secao-dobra {
+  cursor: pointer;
+}
+.regras-secao-dobra::before {
+  content: '▾ ';
+}
+.regras-secao-dobra[aria-expanded='false']::before {
+  content: '▸ ';
+}
+.regras-lista > li.regras-dobrada {
+  display: none;
+}

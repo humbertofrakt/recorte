@@ -1,0 +1,113 @@
+{
+  "bone": {
+    "version": "1.1",
+    "minVersion": "1.0",
+    "generator": "Recorte (rodada 16, lote 7, conta à mão) P-023"
+  },
+  "extensionsUsed": [
+    "BONE_particles"
+  ],
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "emissor",
+      "parent": "root",
+      "x": 50
+    }
+  ],
+  "slots": [
+    {
+      "name": "trilha",
+      "bone": "root",
+      "attachment": "caminho"
+    },
+    {
+      "name": "fx",
+      "bone": "emissor",
+      "attachment": "jato"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "trilha": {
+          "caminho": {
+            "type": "path",
+            "closed": false,
+            "constantSpeed": false,
+            "lengths": [
+              300
+            ],
+            "vertices": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              300,
+              0,
+              300,
+              0,
+              300,
+              0
+            ]
+          }
+        },
+        "fx": {
+          "jato": {
+            "type": "BONE_particle",
+            "path": "fx/faisca",
+            "seed": 42,
+            "rate": 0,
+            "lifetime": [
+              1,
+              1
+            ],
+            "speed": [
+              0,
+              0
+            ],
+            "direction": 90,
+            "spread": 0,
+            "shape": "path",
+            "curve": "trilha/caminho",
+            "gravity": [
+              0,
+              0
+            ],
+            "drag": 0,
+            "angle": [
+              0,
+              0
+            ],
+            "angularVelocity": [
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1
+            ],
+            "space": "local",
+            "looping": false,
+            "maxParticles": 1000,
+            "bursts": [
+              {
+                "time": 0,
+                "count": 4,
+                "cycles": 1,
+                "interval": 1,
+                "probability": 1
+              }
+            ],
+            "x": 10
+          }
+        }
+      }
+    }
+  ]
+}

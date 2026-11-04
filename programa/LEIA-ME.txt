@@ -1,0 +1,22 @@
+RECORTE - editor pronto para usar
+Versao v36.5, montada em 07/10/2026.
+
+COMO ABRIR
+  1. Clique duas vezes em "Abrir o editor.bat".
+  2. O navegador abre sozinho em http://localhost:5180
+  3. Deixe a janela preta aberta enquanto usa o editor.
+  4. Para fechar, feche a janela preta.
+
+Precisa do Node.js instalado (https://nodejs.org). Nada mais.
+Nao precisa de internet.
+
+O QUE TEM AQUI
+  index.html          a pagina do editor
+  assets/             o codigo montado, as imagens e o exemplo (heroi)
+  servidor.mjs        o servidor local, sem dependencia
+  Abrir o editor.bat  o atalho
+
+COMO MONTAR DE NOVO
+Na raiz do projeto:  npm run editor:build
+Depois copie o conteudo de backup/editor-build para esta pasta.
+Ou rode: python ferramentas/montar-programa.py

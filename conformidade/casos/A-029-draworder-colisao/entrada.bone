@@ -1,0 +1,22 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "colisao" },
+  "bones": [ { "name": "root" } ],
+  "slots": [
+    { "name": "corpo", "bone": "root" },
+    { "name": "braco", "bone": "root" },
+    { "name": "mao", "bone": "root" }
+  ],
+  "animations": [
+    {
+      "name": "colisao",
+      "duration": 1,
+      "timelines": [
+        { "type": "drawOrder",
+          "keys": [
+            { "time": 0, "value": [ { "slot": "braco", "offset": -1 }, { "slot": "mao", "offset": -2 } ] },
+            { "time": 1, "value": [ { "slot": "corpo", "offset": 9 }, { "slot": "mao", "offset": -7 } ] }
+          ] }
+      ] }
+  ]
+}

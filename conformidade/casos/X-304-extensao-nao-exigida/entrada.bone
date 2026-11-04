@@ -1,0 +1,14 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "extensao-usada" },
+  "extensionsUsed": ["VENDOR_pelo_ao_vento", "VENDOR_luz_de_cena"],
+  "extensions": {
+    "VENDOR_pelo_ao_vento": { "forca": 3.5, "ossos": ["osso"] }
+  },
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root", "x": 40, "y": 10, "rotation": 90,
+      "extensions": { "VENDOR_luz_de_cena": { "cor": [1, 0, 0] } } }
+  ],
+  "slots": []
+}

@@ -1,0 +1,58 @@
+{
+  "probe": {
+    "animation": "laco",
+    "loop": true,
+    "times": [
+      0.75,
+      1.25
+    ],
+    "measure": [
+      "bones"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.75,
+      "bones": {
+        "hand": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": -20.0,
+          "worldY": 30.0
+        },
+        "pack": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": -30.0,
+          "worldY": 10.0
+        }
+      }
+    },
+    {
+      "time": 1.25,
+      "bones": {
+        "hand": {
+          "a": 0.0,
+          "b": -1.0,
+          "c": 1.0,
+          "d": 0.0,
+          "worldX": 0.0,
+          "worldY": 150.0
+        },
+        "pack": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": -30.0,
+          "worldY": 10.0
+        }
+      }
+    }
+  ]
+}

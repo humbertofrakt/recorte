@@ -1,0 +1,21 @@
+node_modules/
+
+# Saída de compilação. A linha vale em qualquer profundidade.
+dist/
+
+# Exceção: o runtime compilado que o visualizador e o validador da web
+# carregam para DESENHAR o esqueleto. Sem ele, num clone novo, as duas
+# páginas abrem e validam, e o quadro do desenho fica vazio.
+!ferramentas/visualizador/dist/
+
+# Cache do Python do segundo runtime.
+__pycache__/
+
+# Fora do GitHub (04/11/2026)
+backup/
+vivi html v2/
+O PROGRAMA - o essencial/
+.claude/settings.local.json
+# Manuais e capturas de outros programas: não são nossos, não vão para o público
+documentos/pesquisa/nova pesquisa/*/*.pdf
+documentos/pesquisa/nova pesquisa/*/prints/

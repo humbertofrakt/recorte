@@ -1,0 +1,12 @@
+{
+  "atlas": { "version": "1.0", "generator": "suite de conformidade bone" },
+  "scale": 1,
+  "pages": [
+    { "name": "pagina", "image": "pagina.png", "width": 256, "height": 256 }
+  ],
+  "regions": [
+    { "name": "girada", "page": 0, "x": 4, "y": 6, "width": 40, "height": 60,
+      "rotation": 90, "offsetX": 8, "offsetY": 12,
+      "originalWidth": 80, "originalHeight": 100 }
+  ]
+}

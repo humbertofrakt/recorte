@@ -1,0 +1,12 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "escala-zero" },
+  "bones": [
+    { "name": "root" },
+    { "name": "pai", "parent": "root", "x": 10, "y": 20, "scaleX": 0 },
+    { "name": "filho", "parent": "pai", "x": 5, "y": 3 },
+    { "name": "neto", "parent": "filho", "x": 7, "y": 2 },
+    { "name": "nulo", "parent": "root", "x": 1, "y": 2, "scaleX": 0, "scaleY": 0 }
+  ],
+  "slots": []
+}

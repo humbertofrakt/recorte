@@ -1,0 +1,64 @@
+{
+  "probe": {
+    "times": [
+      0
+    ],
+    "measure": [
+      "drawList"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "drawList": [
+        {
+          "piece": "perna/perna",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "aura/bola_a/bola_a",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "aura/anel/anel",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "aura/meio/meio",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "aura/brilho/brilho",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "aura/bola_b/bola_b",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "cabeca/cabeca",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "chapeu/chapeu",
+          "clips": []
+        }
+      ]
+    }
+  ]
+}

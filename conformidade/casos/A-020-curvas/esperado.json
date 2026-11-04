@@ -1,0 +1,20 @@
+{
+  "probe": { "animation": "curvas", "times": [0, 0.75, 1.125, 1.5, 3], "measure": ["bones"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "bones": { "linear": { "ax": 0, "worldX": 0 }, "stepped": { "ax": 0, "worldX": 0 },
+                 "bezier": { "ax": 0, "worldX": 0 }, "bezier-fora": { "ax": 0, "worldX": 0 } } },
+    { "time": 0.75,
+      "bones": { "linear": { "ax": 25, "worldX": 25 }, "stepped": { "ax": 0, "worldX": 0 },
+                 "bezier": { "ax": 1.5625, "worldX": 1.5625 } } },
+    { "time": 1.125,
+      "bones": { "bezier-fora": { "ax": 50, "worldX": 50 } } },
+    { "time": 1.5,
+      "bones": { "linear": { "ax": 50, "worldX": 50 }, "stepped": { "ax": 0, "worldX": 0 },
+                 "bezier": { "ax": 12.5, "worldX": 12.5 } } },
+    { "time": 3,
+      "bones": { "linear": { "ax": 100, "worldX": 100 }, "stepped": { "ax": 100, "worldX": 100 },
+                 "bezier": { "ax": 100, "worldX": 100 }, "bezier-fora": { "ax": 100, "worldX": 100 } } }
+  ]
+}

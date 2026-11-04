@@ -1,0 +1,14 @@
+{
+  "probe": { "animation": "girar", "times": [0, 0.25, 0.5, 1], "measure": ["bones"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "bones": { "giro": { "arotation": -10, "a": 0.984808, "b": 0.173648, "c": -0.173648, "d": 0.984808 } } },
+    { "time": 0.25,
+      "bones": { "giro": { "arotation": -95, "a": -0.087156, "b": 0.996195, "c": -0.996195, "d": -0.087156 } } },
+    { "time": 0.5,
+      "bones": { "giro": { "arotation": 180, "a": -1, "b": 0, "c": 0, "d": -1 } } },
+    { "time": 1,
+      "bones": { "giro": { "arotation": 10, "a": 0.984808, "b": -0.173648, "c": 0.173648, "d": 0.984808 } } }
+  ]
+}

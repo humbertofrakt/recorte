@@ -1,0 +1,18 @@
+{
+  "//": "Compila runtime/src + ferramentas/src/conformidade para ferramentas/dist/conformidade, para o executor .mjs importar. O teste do Vitest importa o .ts direto.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Node",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "declaration": false,
+    "sourceMap": false,
+    "rootDir": "../../..",
+    "outDir": "../../dist/conformidade",
+    "types": []
+  },
+  "include": ["./pose-dump.ts", "../../../runtime/src/**/*.ts"]
+}

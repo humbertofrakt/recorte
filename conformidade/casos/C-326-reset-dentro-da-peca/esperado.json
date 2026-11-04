@@ -1,0 +1,34 @@
+{
+  "probe": {
+    "animation": "fica",
+    "physicsDt": 0.0166666666666667,
+    "times": [
+      0.1,
+      0.1666666666666667
+    ],
+    "measure": [
+      "bones"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.1,
+      "bones": {
+        "cab/fio": {
+          "worldX": 0.531095,
+          "worldY": 0
+        }
+      }
+    },
+    {
+      "time": 0.166667,
+      "bones": {
+        "cab/fio": {
+          "worldX": 0.16283,
+          "worldY": 0
+        }
+      }
+    }
+  ]
+}

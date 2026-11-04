@@ -1,0 +1,16 @@
+{
+  "//": "Confere os tipos do leitor do Construct: npx tsc --noEmit -p leitor-construct. O addon/ é JavaScript do Construct e fica de fora.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["vitest/globals", "node"]
+  },
+  "include": ["src/**/*.ts", "testes/**/*.ts"]
+}

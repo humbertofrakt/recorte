@@ -1,0 +1,110 @@
+{
+  "probe": {
+    "animation": "correr",
+    "physicsDt": 0.01,
+    "times": [
+      0,
+      0.1,
+      0.3,
+      0.5
+    ],
+    "measure": [
+      "bones"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "bones": {
+        "base": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 0,
+          "worldY": 100,
+          "arotation": 0
+        },
+        "haste": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 0,
+          "worldY": 100,
+          "arotation": 0
+        }
+      }
+    },
+    {
+      "time": 0.1,
+      "bones": {
+        "base": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 20,
+          "worldY": 100,
+          "arotation": 0
+        },
+        "haste": {
+          "a": 0.9998,
+          "b": -0.019989,
+          "c": 0.019989,
+          "d": 0.9998,
+          "worldX": 12.627615,
+          "worldY": 94.689052,
+          "arotation": 1.145352
+        }
+      }
+    },
+    {
+      "time": 0.3,
+      "bones": {
+        "base": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 60,
+          "worldY": 100,
+          "arotation": 0
+        },
+        "haste": {
+          "a": 0.995255,
+          "b": 0.097297,
+          "c": -0.097297,
+          "d": 0.995255,
+          "worldX": 59.453738,
+          "worldY": 80.210346,
+          "arotation": -5.583541
+        }
+      }
+    },
+    {
+      "time": 0.5,
+      "bones": {
+        "base": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 100,
+          "worldY": 100,
+          "arotation": 0
+        },
+        "haste": {
+          "a": 0.958242,
+          "b": 0.28596,
+          "c": -0.28596,
+          "d": 0.958242,
+          "worldX": 110.903258,
+          "worldY": 93.692743,
+          "arotation": -16.61624
+        }
+      }
+    }
+  ]
+}

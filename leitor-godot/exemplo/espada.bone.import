@@ -1,0 +1,14 @@
+[remap]
+
+importer="recorte.arquivo"
+type="Resource"
+uid="uid://4urdvtq84rhq"
+path="res://.godot/imported/espada.bone-f9961b4cafad0fdde19df155efc0d0bf.res"
+
+[deps]
+
+source_file="res://exemplo/espada.bone"
+dest_files=["res://.godot/imported/espada.bone-f9961b4cafad0fdde19df155efc0d0bf.res"]
+
+[params]
+

@@ -1,0 +1,274 @@
+/*
+ * Painel Pivôs — degrau 8, tarefa 8.5 (C4).
+ *
+ * A coluna tem 260 px de fábrica e pode encolher até 180 (`layout-model.ts`).
+ * Tudo aqui é medido para caber nesses 180 sem rolagem de lado: a prova
+ * `npm run medir` reprova qualquer aba que passe da coluna.
+ *
+ * Só a **grade** rola (`data-rolagem="lista"`), porque é a única parte que
+ * cresce com o projeto. A prévia de cima é de altura fixa: ela é o lugar onde
+ * a mão trabalha, e não pode fugir da tela quando a lista cresce.
+ */
+
+.pivos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  /*
+   * `height: 100%` é o que faz a GRADE rolar em vez do painel inteiro. Sem
+   * ele o corpo do painel (`.panel-body`, que já rola) é quem estica, e a
+   * prévia de cima — o lugar onde a mão trabalha — foge da tela quando a
+   * lista cresce. A aba Imagens faz o mesmo, pelo mesmo motivo.
+   */
+  height: 100%;
+  min-height: 0;
+  padding: 8px 10px;
+}
+
+/*
+ * A prévia encolhe antes da grade, e nunca some: `0 1 auto` com `min-height`
+ * deixa a coluna apertada cortar daqui em vez de empurrar a grade para fora.
+ */
+.pivos-previa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 0 1 auto;
+  min-height: 0;
+  width: 100%;
+  /*
+   * Lote 3 da rodada final (Q7): o que não couber se corta em baixo, e nunca
+   * cai POR CIMA do vizinho. Antes os nove pontos passavam por cima da caixa
+   * Repetir, e nenhum dos dois se lia.
+   */
+  overflow: hidden;
+}
+
+/* A prévia e os nove pontos lado a lado; na coluna estreita, os pontos descem. */
+.pivos-corpo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  flex: 0 0 auto;
+}
+
+.pivos-nome {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--painel-texto);
+}
+
+/* O quadro da imagem grande: o lugar do clique que acerta o pivô. */
+.pivos-quadro {
+  position: relative;
+  max-width: 100%;
+  border: 1px solid var(--painel-borda);
+  border-radius: 4px;
+  background: var(--painel-fundo-fraco, rgba(128, 128, 128, 0.12));
+  cursor: crosshair;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* A prévia recebe o foco para as setas: o anel diz que elas valem ali. */
+.pivos-quadro:focus-visible {
+  outline: 2px solid var(--foco, #1b52d6);
+  outline-offset: 1px;
+}
+
+.pivos-quadro img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.pivos-lendo {
+  margin: 0;
+  padding: 8px;
+  font-size: 11px;
+  color: var(--painel-texto-fraco);
+}
+
+/*
+ * A cruz. Ela é um elemento, e não um desenho dentro da miniatura, porque a
+ * imagem que ainda só está na pasta não tem região do atlas para carregar o
+ * pivô — e é exatamente essa que mais precisa deste painel.
+ */
+.pivos-cruz {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.pivos-cruz::before,
+.pivos-cruz::after {
+  content: '';
+  position: absolute;
+  background: #ff9a1f;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.75);
+}
+
+.pivos-cruz::before {
+  left: -9px;
+  top: -1px;
+  width: 18px;
+  height: 2px;
+}
+
+.pivos-cruz::after {
+  left: -1px;
+  top: -9px;
+  width: 2px;
+  height: 18px;
+}
+
+/* Na miniatura a cruz é menor: 44 px não comportam braços de 18. */
+.pivos-cruz-mini::before {
+  left: -5px;
+  width: 10px;
+}
+
+.pivos-cruz-mini::after {
+  top: -5px;
+  height: 10px;
+}
+
+.pivos-leitura {
+  margin: 0;
+  font-size: 13px;
+  color: var(--painel-texto-fraco);
+  text-align: center;
+}
+
+/* Os nove pontos, na mesma grade 3×3 da janela do lote 58. */
+.pivos-pontos {
+  display: grid;
+  grid-template-columns: repeat(3, 22px);
+  grid-auto-rows: 20px;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.pivos-pontos .pivo-ponto {
+  padding: 0;
+  line-height: 1;
+}
+
+.pivos-repetir {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+  font-size: 11px;
+  color: var(--painel-texto-fraco);
+  cursor: pointer;
+}
+
+.pivos-repetir-texto {
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+}
+
+/* O aviso de tamanhos diferentes (I8): fica à vista, e não numa dica escondida. */
+.pivos-aviso {
+  margin: 0;
+  width: 100%;
+  font-size: 11px;
+  color: var(--painel-aviso-texto, #8a5300);
+  border-left: 3px solid #ff9a1f;
+  padding-left: 6px;
+  overflow: hidden;
+  /* Rodada 44, lote 3: uma linha só; a frase inteira mora na dica. */
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  line-clamp: 1;
+}
+
+/* A pasta inteira em grade: a parte que cresce, e a única que rola. */
+.pivos-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: 4px;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-content: start;
+}
+
+.pivos-celula {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--painel-borda);
+  border-radius: 4px;
+  background: var(--painel-fundo-fraco, rgba(128, 128, 128, 0.12));
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.pivos-mini {
+  position: relative;
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+
+.pivos-mini img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.pivos-celula-atual {
+  outline: 2px solid #f08a00;
+  outline-offset: -2px;
+}
+
+.pivos-celula:focus-visible {
+  outline: 2px solid var(--foco, #1b52d6);
+  outline-offset: -2px;
+}
+
+/* Sem pivô ainda: a borda tracejada diz o que falta, sem uma palavra. */
+.pivos-sem-pivo {
+  border-style: dashed;
+}
+
+/*
+ * Rodada 13: o pivô à mão — o osso não está nele, o desenho ficou parado.
+ * Uma bolinha no canto de cima da miniatura, e a mesma cor no nome da prévia.
+ * A frase inteira está na dica (regra 21: isso se vê).
+ */
+.pivos-mao-marca {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff9a1f;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+}
+
+.pivos-nome.pivos-a-mao {
+  color: var(--painel-aviso-texto, #8a5300);
+}

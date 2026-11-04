@@ -1,0 +1,23 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "ordem" },
+  "bones": [ { "name": "root" } ],
+  "slots": [
+    { "name": "s0", "bone": "root" },
+    { "name": "s1", "bone": "root" },
+    { "name": "s2", "bone": "root" },
+    { "name": "s3", "bone": "root" }
+  ],
+  "animations": [
+    {
+      "name": "ordem",
+      "duration": 1,
+      "timelines": [
+        { "type": "drawOrder",
+          "keys": [
+            { "time": 0, "value": [ { "slot": "s3", "offset": -3 } ] },
+            { "time": 1, "value": [ { "slot": "s0", "offset": 2 }, { "slot": "s2", "offset": -1 } ] }
+          ] }
+      ] }
+  ]
+}

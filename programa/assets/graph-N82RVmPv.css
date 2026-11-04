@@ -1,0 +1,225 @@
+/*
+ * Style of the panel "Curvas" (the graph editor).
+ *
+ * It inherits the palette and the buttons of `panels.css` through the class
+ * `.painel`, so the whole right-hand column reads as one screen. Only what is
+ * particular to the graph lives here.
+ *
+ * Rules the whole project follows (the owner is dyslexic):
+ *  - 15px base text, never smaller than 14px;
+ *  - high contrast, no grey on grey;
+ *  - every button carries a written label, never an icon alone;
+ *  - short sentences, no abbreviations;
+ *  - things that line up stay lined up.
+ */
+
+/*
+ * O painel inteiro rola.
+ *
+ * `.painel` é `overflow: hidden`, e numa faixa baixa isso CORTAVA a leitura, os
+ * botões de formato e a legenda: existiam na página e não havia como chegar
+ * neles — nem barra, nem roda, nem teclado. Uma rolagem só, no painel todo, é o
+ * que não deixa dúvida sobre qual barra usar.
+ */
+.grafico {
+  gap: 0;
+  overflow: hidden auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* The drawing area                                                    */
+/* ------------------------------------------------------------------ */
+
+/* The canvas is told its size by this box, and the panel redraws when the box
+   changes. Without a fixed height the canvas would try to size itself from the
+   canvas, and the two would chase each other. */
+/* Cresce quando há espaço (`flex-grow: 1`) e NÃO encolhe abaixo de 220 px
+   (`flex-shrink: 0`): um editor de curvas de 80 px de altura não serve para
+   nada. Quando não cabe, quem rola é o painel, na regra acima. */
+.grafico-quadro {
+  position: relative;
+  /* Rodada 40, lote 5 (nota do doc 47): encolhe até 120 px. Com 220 fixos o
+     quadro passava da faixa, o painel rolava, e depois do Ajustar o rótulo do
+     pé do eixo ficava escondido sob a barra de baixo. */
+  flex: 1 1 220px;
+  min-height: 120px;
+  margin: 10px;
+  border: 2px solid var(--painel-linha);
+  border-radius: 6px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.grafico-tela {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* The pointer is always doing something here: picking, dragging, reading. */
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.grafico-tela:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+/* ------------------------------------------------------------------ */
+/* The line that reads out time and value                              */
+/* ------------------------------------------------------------------ */
+
+/* Fixed height and tabular figures, so the numbers do not jump sideways while
+   the cursor moves. */
+.grafico-leitura {
+  margin: 0;
+  padding: 8px 12px;
+  min-height: 38px;
+  border-top: 1px solid var(--painel-linha);
+  border-bottom: 1px solid var(--painel-linha);
+  background: var(--painel-campo);
+  color: var(--painel-texto);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Preset buttons                                                      */
+/* ------------------------------------------------------------------ */
+
+.grafico-formatos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.grafico-titulo {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--painel-texto-fraco, var(--painel-texto));
+}
+
+/* Rodada 17, K9 + G-Q5: os sete formatos numa fila só, na barra de cima. Em
+   duas colunas, abaixo do gráfico, eles caíam fora da tela. */
+.grafico-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Rodada 17, G-Q6: o tocador da aba Curvas, os mesmos botões da Linha do tempo. */
+.grafico-barra {
+  align-items: center;
+}
+
+.grafico-tocador {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.grafico-toc {
+  min-width: 34px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.grafico-toc.is-on {
+  background: var(--painel-realce);
+  color: #ffffff;
+}
+
+.grafico-relogio {
+  margin-left: 6px;
+  color: var(--painel-texto);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ */
+/* Legend: one line per property, with its colour and its name          */
+/* ------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------ */
+/* Tudo o que fica embaixo da área de desenho anda junto                */
+/* ------------------------------------------------------------------ */
+
+/* Sem rolagem própria: quem rola é o painel. Desde a rodada 17 só a legenda
+   mora aqui: a leitura e os botões de formato subiram para cima do gráfico. */
+.grafico-rolagem {
+  flex: 0 0 auto;
+}
+
+.grafico-legenda {
+  margin: 0;
+  padding: 0 0 12px;
+  list-style: none;
+  border-top: 1px solid var(--painel-linha);
+}
+
+.grafico-item {
+  margin: 0;
+}
+
+.grafico-linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--painel-linha);
+  background: transparent;
+  color: var(--painel-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.grafico-linha:hover {
+  background: var(--painel-hover);
+}
+
+.grafico-linha:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+/* A hidden line is dimmed, but the word "Oculta" is what actually says so:
+   colour alone is never the message. */
+.grafico-linha[aria-pressed="false"] .grafico-cor,
+.grafico-linha[aria-pressed="false"] .grafico-nome {
+  opacity: 0.45;
+}
+
+.grafico-cor {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--painel-texto);
+  border-radius: 4px;
+}
+
+.grafico-nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grafico-estado {
+  flex: 0 0 auto;
+  color: var(--painel-texto-fraco);
+}
+
+/* ------------------------------------------------------------------ */
+/* Room                                                                */
+/* ------------------------------------------------------------------ */
+
+/* The panel now lives in the strip under the drawing area (`.dock` in
+   `ui/shell.css`), whose height the user drags with the mouse. Nothing here
+   asks the column for room any more; request 4 of `PEDIDOS-FASE3B.md` is
+   answered. */

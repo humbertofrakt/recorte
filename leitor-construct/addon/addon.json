@@ -1,0 +1,36 @@
+{
+	"is-c3-addon": true,
+	"sdk-version": 2,
+	"min-construct-version": "r449",
+	"type": "plugin",
+	"name": "Recorte",
+	"id": "Recorte_Leitor",
+	"version": "0.1.0.0",
+	"author": "Recorte",
+	"website": "https://github.com/",
+	"documentation": "https://github.com/",
+	"description": "Lê o boneco do Recorte (.bone) e o anima no Construct 3.",
+	"editor-scripts": [
+		"plugin.js",
+		"type.js",
+		"instance.js",
+		"c3runtime/recorte-runtime.js"
+	],
+	"file-list": [
+		"c3runtime/main.js",
+		"c3runtime/plugin.js",
+		"c3runtime/type.js",
+		"c3runtime/instance.js",
+		"c3runtime/conditions.js",
+		"c3runtime/actions.js",
+		"c3runtime/expressions.js",
+		"c3runtime/recorte-runtime.js",
+		"lang/en-US.json",
+		"aces.json",
+		"addon.json",
+		"icon.svg",
+		"plugin.js",
+		"type.js",
+		"instance.js"
+	]
+}

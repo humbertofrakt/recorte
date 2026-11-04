@@ -1,0 +1,27 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "conformidade B-105" },
+  "skeleton": {},
+  "assets": { "atlases": ["entrada.atlas.json"] },
+  "bones": [{ "name": "root" }],
+  "slots": [{ "name": "olho", "bone": "root", "attachment": "olho" }],
+  "skins": [
+    { "name": "default",
+      "attachments": {
+        "olho": {
+          "olho": {
+            "type": "region",
+            "path": "piscar_",
+            "width": 32, "height": 32,
+            "sequence": { "count": 4, "start": 1, "digits": 2, "setup": 0 }
+          }
+        }
+      } }
+  ],
+  "animations": [
+    { "name": "pisca", "duration": 0.4,
+      "timelines": [
+        { "type": "sequence", "target": "olho", "skin": "default", "attachment": "olho",
+          "keys": [{ "time": 0, "value": { "mode": "loop", "index": 0, "delay": 0.1 } }] }
+      ] }
+  ]
+}

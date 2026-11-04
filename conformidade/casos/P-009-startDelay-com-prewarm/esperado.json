@@ -1,0 +1,295 @@
+{
+  "probe": {
+    "times": [
+      0.5
+    ],
+    "measure": [
+      "particles"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.5,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.5,
+            "life": 1.5,
+            "age": 0,
+            "x": 0,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.45,
+            "life": 1.5,
+            "age": 0.05,
+            "x": 0,
+            "y": 5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.4,
+            "life": 1.5,
+            "age": 0.1,
+            "x": 0,
+            "y": 10,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.35,
+            "life": 1.5,
+            "age": 0.15,
+            "x": 0,
+            "y": 15,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0.3,
+            "life": 1.5,
+            "age": 0.2,
+            "x": 0,
+            "y": 20,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -1,
+            "birth": 0.25,
+            "life": 1.5,
+            "age": 0.25,
+            "x": 0,
+            "y": 25,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -2,
+            "birth": 0.2,
+            "life": 1.5,
+            "age": 0.3,
+            "x": 0,
+            "y": 30,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -3,
+            "birth": 0.15,
+            "life": 1.5,
+            "age": 0.35,
+            "x": 0,
+            "y": 35,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -4,
+            "birth": 0.1,
+            "life": 1.5,
+            "age": 0.4,
+            "x": 0,
+            "y": 40,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -5,
+            "birth": 0.05,
+            "life": 1.5,
+            "age": 0.45,
+            "x": 0,
+            "y": 45,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -6,
+            "birth": 0,
+            "life": 1.5,
+            "age": 0.5,
+            "x": 0,
+            "y": 50,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -7,
+            "birth": -0.05,
+            "life": 1.5,
+            "age": 0.55,
+            "x": 0,
+            "y": 55,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -8,
+            "birth": -0.1,
+            "life": 1.5,
+            "age": 0.6,
+            "x": 0,
+            "y": 60,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -9,
+            "birth": -0.15,
+            "life": 1.5,
+            "age": 0.65,
+            "x": 0,
+            "y": 65,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -10,
+            "birth": -0.2,
+            "life": 1.5,
+            "age": 0.7,
+            "x": 0,
+            "y": 70,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -11,
+            "birth": -0.25,
+            "life": 1.5,
+            "age": 0.75,
+            "x": 0,
+            "y": 75,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -12,
+            "birth": -0.3,
+            "life": 1.5,
+            "age": 0.8,
+            "x": 0,
+            "y": 80,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -13,
+            "birth": -0.35,
+            "life": 1.5,
+            "age": 0.85,
+            "x": 0,
+            "y": 85,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -14,
+            "birth": -0.4,
+            "life": 1.5,
+            "age": 0.9,
+            "x": 0,
+            "y": 90,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -15,
+            "birth": -0.45,
+            "life": 1.5,
+            "age": 0.95,
+            "x": 0,
+            "y": 95,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -16,
+            "birth": -0.5,
+            "life": 1.5,
+            "age": 1,
+            "x": 0,
+            "y": 100,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -17,
+            "birth": -0.55,
+            "life": 1.5,
+            "age": 1.05,
+            "x": 0,
+            "y": 105,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -18,
+            "birth": -0.6,
+            "life": 1.5,
+            "age": 1.1,
+            "x": 0,
+            "y": 110,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -19,
+            "birth": -0.65,
+            "life": 1.5,
+            "age": 1.15,
+            "x": 0,
+            "y": 115,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": -20,
+            "birth": -0.7,
+            "life": 1.5,
+            "age": 1.2,
+            "x": 0,
+            "y": 120,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    }
+  ]
+}

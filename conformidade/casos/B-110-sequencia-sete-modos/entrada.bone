@@ -1,0 +1,45 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "sequencia" },
+  "bones": [ { "name": "root" } ],
+  "slots": [
+    { "name": "hold", "bone": "root", "attachment": "quadro" },
+    { "name": "once", "bone": "root", "attachment": "quadro" },
+    { "name": "loop", "bone": "root", "attachment": "quadro" },
+    { "name": "pingpong", "bone": "root", "attachment": "quadro" },
+    { "name": "onceReverse", "bone": "root", "attachment": "quadro" },
+    { "name": "loopReverse", "bone": "root", "attachment": "quadro" },
+    { "name": "pingpongReverse", "bone": "root", "attachment": "quadro" },
+    { "name": "sem_timeline", "bone": "root", "attachment": "quadro" }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "hold":            { "quadro": { "type": "region", "path": "q", "width": 8, "height": 8, "sequence": { "count": 4, "setup": 2 } } },
+        "once":            { "quadro": { "type": "region", "path": "q", "width": 8, "height": 8, "sequence": { "count": 4, "setup": 2 } } },
+        "loop":            { "quadro": { "type": "region", "path": "q", "width": 8, "height": 8, "sequence": { "count": 4, "setup": 2 } } },
+        "pingpong":        { "quadro": { "type": "region", "path": "q", "width": 8, "height": 8, "sequence": { "count": 4, "setup": 2 } } },
+        "onceReverse":     { "quadro": { "type": "region", "path": "q", "width": 8, "height": 8, "sequence": { "count": 4, "setup": 2 } } },
+        "loopReverse":     { "quadro": { "type": "region", "path": "q", "width": 8, "height": 8, "sequence": { "count": 4, "setup": 2 } } },
+        "pingpongReverse": { "quadro": { "type": "region", "path": "q", "width": 8, "height": 8, "sequence": { "count": 4, "setup": 2 } } },
+        "sem_timeline":    { "quadro": { "type": "region", "path": "q", "width": 8, "height": 8, "sequence": { "count": 4, "setup": 2 } } }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "rodar",
+      "duration": 0.6,
+      "timelines": [
+        { "type": "sequence", "target": "hold",            "attachment": "quadro", "keys": [ { "time": 0, "value": { "mode": "hold",            "index": 1, "delay": 0.1 } } ] },
+        { "type": "sequence", "target": "once",            "attachment": "quadro", "keys": [ { "time": 0, "value": { "mode": "once",            "index": 1, "delay": 0.1 } } ] },
+        { "type": "sequence", "target": "loop",            "attachment": "quadro", "keys": [ { "time": 0, "value": { "mode": "loop",            "index": 1, "delay": 0.1 } } ] },
+        { "type": "sequence", "target": "pingpong",        "attachment": "quadro", "keys": [ { "time": 0, "value": { "mode": "pingpong",        "index": 1, "delay": 0.1 } } ] },
+        { "type": "sequence", "target": "onceReverse",     "attachment": "quadro", "keys": [ { "time": 0, "value": { "mode": "onceReverse",     "index": 1, "delay": 0.1 } } ] },
+        { "type": "sequence", "target": "loopReverse",     "attachment": "quadro", "keys": [ { "time": 0, "value": { "mode": "loopReverse",     "index": 1, "delay": 0.1 } } ] },
+        { "type": "sequence", "target": "pingpongReverse", "attachment": "quadro", "keys": [ { "time": 0, "value": { "mode": "pingpongReverse", "index": 1, "delay": 0.1 } } ] }
+      ]
+    }
+  ]
+}

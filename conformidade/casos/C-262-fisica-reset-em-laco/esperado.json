@@ -1,0 +1,154 @@
+{
+  "probe": {
+    "animation": "gira",
+    "loop": true,
+    "physicsDt": 0.0166666666666667,
+    "times": [0.0833333333333333, 0.15, 0.25, 0.35],
+    "measure": [
+      "bones"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.083333,
+      "bones": {
+        "root": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 0,
+          "worldY": 0,
+          "ax": 0,
+          "ay": 0,
+          "arotation": 0,
+          "ascaleX": 1,
+          "ascaleY": 1,
+          "ashearX": 0,
+          "ashearY": 0
+        },
+        "haste": {
+          "a": 0.516898,
+          "b": -0.856047,
+          "c": 0.856047,
+          "d": 0.516898,
+          "worldX": 0,
+          "worldY": 0,
+          "ax": 0,
+          "ay": 0,
+          "arotation": 58.875597,
+          "ascaleX": 1,
+          "ascaleY": 1,
+          "ashearX": 0,
+          "ashearY": 0
+        }
+      }
+    },
+    {
+      "time": 0.15,
+      "bones": {
+        "root": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 0,
+          "worldY": 0,
+          "ax": 0,
+          "ay": 0,
+          "arotation": 0,
+          "ascaleX": 1,
+          "ascaleY": 1,
+          "ashearX": 0,
+          "ashearY": 0
+        },
+        "haste": {
+          "a": 0.507048,
+          "b": -0.861918,
+          "c": 0.861918,
+          "d": 0.507048,
+          "worldX": 0,
+          "worldY": 0,
+          "ax": 0,
+          "ay": 0,
+          "arotation": 59.53258,
+          "ascaleX": 1,
+          "ascaleY": 1,
+          "ashearX": 0,
+          "ashearY": 0
+        }
+      }
+    },
+    {
+      "time": 0.25,
+      "bones": {
+        "root": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 0,
+          "worldY": 0,
+          "ax": 0,
+          "ay": 0,
+          "arotation": 0,
+          "ascaleX": 1,
+          "ascaleY": 1,
+          "ashearX": 0,
+          "ashearY": 0
+        },
+        "haste": {
+          "a": 0.544054,
+          "b": -0.83905,
+          "c": 0.83905,
+          "d": 0.544054,
+          "worldX": 0,
+          "worldY": 0,
+          "ax": 0,
+          "ay": 0,
+          "arotation": 57.03997,
+          "ascaleX": 1,
+          "ascaleY": 1,
+          "ashearX": 0,
+          "ashearY": 0
+        }
+      }
+    },
+    {
+      "time": 0.35,
+      "bones": {
+        "root": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 0,
+          "worldY": 0,
+          "ax": 0,
+          "ay": 0,
+          "arotation": 0,
+          "ascaleX": 1,
+          "ascaleY": 1,
+          "ashearX": 0,
+          "ashearY": 0
+        },
+        "haste": {
+          "a": 0.507048,
+          "b": -0.861918,
+          "c": 0.861918,
+          "d": 0.507048,
+          "worldX": 0,
+          "worldY": 0,
+          "ax": 0,
+          "ay": 0,
+          "arotation": 59.53258,
+          "ascaleX": 1,
+          "ascaleY": 1,
+          "ashearX": 0,
+          "ashearY": 0
+        }
+      }
+    }
+  ]
+}

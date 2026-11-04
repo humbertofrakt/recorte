@@ -1,0 +1,79 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "andar"
+  },
+  "rig": {
+    "name": "boneco-v1",
+    "bones": [
+      "tronco"
+    ],
+    "reference": {
+      "bone": "tronco",
+      "length": 60
+    }
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "animations": [
+    {
+      "name": "andar",
+      "duration": 1.0,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "tronco",
+          "property": "x",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1.0,
+              "value": 30
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "tronco",
+          "property": "y",
+          "keys": [
+            {
+              "time": 0,
+              "value": 100
+            },
+            {
+              "time": 1.0,
+              "value": 110
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "tronco",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1.0,
+              "value": 45
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

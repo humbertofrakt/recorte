@@ -1,0 +1,66 @@
+{
+  "probe": {
+    "animation": "estoura",
+    "times": [
+      0.95
+    ],
+    "measure": [
+      "particles"
+    ],
+    "loop": true
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.95,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 1,
+            "index": 3,
+            "birth": 0.9,
+            "life": 0.5,
+            "age": 0.05,
+            "x": 0,
+            "y": 5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 1,
+            "index": 2,
+            "birth": 0.9,
+            "life": 0.5,
+            "age": 0.05,
+            "x": 0,
+            "y": 5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 1,
+            "index": 1,
+            "birth": 0.6,
+            "life": 0.5,
+            "age": 0.35,
+            "x": 0,
+            "y": 35,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 1,
+            "index": 0,
+            "birth": 0.6,
+            "life": 0.5,
+            "age": 0.35,
+            "x": 0,
+            "y": 35,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    }
+  ]
+}

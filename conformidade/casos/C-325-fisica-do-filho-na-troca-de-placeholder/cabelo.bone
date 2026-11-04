@@ -1,0 +1,45 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 34 (conta a mao)"
+  },
+  "skeleton": {
+    "name": "cabelo",
+    "referenceScale": 100
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "fio",
+      "parent": "root",
+      "length": 100
+    }
+  ],
+  "slots": [],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {}
+    }
+  ],
+  "constraints": [
+    {
+      "type": "physics",
+      "name": "vento",
+      "bone": "fio",
+      "x": 1,
+      "inertia": 0.5,
+      "strength": 100,
+      "damping": 1,
+      "mass": 1,
+      "wind": 1,
+      "gravity": 0,
+      "limit": 5000,
+      "fps": 60
+    }
+  ],
+  "animations": []
+}

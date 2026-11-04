@@ -1,0 +1,45 @@
+{
+  "probe": {
+    "animation": "sopro",
+    "loop": true,
+    "physicsDt": 0.0166666666666667,
+    "times": [
+      0.05,
+      0.2,
+      0.2666666666666667
+    ],
+    "measure": [
+      "bones"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.05,
+      "bones": {
+        "fio": {
+          "worldX": 0.16283,
+          "worldY": 0
+        }
+      }
+    },
+    {
+      "time": 0.2,
+      "bones": {
+        "fio": {
+          "worldX": 1.494215,
+          "worldY": 0
+        }
+      }
+    },
+    {
+      "time": 0.266667,
+      "bones": {
+        "fio": {
+          "worldX": 0.16283,
+          "worldY": 0
+        }
+      }
+    }
+  ]
+}

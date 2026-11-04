@@ -1,0 +1,6 @@
+{
+  "probe": { "times": [0], "measure": ["bones"] },
+  "recusa": { "contem": "VENDOR_malha_volumetrica" },
+  "version": "1.0",
+  "samples": []
+}

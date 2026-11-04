@@ -1,0 +1,15 @@
+{
+  "probe": { "animation": "fechar", "times": [0, 0.25, 0.5, 0.75, 1], "measure": ["slots", "vertices"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,    "slots": { "mao": { "attachment": "aberta" } },
+      "vertices": { "mao/aberta": [-10, -10, 10, -10, 10, 10, -10, 10] } },
+    { "time": 0.25, "slots": { "mao": { "attachment": "aberta" } },
+      "vertices": { "mao/aberta": [-10, -10, 10, -10, 10, 10, -10, 10] } },
+    { "time": 0.5,  "slots": { "mao": { "attachment": "fechada" } },
+      "vertices": { "mao/fechada": [-20, -5, 20, -5, 20, 5, -20, 5] } },
+    { "time": 0.75, "slots": { "mao": { "attachment": "fechada" } },
+      "vertices": { "mao/fechada": [-20, -5, 20, -5, 20, 5, -20, 5] } },
+    { "time": 1,    "slots": { "mao": { "attachment": null } }, "vertices": {} }
+  ]
+}

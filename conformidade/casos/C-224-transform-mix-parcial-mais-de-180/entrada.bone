@@ -1,0 +1,16 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "volta-inteira" },
+  "bones": [
+    { "name": "root" },
+    { "name": "alvo", "parent": "root", "x": 100, "y": 0, "rotation": 170 },
+    { "name": "osso", "parent": "root", "x": 30, "y": 0, "rotation": -100 }
+  ],
+  "slots": [],
+  "constraints": [
+    { "type": "transform", "name": "tc", "bones": ["osso"], "target": "alvo",
+      "local": false, "relative": false,
+      "mixRotation": 0.5, "mixX": 0, "mixY": 0,
+      "mixScaleX": 0, "mixScaleY": 0, "mixShearY": 0 }
+  ]
+}

@@ -1,0 +1,14 @@
+[remap]
+
+importer="recorte.arquivo"
+type="Resource"
+uid="uid://cikmlggjengl1"
+path="res://.godot/imported/heroi-fogo.bone-9f9525fa4d0e9129e1c16007fa7b933b.res"
+
+[deps]
+
+source_file="res://exemplo/heroi-fogo.bone"
+dest_files=["res://.godot/imported/heroi-fogo.bone-9f9525fa4d0e9129e1c16007fa7b933b.res"]
+
+[params]
+

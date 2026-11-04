@@ -1,0 +1,14 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "ik2" },
+  "bones": [
+    { "name": "root" },
+    { "name": "P", "parent": "root", "length": 100 },
+    { "name": "C", "parent": "P", "x": 100, "length": 100 },
+    { "name": "alvo", "parent": "root", "x": 0, "y": 100 }
+  ],
+  "slots": [],
+  "constraints": [
+    { "type": "ik", "name": "ik", "bones": ["P", "C"], "target": "alvo", "bendPositive": true }
+  ]
+}

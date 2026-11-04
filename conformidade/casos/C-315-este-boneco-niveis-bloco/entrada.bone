@@ -1,0 +1,65 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 11"
+  },
+  "skeleton": {
+    "name": "mundo"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "chao",
+      "bone": "root",
+      "attachment": "chao"
+    },
+    {
+      "name": "heroi",
+      "bone": "root",
+      "attachment": "heroi"
+    },
+    {
+      "name": "ceu",
+      "bone": "root",
+      "attachment": "ceu"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "chao": {
+          "chao": {
+            "type": "region",
+            "path": "chao",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "ceu": {
+          "ceu": {
+            "type": "region",
+            "path": "ceu",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "heroi": {
+          "heroi": {
+            "type": "skeleton",
+            "uri": "heroi.bone"
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

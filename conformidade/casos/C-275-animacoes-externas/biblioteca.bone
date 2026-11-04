@@ -1,0 +1,63 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "biblioteca"
+  },
+  "rig": {
+    "name": "bipede-v1",
+    "bones": [
+      "hips"
+    ]
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "animations": [
+    {
+      "name": "walk",
+      "duration": 1.0,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "hips",
+          "property": "y",
+          "keys": [
+            {
+              "time": 0,
+              "value": 90
+            },
+            {
+              "time": 1.0,
+              "value": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "idle",
+      "duration": 1.0,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "hips",
+          "property": "y",
+          "keys": [
+            {
+              "time": 0,
+              "value": 999
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

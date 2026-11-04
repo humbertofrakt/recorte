@@ -1,0 +1,23 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "heranca" },
+  "bones": [
+    { "name": "root" },
+    { "name": "pai", "parent": "root", "x": 10, "y": 20, "rotation": 90, "scaleX": 2, "scaleY": -1 },
+
+    { "name": "normal", "parent": "pai", "x": 10, "y": 0, "rotation": 30 },
+
+    { "name": "onlyTranslation", "parent": "pai", "x": 10, "y": 0, "rotation": 30,
+      "inheritRotation": false, "inheritScale": false, "inheritReflection": false },
+
+    { "name": "noRotationOrReflection", "parent": "pai", "x": 10, "y": 0, "rotation": 30,
+      "inheritRotation": false, "inheritScale": true, "inheritReflection": false },
+
+    { "name": "noScale", "parent": "pai", "x": 10, "y": 0, "rotation": 30,
+      "inheritRotation": true, "inheritScale": false, "inheritReflection": true },
+
+    { "name": "noScaleOrReflection", "parent": "pai", "x": 10, "y": 0, "rotation": 30,
+      "inheritRotation": true, "inheritScale": false, "inheritReflection": false }
+  ],
+  "slots": []
+}

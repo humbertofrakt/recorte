@@ -1,0 +1,80 @@
+{
+  "probe": {
+    "animation": "sacar",
+    "times": [
+      0.25,
+      1.0
+    ],
+    "measure": [
+      "bones",
+      "slots"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "body": null,
+      "bones": {
+        "hand": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 100.0,
+          "worldY": 50.0
+        }
+      },
+      "slots": {
+        "weapon": {
+          "attachment": null,
+          "visible": true
+        }
+      }
+    },
+    {
+      "time": 1.0,
+      "body": null,
+      "bones": {
+        "hand": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 100.0,
+          "worldY": 50.0
+        },
+        "weapon/root": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 105.0,
+          "worldY": 50.0
+        },
+        "weapon/lamina": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 125.0,
+          "worldY": 50.0
+        },
+        "weapon/gema": {
+          "a": 0.0,
+          "b": -1.0,
+          "c": 1.0,
+          "d": 0.0,
+          "worldX": 135.0,
+          "worldY": 50.0
+        }
+      },
+      "slots": {
+        "weapon": {
+          "attachment": "sword",
+          "visible": true
+        }
+      }
+    }
+  ]
+}

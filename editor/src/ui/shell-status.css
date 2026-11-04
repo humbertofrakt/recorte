@@ -1,0 +1,17 @@
+/*
+ * **A dica do passo seguinte** — P19, o ajuste da cor (29/09/2026).
+ *
+ * A linha da ferramenta é cinza (`--ink-soft`, do `shell.css`, chat P). A dica
+ * do passo seguinte é a coisa mais importante do rodapé, e o Humberto é
+ * disléxico: a palavra que abre a frase vai em NEGRITO e na cor de destaque da
+ * casa, e o resto na cor normal do texto. O tamanho da letra não muda, e a
+ * altura do rodapé (54 px, do chat P) também não.
+ */
+.status-tool.is-proximo {
+  color: var(--ink);
+}
+
+.status-proximo {
+  font-weight: 700;
+  color: var(--accent);
+}

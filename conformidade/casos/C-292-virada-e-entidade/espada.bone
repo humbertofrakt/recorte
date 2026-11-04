@@ -1,0 +1,68 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "espada"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "lamina",
+      "parent": "root",
+      "x": 20,
+      "length": 30
+    }
+  ],
+  "slots": [
+    {
+      "name": "lamina",
+      "bone": "lamina",
+      "attachment": "lamina"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "lamina": {
+          "lamina": {
+            "type": "region",
+            "width": 20,
+            "height": 10,
+            "path": "lamina",
+            "x": 15
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "girar",
+      "duration": 1.0,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "lamina",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1.0,
+              "value": 90
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

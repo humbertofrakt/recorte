@@ -1,0 +1,96 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.2.0",
+    "id": "3f0c9a52-6b1e-4d8a-9e2f-7a4c1d5b8e60",
+    "created": "2026-09-09T12:00:00Z",
+    "modified": "2026-09-17T12:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo da especificação bone 0.2 — a entidade segue a imagem (7.11), animações e pele de fora (2.8), contrato de rig (4.8)"
+  },
+  "skeleton": {
+    "name": "mecha",
+    "x": -50, "y": 0, "width": 100, "height": 200,
+    "fps": 30,
+    "referenceScale": 100,
+    "pixelArt": false
+  },
+  "assets": {
+    "atlases": ["heroi.atlas.json"],
+    "imagesBase": "images/",
+    "audioBase": "",
+    "skeletonsBase": "",
+    "animations": ["mecha-animacoes.bone"],
+    "skins": ["mecha-pele-inverno.bone"]
+  },
+  "rig": {
+    "name": "mecha-humanoide-v1",
+    "bones": ["hips", "torso", "arm", "hand", "head"],
+    "slots": ["body", "arm", "head", "weapon"]
+  },
+
+  "bones": [
+    { "name": "root",  "color": [0.6, 0.6, 0.6, 1] },
+    { "name": "hips",  "parent": "root",  "x": 0,  "y": 90,  "length": 10 },
+    { "name": "torso", "parent": "hips",  "x": 0,  "y": 0,   "rotation": 90,   "length": 70 },
+    { "name": "arm",   "parent": "torso", "x": 55, "y": -10, "rotation": -160, "length": 40 },
+    { "name": "hand",  "parent": "arm",   "x": 40, "y": 0,   "rotation": 20,   "length": 20 },
+    { "name": "head",  "parent": "torso", "x": 70, "y": 0,   "length": 40 }
+  ],
+
+  "slots": [
+    { "name": "body",   "bone": "torso", "attachment": "body" },
+    { "name": "arm",    "bone": "arm",   "attachment": "arm" },
+    { "name": "hand",   "bone": "hand",  "attachment": "hand" },
+    { "name": "weapon", "bone": "hand",  "attachment": "sword" },
+    { "name": "head",   "bone": "head",  "attachment": "head" }
+  ],
+
+  "skins": [
+    {
+      "name": "default",
+      "displayName": "Padrão",
+      "attachments": {
+        "body": {
+          "body": { "type": "region", "path": "body", "x": 35, "y": 0, "rotation": -90, "width": 76, "height": 84 }
+        },
+        "arm": {
+          "arm": { "type": "region", "path": "arm", "x": 22, "y": 0, "width": 52, "height": 26 }
+        },
+        "hand": {
+          "hand": { "type": "region", "path": "hand_03", "x": 10, "y": 0, "width": 24, "height": 24 }
+        },
+        "head": {
+          "head": { "type": "region", "path": "face", "x": 20, "y": 0, "rotation": -90, "width": 64, "height": 66 }
+        },
+        "weapon": {
+          "sword": { "type": "skeleton", "uri": "espada.bone",
+                     "x": 20, "y": 0, "rotation": 0, "scaleX": 1, "scaleY": 1,
+                     "inheritAnimation": true, "baseAnimation": "brilho",
+                     "skins": [], "loop": true, "timeScale": 1, "inheritColor": true }
+        }
+      }
+    }
+  ],
+
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.0,
+      "loop": true,
+      "timelines": [
+        { "type": "bone", "target": "torso", "property": "rotation",
+          "keys": [
+            { "time": 0,   "value": 90 },
+            { "time": 1.0, "value": 92 },
+            { "time": 2.0, "value": 90 }
+          ] }
+      ]
+    }
+  ],
+
+  "extras": {
+    "descricao": "O corpo que pendura a espada PELA IMAGEM: o slot weapon, no osso hand, mostra o anexo skeleton espada.bone com x 20 — a raiz da espada cai onde a imagem da espada cairia. Sem socket (rascunho 0.2, Apêndice A 72). A espada responde ao attack do mecha (inheritAnimation) e brilha sempre (baseAnimation). walk, attack e falar vêm de mecha-animacoes.bone; a pele inverno vem de mecha-pele-inverno.bone e troca a cabeça pelo capacete.bone, também pela imagem."
+  }
+}

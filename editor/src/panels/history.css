@@ -1,0 +1,97 @@
+/* ------------------------------------------------------------------ */
+/* history.css — lote A6, plano arrumação (v11.2)                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * O painel Histórico — o passo de agora e os desfeitos.
+ *
+ * Estes blocos moravam em `panels.css`, com os de todos os painéis. Vieram
+ * para cá sem mudar um seletor, na mesma ordem entre si; o `main.ts` carrega
+ * este arquivo logo depois do `panels.css`.
+ */
+
+/* ------------------------------------------------------------------ */
+/* O painel Histórico — lote 19                                        */
+/* ------------------------------------------------------------------ */
+
+.historico {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.historico-aviso {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 10px;
+  font-size: 14px;
+  color: var(--painel-texto-fraco);
+  background: var(--painel-campo);
+  border-bottom: 1px solid var(--painel-linha);
+}
+
+.historico-lista {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.historico-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 10px;
+  font: inherit;
+  text-align: left;
+  color: var(--painel-texto);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--painel-linha);
+  cursor: pointer;
+}
+
+.historico-linha:hover {
+  background: var(--painel-hover);
+}
+
+.historico-linha:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+/* O passo em que o documento está: em negrito, com a bolinha cheia. */
+.historico-atual {
+  font-weight: 700;
+  background: var(--painel-realce-fraco);
+  box-shadow: inset 3px 0 0 var(--painel-realce);
+}
+
+/*
+ * Os desfeitos ficam CINZA e continuam na lista.
+ *
+ * Some quando alguém escreve por cima — que é o que a pilha faz —, e até lá
+ * eles são o caminho de volta. Uma lista que apagasse o desfeito na hora
+ * tiraria justamente o que se quer olhar depois de um Ctrl+Z.
+ */
+.historico-desfeito {
+  color: var(--painel-texto-fraco);
+  opacity: 0.7;
+}
+
+.historico-marca {
+  flex: 0 0 auto;
+  color: var(--painel-realce);
+}
+
+.historico-desfeito .historico-marca {
+  color: var(--painel-texto-fraco);
+}
+
+.historico-nome {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

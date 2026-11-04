@@ -1,0 +1,59 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 34 (conta a mao)"
+  },
+  "skeleton": {
+    "name": "heroi"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "cab",
+      "bone": "root",
+      "attachment": "cabelo"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "cab": {
+          "cabelo": {
+            "type": "skeleton",
+            "uri": "cabelo.bone",
+            "animation": "sopro",
+            "loop": false
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "fica",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "slot",
+          "target": "cab",
+          "property": "attachment",
+          "keys": [
+            {
+              "time": 0,
+              "value": "cabelo"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validador — Recorte</title>
+<meta name="description" content="Confira um arquivo .bone, .boneb, .bonez ou .atlas.json no seu navegador. Nada é enviado para lugar nenhum.">
+<link rel="icon" href="../favicon.ico" sizes="32x32">
+<link rel="stylesheet" href="./validador.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="faixa">
+    <p class="marca"><a href="../index.html">Recorte</a></p>
+    <nav>
+      <a href="../index.html">Início</a>
+      <a href="../../ferramentas/visualizador/index.html">Visualizador</a>
+      <a href="../../formato/ESPECIFICACAO 2026-09-06.md">Especificação</a>
+    </nav>
+  </div>
+  <div class="dentro">
+  <h1>Validador de arquivo</h1>
+  <p class="linhaFina">Arraste um arquivo e veja o resultado na hora.</p>
+  <p class="privacidade">
+    <strong>Nada sai do seu computador.</strong>
+    O arquivo é lido aqui dentro do navegador. Não existe envio, não existe servidor,
+    não existe cópia. Você pode desligar a internet e a página continua funcionando.
+  </p>
+  </div>
+</header>
+
+<main>
+
+  <section id="area" class="solta" aria-label="Solte o arquivo aqui">
+    <p class="soltaTitulo">Arraste o arquivo aqui</p>
+    <p class="soltaAjuda">Aceita <b>.bone</b>, <b>.boneb</b>, <b>.bonez</b> e <b>.atlas.json</b>.</p>
+    <p>
+      <label class="botao" for="escolher">Escolher arquivo</label>
+      <input id="escolher" type="file" multiple accept=".bone,.boneb,.bonez,.json,.png,.jpg,.jpeg">
+    </p>
+    <p class="soltaDica">
+      Pode soltar vários de uma vez: o esqueleto, o atlas e as imagens.
+      Assim o desenho aparece completo.
+    </p>
+    <p class="soltaDica">
+      Sem arquivo à mão?
+      <button type="button" class="link" id="exemplo">Ver um arquivo certo</button>
+      ou
+      <button type="button" class="link" id="exemploComErro">ver um arquivo com erro</button>.
+    </p>
+  </section>
+
+  <section id="resultado" hidden aria-live="polite">
+
+    <div id="placar" class="placar">
+      <p class="placarTitulo" id="placarTitulo">—</p>
+      <p class="placarDetalhe" id="placarDetalhe">—</p>
+    </div>
+
+    <div class="colunas">
+
+      <section class="cartao" id="cartaoResumo">
+        <h2>O que tem dentro</h2>
+        <table class="ficha">
+          <tbody id="ficha"></tbody>
+        </table>
+        <div id="contas" class="contas"></div>
+        <h3 id="tituloRecursos" hidden>Recursos usados</h3>
+        <ul id="recursos" class="etiquetas"></ul>
+      </section>
+
+      <section class="cartao" id="cartaoDesenho">
+        <h2>O desenho</h2>
+        <div class="palco"><canvas id="tela" width="600" height="440"></canvas></div>
+        <p class="aviso" id="recadoDesenho">—</p>
+        <div class="controles">
+          <button type="button" id="tocar">Tocar</button>
+          <button type="button" id="parar">Parar</button>
+          <button type="button" id="reiniciar">Reiniciar</button>
+          <label class="caixa"><input type="checkbox" id="verOssos" checked> Mostrar ossos</label>
+        </div>
+        <p class="relogio" id="relogio">0,00 s</p>
+        <h3>Animações</h3>
+        <div class="lista" id="animacoes"></div>
+      </section>
+
+    </div>
+
+    <section class="cartao" id="cartaoProblemas">
+      <h2>Problemas</h2>
+      <p id="semProblemas" class="tudoCerto" hidden>Nenhum problema. O arquivo segue a especificação.</p>
+      <div class="rolagem">
+      <table class="tabelaProblemas" id="tabelaProblemas" hidden>
+        <thead>
+          <tr>
+            <th scope="col">Gravidade</th>
+            <th scope="col">Linha</th>
+            <th scope="col">O que está errado</th>
+            <th scope="col">Onde, dentro do arquivo</th>
+            <th scope="col">Regra</th>
+          </tr>
+        </thead>
+        <tbody id="listaProblemas"></tbody>
+      </table>
+      </div>
+      <p class="rodapeTabela" id="cortados" hidden></p>
+    </section>
+
+  </section>
+
+  <section class="cartao ajuda">
+    <h2>Como ler o resultado</h2>
+    <table class="ficha">
+      <tbody>
+        <tr><th scope="row"><span class="grav erro">Erro</span></th><td>O arquivo não segue a especificação. Um programa que leia esse arquivo pode recusar ou desenhar errado.</td></tr>
+        <tr><th scope="row"><span class="grav aviso">Aviso</span></th><td>O arquivo é válido, mas alguma coisa chama atenção. Vale conferir.</td></tr>
+        <tr><th scope="row">Linha</th><td>A linha do arquivo de texto onde o problema está. Só existe para <b>.bone</b>, que é texto.</td></tr>
+        <tr><th scope="row">Onde</th><td>O endereço do trecho dentro do arquivo, no formato JSON Pointer. Exemplo: <code>/bones/3/parent</code> é a propriedade <code>parent</code> do quarto osso.</td></tr>
+        <tr><th scope="row">Regra</th><td>A seção da especificação que manda nisso.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  <p>
+    Recorte — formato aberto <b>.bone</b> para animação 2D por ossos.
+    Código sob Apache 2.0. Especificação sob CC BY 4.0.
+  </p>
+  <p>
+    Esta página usa a mesma checagem da linha de comando
+    (<code>npm run validar</code>) e o mesmo <code>bone.schema.json</code>.
+  </p>
+</footer>
+
+<script type="module" src="./validador.js"></script>
+</body>
+</html>

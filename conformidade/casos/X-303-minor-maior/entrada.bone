@@ -1,0 +1,28 @@
+{
+  "bone": { "version": "1.7", "minVersion": "1.0", "generator": "editor do futuro 2.0" },
+  "skeleton": { "name": "futuro" },
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root", "x": 10, "y": 20, "rotation": 90 }
+  ],
+  "slots": [
+    { "name": "corpo", "bone": "osso", "attachment": "corpo", "blend": "subtract" }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": { "corpo": { "type": "region", "path": "corpo", "width": 20, "height": 20 } }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "andar",
+      "duration": 1,
+      "timelines": [
+        { "type": "bone", "target": "osso", "property": "rotation",
+          "keys": [ { "time": 0, "value": 90 }, { "time": 1, "value": 0 } ] }
+      ] }
+  ]
+}

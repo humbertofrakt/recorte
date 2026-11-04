@@ -1,0 +1,14 @@
+[remap]
+
+importer="recorte.arquivo"
+type="Resource"
+uid="uid://don1dgbbco7mk"
+path="res://.godot/imported/heroi.bone-8984461146239afdc18682ffc1ffeeb9.res"
+
+[deps]
+
+source_file="res://exemplo/heroi.bone"
+dest_files=["res://.godot/imported/heroi.bone-8984461146239afdc18682ffc1ffeeb9.res"]
+
+[params]
+

@@ -1,0 +1,18 @@
+{
+  "//": "Compila ferramentas/src/exportar (e o runtime que ele usa) para ferramentas/dist/exportar, para o script exportar.mjs importar. O editor importa o .ts direto.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Node",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "declaration": false,
+    "sourceMap": false,
+    "rootDir": "../../..",
+    "outDir": "../../dist/exportar",
+    "types": []
+  },
+  "include": ["./*.ts", "../atlas/*.ts", "../../../runtime/src/**/*.ts"]
+}

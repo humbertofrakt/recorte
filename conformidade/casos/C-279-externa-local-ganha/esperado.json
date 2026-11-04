@@ -1,0 +1,28 @@
+{
+  "probe": {
+    "animation": "idle",
+    "times": [
+      0
+    ],
+    "measure": [
+      "bones"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "bones": {
+        "hips": {
+          "a": 0.707107,
+          "b": -0.707107,
+          "c": 0.707107,
+          "d": 0.707107,
+          "worldX": 0.0,
+          "worldY": 90.0
+        }
+      },
+      "body": null
+    }
+  ]
+}

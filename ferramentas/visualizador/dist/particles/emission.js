@@ -1,0 +1,300 @@
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * When a particle is born — extension `BONE_particles`, sections 4, 5 and 6.
+ *
+ * Everything here is a closed form. `E(t)` is the number of births up to `t`,
+ * the integral of the effective rate; a particle `i` is born at the `t` where
+ * `E(t) = i`, and that inverse is a division. There is no accumulator that
+ * walks frame by frame, because an accumulator makes 30 fps and 60 fps disagree
+ * and makes dragging the cursor backwards impossible (extension 3.4).
+ *
+ * 1st PHASE, and only it: `rate` is a fixed number on the attachment and what
+ * animates is `emitting`, a boolean with `stepped` keys (extension 4.1). The
+ * `linear` branch of extension 4.2 — the parabola and its stable inverse — is
+ * 2nd phase: it is written out in full in the spec so the second reader does
+ * not invent its own, and it is deliberately NOT implemented here. Case P-002
+ * is the case for it, its `esperado.json` is empty on purpose, and
+ * `runtime/testes/particulas.test.ts` holds that sentence in place.
+ *
+ * The only sum allowed is the one below, per key, taken when the curve is
+ * built: fixed order, fixed number of terms, independent of the frame.
+ */
+import { particleRandom, PARTICLE_CHANNEL } from './hash.js';
+/** Slack for the floor/ceil of a count that a division may land just off. */
+const COUNT_EPSILON = 1e-9;
+/**
+ * Safety stop on how many birth candidates one emitter may enumerate in one
+ * frame. The format's own ceiling is 10 000 live particles (extension 10), so
+ * this is twenty times above anything a valid file asks for; it exists so a
+ * `count` of a billion in a broken file cannot hang the editor.
+ */
+const CANDIDATE_CAP = 200000;
+/**
+ * The piecewise-constant effective rate and its integral `E` (extension 4.1).
+ *
+ * `E` is anchored at the emission origin — `startDelay` — so that `E(origin)`
+ * is `0` and index `0` is born there. Before the origin the rate is the one of
+ * the FIRST key (spec 9.10: before the first key the first key holds), which is
+ * what gives `prewarm` its negative indices a known rate (extension 6).
+ */
+export class EmissionCurve {
+    /** `E(origin) = 0`. */
+    origin;
+    /** Effective rate for `t < origin`, from the first key. */
+    rateBefore;
+    /** Segment starts, ascending; `boundaries[0] === origin`. */
+    boundaries;
+    /** Constant effective rate inside `[boundaries[k], boundaries[k+1])`. */
+    rates;
+    /** `E(boundaries[k])`, summed once here and never per frame. */
+    totals;
+    constructor(attachment, emitting) {
+        const rate = attachment.rate > 0 ? attachment.rate : 0;
+        this.origin = attachment.startDelay;
+        const on = (t) => {
+            if (emitting === null || emitting.times.length === 0)
+                return attachment.emitting;
+            const times = emitting.times;
+            if (t < times[0])
+                return emitting.values[0];
+            let lo = 0;
+            let hi = times.length - 1;
+            while (lo < hi) {
+                const mid = (lo + hi + 1) >> 1;
+                if (times[mid] <= t)
+                    lo = mid;
+                else
+                    hi = mid - 1;
+            }
+            return emitting.values[lo];
+        };
+        this.rateBefore = on(-Infinity) ? rate : 0;
+        const marks = [this.origin];
+        if (emitting !== null) {
+            for (let i = 0; i < emitting.times.length; i++) {
+                const t = emitting.times[i];
+                if (t > this.origin)
+                    marks.push(t);
+            }
+        }
+        marks.sort((a, b) => a - b);
+        const boundaries = [];
+        for (const t of marks)
+            if (boundaries.length === 0 || t > boundaries[boundaries.length - 1])
+                boundaries.push(t);
+        const rates = new Float64Array(boundaries.length);
+        const totals = new Float64Array(boundaries.length);
+        for (let k = 0; k < boundaries.length; k++) {
+            rates[k] = on(boundaries[k]) ? rate : 0;
+            if (k > 0)
+                totals[k] = totals[k - 1] + rates[k - 1] * (boundaries[k] - boundaries[k - 1]);
+        }
+        // `marks` always holds the origin, so there is always at least one segment.
+        this.boundaries = new Float64Array(boundaries);
+        this.rates = rates;
+        this.totals = totals;
+    }
+    /** The effective rate in force at `t` (extension 4.1). */
+    rateAt(t) {
+        if (t < this.boundaries[0])
+            return this.rateBefore;
+        return this.rates[this.segmentAt(t)];
+    }
+    /** `E(t)`: how many births up to `t`, counted from the origin. Negative before it. */
+    countAt(t) {
+        if (t < this.boundaries[0])
+            return -this.rateBefore * (this.boundaries[0] - t);
+        const k = this.segmentAt(t);
+        return this.totals[k] + this.rates[k] * (t - this.boundaries[k]);
+    }
+    /**
+     * `τ(i)`: the time at which `E` reaches `i`, or `null` when the rate never
+     * gets there (a stretch with `emitting` off never produces anyone).
+     */
+    timeOf(index) {
+        if (index < this.totals[0]) {
+            if (this.rateBefore <= 0)
+                return null;
+            return this.boundaries[0] + index / this.rateBefore;
+        }
+        let lo = 0;
+        let hi = this.totals.length - 1;
+        while (lo < hi) {
+            const mid = (lo + hi + 1) >> 1;
+            if (this.totals[mid] <= index)
+                lo = mid;
+            else
+                hi = mid - 1;
+        }
+        if (this.rates[lo] <= 0)
+            return null;
+        return this.boundaries[lo] + (index - this.totals[lo]) / this.rates[lo];
+    }
+    segmentAt(t) {
+        let lo = 0;
+        let hi = this.boundaries.length - 1;
+        while (lo < hi) {
+            const mid = (lo + hi + 1) >> 1;
+            if (this.boundaries[mid] <= t)
+                lo = mid;
+            else
+                hi = mid - 1;
+        }
+        return lo;
+    }
+}
+/** A fresh, empty report. */
+export function newBirthReport() {
+    return { cyclesDropped: 0, burstsCut: [] };
+}
+/**
+ * Applies `explosiveness` then `randomness` to a continuous birth, in that
+ * order (extension 4.4). Both are monotonic and pure: the tremor stays inside
+ * the particle's own slot, so the order of births never changes.
+ */
+function shiftBirth(attachment, curve, index, continuous) {
+    let t = continuous;
+    const e = attachment.explosiveness;
+    if (e > 0 && attachment.duration > 0) {
+        const start = Math.floor(continuous / attachment.duration) * attachment.duration;
+        t = start + (1 - e) * (continuous - start);
+    }
+    const r = attachment.randomness;
+    if (r > 0) {
+        const local = curve.rateAt(continuous);
+        // No slot, no tremor: with a local rate of 0 there is nothing to shake.
+        if (local > 0)
+            t += r * particleRandom(attachment.seed, 0, index, PARTICLE_CHANNEL.RANDOMNESS) / local;
+    }
+    return t;
+}
+/**
+ * Every birth that could still be alive at `window.time`, in no particular
+ * order (extension 4 and 5, with the loop of extension 6).
+ *
+ * The window comes from `lifetime.max`, a field that is deliberately NOT
+ * animable: with keys the window would mean walking a curve, and a Bézier
+ * bulges (extension 5). `E` only picks candidates; the filter on `t_i` decides.
+ */
+export function collectBirths(attachment, curve, window, out = [], report = null) {
+    const now = window.time;
+    const lifeMax = attachment.lifetime[1];
+    const oldest = now - lifeMax;
+    const looping = attachment.looping && window.duration > 0;
+    const duration = window.duration;
+    let budget = CANDIDATE_CAP;
+    const add = (flow, index, birth) => {
+        if (birth > now || birth <= oldest)
+            return;
+        // `Math.ceil` of a value a hair below zero gives `-0`, and `-0` is a
+        // different index from `0` to anything that compares field by field.
+        out.push({ flow, index: index === 0 ? 0 : index, birth: birth === 0 ? 0 : birth });
+    };
+    // --- the continuous flow --------------------------------------------------
+    if (looping) {
+        // Extension 6: one lap carries the indices `0 <= i < E(D)`, and the lap
+        // behind is the same list with `t_i` moved by `−D`. The chance does NOT
+        // include the lap number — if it did, `t` alone would not say which lap we
+        // are on, and the function would stop being pure.
+        const perLap = Math.ceil(curve.countAt(duration) - COUNT_EPSILON);
+        if (perLap > 0) {
+            const laps = Math.ceil((lifeMax + duration) / duration) + 1;
+            for (let lap = 0; lap < laps && budget > 0; lap++) {
+                const shift = lap * duration;
+                for (let i = 0; i < perLap && budget > 0; i++) {
+                    budget--;
+                    const base = curve.timeOf(i);
+                    if (base === null)
+                        continue;
+                    add(0, i, shiftBirth(attachment, curve, i, base) - shift);
+                }
+            }
+        }
+    }
+    else {
+        // Extension 6: without the loop the births are the ones in `[−prewarm, t]`,
+        // and `prewarm: 0` starts the emitter empty.
+        const first = Math.ceil(curve.countAt(curve.origin - attachment.prewarm) - COUNT_EPSILON);
+        const lo = Math.max(first, Math.ceil(curve.countAt(oldest)) - 1);
+        const hi = Math.floor(curve.countAt(now)) + 1;
+        for (let i = lo; i <= hi && budget > 0; i++) {
+            budget--;
+            const base = curve.timeOf(i);
+            if (base === null)
+                continue;
+            add(0, i, shiftBirth(attachment, curve, i, base));
+        }
+    }
+    // --- the bursts (extension 4.3) ------------------------------------------
+    // `probability` is drawn PER PARTICLE, on channel 11, in the burst's own
+    // flow. Half a probability does not mean exactly half the particles: case
+    // P-007 gets 6 of 10, and a reader that rounds to 5 fails it.
+    const lapsBack = looping ? Math.ceil((lifeMax + duration) / duration) + 1 : 1;
+    for (let b = 0; b < attachment.bursts.length; b++) {
+        const burst = attachment.bursts[b];
+        const flow = 1 + b;
+        // Extension 6: with the loop on, the lap carries ONLY the cycles whose
+        // instant falls in `[0, D)` — zero CLOSED, `D` OPEN. A cycle landing
+        // exactly on `D` is the first cycle of the NEXT lap, not the last of this
+        // one, and counting it in both would duplicate it, which is the very
+        // defect this cut exists to kill. Without the loop every cycle counts: it
+        // is the loop that cuts, and with no loop there is no seam to hide.
+        //
+        // The instant is `startDelay + time + c·interval`, exactly as extension 4.3
+        // writes it, and the cut of extension 6 uses the SAME expression.
+        // `startDelay` belongs to the whole emitter, not to one flow: 9.1 defines
+        // it as "births only from here on", and 6 fixes that a burst IS a birth.
+        // Reading "birth" one way in 6 and another in 9.1 would be the same word
+        // meaning two things in one document.
+        const origin = curve.origin;
+        const lastCycle = looping
+            ? cyclesInLap(burst, origin, duration, report, b)
+            : burst.cycles - 1;
+        for (let lap = 0; lap < lapsBack && budget > 0; lap++) {
+            const shift = looping ? lap * duration : 0;
+            const base = origin + burst.time;
+            const cLo = Math.max(0, Math.ceil((oldest - base + shift) / burst.interval - COUNT_EPSILON));
+            const cHi = Math.min(lastCycle, Math.floor((now - base + shift) / burst.interval + COUNT_EPSILON));
+            for (let c = cLo; c <= cHi && budget > 0; c++) {
+                const birth = base + c * burst.interval - shift;
+                for (let j = 0; j < burst.count && budget > 0; j++) {
+                    budget--;
+                    const index = c * burst.count + j;
+                    if (particleRandom(attachment.seed, flow, index, PARTICLE_CHANNEL.PROBABILITY) >= burst.probability)
+                        continue;
+                    add(flow, index, birth);
+                }
+            }
+            if (!looping)
+                break;
+        }
+    }
+    return out;
+}
+/**
+ * Last cycle index of a burst that still belongs to the lap (extension 6).
+ *
+ * `0 <= startDelay + time + c·interval < D`, with `D` OPEN. Returns `-1` when
+ * not even the first cycle fits. Whatever is left over is counted into `report`, because a
+ * reader that cuts in silence drops a cycle the author wrote and gives no sign
+ * — and cutting without saying so is wrong for the same reason as not cutting
+ * at all.
+ */
+function cyclesInLap(burst, origin, duration, report, index) {
+    const first = origin + burst.time;
+    if (first < 0 || first >= duration) {
+        if (report !== null) {
+            report.cyclesDropped += burst.cycles;
+            report.burstsCut.push(index);
+        }
+        return -1;
+    }
+    // The largest `c` with `startDelay + time + c·interval < D`.
+    const limit = Math.ceil((duration - first) / burst.interval - COUNT_EPSILON) - 1;
+    const last = Math.min(burst.cycles - 1, limit);
+    if (report !== null && last < burst.cycles - 1) {
+        report.cyclesDropped += burst.cycles - 1 - last;
+        report.burstsCut.push(index);
+    }
+    return last;
+}

@@ -1,0 +1,17 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "ordem-constraints" },
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root" },
+    { "name": "alvoA", "parent": "root", "x": 100, "y": 0 },
+    { "name": "alvoB", "parent": "root", "x": 0, "y": 100 }
+  ],
+  "slots": [],
+  "constraints": [
+    { "type": "transform", "name": "t1", "bones": ["osso"], "target": "alvoA",
+      "mixRotation": 0, "mixX": 1, "mixY": 1, "mixScaleX": 0, "mixScaleY": 0, "mixShearY": 0 },
+    { "type": "transform", "name": "t2", "bones": ["osso"], "target": "alvoB",
+      "mixRotation": 0, "mixX": 0.5, "mixY": 0.5, "mixScaleX": 0, "mixScaleY": 0, "mixShearY": 0 }
+  ]
+}

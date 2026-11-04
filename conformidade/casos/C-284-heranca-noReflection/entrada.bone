@@ -1,0 +1,17 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "heranca-noReflection" },
+  "bones": [
+    { "name": "root" },
+    { "name": "pai", "parent": "root", "x": 10, "y": 20, "rotation": 90, "scaleX": 2, "scaleY": -1 },
+
+    { "name": "noReflection", "parent": "pai", "x": 10, "y": 0, "rotation": 30,
+      "inheritRotation": true, "inheritScale": true, "inheritReflection": false },
+
+    { "name": "pai2", "parent": "root", "x": 50, "y": 0, "scaleY": -1, "shearY": 30 },
+
+    { "name": "noReflection_cisalhado", "parent": "pai2", "x": 10, "y": 0, "rotation": 30,
+      "inheritRotation": true, "inheritScale": true, "inheritReflection": false }
+  ],
+  "slots": []
+}

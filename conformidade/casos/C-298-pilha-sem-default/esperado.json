@@ -1,0 +1,48 @@
+{
+  "probe": {
+    "skins": [
+      "armadura"
+    ],
+    "times": [
+      0
+    ],
+    "measure": [
+      "slots",
+      "drawOrder",
+      "vertices"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "body": null,
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "visible": true
+        },
+        "capa": {
+          "attachment": null,
+          "visible": true
+        }
+      },
+      "drawOrder": [
+        "corpo",
+        "capa"
+      ],
+      "vertices": {
+        "corpo/corpo": [
+          -10.0,
+          -15.0,
+          10.0,
+          -15.0,
+          10.0,
+          15.0,
+          -10.0,
+          15.0
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "bonez": {
+    "version": "1.0"
+  },
+  "main": "heroi.bone",
+  "skeletons": [
+    "heroi.bone",
+    "espada.bone"
+  ],
+  "atlases": [
+    "heroi.atlas.json"
+  ],
+  "images": [
+    "heroi.png"
+  ]
+}

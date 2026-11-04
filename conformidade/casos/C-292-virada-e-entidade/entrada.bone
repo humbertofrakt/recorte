@@ -1,0 +1,88 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "homem"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "tronco",
+      "parent": "root",
+      "y": 100,
+      "length": 60
+    },
+    {
+      "name": "mao",
+      "parent": "tronco",
+      "x": 30,
+      "length": 10
+    }
+  ],
+  "slots": [
+    {
+      "name": "corpo",
+      "bone": "tronco",
+      "attachment": "corpo"
+    },
+    {
+      "name": "espada",
+      "bone": "mao",
+      "attachment": "espada"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": {
+          "corpo": {
+            "type": "region",
+            "width": 20,
+            "height": 40,
+            "path": "homem"
+          }
+        },
+        "espada": {
+          "espada": {
+            "type": "skeleton",
+            "uri": "espada.bone",
+            "x": 5,
+            "animation": "girar",
+            "loop": true
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "transformar",
+      "duration": 1.0,
+      "loop": false,
+      "timelines": [
+        {
+          "type": "body",
+          "keys": [
+            {
+              "time": 0.4,
+              "value": "lobisomem.bone"
+            },
+            {
+              "time": 0.8,
+              "value": "lobo.bone"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "probe": { "times": [0], "measure": ["bones"] },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "bones": {
+        "osso": {
+          "a": 0.633927, "b": -1.532089, "c": 1.359462, "d": 1.285575,
+          "worldX": 5, "worldY": 7,
+          "ax": 5, "ay": 7, "arotation": 20,
+          "ascaleX": 1.5, "ascaleY": 2, "ashearX": 45, "ashearY": 30
+        }
+      }
+    }
+  ]
+}

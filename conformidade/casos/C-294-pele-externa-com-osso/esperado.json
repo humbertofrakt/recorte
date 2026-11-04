@@ -1,0 +1,86 @@
+{
+  "probe": {
+    "skins": [
+      "default",
+      "lobisomem"
+    ],
+    "times": [
+      0
+    ],
+    "measure": [
+      "bones",
+      "slots",
+      "drawOrder",
+      "vertices"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "body": null,
+      "bones": {
+        "root": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 0.0,
+          "worldY": 0.0
+        },
+        "tronco": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 0.0,
+          "worldY": 100.0
+        },
+        "rabo": {
+          "a": 0.866025,
+          "b": -0.5,
+          "c": 0.5,
+          "d": 0.866025,
+          "worldX": -10.0,
+          "worldY": 100.0
+        }
+      },
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "visible": true
+        },
+        "rabo": {
+          "attachment": "rabo",
+          "visible": true
+        }
+      },
+      "drawOrder": [
+        "corpo",
+        "rabo"
+      ],
+      "vertices": {
+        "corpo/corpo": [
+          -10.0,
+          80.0,
+          10.0,
+          80.0,
+          10.0,
+          120.0,
+          -10.0,
+          120.0
+        ],
+        "rabo/rabo": [
+          -8.5,
+          97.401924,
+          8.820508,
+          107.401924,
+          5.820508,
+          112.598076,
+          -11.5,
+          102.598076
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[remap]
+
+importer="recorte.arquivo"
+type="Resource"
+uid="uid://b8x22vcjubhl7"
+path="res://.godot/imported/mecha.bone-56df1d8303a2a50233984d96cdf149ad.res"
+
+[deps]
+
+source_file="res://exemplo/mecha.bone"
+dest_files=["res://.godot/imported/mecha.bone-56df1d8303a2a50233984d96cdf149ad.res"]
+
+[params]
+

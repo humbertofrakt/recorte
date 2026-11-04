@@ -1,0 +1,35 @@
+{
+  "probe": {
+    "animation": "ciclo",
+    "times": [
+      0.75
+    ],
+    "measure": [
+      "bones"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.75,
+      "bones": {
+        "torso": {
+          "a": 0.0,
+          "b": -1.0,
+          "c": 1.0,
+          "d": 0.0,
+          "worldX": 0.0,
+          "worldY": 100.0
+        },
+        "hand": {
+          "a": 0.0,
+          "b": -1.0,
+          "c": 1.0,
+          "d": 0.0,
+          "worldX": 0.0,
+          "worldY": 150.0
+        }
+      }
+    }
+  ]
+}

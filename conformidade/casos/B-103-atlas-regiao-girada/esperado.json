@@ -1,0 +1,15 @@
+{
+  "probe": { "times": [0], "measure": ["slots", "vertices", "uvs"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "slots": { "corpo": { "attachment": "corpo", "visible": true } },
+      "vertices": { "corpo/corpo": [-32, -38, 8, -38, 8, 22, -32, 22] },
+      "uvs": { "corpo/corpo": [
+        0.015625, 0.023438,
+        0.015625, 0.179688,
+        0.25,     0.179688,
+        0.25,     0.023438
+      ] } }
+  ]
+}

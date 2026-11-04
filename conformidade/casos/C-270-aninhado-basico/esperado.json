@@ -1,0 +1,102 @@
+{
+  "probe": {
+    "times": [
+      0.6
+    ],
+    "measure": [
+      "bones",
+      "vertices",
+      "points",
+      "events"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.6,
+      "bones": {
+        "root": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 0.0,
+          "worldY": 0.0
+        },
+        "hand": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 100.0,
+          "worldY": 50.0
+        },
+        "weapon/root": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 105.0,
+          "worldY": 50.0
+        },
+        "weapon/lamina": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 125.0,
+          "worldY": 50.0
+        },
+        "weapon/gema": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 135.0,
+          "worldY": 50.0
+        }
+      },
+      "vertices": {
+        "weapon/lamina/lamina": [
+          130.0,
+          45.0,
+          150.0,
+          45.0,
+          150.0,
+          55.0,
+          130.0,
+          55.0
+        ]
+      },
+      "points": {
+        "hand_point/hand_point": {
+          "x": 110.0,
+          "y": 50.0,
+          "rotation": 90.0
+        },
+        "weapon/punho/punho": {
+          "x": 105.0,
+          "y": 50.0,
+          "rotation": 0.0
+        },
+        "weapon/gema/gema": {
+          "x": 135.0,
+          "y": 50.0,
+          "rotation": 0.0
+        }
+      },
+      "events": [
+        {
+          "time": 0.5,
+          "event": "weapon/disparo",
+          "int": 0,
+          "float": 0,
+          "string": "",
+          "volume": 1,
+          "balance": 0
+        }
+      ],
+      "body": null
+    }
+  ]
+}

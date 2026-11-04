@@ -1,0 +1,28 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "curvas" },
+  "bones": [
+    { "name": "root" },
+    { "name": "linear", "parent": "root" },
+    { "name": "stepped", "parent": "root" },
+    { "name": "bezier", "parent": "root" },
+    { "name": "bezier-fora", "parent": "root" }
+  ],
+  "slots": [],
+  "animations": [
+    {
+      "name": "curvas",
+      "duration": 3,
+      "timelines": [
+        { "type": "bone", "target": "linear", "property": "x",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 3, "value": 100 } ] },
+        { "type": "bone", "target": "stepped", "property": "x",
+          "keys": [ { "time": 0, "value": 0, "curve": "stepped" }, { "time": 3, "value": 100 } ] },
+        { "type": "bone", "target": "bezier", "property": "x",
+          "keys": [ { "time": 0, "value": 0, "curve": [1, 0, 2, 0] }, { "time": 3, "value": 100 } ] },
+        { "type": "bone", "target": "bezier-fora", "property": "x",
+          "keys": [ { "time": 0, "value": 0, "curve": [-2, 0, 2, 100] }, { "time": 3, "value": 100 } ] }
+      ]
+    }
+  ]
+}

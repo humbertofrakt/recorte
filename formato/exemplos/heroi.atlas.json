@@ -1,0 +1,242 @@
+{
+  "atlas": {
+    "version": "1.0",
+    "generator": "Recorte 0.1.0"
+  },
+  "scale": 1,
+  "pages": [
+    {
+      "name": "heroi",
+      "image": "heroi.png",
+      "width": 256,
+      "height": 256,
+      "format": "rgba8",
+      "minFilter": "linear",
+      "magFilter": "linear",
+      "wrapU": "clamp",
+      "wrapV": "clamp",
+      "premultiplied": false
+    }
+  ],
+  "regions": [
+    {
+      "name": "body",
+      "page": 0,
+      "x": 2,
+      "y": 2,
+      "width": 76,
+      "height": 84,
+      "pivotX": 38,
+      "pivotY": 7
+    },
+    {
+      "name": "armadura/body",
+      "page": 0,
+      "x": 80,
+      "y": 2,
+      "width": 72,
+      "height": 78,
+      "offsetX": 2,
+      "offsetY": 3,
+      "originalWidth": 76,
+      "originalHeight": 84,
+      "pivotX": 38,
+      "pivotY": 7
+    },
+    {
+      "name": "face",
+      "page": 0,
+      "x": 154,
+      "y": 2,
+      "width": 64,
+      "height": 66,
+      "aliases": [
+        "rosto"
+      ]
+    },
+    {
+      "name": "hair",
+      "page": 0,
+      "x": 92,
+      "y": 88,
+      "width": 56,
+      "height": 30,
+      "pivotX": 2,
+      "pivotY": 15
+    },
+    {
+      "name": "arm",
+      "page": 0,
+      "x": 220,
+      "y": 2,
+      "width": 52,
+      "height": 26,
+      "rotation": 90,
+      "pivotX": 4,
+      "pivotY": 13
+    },
+    {
+      "name": "forearm",
+      "page": 0,
+      "x": 74,
+      "y": 158,
+      "width": 44,
+      "height": 22,
+      "pivotX": 4,
+      "pivotY": 11
+    },
+    {
+      "name": "hand_01",
+      "page": 0,
+      "x": 2,
+      "y": 132,
+      "width": 24,
+      "height": 24,
+      "pivotX": -23,
+      "pivotY": 12
+    },
+    {
+      "name": "hand_02",
+      "page": 0,
+      "x": 28,
+      "y": 132,
+      "width": 24,
+      "height": 24,
+      "pivotX": -23,
+      "pivotY": 12
+    },
+    {
+      "name": "hand_03",
+      "page": 0,
+      "x": 54,
+      "y": 132,
+      "width": 24,
+      "height": 24,
+      "pivotX": -23,
+      "pivotY": 12
+    },
+    {
+      "name": "arm_back",
+      "page": 0,
+      "x": 80,
+      "y": 132,
+      "width": 48,
+      "height": 24,
+      "pivotX": 4,
+      "pivotY": 12
+    },
+    {
+      "name": "forearm_back",
+      "page": 0,
+      "x": 144,
+      "y": 158,
+      "width": 40,
+      "height": 20,
+      "pivotX": 3,
+      "pivotY": 10
+    },
+    {
+      "name": "hand_back",
+      "page": 0,
+      "x": 120,
+      "y": 158,
+      "width": 22,
+      "height": 22,
+      "pivotX": -22,
+      "pivotY": 11
+    },
+    {
+      "name": "thigh",
+      "page": 0,
+      "x": 150,
+      "y": 88,
+      "width": 50,
+      "height": 28,
+      "pivotX": 4,
+      "pivotY": 14
+    },
+    {
+      "name": "shin",
+      "page": 0,
+      "x": 130,
+      "y": 132,
+      "width": 46,
+      "height": 24,
+      "pivotX": 3,
+      "pivotY": 12
+    },
+    {
+      "name": "foot",
+      "page": 0,
+      "x": 186,
+      "y": 158,
+      "width": 34,
+      "height": 20,
+      "pivotX": 5,
+      "pivotY": 15
+    },
+    {
+      "name": "thigh_back",
+      "page": 0,
+      "x": 202,
+      "y": 88,
+      "width": 50,
+      "height": 28,
+      "pivotX": 4,
+      "pivotY": 14
+    },
+    {
+      "name": "shin_back",
+      "page": 0,
+      "x": 178,
+      "y": 132,
+      "width": 46,
+      "height": 24,
+      "pivotX": 3,
+      "pivotY": 12
+    },
+    {
+      "name": "foot_back",
+      "page": 0,
+      "x": 2,
+      "y": 184,
+      "width": 34,
+      "height": 20,
+      "pivotX": 5,
+      "pivotY": 15
+    },
+    {
+      "name": "blade",
+      "page": 0,
+      "x": 2,
+      "y": 158,
+      "width": 70,
+      "height": 24,
+      "pivotX": -27,
+      "pivotY": 12
+    },
+    {
+      "name": "cape_upper",
+      "page": 0,
+      "x": 50,
+      "y": 88,
+      "width": 40,
+      "height": 32,
+      "pivotX": 1,
+      "pivotY": 16
+    },
+    {
+      "name": "cape_lower",
+      "page": 0,
+      "x": 2,
+      "y": 88,
+      "width": 46,
+      "height": 42,
+      "pivotX": 2,
+      "pivotY": 21
+    }
+  ],
+  "extras": {
+    "packer": "ferramentas/gerar-arte-exemplo.mjs"
+  }
+}

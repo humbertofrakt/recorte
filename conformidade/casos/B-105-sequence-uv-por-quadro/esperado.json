@@ -1,0 +1,86 @@
+{
+  "probe": {
+    "animation": "pisca",
+    "times": [0, 0.1, 0.2, 0.3],
+    "measure": [
+      "slots",
+      "vertices",
+      "uvs"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "slots": {
+        "olho": {
+          "attachment": "olho",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": 0
+        }
+      },
+      "vertices": {
+        "olho/olho": [-16, -16, 16, -16, 16, 16, -16, 16]
+      },
+      "uvs": {
+        "olho/olho": [0, 0.25, 0.25, 0.25, 0.25, 0, 0, 0]
+      }
+    },
+    {
+      "time": 0.1,
+      "slots": {
+        "olho": {
+          "attachment": "olho",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": 1
+        }
+      },
+      "vertices": {
+        "olho/olho": [-16, -16, 16, -16, 16, 16, -16, 16]
+      },
+      "uvs": {
+        "olho/olho": [0.25, 0.25, 0.5, 0.25, 0.5, 0, 0.25, 0]
+      }
+    },
+    {
+      "time": 0.2,
+      "slots": {
+        "olho": {
+          "attachment": "olho",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": 2
+        }
+      },
+      "vertices": {
+        "olho/olho": [-16, -16, 16, -16, 16, 16, -16, 16]
+      },
+      "uvs": {
+        "olho/olho": [0, 0.5, 0.25, 0.5, 0.25, 0.25, 0, 0.25]
+      }
+    },
+    {
+      "time": 0.3,
+      "slots": {
+        "olho": {
+          "attachment": "olho",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": 3
+        }
+      },
+      "vertices": {
+        "olho/olho": [-16, -16, 16, -16, 16, 16, -16, 16]
+      },
+      "uvs": {
+        "olho/olho": [0.25, 0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25]
+      }
+    }
+  ]
+}

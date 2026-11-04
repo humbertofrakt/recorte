@@ -1,0 +1,9 @@
+{
+  "probe": { "animation": "misturar", "times": [0, 0.5, 1], "measure": ["vertices"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,   "vertices": { "malha/malha": [0, 0, 100, 0, 0, 100] } },
+    { "time": 0.5, "vertices": { "malha/malha": [5, 2.5, 100, 0, 0, 100] } },
+    { "time": 1,   "vertices": { "malha/malha": [10, 5, 100, 0, 0, 100] } }
+  ]
+}

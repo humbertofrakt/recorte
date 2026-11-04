@@ -1,0 +1,20 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "borda" },
+  "bones": [
+    { "name": "root" },
+    { "name": "com_chave", "parent": "root", "x": 7 },
+    { "name": "sem_chave", "parent": "root", "x": 42 }
+  ],
+  "slots": [],
+  "animations": [
+    {
+      "name": "andar",
+      "duration": 1,
+      "timelines": [
+        { "type": "bone", "target": "com_chave", "property": "x",
+          "keys": [ { "time": 0.5, "value": 100 }, { "time": 1, "value": 200 } ] }
+      ]
+    }
+  ]
+}

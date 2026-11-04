@@ -1,0 +1,66 @@
+{
+  "bone": {
+    "version": "1.1",
+    "minVersion": "1.1",
+    "generator": "suite de conformidade bone, rodada 34 (conta a mao)"
+  },
+  "skeleton": {
+    "name": "heroi"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "perna",
+      "bone": "root",
+      "attachment": "perna"
+    },
+    {
+      "name": "aura",
+      "bone": "root",
+      "attachment": "poder"
+    },
+    {
+      "name": "cabeca",
+      "bone": "root",
+      "attachment": "cabeca"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "perna": {
+          "perna": {
+            "type": "region",
+            "path": "perna",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "cabeca": {
+          "cabeca": {
+            "type": "region",
+            "path": "cabeca",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "aura": {
+          "poder": {
+            "type": "skeleton",
+            "uri": "poder.bone",
+            "around": "meio"
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

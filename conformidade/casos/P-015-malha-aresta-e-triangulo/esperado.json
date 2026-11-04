@@ -1,0 +1,255 @@
+{
+  "probe": {
+    "times": [
+      0.3
+    ],
+    "measure": [
+      "particles"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.3,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.3,
+            "life": 2,
+            "age": 0,
+            "x": 1.532934,
+            "y": 10,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.25,
+            "life": 2,
+            "age": 0.05,
+            "x": 0,
+            "y": 2.359307,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.2,
+            "life": 2,
+            "age": 0.1,
+            "x": 2.512111,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.15,
+            "life": 2,
+            "age": 0.15,
+            "x": 7.216458,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.1,
+            "life": 2,
+            "age": 0.2,
+            "x": 6.562261,
+            "y": 10,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.05,
+            "life": 2,
+            "age": 0.25,
+            "x": 3.051565,
+            "y": 10,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 0.3,
+            "x": 0,
+            "y": 3.780076,
+            "angle": 0,
+            "scale": 1
+          }
+        ],
+        "fx2/jato2": [
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.3,
+            "life": 2,
+            "age": 0,
+            "x": 1.532934,
+            "y": 10,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.25,
+            "life": 2,
+            "age": 0.05,
+            "x": 0,
+            "y": 2.359307,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.2,
+            "life": 2,
+            "age": 0.1,
+            "x": 2.512111,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.15,
+            "life": 2,
+            "age": 0.15,
+            "x": 7.216458,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.1,
+            "life": 2,
+            "age": 0.2,
+            "x": 6.562261,
+            "y": 10,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.05,
+            "life": 2,
+            "age": 0.25,
+            "x": 3.051565,
+            "y": 10,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 0.3,
+            "x": 0,
+            "y": 3.780076,
+            "angle": 0,
+            "scale": 1
+          }
+        ],
+        "fx3/jato3": [
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.3,
+            "life": 2,
+            "age": 0,
+            "x": 1.532934,
+            "y": 4.242421,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.25,
+            "life": 2,
+            "age": 0.05,
+            "x": 2.359307,
+            "y": 5.163091,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.2,
+            "life": 2,
+            "age": 0.1,
+            "x": 8.471318,
+            "y": 0.98343,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.15,
+            "life": 2,
+            "age": 0.15,
+            "x": 3.021674,
+            "y": 0.238132,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.1,
+            "life": 2,
+            "age": 0.2,
+            "x": 3.437739,
+            "y": 5.648961,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.05,
+            "life": 2,
+            "age": 0.25,
+            "x": 3.051565,
+            "y": 9.355802,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 0.3,
+            "x": 3.780076,
+            "y": 7.944799,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    }
+  ]
+}

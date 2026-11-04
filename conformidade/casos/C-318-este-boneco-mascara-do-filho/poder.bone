@@ -1,0 +1,101 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 11"
+  },
+  "skeleton": {
+    "name": "poder"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "mascara",
+      "bone": "root",
+      "attachment": "mascara"
+    },
+    {
+      "name": "anel",
+      "bone": "root",
+      "attachment": "anel"
+    },
+    {
+      "name": "meio",
+      "bone": "root",
+      "attachment": "meio"
+    },
+    {
+      "name": "brilho",
+      "bone": "root",
+      "attachment": "brilho"
+    },
+    {
+      "name": "bola_b",
+      "bone": "root",
+      "attachment": "bola_b"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "mascara": {
+          "mascara": {
+            "type": "clipping",
+            "end": "brilho",
+            "vertices": [
+              -50,
+              -50,
+              50,
+              -50,
+              50,
+              50,
+              -50,
+              50
+            ]
+          }
+        },
+        "anel": {
+          "anel": {
+            "type": "region",
+            "path": "anel",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "meio": {
+          "meio": {
+            "type": "region",
+            "path": "meio",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "brilho": {
+          "brilho": {
+            "type": "region",
+            "path": "brilho",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "bola_b": {
+          "bola_b": {
+            "type": "region",
+            "path": "bola_b",
+            "width": 10,
+            "height": 10
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

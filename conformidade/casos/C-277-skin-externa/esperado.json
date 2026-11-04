@@ -1,0 +1,39 @@
+{
+  "probe": {
+    "skins": [
+      "inverno"
+    ],
+    "times": [
+      0
+    ],
+    "measure": [
+      "slots",
+      "vertices"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "visible": true
+        }
+      },
+      "vertices": {
+        "corpo/corpo": [
+          -10,
+          -15,
+          10,
+          -15,
+          10,
+          15,
+          -10,
+          15
+        ]
+      },
+      "body": null
+    }
+  ]
+}

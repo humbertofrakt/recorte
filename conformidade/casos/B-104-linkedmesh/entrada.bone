@@ -1,0 +1,68 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "ligada" },
+  "bones": [ { "name": "root" } ],
+  "slots": [
+    { "name": "herda", "bone": "root", "attachment": "copia_herda" },
+    { "name": "propria", "bone": "root", "attachment": "copia_propria" }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "herda": {
+          "forma_herda": {
+            "type": "mesh",
+            "path": "forma",
+            "width": 100, "height": 100,
+            "vertices": [0, 0, 100, 0, 0, 100],
+            "uvs": [0, 0, 1, 0, 0, 1],
+            "triangles": [0, 1, 2],
+            "hull": 3
+          },
+          "copia_herda": {
+            "type": "linkedmesh",
+            "parent": "forma_herda",
+            "skin": "default",
+            "path": "outra_imagem"
+          }
+        },
+        "propria": {
+          "forma_propria": {
+            "type": "mesh",
+            "path": "forma",
+            "width": 100, "height": 100,
+            "vertices": [0, 0, 100, 0, 0, 100],
+            "uvs": [0, 0, 1, 0, 0, 1],
+            "triangles": [0, 1, 2],
+            "hull": 3
+          },
+          "copia_propria": {
+            "type": "linkedmesh",
+            "parent": "forma_propria",
+            "skin": "default",
+            "inheritDeform": false,
+            "path": "outra_imagem"
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "puxar",
+      "duration": 1,
+      "timelines": [
+        { "type": "deform", "target": "herda", "attachment": "forma_herda",
+          "keys": [
+            { "time": 0, "value": [0, 0, 0, 0, 0, 0] },
+            { "time": 1, "value": [20, 0, 0, 0, 0, 0] }
+          ] },
+        { "type": "deform", "target": "propria", "attachment": "forma_propria",
+          "keys": [
+            { "time": 0, "value": [0, 0, 0, 0, 0, 0] },
+            { "time": 1, "value": [20, 0, 0, 0, 0, 0] }
+          ] }
+      ] }
+  ]
+}

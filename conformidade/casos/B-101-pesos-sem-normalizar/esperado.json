@@ -1,0 +1,7 @@
+{
+  "probe": { "times": [0], "measure": ["vertices"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0, "vertices": { "malha/malha": [27.5, 0, 50, 20, 0, 0] } }
+  ]
+}

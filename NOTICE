@@ -1,0 +1,61 @@
+Recorte — animação 2D por ossos, e o formato aberto bone
+Copyright (c) 2026 Humberto Frakt
+
+Este produto tem duas licenças, uma para o código e outra para o formato.
+
+
+CÓDIGO — Apache License 2.0
+---------------------------
+
+  runtime/        biblioteca de referência
+  editor/         o programa
+  ferramentas/    validador, importadores, empacotador, conversor,
+                  exportador, render, executor de conformidade
+  *.mjs, *.ts, *.js da raiz e das pastas acima
+
+Licenciado sob a Apache License, Version 2.0 — arquivo LICENSE na raiz.
+SPDX-License-Identifier: Apache-2.0
+
+A cláusula 3 da Apache 2.0 é uma outorga expressa de patente. É ela que faz um
+estúdio conseguir aprovar o uso sem escrever um contrato próprio, e é por isso
+que o código não está sob MIT.
+
+
+FORMATO E DOCUMENTAÇÃO — CC BY 4.0
+----------------------------------
+
+  formato/ESPECIFICACAO 2026-09-06.md
+  formato/bone.schema.json
+  formato/exemplos/
+  conformidade/
+  documentos/manual/
+
+Licenciado sob Creative Commons Attribution 4.0 International —
+arquivo formato/LICENSE.
+SPDX-License-Identifier: CC-BY-4.0
+
+
+ARTE E ARQUIVOS DE EXEMPLO
+--------------------------
+
+Os PNG e os `.bone` de `formato/exemplos/` e de `conformidade/casos/` foram
+feitos para este projeto e seguem a licença da parte em que estão: os de
+`formato/exemplos/` e `conformidade/` são CC BY 4.0.
+
+
+TRABALHO DE TERCEIROS
+---------------------
+
+O runtime não embute código de terceiros. As fórmulas de cinemática inversa,
+regra de transformação, caminho e física seguem o comportamento observável do
+Spine 4.2 (Esoteric Software), descrito de forma independente na especificação
+a partir do comportamento e da documentação pública. Nenhum código do Spine
+foi copiado.
+
+Os importadores leem os formatos de arquivo do Spine, do DragonBones e do
+Spriter. Ler um formato não é usar o programa que o criou, e nenhum desses
+projetos endossa este.
+
+Dependências de desenvolvimento (ajv, ajv-formats, typescript, vite, vitest)
+não são redistribuídas com este projeto; cada uma tem a sua própria licença,
+em `node_modules/<pacote>/LICENSE`.

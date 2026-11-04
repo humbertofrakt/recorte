@@ -1,0 +1,81 @@
+{
+  "bone": {
+    "version": "1.1",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.1.0"
+  },
+  "extensionsUsed": [
+    "BONE_particles"
+  ],
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "emissor",
+      "parent": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "fx",
+      "bone": "emissor",
+      "attachment": "jato"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "fx": {
+          "jato": {
+            "type": "BONE_particle",
+            "path": "fx/faisca",
+            "seed": 42,
+            "rate": 0,
+            "lifetime": [
+              2,
+              2
+            ],
+            "speed": [
+              100,
+              100
+            ],
+            "direction": 90,
+            "spread": 0,
+            "shape": "point",
+            "gravity": [
+              0,
+              0
+            ],
+            "drag": 0,
+            "angle": [
+              0,
+              0
+            ],
+            "angularVelocity": [
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1
+            ],
+            "space": "local",
+            "looping": false,
+            "maxParticles": 1000,
+            "bursts": [
+              {
+                "time": 0.1,
+                "count": 10,
+                "cycles": 1,
+                "interval": 1,
+                "probability": 0.5
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[remap]
+
+importer="recorte.arquivo"
+type="Resource"
+uid="uid://1toqt08a0dhr"
+path="res://.godot/imported/particulas.bone-a88c7f34ab23ccba26ee083ada340414.res"
+
+[deps]
+
+source_file="res://testes/particulas.bone"
+dest_files=["res://.godot/imported/particulas.bone-a88c7f34ab23ccba26ee083ada340414.res"]
+
+[params]
+

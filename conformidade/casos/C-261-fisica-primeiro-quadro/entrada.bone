@@ -1,0 +1,22 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "conformidade C-261" },
+  "skeleton": { "referenceScale": 100 },
+  "bones": [
+    { "name": "root" },
+    { "name": "haste", "parent": "root", "length": 100, "rotation": 60 }
+  ],
+  "slots": [],
+  "skins": [{ "name": "default", "attachments": {} }],
+  "constraints": [
+    { "type": "physics", "name": "balanco", "bone": "haste",
+      "rotation": 1, "inertia": 0.5, "strength": 100, "damping": 1,
+      "mass": 1, "gravity": 10, "wind": 0, "limit": 5000, "fps": 60 }
+  ],
+  "animations": [
+    { "name": "parado", "duration": 0.2,
+      "timelines": [
+        { "type": "bone", "target": "haste", "property": "rotation",
+          "keys": [{ "time": 0, "value": 20 }, { "time": 0.2, "value": 20 }] }
+      ] }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "probe": {
+    "animation": "soprar",
+    "times": [
+      1
+    ],
+    "measure": [
+      "particles"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 1,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.45,
+            "life": 2,
+            "age": 0.55,
+            "x": 0,
+            "y": 55,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.4,
+            "life": 2,
+            "age": 0.6,
+            "x": 0,
+            "y": 60,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.35,
+            "life": 2,
+            "age": 0.65,
+            "x": 0,
+            "y": 65,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0.3,
+            "life": 2,
+            "age": 0.7,
+            "x": 0,
+            "y": 70,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "probe": {
+    "animation": "guardar",
+    "times": [
+      0.49,
+      0.51
+    ],
+    "measure": [
+      "bones",
+      "slots",
+      "vertices"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.49,
+      "body": null,
+      "bones": {
+        "root": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 0.0,
+          "worldY": 0.0
+        },
+        "mao": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 50.0,
+          "worldY": 100.0
+        },
+        "costas": {
+          "a": 0.0,
+          "b": -1.0,
+          "c": 1.0,
+          "d": 0.0,
+          "worldX": -20.0,
+          "worldY": 120.0
+        }
+      },
+      "slots": {
+        "espada": {
+          "attachment": "espada",
+          "visible": true,
+          "bone": "mao"
+        }
+      },
+      "vertices": {
+        "espada/espada": [
+          50.0,
+          95.0,
+          90.0,
+          95.0,
+          90.0,
+          105.0,
+          50.0,
+          105.0
+        ]
+      }
+    },
+    {
+      "time": 0.51,
+      "body": null,
+      "bones": {
+        "root": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 0.0,
+          "worldY": 0.0
+        },
+        "mao": {
+          "a": 1.0,
+          "b": 0.0,
+          "c": 0.0,
+          "d": 1.0,
+          "worldX": 50.0,
+          "worldY": 100.0
+        },
+        "costas": {
+          "a": 0.0,
+          "b": -1.0,
+          "c": 1.0,
+          "d": 0.0,
+          "worldX": -20.0,
+          "worldY": 120.0
+        }
+      },
+      "slots": {
+        "espada": {
+          "attachment": "espada",
+          "visible": true,
+          "bone": "costas"
+        }
+      },
+      "vertices": {
+        "espada/espada": [
+          -20.0,
+          125.0,
+          20.0,
+          125.0,
+          20.0,
+          135.0,
+          -20.0,
+          135.0
+        ]
+      }
+    }
+  ]
+}

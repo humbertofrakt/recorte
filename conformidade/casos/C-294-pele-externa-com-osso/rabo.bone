@@ -1,0 +1,55 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "rabo"
+  },
+  "rig": {
+    "name": "boneco-v1",
+    "bones": [
+      "tronco"
+    ]
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "rabo",
+      "parent": "tronco",
+      "x": -10,
+      "rotation": 30,
+      "length": 20,
+      "skinRequired": true
+    }
+  ],
+  "slots": [
+    {
+      "name": "rabo",
+      "bone": "rabo",
+      "attachment": "rabo"
+    }
+  ],
+  "skins": [
+    {
+      "name": "lobisomem",
+      "bones": [
+        "rabo"
+      ],
+      "attachments": {
+        "rabo": {
+          "rabo": {
+            "type": "region",
+            "width": 20,
+            "height": 6,
+            "path": "rabo",
+            "x": 10
+          }
+        }
+      }
+    }
+  ]
+}

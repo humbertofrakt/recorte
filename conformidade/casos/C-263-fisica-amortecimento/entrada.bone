@@ -1,0 +1,40 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 11"
+  },
+  "skeleton": {
+    "name": "freio",
+    "referenceScale": 100
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "haste",
+      "parent": "root",
+      "y": 100,
+      "length": 50
+    }
+  ],
+  "slots": [],
+  "constraints": [
+    {
+      "type": "physics",
+      "name": "freio",
+      "bone": "haste",
+      "x": 1,
+      "inertia": 0.5,
+      "strength": 0,
+      "damping": 0.5,
+      "mass": 1,
+      "wind": 36,
+      "gravity": 0,
+      "limit": 5000,
+      "fps": 60
+    }
+  ],
+  "animations": []
+}

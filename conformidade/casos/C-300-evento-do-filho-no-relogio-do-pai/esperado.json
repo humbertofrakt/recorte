@@ -1,0 +1,51 @@
+{
+  "probe": {
+    "animation": "esperar",
+    "times": [
+      0.2,
+      0.3,
+      0.8
+    ],
+    "measure": [
+      "events"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.2,
+      "body": null,
+      "events": []
+    },
+    {
+      "time": 0.3,
+      "body": null,
+      "events": [
+        {
+          "time": 0.25,
+          "event": "weapon/disparo",
+          "int": 0,
+          "float": 0,
+          "string": "",
+          "volume": 1,
+          "balance": 0
+        }
+      ]
+    },
+    {
+      "time": 0.8,
+      "body": null,
+      "events": [
+        {
+          "time": 0.75,
+          "event": "weapon/disparo",
+          "int": 0,
+          "float": 0,
+          "string": "",
+          "volume": 1,
+          "balance": 0
+        }
+      ]
+    }
+  ]
+}

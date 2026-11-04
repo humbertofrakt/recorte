@@ -1,0 +1,36 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "conformidade A-031" },
+  "skeleton": {},
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root" }
+  ],
+  "slots": [{ "name": "pano", "bone": "osso", "attachment": "pano" }],
+  "skins": [
+    { "name": "default",
+      "attachments": {
+        "pano": {
+          "pano": {
+            "type": "mesh",
+            "path": "pano",
+            "width": 40, "height": 40,
+            "vertices": [-20, -20, 20, -20, 20, 20, -20, 20],
+            "uvs": [0, 1, 1, 1, 1, 0, 0, 0],
+            "triangles": [0, 1, 2, 0, 2, 3],
+            "hull": 4
+          }
+        }
+      } }
+  ],
+  "animations": [
+    { "name": "soprar", "duration": 2.0,
+      "timelines": [
+        { "type": "deform", "target": "pano", "skin": "default", "attachment": "pano",
+          "keys": [
+            { "time": 0, "value": [] },
+            { "time": 1.0, "offset": 4, "value": [0, 10, 0, 10] },
+            { "time": 2.0, "offset": 2, "value": [5, 0] }
+          ] }
+      ] }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.2.0",
+    "id": "5d8a1f27-9e4b-4c03-b6f2-0a3c7e1d9b48",
+    "created": "2026-09-09T12:00:00Z",
+    "modified": "2026-09-17T12:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo da especificação bone 0.2 — pele de fora, com contrato de rig (4.8, 2.8)"
+  },
+  "skeleton": { "name": "mecha-pele-inverno" },
+  "assets": {
+    "atlases": ["heroi.atlas.json"],
+    "imagesBase": "images/"
+  },
+
+  "rig": {
+    "name": "mecha-humanoide-v1",
+    "slots": ["body", "arm", "head"]
+  },
+
+  "bones": [
+    { "name": "root" }
+  ],
+
+  "skins": [
+    {
+      "name": "inverno",
+      "displayName": "Inverno",
+      "attachments": {
+        "body": {
+          "body": { "type": "region", "path": "armadura/body", "x": 35, "y": 0, "rotation": -90, "width": 76, "height": 84 }
+        },
+        "arm": {
+          "arm": { "type": "region", "path": "arm", "x": 22, "y": 0, "width": 52, "height": 26, "color": [0.8, 0.9, 1, 1] }
+        },
+        "head": {
+          "head": { "type": "skeleton", "uri": "capacete.bone",
+                    "x": 20, "y": 0, "rotation": 0,
+                    "inheritAnimation": true, "baseAnimation": "piscar" }
+        }
+      }
+    }
+  ],
+
+  "extras": {
+    "descricao": "Uma pele que vem de fora. Encaixa em qualquer corpo que tenha os slots do rig. O atlas resolve contra ESTE arquivo, não contra o hospedeiro. Com esta pele a cabeça deixa de ser uma imagem e vira um capacete animado que também veio de fora: o slot head recebe o capacete.bone, posto pela imagem (x 20 no osso head), sem socket (rascunho 0.2). O mecha toca falar e o capacete toca o falar dele (inheritAnimation); a luz pisca sempre, por baixo (baseAnimation piscar)."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "conformidade B-106" },
+  "skeleton": {},
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root", "x": 10, "y": 20, "rotation": 30, "length": 50 }
+  ],
+  "slots": [
+    { "name": "corpo", "bone": "osso", "attachment": "corpo" },
+    { "name": "caixa", "bone": "osso", "attachment": "caixa" },
+    { "name": "mascara", "bone": "osso", "attachment": "mascara" },
+    { "name": "trilho", "bone": "osso", "attachment": "trilho" },
+    { "name": "marca", "bone": "osso", "attachment": "marca" },
+    { "name": "escondido", "bone": "osso", "attachment": "escondido", "visible": false }
+  ],
+  "skins": [
+    { "name": "default",
+      "attachments": {
+        "corpo": { "corpo": { "type": "mesh", "path": "corpo",
+          "width": 40, "height": 40,
+          "vertices": [-20, -20, 20, -20, 20, 20, -20, 20],
+          "uvs": [0, 1, 1, 1, 1, 0, 0, 0],
+          "triangles": [0, 1, 2, 0, 2, 3], "hull": 4 } },
+        "caixa": { "caixa": { "type": "boundingbox", "shape": "polygon",
+          "vertices": [-5, -5, 5, -5, 5, 5, -5, 5] } },
+        "mascara": { "mascara": { "type": "clipping", "end": "trilho",
+          "vertices": [-30, -30, 30, -30, 30, 30, -30, 30] } },
+        "trilho": { "trilho": { "type": "path", "closed": false, "constantSpeed": true, "lengths": [40],
+          "vertices": [-10, 0, 0, 0, 10, 0, 20, 0, 30, 0, 40, 0] } },
+        "marca": { "marca": { "type": "point", "x": 7, "y": 3, "rotation": 15 } },
+        "escondido": { "escondido": { "type": "mesh", "path": "escondido",
+          "width": 10, "height": 10,
+          "vertices": [-5, -5, 5, -5, 5, 5, -5, 5],
+          "uvs": [0, 1, 1, 1, 1, 0, 0, 0],
+          "triangles": [0, 1, 2, 0, 2, 3], "hull": 4 } }
+      } }
+  ]
+}

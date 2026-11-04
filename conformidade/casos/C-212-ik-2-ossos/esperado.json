@@ -1,0 +1,11 @@
+{
+  "probe": { "times": [0], "measure": ["bones"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "bones": {
+        "P": { "a": 0.866025, "b": -0.5, "c": 0.5, "d": 0.866025, "worldX": 0, "worldY": 0, "arotation": 30 },
+        "C": { "a": -0.866025, "b": -0.5, "c": 0.5, "d": -0.866025, "worldX": 86.60254, "worldY": 50, "arotation": 120 }
+      } }
+  ]
+}

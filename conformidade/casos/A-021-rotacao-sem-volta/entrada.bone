@@ -1,0 +1,19 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "rotacao" },
+  "bones": [
+    { "name": "root" },
+    { "name": "giro", "parent": "root" }
+  ],
+  "slots": [],
+  "animations": [
+    {
+      "name": "girar",
+      "duration": 1,
+      "timelines": [
+        { "type": "bone", "target": "giro", "property": "rotation",
+          "keys": [ { "time": 0, "value": 350 }, { "time": 1, "value": 10 } ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "probe": { "animation": "andar", "times": [0, 0.25, 0.5, 0.75, 1, 2], "measure": ["bones"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,    "bones": { "com_chave": { "ax": 100, "worldX": 100 }, "sem_chave": { "ax": 42, "worldX": 42 } } },
+    { "time": 0.25, "bones": { "com_chave": { "ax": 100, "worldX": 100 }, "sem_chave": { "ax": 42, "worldX": 42 } } },
+    { "time": 0.5,  "bones": { "com_chave": { "ax": 100, "worldX": 100 }, "sem_chave": { "ax": 42, "worldX": 42 } } },
+    { "time": 0.75, "bones": { "com_chave": { "ax": 150, "worldX": 150 }, "sem_chave": { "ax": 42, "worldX": 42 } } },
+    { "time": 1,    "bones": { "com_chave": { "ax": 200, "worldX": 200 }, "sem_chave": { "ax": 42, "worldX": 42 } } },
+    { "time": 2,    "bones": { "com_chave": { "ax": 200, "worldX": 200 }, "sem_chave": { "ax": 42, "worldX": 42 } } }
+  ]
+}

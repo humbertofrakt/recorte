@@ -1,0 +1,45 @@
+{
+  "name": "recorte",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Recorte — animação 2D por ossos para jogos. Formato aberto .bone, runtime e editor.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "validar": "node ferramentas/validador/validar.mjs",
+    "importar": "node ferramentas/importar.mjs",
+    "importar-psd": "node ferramentas/importar-psd.mjs",
+    "empacotar": "node ferramentas/empacotar.mjs",
+    "converter": "node ferramentas/converter.mjs",
+    "conformidade": "node ferramentas/conformidade.mjs",
+    "roteiro": "node ferramentas/provas/roteiro-30.mjs",
+    "medir": "node ferramentas/provas/medir-paineis.mjs",
+    "portas": "vite-node ferramentas/provas/comando-sem-porta.ts",
+    "tarefas": "vite-node ferramentas/provas/folha-de-tarefas.ts",
+    "pesos": "node ferramentas/provas/pesos-dois-ossos.mjs",
+    "conformidade:python": "python runtime-python/conformidade.py",
+    "conformidade:dois": "node ferramentas/comparar-runtimes.mjs",
+    "leitor:construct": "node leitor-construct/montar.mjs",
+    "leitor:construct:conformidade": "node ferramentas/conformidade.mjs --adaptador \"node leitor-construct/testes/adaptador-pacote.mjs\"",
+    "exportar": "node ferramentas/exportar.mjs",
+    "exportar-imagem": "node ferramentas/exportar-imagem.mjs",
+    "manual-pdf": "node ferramentas/manual-pdf.mjs",
+    "fatiar": "node ferramentas/fatiar.mjs",
+    "test": "vitest run",
+    "dev": "vite editor",
+    "build": "vite build editor",
+    "editor": "vite editor",
+    "editor:build": "vite build editor",
+    "site": "vite --port 5174 --open /site/index.html"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "typescript": "^5.6.0",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.0"
+  },
+  "license": "Apache-2.0"
+}

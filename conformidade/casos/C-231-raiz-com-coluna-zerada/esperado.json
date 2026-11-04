@@ -1,0 +1,12 @@
+{
+  "probe": { "times": [0], "measure": ["bones"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "bones": {
+        "zerado": { "a": 0, "b": 0, "c": 0, "d": 0, "worldX": 4, "worldY": 6,
+                    "ax": 4, "ay": 6, "arotation": 90,
+                    "ascaleX": 0, "ascaleY": 0, "ashearX": 0, "ashearY": 0 }
+      } }
+  ]
+}

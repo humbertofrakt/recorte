@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recorte — formato aberto para animação 2D por ossos</title>
+<meta name="description" content="Recorte é um formato de arquivo aberto para animação 2D por ossos. Especificação pública, validador, runtime e editor.">
+<link rel="icon" href="./favicon.ico" sizes="32x32">
+<link rel="stylesheet" href="./site.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="faixa">
+    <p class="marca">Recorte</p>
+    <nav>
+      <a href="./validador/index.html">Validador</a>
+      <a href="../ferramentas/visualizador/index.html">Visualizador</a>
+      <a href="../formato/ESPECIFICACAO 2026-09-06.md">Especificação</a>
+      <a href="../documentos/manual/">Manual</a>
+      <a href="../documentos/manual/en/README.md">Manual in English</a>
+    </nav>
+  </div>
+
+  <div class="dentro">
+  <h1>Animação 2D por ossos, num formato que qualquer um pode ler.</h1>
+
+  <p class="chamada">
+    O Recorte é um <b>formato de arquivo aberto</b> para personagens 2D animados
+    por ossos. A especificação é pública. O validador é público. A suíte de
+    conformidade é pública. Qualquer programa pode gravar e ler <b>.bone</b>,
+    sem pedir licença a ninguém.
+  </p>
+
+  <p class="acoes">
+    <a class="botao" href="./validador/index.html">Conferir um arquivo</a>
+    <a class="botao vazio" href="../ferramentas/visualizador/index.html">Ver um personagem mexer</a>
+  </p>
+  </div>
+</header>
+
+<main>
+
+  <section class="cartao">
+    <h2>Por que isto existe</h2>
+    <p class="paragrafo">
+      Um formato fechado morre com a empresa que o inventou. Um formato aberto
+      sobrevive a ela. Foi o que aconteceu duas vezes:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Formato</th>
+          <th scope="col">O que ele resolveu</th>
+          <th scope="col">Por que pegou</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">PDF</th>
+          <td>Documento que fica igual em qualquer máquina.</td>
+          <td>Especificação aberta, estável, com validador. Virou norma ISO.</td>
+        </tr>
+        <tr>
+          <th scope="row">glTF</th>
+          <td>Modelo 3D que passa de um programa para outro.</td>
+          <td>Especificação aberta, validador na web, suíte de conformidade.</td>
+        </tr>
+        <tr>
+          <th scope="row"><b>.bone</b></th>
+          <td>Personagem 2D animado por ossos.</td>
+          <td>É o que este projeto está tentando fazer.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="paragrafo">
+      Hoje não existe equivalente para 2D. Spine, DragonBones, Live2D e Creature
+      guardam cada um o seu formato próprio. Quem anima fica preso ao programa
+      que escolheu, e o trabalho morre junto com ele. O DragonBones parou; os
+      arquivos ficaram.
+    </p>
+    <p class="frase">
+      O padrão é o arquivo, não o programa.<br>
+      O programa é só a melhor forma de fazer esse arquivo.
+    </p>
+  </section>
+
+  <section class="cartao">
+    <h2>As três embalagens</h2>
+    <p class="paragrafo">
+      Um modelo de dados só, gravado de três jeitos. Um leitor descobre qual é
+      pelos primeiros bytes do arquivo, nunca pelo nome.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Extensão</th>
+          <th scope="col">O que é</th>
+          <th scope="col">Quando usar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"><code>.bone</code></th>
+          <td>Texto JSON. Abre em qualquer editor de texto.</td>
+          <td>Enquanto se trabalha. Dá para ler, comparar e versionar.</td>
+        </tr>
+        <tr>
+          <th scope="row"><code>.boneb</code></th>
+          <td>Binário compacto, com os mesmos dados.</td>
+          <td>Dentro do jogo. Cerca de 38% menor e carrega mais rápido.</td>
+        </tr>
+        <tr>
+          <th scope="row"><code>.bonez</code></th>
+          <td>Pacote ZIP: esqueleto, atlas e imagens juntos.</td>
+          <td>Para entregar tudo num arquivo só.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="cartao">
+    <h2>O que já existe</h2>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Peça</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Onde</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Especificação</th>
+          <td>Rascunho aberto, com JSON Schema.</td>
+          <td><a href="../formato/ESPECIFICACAO 2026-09-06.md">ESPECIFICACAO.md</a></td>
+        </tr>
+        <tr>
+          <th scope="row">Validador</th>
+          <td>Na web e na linha de comando.</td>
+          <td><a href="./validador/index.html">Abrir o validador</a></td>
+        </tr>
+        <tr>
+          <th scope="row">Visualizador</th>
+          <td>Desenha um <code>.bone</code> animado no navegador.</td>
+          <td><a href="../ferramentas/visualizador/index.html">Abrir o visualizador</a></td>
+        </tr>
+        <tr>
+          <th scope="row">Runtime</th>
+          <td>Biblioteca de referência em TypeScript.</td>
+          <td><code>runtime/</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Editor</th>
+          <td>Programa de animação, roda no navegador.</td>
+          <td><code>editor/</code></td>
+        </tr>
+        <tr>
+          <th scope="row">Conformidade</th>
+          <td>Casos que qualquer runtime de terceiro pode rodar.</td>
+          <td>
+            <a href="../conformidade/como-provar-conformidade.md">Como provar conformidade</a>
+            ·
+            <a href="../conformidade/how-to-prove-conformance.md">How to prove conformance</a>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Manual</th>
+          <td>Oito capítulos em português, com imagens.</td>
+          <td><a href="../documentos/manual/">documentos/manual/</a></td>
+        </tr>
+        <tr>
+          <th scope="row">Manual in English</th>
+          <td>Os mesmos oito capítulos em inglês, com as mesmas imagens.</td>
+          <td><a href="../documentos/manual/en/README.md">documentos/manual/en/</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="paragrafo">
+      O que ainda falta está escrito, sem maquiagem, em
+      <a href="../ESTADO.md">ESTADO.md</a>.
+    </p>
+  </section>
+
+  <section class="cartao">
+    <h2>Licença</h2>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">O quê</th>
+          <th scope="col">Licença</th>
+          <th scope="col">O que você pode fazer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Código</th>
+          <td><a href="../LICENSE">Apache 2.0</a></td>
+          <td>Usar em jogo comercial, mudar, redistribuir. Traz outorga de patente.</td>
+        </tr>
+        <tr>
+          <th scope="row">Especificação</th>
+          <td><a href="../formato/LICENSE">CC BY 4.0</a></td>
+          <td>Copiar, traduzir e escrever o seu próprio leitor. Basta citar a fonte.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="paragrafo">
+      Ninguém precisa de permissão para escrever um leitor ou um gravador de
+      <b>.bone</b>. É esse o ponto.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <p>Recorte — formato aberto <b>.bone</b> para animação 2D por ossos.</p>
+  <p>Código sob Apache 2.0. Especificação sob CC BY 4.0.</p>
+</footer>
+
+</body>
+</html>

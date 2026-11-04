@@ -1,0 +1,275 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://recorte.dev/schemas/extensions/BONE_particles-1.1.schema.json",
+  "title": "BONE_particles 1.1 — emissor de partículas sem estado",
+  "description": "Schema do anexo BONE_particle. A spec está em formato/extensions/BONE_particles.md. O validador aplica este schema pelo NOME da extensão, sobre todo anexo de type BONE_particle e sobre todo objeto extensions.BONE_particles.",
+  "x-extension": "BONE_particles",
+  "x-attachment-types": ["BONE_particle"],
+  "x-timeline-types": ["BONE_particle"],
+  "x-level": "P",
+  "x-since": "1.0",
+
+  "$ref": "#/definitions/attachmentParticle",
+
+  "definitions": {
+
+    "range2": {
+      "description": "Faixa [min, max]. min > max é L1 RANGE_PARTICLE_MINMAX (regra semântica, não do schema).",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "type": "number" }
+    },
+
+    "color4": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "type": "number", "minimum": 0, "maximum": 1 }
+    },
+
+    "curve": {
+      "description": "Igual à §9.3 da spec: 'linear', 'stepped' ou os 4 números da Bézier absoluta.",
+      "anyOf": [
+        { "type": "string" },
+        { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } }
+      ]
+    },
+
+    "keyNumber": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["time", "value"],
+      "properties": {
+        "time": { "type": "number" },
+        "value": { "type": "number" },
+        "curve": { "$ref": "#/definitions/curve" }
+      }
+    },
+
+    "keyColor": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["time", "value"],
+      "properties": {
+        "time": { "type": "number" },
+        "value": { "$ref": "#/definitions/color4" },
+        "curve": { "$ref": "#/definitions/curve" }
+      }
+    },
+
+    "keyUnit": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["time", "value"],
+      "properties": {
+        "time": { "type": "number" },
+        "value": { "type": "number", "minimum": 0, "maximum": 1 },
+        "curve": { "$ref": "#/definitions/curve" }
+      }
+    },
+
+    "burst": {
+      "description": "Uma rajada. Nasce no fluxo 1+b; ver §4.3 da spec da extensão.",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["time"],
+      "properties": {
+        "time": { "type": "number", "minimum": 0 },
+        "count": { "type": "integer", "minimum": 1, "default": 1 },
+        "cycles": { "type": "integer", "minimum": 1, "maximum": 1048576, "default": 1 },
+        "interval": { "type": "number", "exclusiveMinimum": 0, "default": 1 },
+        "probability": { "type": "number", "minimum": 0, "maximum": 1, "default": 1 }
+      }
+    },
+
+    "attachmentParticle": {
+      "description": "O anexo BONE_particle. additionalProperties true por desenho: campo desconhecido é ignorado e preservado (§2.5 e §2.6 da spec).",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type"],
+      "x-since": "1.0",
+      "x-level": "P",
+      "properties": {
+
+        "type": { "type": "string", "const": "BONE_particle" },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!\\.\\.?(/|$))(?!.*/\\.\\.?(/|$))[^\\\\:]*$"
+        },
+        "color": { "$ref": "#/definitions/color4", "default": [1, 1, 1, 1] },
+
+        "emitting": { "type": "boolean", "default": true },
+        "rate": {
+          "description": "partículas/s. Na 1ª fase é FIXO: quem anima é emitting. Negativo é L1 RANGE_PARTICLE_RATE.",
+          "type": "number",
+          "minimum": 0,
+          "default": 10
+        },
+        "bursts": {
+          "type": "array",
+          "maxItems": 1024,
+          "items": { "$ref": "#/definitions/burst" },
+          "default": []
+        },
+        "explosiveness": { "type": "number", "minimum": 0, "maximum": 1, "default": 0 },
+        "duration": {
+          "description": "Só para explosiveness. O laço usa a duração da animação (§6).",
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 1
+        },
+        "randomness": { "type": "number", "minimum": 0, "maximum": 1, "default": 0 },
+        "startDelay": { "type": "number", "minimum": 0, "default": 0 },
+
+        "lifetime": {
+          "description": "[min, max] em segundos, > 0. NÃO animável: o max define a janela de busca (§5).",
+          "allOf": [{ "$ref": "#/definitions/range2" }],
+          "items": { "type": "number", "exclusiveMinimum": 0 },
+          "default": [1, 1]
+        },
+        "maxParticles": { "type": "integer", "minimum": 1, "maximum": 10000, "default": 1000 },
+
+        "x": { "description": "§9.10: origem do emissor no espaço local do osso, como region.x. Não animável.", "type": "number", "default": 0 },
+        "y": { "description": "§9.10.", "type": "number", "default": 0 },
+        "rotation": { "description": "§9.10: graus, anti-horário. Gira o referencial do emissor. Não animável.", "type": "number", "default": 0 },
+
+        "speed": { "allOf": [{ "$ref": "#/definitions/range2" }], "default": [100, 100] },
+        "direction": { "type": "number", "default": 90 },
+        "spread": { "type": "number", "minimum": 0, "maximum": 180, "default": 0 },
+        "spherizeDirection": { "type": "number", "minimum": 0, "maximum": 1, "default": 0 },
+        "alignToVelocity": { "type": "boolean", "default": false },
+
+        "shape": {
+          "description": "Forma desconhecida: o leitor NÃO desenha o emissor e avisa (§7.4). Não cai para point.",
+          "type": "string",
+          "enum": ["point", "circle", "rectangle", "edge", "bone", "mesh", "path"],
+          "default": "point",
+          "x-fallback": "não desenha, avisa"
+        },
+        "radius": { "type": "number", "minimum": 0, "default": 0 },
+        "radiusThickness": { "type": "number", "minimum": 0, "maximum": 1, "default": 1 },
+        "arc": { "type": "number", "default": 360 },
+        "size": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": { "type": "number", "minimum": 0 },
+          "default": [0, 0]
+        },
+        "edge": {
+          "type": "array", "minItems": 4, "maxItems": 4,
+          "items": { "type": "number" },
+          "default": [0, 0, 0, 0]
+        },
+        "mesh": {
+          "description": "Placeholder de um anexo mesh DO MESMO SLOT. Referência conferida por L1 REF_PARTICLE_MESH. Exige nível B.",
+          "type": "string",
+          "minLength": 1,
+          "x-level": "B"
+        },
+        "curve": {
+          "description": "shape path: o caminho de onde as partículas nascem, como \"<slot>/<placeholder>\" de um anexo path (de QUALQUER slot; o slot é o que vem antes da PRIMEIRA barra). Referência conferida por L1 REF_PARTICLE_CURVE. Caminho com pesos exige nível B. §9.4.2.",
+          "type": "string",
+          "minLength": 3,
+          "pattern": "^[^/]+/.+$",
+          "x-since": "1.1"
+        },
+        "meshMode": {
+          "type": "string",
+          "enum": ["vertex", "edge", "triangle"],
+          "default": "vertex",
+          "x-fallback": "vertex"
+        },
+
+        "gravity": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": { "type": "number" },
+          "default": [0, 0]
+        },
+        "drag": { "type": "number", "minimum": 0, "default": 0 },
+
+        "angle": { "allOf": [{ "$ref": "#/definitions/range2" }], "default": [0, 0] },
+        "angularVelocity": { "allOf": [{ "$ref": "#/definitions/range2" }], "default": [0, 0] },
+
+        "scale": { "allOf": [{ "$ref": "#/definitions/range2" }], "default": [1, 1] },
+        "scaleOverLifetime": {
+          "description": "time em 0..1 da vida, não em segundos.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/keyNumber" }
+        },
+
+        "startColor": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": { "$ref": "#/definitions/color4" },
+          "default": [[1, 1, 1, 1], [1, 1, 1, 1]]
+        },
+        "colorOverLifetime": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/keyColor" }
+        },
+        "alphaOverLifetime": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/keyUnit" }
+        },
+
+        "sequence": {
+          "description": "O objeto Sequence da §7.10 da spec, sem mudança.",
+          "type": "object",
+          "additionalProperties": true
+        },
+        "frameMode": {
+          "type": "string",
+          "enum": ["lifetime", "fps"],
+          "default": "lifetime",
+          "x-fallback": "lifetime"
+        },
+        "cycles": { "type": "number", "exclusiveMinimum": 0, "default": 1 },
+        "fps": { "type": "number", "exclusiveMinimum": 0, "default": 12 },
+        "startFrame": { "allOf": [{ "$ref": "#/definitions/range2" }], "default": [0, 0] },
+
+        "space": {
+          "type": "string",
+          "enum": ["local", "world"],
+          "default": "local",
+          "x-fallback": "local"
+        },
+        "seed": {
+          "description": "SEMPRE fixa. Não existe semente automática. 0 é semente válida.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "default": 0
+        },
+        "looping": { "type": "boolean", "default": true },
+        "prewarm": {
+          "description": "Segundos. Só vale com looping: false.",
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "sortMode": {
+          "type": "string",
+          "enum": ["youngestInFront", "oldestInFront"],
+          "default": "youngestInFront",
+          "x-fallback": "youngestInFront"
+        },
+
+        "extensions": { "type": "object" },
+        "extras": {}
+      },
+
+      "allOf": [
+        {
+          "description": "shape mesh exige o campo mesh. Sem ele o emissor não tem de onde nascer.",
+          "if": { "properties": { "shape": { "const": "mesh" } }, "required": ["shape"] },
+          "then": { "required": ["mesh"] }
+        },
+        {
+          "description": "shape path exige o campo curve. Sem ele o emissor não tem de onde nascer. Desde a 1.1.",
+          "if": { "properties": { "shape": { "const": "path" } }, "required": ["shape"] },
+          "then": { "required": ["curve"] }
+        }
+      ]
+    }
+  }
+}

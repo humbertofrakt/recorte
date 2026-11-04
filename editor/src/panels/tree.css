@@ -1,0 +1,376 @@
+/* ------------------------------------------------------------------ */
+/* tree.css — lote A6, plano arrumação (v11.2)                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A Árvore — a hierarquia (lote 64), o cadeado e o olho de cada linha, a bolinha
+ * do anexo, a miniatura, a marca de regra, a busca, a barra e o menu do botão direito.
+ *
+ * Estes blocos moravam em `panels.css`, com os de todos os painéis. Vieram
+ * para cá sem mudar um seletor, na mesma ordem entre si; o `main.ts` carrega
+ * este arquivo logo depois do `panels.css`.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Tree                                                                */
+/* ------------------------------------------------------------------ */
+
+.arvore-secao {
+  border-bottom: 1px solid var(--painel-linha);
+}
+
+.arvore-secao-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--painel-texto);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.arvore-secao-titulo:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+.arvore-seta {
+  width: 1em;
+  flex: 0 0 auto;
+}
+
+.arvore-conta {
+  margin-left: auto;
+  color: var(--painel-texto-fraco);
+  font-weight: 400;
+}
+
+.arvore-lista {
+  margin: 0;
+  padding: 0 0 8px;
+  list-style: none;
+}
+
+.arvore-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 0;
+  border-left: 4px solid transparent;
+  background: transparent;
+  color: var(--painel-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.arvore-item:hover {
+  background: var(--painel-hover);
+}
+
+.arvore-item[aria-selected="true"] {
+  background: var(--painel-realce);
+  color: var(--painel-realce-texto);
+}
+
+.arvore-item:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+.arvore-item.arvore-alvo {
+  border-left-color: var(--painel-realce);
+  background: var(--painel-alvo);
+}
+
+.arvore-nome {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arvore-detalhe {
+  margin-left: auto;
+  color: var(--painel-texto-fraco);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.arvore-item[aria-selected="true"] .arvore-detalhe {
+  color: var(--painel-realce-fraco);
+}
+
+.arvore-renomear {
+  width: 100%;
+  min-height: 30px;
+  padding: 2px 6px;
+  border: 2px solid var(--painel-realce);
+  border-radius: 4px;
+  background: var(--painel-campo);
+  color: var(--painel-texto);
+  font: inherit;
+}
+
+/* O cadeado de cada osso e de cada slot da Árvore. */
+.arvore-lista > li {
+  display: flex;
+  align-items: center;
+}
+.arvore-lista > li > .arvore-item {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.arvore-trava {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 24px;
+  margin-right: 4px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.35;
+  cursor: pointer;
+}
+.arvore-trava:hover,
+.arvore-trava:focus-visible {
+  opacity: 1;
+  border-color: #9a9a94;
+}
+.arvore-trava.is-travado {
+  opacity: 1;
+}
+.arvore-trava:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/*
+ * A bolinha de cada anexo na Árvore — item 9, lote 3a.
+ *
+ * `●` é o desenho que o slot mostra agora, `○` é um que ele poderia mostrar.
+ * Clicar troca. Ela é um `<span>` com `role="button"` e não um `<button>`
+ * dentro do botão da linha, que é HTML inválido e que o Tab percorreria duas
+ * vezes; quem chega pelo teclado usa o campo "Anexo" do painel Propriedades,
+ * que é a mesma coisa escrita em palavras.
+ */
+.arvore-bola {
+  flex: 0 0 auto;
+  margin-right: 7px;
+  padding: 0 2px;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--painel-texto-fraco);
+  cursor: pointer;
+}
+
+.arvore-bola-cheia {
+  color: var(--painel-realce);
+}
+
+.arvore-bola:hover {
+  color: var(--painel-realce);
+}
+
+.arvore-item[aria-selected="true"] .arvore-bola,
+.arvore-item[aria-selected="true"] .arvore-bola-cheia {
+  color: var(--painel-realce-fraco);
+}
+
+/*
+ * O olho de cada linha da Árvore — item 57.
+ *
+ * Ao lado do cadeado, e com a mesma forma. Escondido é diferente de travado:
+ * travado aparece e não pega clique; escondido não aparece e também não pega.
+ */
+.arvore-olho {
+  flex: 0 0 auto;
+  margin-left: 6px;
+  padding: 0 2px;
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.arvore-olho:hover {
+  opacity: 1;
+}
+
+.arvore-olho-off {
+  opacity: 1;
+}
+
+/*
+ * A miniatura do desenho — item 75.
+ *
+ * Fundo quadriculado leve: uma peça com fundo transparente contra um fundo
+ * branco vira um borrão branco, e a miniatura existe justamente para se
+ * reconhecer a peça de relance.
+ */
+.arvore-mini,
+.prop-mini {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  border: 1px solid var(--painel-linha);
+  border-radius: 3px;
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e9e9e4 25%, transparent 25%, transparent 75%, #e9e9e4 75%),
+    linear-gradient(45deg, #e9e9e4 25%, transparent 25%, transparent 75%, #e9e9e4 75%);
+  background-size: 8px 8px;
+  background-position: 0 0, 4px 4px;
+  image-rendering: auto;
+}
+
+.prop-mini {
+  margin-left: 10px;
+}
+
+/*
+ * O menu do botão direito da Árvore — lote 29, anotação 15, itens f e i.
+ *
+ * "Substituir nomes" e as duas de posição no osso só existiam no menu Editar,
+ * que é o último lugar onde se procura o que fazer com a linha que está
+ * debaixo do dedo.
+ */
+
+/* A marca do osso que tem regra, na Árvore. */
+.arvore-regra {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  color: #d24500;
+}
+
+/*
+ * A marca do osso que só existe com uma pele — degrau 9 (18/09/2026), I5.
+ *
+ * Cor diferente da marca da regra de propósito: são duas perguntas diferentes
+ * ("este osso se mexe sozinho?" e "este osso é da roupa?") e duas marcas
+ * laranjas iguais seriam uma só, borrada.
+ */
+.arvore-pele {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 4px;
+  color: var(--painel-realce);
+}
+
+/*
+ * A busca da Árvore — anotação 22, lote 33.
+ *
+ * Ela nasce fechada e só aparece quando alguém pede, pelo botão da lupa ou por
+ * `Ctrl+F`: uma caixa de texto permanente no alto do painel mais usado seria
+ * uma linha a menos de árvore o dia inteiro.
+ */
+/*
+ * A barra da Árvore ganhou o quarto botão no lote 37 (Duplicar), e quatro de
+ * 48 px não cabem na coluna: ela quebrava em duas linhas, e a segunda linha é
+ * altura tirada da árvore. Os botões de ícone ficam menores; **Novo ▾**, que
+ * tem palavra, não muda.
+ */
+.arvore-barra .painel-botao-icone {
+  padding: 4px 4px;
+}
+
+.arvore-barra .icone {
+  width: 16px;
+  height: 16px;
+}
+
+.arvore-busca {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--painel-linha, #c3ccd8);
+}
+
+.arvore-busca-campo {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.imagens-busca {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--painel-linha);
+}
+
+/* Árvore — uma árvore só, como a Hierarchy do Spriter (lote 64)                */
+/* ------------------------------------------------------------------ */
+
+.arvore-hierarquia {
+  padding-top: 4px;
+}
+
+.arvore-dobra {
+  flex: 0 0 16px;
+  width: 16px;
+  color: var(--painel-texto-fraco);
+  font-size: 11px;
+  text-align: center;
+}
+
+.arvore-dobra[role="button"] {
+  cursor: pointer;
+}
+
+.arvore-icone-osso {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--painel-texto-fraco);
+}
+
+.arvore-lista > li.arvore-vazio .arvore-nome {
+  color: var(--painel-texto-fraco);
+}
+
+.arvore-lista > li.arvore-vazio .arvore-mini {
+  opacity: 0.35;
+}
+
+/* O vazio do fim: soltar aqui deixa solto, sem osso. */
+.arvore-vazio-fim {
+  min-height: 48px;
+}
+
+.arvore-vazio-fim.arvore-alvo {
+  outline: 2px dashed var(--painel-realce);
+  outline-offset: -4px;
+  background: var(--painel-alvo);
+}
+
+/*
+ * Lote 1 do chat D, rodada final (28/09/2026): o grupo "Eventos e parâmetros"
+ * no fim da Árvore — o nó `Events` do Spine. Um fio em cima separa o grupo dos
+ * ossos; o título vai em texto fraco, como os títulos de seção dos painéis.
+ */
+.arvore-item.arvore-grupo {
+  border-top: 1px solid var(--painel-linha);
+  color: var(--painel-texto-fraco);
+  font-weight: 600;
+}
+
+/* Rodada 43, lote 3: buscando, o nome que casou fica em negrito e sublinhado. */
+.arvore-nome.arvore-achado {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

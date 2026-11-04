@@ -1,0 +1,14 @@
+[remap]
+
+importer="recorte.arquivo"
+type="Resource"
+uid="uid://db58tkwpgcwx4"
+path="res://.godot/imported/aura.bone-dec38cbbc0f0d98ba460ab6a14fdfd07.res"
+
+[deps]
+
+source_file="res://exemplo/aura.bone"
+dest_files=["res://.godot/imported/aura.bone-dec38cbbc0f0d98ba460ab6a14fdfd07.res"]
+
+[params]
+

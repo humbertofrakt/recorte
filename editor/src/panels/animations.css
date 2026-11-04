@@ -1,0 +1,398 @@
+/* ------------------------------------------------------------------ */
+/* animations.css — lote A6, plano arrumação (v11.2)                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Animações — a lista, o "repete" só de leitura, a estrelinha da padrão, a
+ * próxima da fila, e a chave de evento.
+ *
+ * Estes blocos moravam em `panels.css`, com os de todos os painéis. Vieram
+ * para cá sem mudar um seletor, na mesma ordem entre si; o `main.ts` carrega
+ * este arquivo logo depois do `panels.css`.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Animations                                                          */
+/* ------------------------------------------------------------------ */
+
+/*
+ * O recheio do corpo foi para dentro da LISTA — 13/09/2026.
+ *
+ * O `.painel-corpo` traz `padding: 4px 0 16px`, e recheio não encolhe: num
+ * painel baixo esses 20 px eram o mínimo irredutível do corpo, e faziam o
+ * painel INTEIRO passar da altura — 21 px em 1280×720, achados pela medição
+ * de altura. Dentro da lista, que rola, o mesmo espaço continua embaixo da
+ * última animação e o corpo já pode encolher até sumir.
+ */
+.anim-corpo {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.anim-lista {
+  margin: 0;
+  padding: 4px 0 16px;
+  list-style: none;
+  /* Três linhas de altura mínima. Com uma linha só, o animador perde a
+     referência de onde está: a lista mostrava "idle" enquanto a barra de
+     estado dizia "Animando: walk". Eram quatro até o degrau 5: a lista Corpos
+     entrou em cima, e as duas juntas continuam cabendo onde uma cabia. */
+  min-height: 102px;
+  overflow-y: auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Corpos em cima, Animações embaixo — degrau 5 (17/09/2026), M8       */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A tira de cada lista: o nome à esquerda, os botões daquela lista à direita.
+ *
+ * O botão mora ao lado da lista em que ele age, e não numa barra única lá em
+ * cima: quem lê a janela de cima para baixo encontra "Corpos" e, na mesma
+ * linha, o que se faz com um corpo.
+ *
+ * A tira **não gruda no topo**, e é regra da casa (lote 48, prova
+ * `acabamento`): cabeçalho grudado tapa a primeira linha do painel. Ela rola
+ * junto com o resto, como os cabeçalhos de subpasta da aba Imagens.
+ */
+.anim-secao {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px 2px 12px;
+  background: var(--painel-fundo);
+  border-bottom: 1px solid var(--painel-borda);
+}
+
+.anim-secao-nome {
+  flex: 1;
+  min-width: 0;
+  color: var(--painel-texto-fraco);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A tira de seção é apertada: o botão dela não usa a altura de botão de barra. */
+.anim-secao .painel-botao-icone {
+  min-height: 0;
+  padding: 2px 4px;
+}
+
+.anim-corpos {
+  margin: 0;
+  padding: 2px 0 4px;
+  list-style: none;
+  /* Duas linhas à vista. Mais que quatro, rola: a lista de corpos de um
+     projeto é curta, e roubar a altura da lista de animações seria trocar o
+     que se usa o dia inteiro pelo que se usa uma vez por corpo. */
+  min-height: 68px;
+  max-height: 136px;
+  overflow-y: auto;
+}
+
+.anim-corpo-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 4px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--painel-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.anim-corpo-item:hover {
+  background: var(--painel-hover);
+}
+
+.anim-corpo-item[aria-selected="true"] {
+  background: var(--painel-realce);
+  color: var(--painel-realce-texto);
+}
+
+.anim-corpo-item:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+/*
+ * O corpo EM FOCO fica em negrito, e não só realçado: o realce é "onde a mão
+ * está" e muda a cada clique; o foco é "o que a cena está mostrando". Os dois
+ * podem ser corpos diferentes por um instante, e a tela não pode mentir sobre
+ * qual é qual.
+ */
+.anim-corpo-foco .arvore-nome {
+  font-weight: 600;
+}
+
+/* Quantas animações aquele corpo tem. O número é pequeno e mora à direita. */
+.anim-corpo-conta {
+  margin-left: auto;
+  color: var(--painel-texto-fraco);
+  font-size: 13px;
+}
+
+.anim-corpo-item[aria-selected="true"] .anim-corpo-conta {
+  color: var(--painel-realce-fraco);
+}
+
+.anim-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 34px;
+  padding: 5px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--painel-texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.anim-item:hover {
+  background: var(--painel-hover);
+}
+
+.anim-item[aria-selected="true"] {
+  background: var(--painel-realce);
+  color: var(--painel-realce-texto);
+}
+
+.anim-item:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+.anim-duracao {
+  margin-left: auto;
+  color: var(--painel-texto-fraco);
+  font-size: 14px;
+}
+
+.anim-item[aria-selected="true"] .anim-duracao {
+  color: var(--painel-realce-fraco);
+}
+
+/* O tocador saiu deste painel no lote 2 (v1.8) e foi para a primeira linha da
+   linha do tempo, então `.anim-tocador`, `.anim-controles`, `.anim-tempo`,
+   `.anim-barra`, `.anim-progresso` e `.anim-rodape` saíram daqui com ele. O
+   estilo do tocador de hoje está em `dopesheet.css`, em "O tocador". */
+
+/* -------------------------------------------------------------------------
+   Chave de evento (requisito A3).
+
+   O campo e a nota de onde o valor veio ficam na mesma coluna, um em cima do
+   outro: a nota é curta e nunca disputa espaço com o campo. Ver
+   panels/event-key-editor.ts.
+   ------------------------------------------------------------------------- */
+
+.prop-campo-com-nota {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.evento-origem {
+  color: var(--painel-texto-fraco);
+  font-size: 13px;
+}
+
+.evento-bloco {
+  display: block;
+}
+
+.evento-dobra > summary {
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+/*
+ * "repete" na linha da animação — só leitura.
+ *
+ * Diz de relance quais animações voltam ao começo, sem abrir uma por uma.
+ * Ligar e desligar é no tocador da linha do tempo, e só lá: dois lugares que
+ * escrevem no mesmo campo é onde nascem as duas verdades.
+ */
+.anim-repete {
+  margin-left: 8px;
+  padding: 1px 7px;
+  font-size: 13px;
+  color: #7a2800;
+  background: #ffe7d8;
+  border: 1px solid #d24500;
+  border-radius: 999px;
+}
+
+/*
+ * A estrelinha da animação padrão, a primeira da lista — lote 44.
+ *
+ * Discreta de propósito: é um lembrete, não um botão. A palavra "padrão" está
+ * na dica da linha. Na linha escolhida herda a cor do realce.
+ */
+.anim-padrao {
+  font-size: 12px;
+  color: var(--painel-texto-fraco);
+}
+
+.anim-item[aria-selected="true"] .anim-padrao {
+  color: var(--painel-realce-fraco);
+}
+
+/*
+ * A próxima, na fila de "terminar a atual antes" — lote 46. Some quando ela
+ * entra. A palavra "próxima" está na dica.
+ */
+.anim-proxima {
+  margin-left: 8px;
+  font-size: 13px;
+  color: var(--painel-texto-fraco);
+}
+
+/*
+ * "De fora" — os arquivos de `assets.animations` (2.8), degrau 12 parte `B`.
+ *
+ * Não é botão, e por isso não tem cursor de mão nem realce: as animações de
+ * fora não são deste arquivo, e clicar nelas não abriria coisa nenhuma. O que
+ * a linha tem é a dica, que diz o que o arquivo traz — ou que o editor ainda
+ * não o abriu, que é a verdade quando é a verdade (regra 21).
+ */
+.anim-item-fora {
+  cursor: default;
+  color: var(--painel-texto-fraco);
+}
+
+.anim-item-fora:hover {
+  background: transparent;
+}
+
+.anim-de-fora {
+  border-top: 1px solid var(--painel-linha);
+}
+
+/* ------------------------------------------------------------------ */
+/* A fila do arroz — chat G, lote 3 (29/09/2026), Q1/K1 e P33          */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A lista pega a altura que sobra, e rola por dentro.
+ *
+ * Medido em 1440×900, antes: o painel tinha 129 px, a barra de ícones em duas
+ * linhas comia 112, e a lista ficava com 17 — a animação nova nascia fora da
+ * vista e o mouse não alcançava linha nenhuma. Agora: uma tira (o título e os
+ * seis ícones), a linha "Base — montar" e a lista, que fica com o resto e
+ * mostra duas linhas no mínimo.
+ */
+.anim-corpo {
+  display: flex;
+  flex-direction: column;
+}
+
+.anim-corpo > .anim-secao,
+.anim-corpo > .anim-corpos {
+  flex: 0 0 auto;
+}
+
+.anim-corpo > .anim-lista {
+  flex: 1 1 auto;
+  min-height: 68px;
+  padding: 2px 0 4px;
+}
+
+/* Os seis ícones, na tira do título: pequenos, numa linha só. */
+.anim-secao-botoes {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+}
+
+.anim-secao-animacoes .painel-botao {
+  min-height: 0;
+  padding: 2px 3px;
+}
+
+/* O desenho dentro do botão sem recheio: seis de 26 px deixam o título
+   "Animações" inteiro na coluna de 258 (medido: com recheio, saía "A…"). */
+.anim-secao-animacoes .painel-botao .painel-botao-icone,
+.anim-corpo-linha > .painel-botao .painel-botao-icone {
+  padding: 0;
+}
+
+.anim-secao-animacoes .anim-secao-nome {
+  min-width: 64px;
+}
+
+.anim-secao-animacoes .icone {
+  width: 16px;
+  height: 16px;
+}
+
+/* Um corpo só: a lista Corpos é UMA linha, sem a caixa de 68 px (P33). */
+.anim-corpos.anim-corpos-um {
+  min-height: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--painel-borda);
+}
+
+.anim-corpo-linha {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 8px;
+}
+
+.anim-corpo-linha > .anim-corpo-item {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.anim-corpo-linha > .painel-botao {
+  min-height: 0;
+  padding: 2px 3px;
+}
+
+/* A base aberta acende a linha "Base — montar": é ali que se está. */
+.anim-corpo-item.anim-base-aberta {
+  background: var(--painel-realce);
+  color: var(--painel-realce-texto);
+}
+
+.anim-corpo-item.anim-base-aberta .anim-corpo-conta {
+  color: var(--painel-realce-fraco);
+}
+
+/* O campo de renomear no lugar da linha — Q2/K14. */
+.anim-renomear {
+  width: calc(100% - 16px);
+  margin: 2px 8px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Rodada 8b, C9: as entidades encaixadas, como bases, na mesma lista  */
+/* ------------------------------------------------------------------ */
+
+/* A linha do nome separa a entidade das animações da base em foco. */
+.anim-entidade-linha {
+  border-top: 1px solid var(--painel-linha);
+}
+
+/* A palavra "entidade", pequena, depois do nome: base ou entidade depende de
+   onde se está, e a linha diz qual é esta. */
+.anim-entidade-marca {
+  color: var(--painel-texto-fraco);
+  font-size: 12px;
+}
+
+/* As animações da entidade, recuadas embaixo do nome dela. */
+.anim-item-entidade {
+  padding-left: 28px;
+}

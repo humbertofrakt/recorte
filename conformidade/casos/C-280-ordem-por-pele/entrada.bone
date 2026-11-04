@@ -1,0 +1,41 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "ordem por pele" },
+  "bones": [ { "name": "root" } ],
+  "slots": [
+    { "name": "corpo", "bone": "root", "attachment": "corpo" },
+    { "name": "capa",  "bone": "root", "attachment": "capa" },
+    { "name": "braco", "bone": "root", "attachment": "braco" }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": { "corpo": { "type": "region", "path": "corpo", "width": 10, "height": 10 } },
+        "capa":  { "capa":  { "type": "region", "path": "capa",  "width": 10, "height": 10 } },
+        "braco": { "braco": { "type": "region", "path": "braco", "width": 10, "height": 10 } }
+      }
+    },
+    {
+      "name": "vestida",
+      "drawOrder": [ { "slot": "capa", "offset": 1 } ],
+      "attachments": {
+        "capa": { "capa": { "type": "region", "path": "capa_vestida", "width": 12, "height": 12 } }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "acenar",
+      "duration": 1.0,
+      "loop": false,
+      "timelines": [
+        { "type": "drawOrder",
+          "keys": [
+            { "time": 0,   "value": [] },
+            { "time": 0.5, "value": [ { "slot": "braco", "offset": -1 } ] }
+          ] }
+      ]
+    }
+  ]
+}

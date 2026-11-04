@@ -1,0 +1,29 @@
+{
+  "probe": { "animation": "puxar", "times": [0, 0.5, 1], "measure": ["slots", "vertices", "uvs"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "slots": {
+        "herda":   { "attachment": "copia_herda",   "color": [1, 1, 1, 1], "darkColor": null, "visible": true, "sequenceIndex": -1 },
+        "propria": { "attachment": "copia_propria", "color": [1, 1, 1, 1], "darkColor": null, "visible": true, "sequenceIndex": -1 }
+      },
+      "vertices": {
+        "herda/copia_herda":     [0, 0, 100, 0, 0, 100],
+        "propria/copia_propria": [0, 0, 100, 0, 0, 100]
+      },
+      "uvs": {
+        "herda/copia_herda":     [0, 0, 1, 0, 0, 1],
+        "propria/copia_propria": [0, 0, 1, 0, 0, 1]
+      } },
+    { "time": 0.5,
+      "vertices": {
+        "herda/copia_herda":     [10, 0, 100, 0, 0, 100],
+        "propria/copia_propria": [0, 0, 100, 0, 0, 100]
+      } },
+    { "time": 1,
+      "vertices": {
+        "herda/copia_herda":     [20, 0, 100, 0, 0, 100],
+        "propria/copia_propria": [0, 0, 100, 0, 0, 100]
+      } }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "pesos animados"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "hips",
+      "parent": "root",
+      "y": 100,
+      "length": 10
+    },
+    {
+      "name": "torso",
+      "parent": "hips",
+      "rotation": 90,
+      "length": 50
+    }
+  ],
+  "slots": [
+    {
+      "name": "capa",
+      "bone": "hips",
+      "attachment": "capa"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "capa": {
+          "capa": {
+            "type": "mesh",
+            "path": "capa",
+            "width": 40,
+            "height": 50,
+            "binding": {
+              "counts": [
+                2,
+                1,
+                1
+              ],
+              "bones": [
+                1,
+                2,
+                1,
+                1
+              ],
+              "positions": [
+                0,
+                50,
+                50,
+                0,
+                -20,
+                0,
+                20,
+                0
+              ],
+              "weights": [
+                1,
+                0,
+                1,
+                1
+              ]
+            },
+            "uvs": [
+              0.5,
+              0,
+              0,
+              1,
+              1,
+              1
+            ],
+            "triangles": [
+              0,
+              1,
+              2
+            ],
+            "hull": 3
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "dobrar",
+      "duration": 1.0,
+      "loop": false,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "torso",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 90
+            },
+            {
+              "time": 1.0,
+              "value": 180
+            }
+          ]
+        },
+        {
+          "type": "weights",
+          "target": "capa",
+          "skin": "default",
+          "attachment": "capa",
+          "keys": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                0,
+                1,
+                1
+              ]
+            },
+            {
+              "time": 1.0,
+              "value": [
+                0,
+                1,
+                1,
+                1
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

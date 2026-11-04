@@ -1,0 +1,550 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.1.0",
+    "id": "3c9f4a2e-7b1d-4e6a-9f0c-2d5b8e1a7c44",
+    "created": "2026-09-06T12:00:00Z",
+    "modified": "2026-09-06T12:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo da especificação bone 0.1"
+  },
+  "extensionsUsed": ["RECORTE_editor_state"],
+  "extensionsRequired": [],
+  "skeleton": {
+    "name": "heroi",
+    "x": -70, "y": -8, "width": 150, "height": 240,
+    "fps": 30,
+    "referenceScale": 100,
+    "pixelArt": false,
+    "hash": "exemplo"
+  },
+  "assets": {
+    "atlases": ["heroi.atlas.json"],
+    "imagesBase": "images/",
+    "audioBase": "audio/",
+    "skeletonsBase": ""
+  },
+
+  "bones": [
+    { "name": "root",        "color": [0.6, 0.6, 0.6, 1] },
+    { "name": "hips",        "parent": "root",   "x": 0,  "y": 90,  "length": 10, "folder": "corpo" },
+    { "name": "torso",       "parent": "hips",   "x": 0,  "y": 0,   "rotation": 90, "length": 70, "folder": "corpo" },
+    { "name": "head",        "parent": "torso",  "x": 70, "y": 0,   "length": 40, "folder": "corpo", "icon": "head" },
+    { "name": "arm",         "parent": "torso",  "x": 55, "y": -10, "rotation": -160, "length": 40, "folder": "braco" },
+    { "name": "forearm",     "parent": "arm",    "x": 40, "y": 0,   "rotation": 20,  "length": 35, "folder": "braco" },
+    { "name": "hand_target", "parent": "root",   "x": 30, "y": 60,  "icon": "ik", "inheritRotation": false, "inheritScale": false, "inheritReflection": false },
+    { "name": "leg",         "parent": "hips",   "x": 4,  "y": -4,  "rotation": -85, "length": 44, "folder": "perna" },
+    { "name": "shin",        "parent": "leg",    "x": 44, "y": 0,   "rotation": -5, "length": 40, "folder": "perna" },
+    { "name": "foot",        "parent": "shin",   "x": 40, "y": 0,   "rotation": 95, "length": 24, "folder": "perna" },
+    { "name": "hair",        "parent": "head",   "x": 34, "y": 24,  "rotation": 160, "length": 50, "folder": "cabelo", "visible": true },
+    { "name": "cape1",       "parent": "torso",  "x": 60, "y": 10,  "rotation": 170, "length": 36, "folder": "capa" },
+    { "name": "cape2",       "parent": "cape1",  "x": 36, "y": 0,   "rotation": 10,  "length": 41, "folder": "capa" },
+    { "name": "arm_b",       "parent": "torso",  "x": 55, "y": 10,  "rotation": -185, "length": 38, "folder": "atras" },
+    { "name": "forearm_b",   "parent": "arm_b",  "x": 38, "y": 0,   "rotation": 15, "length": 34, "folder": "atras" },
+    { "name": "leg_b",       "parent": "hips",   "x": -4, "y": -4,  "rotation": -95, "length": 44, "folder": "atras" },
+    { "name": "shin_b",      "parent": "leg_b",  "x": 44, "y": 0,   "rotation": -5, "length": 40, "folder": "atras" },
+    { "name": "foot_b",      "parent": "shin_b", "x": 40, "y": 0,   "rotation": 85, "length": 24, "folder": "atras" }
+  ],
+
+  "slots": [
+    { "name": "cape_upper",   "bone": "cape1",     "attachment": "cape_upper", "folder": "capa" },
+    { "name": "cape_lower",   "bone": "cape2",     "attachment": "cape_lower", "folder": "capa" },
+    { "name": "hair",         "bone": "hair",      "attachment": "hair", "darkColor": [0.1, 0, 0.1] },
+    { "name": "arm_back",     "bone": "arm_b",     "attachment": "arm_back", "folder": "atras" },
+    { "name": "forearm_back", "bone": "forearm_b", "attachment": "forearm_back", "folder": "atras" },
+    { "name": "hand_back",    "bone": "forearm_b", "attachment": "hand_back", "folder": "atras" },
+    { "name": "leg_back",     "bone": "leg_b",     "attachment": "thigh_back", "folder": "atras" },
+    { "name": "shin_back",    "bone": "shin_b",    "attachment": "shin_back", "folder": "atras" },
+    { "name": "foot_back",    "bone": "foot_b",    "attachment": "foot_back", "folder": "atras" },
+    { "name": "mask",         "bone": "torso",     "attachment": "mask", "folder": "mascaras" },
+    { "name": "body",         "bone": "torso",     "attachment": "body" },
+    { "name": "head",         "bone": "head",      "attachment": "face", "color": [1, 1, 1, 1] },
+    { "name": "leg_front",    "bone": "leg",       "attachment": "thigh", "folder": "perna" },
+    { "name": "shin_front",   "bone": "shin",      "attachment": "shin", "folder": "perna" },
+    { "name": "foot_front",   "bone": "foot",      "attachment": "foot", "folder": "perna" },
+    { "name": "arm",          "bone": "arm",       "attachment": "arm" },
+    { "name": "forearm",      "bone": "forearm",   "attachment": "forearm" },
+    { "name": "sword_blade",  "bone": "forearm",   "attachment": "blade", "folder": "arma" },
+    { "name": "weapon",       "bone": "forearm",   "attachment": "sword", "visible": true },
+    { "name": "hand",         "bone": "forearm",   "attachment": "hand", "blend": "normal" },
+    { "name": "hitbox",       "bone": "torso",     "attachment": "hitbox", "folder": "colisao" },
+    { "name": "hand_point",   "bone": "forearm",   "attachment": "hand_point", "folder": "pontos" },
+    { "name": "cape_path",    "bone": "torso",     "attachment": "cape_path", "folder": "capa" }
+  ],
+
+  "constraints": [
+    { "type": "ik", "name": "ik_arm", "bones": ["arm", "forearm"], "target": "hand_target",
+      "mix": 1, "bendPositive": false, "compress": false, "stretch": false, "uniform": false, "softness": 0 },
+    { "type": "transform", "name": "head_lean", "bones": ["head"], "target": "torso",
+      "local": true, "relative": true, "offsetRotation": 0, "mixRotation": 0.05, "mixX": 0, "mixY": 0,
+      "mixScaleX": 0, "mixScaleY": 0, "mixShearY": 0, "mix": 1 },
+    { "type": "path", "name": "cape_follow", "bones": ["cape1", "cape2"], "target": "cape_path",
+      "positionMode": "percent", "spacingMode": "length", "rotateMode": "chain",
+      "offsetRotation": 0, "position": 0, "spacing": 0, "mixRotation": 1, "mixX": 1, "mixY": 1, "mix": 1 },
+    { "type": "physics", "name": "hair_physics", "bone": "hair",
+      "x": 0, "y": 0, "rotation": 1, "scaleX": 0, "shearX": 0,
+      "inertia": 0.5, "strength": 80, "damping": 0.9, "mass": 1, "wind": 0, "gravity": 20, "limit": 5000, "fps": 60, "mix": 1 },
+    { "type": "driver", "name": "look_driver", "parameter": "lookX", "mix": 1,
+      "targets": [
+        { "type": "bone", "target": "head", "property": "rotation", "mode": "add",
+          "keys": [
+            { "input": -1, "value": -12 },
+            { "input": 0,  "value": 0, "curve": [0.3, 0, 0.7, 12] },
+            { "input": 1,  "value": 12 }
+          ] },
+        { "type": "morph", "target": "smile", "property": "weight", "mode": "replace",
+          "keys": [
+            { "input": -1, "value": 0 },
+            { "input": 1,  "value": 1 }
+          ] }
+      ] }
+  ],
+
+  "skins": [
+    {
+      "name": "default",
+      "displayName": "Padrão",
+      "attachments": {
+        "cape_upper": {
+          "cape_upper": { "type": "region", "path": "cape_upper", "x": 19, "y": 0, "width": 40, "height": 32 }
+        },
+        "cape_lower": {
+          "cape_lower": { "type": "region", "path": "cape_lower", "x": 21, "y": 0, "width": 46, "height": 42 }
+        },
+        "hair": {
+          "hair": { "type": "region", "path": "hair", "x": 26, "y": 0, "rotation": 0, "scaleX": 1, "scaleY": 1, "width": 56, "height": 30 }
+        },
+        "arm_back": {
+          "arm_back": { "type": "region", "path": "arm_back", "x": 20, "y": 0, "width": 48, "height": 24 }
+        },
+        "forearm_back": {
+          "forearm_back": { "type": "region", "path": "forearm_back", "x": 17, "y": 0, "width": 40, "height": 20 }
+        },
+        "hand_back": {
+          "hand_back": { "type": "region", "path": "hand_back", "x": 33, "y": 0, "width": 22, "height": 22 }
+        },
+        "leg_back": {
+          "thigh_back": { "type": "region", "path": "thigh_back", "x": 21, "y": 0, "width": 50, "height": 28 }
+        },
+        "shin_back": {
+          "shin_back": { "type": "region", "path": "shin_back", "x": 20, "y": 0, "width": 46, "height": 24 }
+        },
+        "foot_back": {
+          "foot_back": { "type": "region", "path": "foot_back", "x": 12, "y": -5, "width": 34, "height": 20 }
+        },
+        "mask": {
+          "mask": { "type": "clipping", "end": "head", "invert": false, "vertices": [-30, -70, 150, -70, 150, 70, -30, 70] }
+        },
+        "body": {
+          "body": { "type": "region", "path": "body", "x": 35, "y": 0, "rotation": -90, "width": 76, "height": 84 }
+        },
+        "head": {
+          "face": {
+            "type": "mesh",
+            "path": "face",
+            "width": 64, "height": 66,
+            "binding": {
+              "counts":    [1, 1, 1, 2],
+              "bones":     [3, 3, 3, 3, 2],
+              "positions": [-4, 32,  62, 32,  62, -32,  -4, -32,  68.52, -32.21],
+              "weights":   [1, 1, 1, 0.7, 0.3]
+            },
+            "uvs": [0, 1, 0, 0, 1, 0, 1, 1],
+            "triangles": [0, 1, 2, 0, 2, 3],
+            "hull": 4,
+            "edges": [0, 1, 1, 2, 2, 3, 3, 0],
+            "extras": { "autoMesh": true }
+          }
+        },
+        "leg_front": {
+          "thigh": { "type": "region", "path": "thigh", "x": 21, "y": 0, "width": 50, "height": 28 }
+        },
+        "shin_front": {
+          "shin": { "type": "region", "path": "shin", "x": 20, "y": 0, "width": 46, "height": 24 }
+        },
+        "foot_front": {
+          "foot": { "type": "region", "path": "foot", "x": 12, "y": -5, "width": 34, "height": 20 }
+        },
+        "arm": {
+          "arm": { "type": "region", "path": "arm", "x": 22, "y": 0, "width": 52, "height": 26 }
+        },
+        "forearm": {
+          "forearm": { "type": "region", "path": "forearm", "x": 18, "y": 0, "width": 44, "height": 22 }
+        },
+        "sword_blade": {
+          "blade": { "type": "region", "path": "blade", "x": 62, "y": 0, "width": 70, "height": 24 }
+        },
+        "weapon": {
+          "sword": { "type": "skeleton", "uri": "espada.bone", "x": 35, "y": 0, "rotation": 0,
+                     "scaleX": 1, "scaleY": 1, "skins": [], "animation": "idle", "loop": true,
+                     "timeScale": 1, "inheritColor": true }
+        },
+        "hand": {
+          "hand": { "type": "region", "path": "hand_", "x": 35, "y": 0, "width": 24, "height": 24,
+                    "sequence": { "frames": ["hand_01", "hand_02", "hand_03"], "setup": 0 } },
+          "hand_fist": { "type": "region", "path": "hand_03", "x": 35, "y": 0, "width": 24, "height": 24 }
+        },
+        "hitbox": {
+          "hitbox": { "type": "boundingbox", "shape": "polygon", "vertices": [0, -32, 74, -32, 74, 32, 0, 32],
+                      "color": [0.38, 0.94, 0, 1] }
+        },
+        "hand_point": {
+          "hand_point": { "type": "point", "x": 35, "y": 0, "rotation": 0 }
+        },
+        "cape_path": {
+          "cape_path": {
+            "type": "path",
+            "closed": false,
+            "constantSpeed": true,
+            "vertices": [60, 10, 60, 10, 60, 10,   30, 30, 30, 30, 30, 30,   -10, 40, -10, 40, -10, 40],
+            "lengths": [36.056, 77.287],
+            "color": [1, 0.5, 0, 1]
+          }
+        }
+      }
+    },
+    {
+      "name": "armadura",
+      "displayName": "Armadura",
+      "includes": [],
+      "bones": [],
+      "constraints": [],
+      "attachments": {
+        "body": {
+          "body": { "type": "region", "path": "armadura/body", "x": 35, "y": 0, "rotation": -90, "width": 76, "height": 84 }
+        },
+        "head": {
+          "face": { "type": "linkedmesh", "path": "face", "parent": "face", "skin": "default", "inheritDeform": true, "width": 64, "height": 66 }
+        },
+        "hair": {
+          "hair": null
+        }
+      },
+      "extras": { "autor": "Humberto" }
+    },
+    {
+      "name": "armadura_capa",
+      "displayName": "Armadura com capa",
+      "includes": ["armadura"],
+      "attachments": {
+        "hair": {
+          "hair": null
+        }
+      }
+    }
+  ],
+
+  "events": [
+    { "name": "step", "int": 1, "float": 0, "string": "", "audio": "step.ogg", "volume": 0.8, "balance": 0 },
+    { "name": "hit",  "int": 10, "string": "sword" }
+  ],
+
+  "parameters": [
+    { "name": "lookX", "min": -1, "max": 1, "default": 0, "repeat": false, "group": "rosto", "displayName": "Olhar X" }
+  ],
+
+  "morphs": [
+    { "name": "smile", "weight": 0, "min": 0, "max": 1, "group": "rosto",
+      "targets": [
+        { "slot": "head", "attachment": "face", "skin": "default", "offsets": [0, 0, 0, 0, 0, 3, 0, -3, 0, 0] }
+      ] }
+  ],
+
+  "variables": [
+    { "name": "speed", "type": "float", "default": 0 },
+    { "name": "grounded", "type": "bool", "default": true }
+  ],
+
+  "tags": ["vulnerable", "attacking", "idle"],
+
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 2.0,
+      "loop": true,
+      "blend": "replace",
+      "tags": ["idle"],
+      "timelines": [
+        { "type": "bone", "target": "torso", "property": "rotation",
+          "keys": [
+            { "time": 0,   "value": 90, "curve": [0.3, 90, 0.7, 93] },
+            { "time": 1.0, "value": 93, "curve": [1.3, 93, 1.7, 90] },
+            { "time": 2.0, "value": 90 }
+          ] },
+        { "type": "bone", "target": "hips", "property": "y",
+          "keys": [
+            { "time": 0,   "value": 90 },
+            { "time": 1.0, "value": 88 },
+            { "time": 2.0, "value": 90 }
+          ] },
+        { "type": "bone", "target": "head", "property": "scaleX",
+          "keys": [ { "time": 0, "value": 1 }, { "time": 1.0, "value": 1.02 }, { "time": 2.0, "value": 1 } ] },
+        { "type": "bone", "target": "head", "property": "scaleY",
+          "keys": [ { "time": 0, "value": 1 }, { "time": 1.0, "value": 0.98 }, { "time": 2.0, "value": 1 } ] },
+        { "type": "bone", "target": "head", "property": "rotation",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.7, "value": -2 }, { "time": 1.4, "value": 1 }, { "time": 2.0, "value": 0 } ] },
+        { "type": "bone", "target": "arm_b", "property": "rotation",
+          "keys": [ { "time": 0, "value": -185 }, { "time": 1.0, "value": -181 }, { "time": 2.0, "value": -185 } ] },
+        { "type": "bone", "target": "forearm_b", "property": "rotation",
+          "keys": [ { "time": 0, "value": 15 }, { "time": 1.0, "value": 11 }, { "time": 2.0, "value": 15 } ] },
+        { "type": "bone", "target": "shin", "property": "rotation",
+          "keys": [ { "time": 0, "value": -5 }, { "time": 1.0, "value": -8 }, { "time": 2.0, "value": -5 } ] },
+        { "type": "bone", "target": "shin_b", "property": "rotation",
+          "keys": [ { "time": 0, "value": -5 }, { "time": 1.0, "value": -2 }, { "time": 2.0, "value": -5 } ] },
+        { "type": "slot", "target": "head", "property": "color",
+          "keys": [
+            { "time": 0,   "value": [1, 1, 1, 1], "curve": [0.5, 1, 1.5, 1,  0.5, 1, 1.5, 0.95,  0.5, 1, 1.5, 0.95,  0.5, 1, 1.5, 1] },
+            { "time": 2.0, "value": [1, 0.95, 0.95, 1] }
+          ] },
+        { "type": "deform", "target": "head", "skin": "default", "attachment": "face",
+          "keys": [
+            { "time": 0,   "value": [] },
+            { "time": 1.0, "offset": 4, "value": [0, 1, 0, 1], "curve": [1.2, 0, 1.8, 1] },
+            { "time": 2.0, "value": [] }
+          ] },
+        { "type": "sequence", "target": "hand", "skin": "default", "attachment": "hand",
+          "keys": [ { "time": 0, "value": { "mode": "loop", "index": 0, "delay": 0.25 } } ] },
+        { "type": "parameter", "target": "lookX", "property": "value",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 1.0, "value": 0.5 }, { "time": 2.0, "value": 0 } ] },
+        { "type": "morph", "target": "smile", "property": "weight",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 1.0, "value": 0.3, "curve": "stepped" }, { "time": 2.0, "value": 0 } ] },
+        { "type": "constraint", "target": "hair_physics", "property": "gravity",
+          "keys": [ { "time": 0, "value": 20 }, { "time": 2.0, "value": 20 } ] },
+        { "type": "variable", "target": "speed", "property": "value",
+          "keys": [ { "time": 0, "value": 0 } ] },
+        { "type": "variable", "target": "grounded", "property": "value",
+          "keys": [ { "time": 0, "value": true } ] },
+        { "type": "tag",
+          "keys": [ { "time": 0, "value": ["vulnerable"] } ] },
+        { "type": "nested", "target": "weapon", "property": "animation",
+          "keys": [ { "time": 0, "value": "idle" } ] },
+        { "type": "nested", "target": "weapon", "property": "timeScale",
+          "keys": [ { "time": 0, "value": 1 } ] }
+      ]
+    },
+    {
+      "name": "walk",
+      "duration": 1.0,
+      "loop": true,
+      "defaultMix": 0.2,
+      "tags": ["vulnerable"],
+      "timelines": [
+        { "type": "bone", "target": "hips", "property": "x",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.5, "value": 4 }, { "time": 1.0, "value": 0 } ] },
+        { "type": "bone", "target": "hips", "property": "y",
+          "keys": [
+            { "time": 0,    "value": 90, "curve": [0.08, 90, 0.17, 86] },
+            { "time": 0.25, "value": 86, "curve": [0.33, 86, 0.42, 90] },
+            { "time": 0.5,  "value": 90, "curve": [0.58, 90, 0.67, 86] },
+            { "time": 0.75, "value": 86, "curve": [0.83, 86, 0.92, 90] },
+            { "time": 1.0,  "value": 90 }
+          ] },
+        { "type": "bone", "target": "leg", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": -84 },
+            { "time": 0.25, "value": -63 },
+            { "time": 0.5,  "value": -86 },
+            { "time": 0.75, "value": -108 },
+            { "time": 1.0,  "value": -84 }
+          ] },
+        { "type": "bone", "target": "shin", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": -50 },
+            { "time": 0.25, "value": -6 },
+            { "time": 0.5,  "value": -5 },
+            { "time": 0.75, "value": -16 },
+            { "time": 1.0,  "value": -50 }
+          ] },
+        { "type": "bone", "target": "foot", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": 122 },
+            { "time": 0.25, "value": 81 },
+            { "time": 0.5,  "value": 91 },
+            { "time": 0.75, "value": 92 },
+            { "time": 1.0,  "value": 122 }
+          ] },
+        { "type": "bone", "target": "leg_b", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": -86 },
+            { "time": 0.25, "value": -108 },
+            { "time": 0.5,  "value": -84 },
+            { "time": 0.75, "value": -63 },
+            { "time": 1.0,  "value": -86 }
+          ] },
+        { "type": "bone", "target": "shin_b", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": -5 },
+            { "time": 0.25, "value": -16 },
+            { "time": 0.5,  "value": -50 },
+            { "time": 0.75, "value": -6 },
+            { "time": 1.0,  "value": -5 }
+          ] },
+        { "type": "bone", "target": "foot_b", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": 91 },
+            { "time": 0.25, "value": 92 },
+            { "time": 0.5,  "value": 122 },
+            { "time": 0.75, "value": 81 },
+            { "time": 1.0,  "value": 91 }
+          ] },
+        { "type": "bone", "target": "arm", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": -172 },
+            { "time": 0.25, "value": -184 },
+            { "time": 0.5,  "value": -172 },
+            { "time": 0.75, "value": -160 },
+            { "time": 1.0,  "value": -172 }
+          ] },
+        { "type": "bone", "target": "forearm", "property": "rotation",
+          "keys": [ { "time": 0, "value": 22 }, { "time": 0.5, "value": 28 }, { "time": 1.0, "value": 22 } ] },
+        { "type": "bone", "target": "arm_b", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": -178 },
+            { "time": 0.25, "value": -156 },
+            { "time": 0.5,  "value": -178 },
+            { "time": 0.75, "value": -200 },
+            { "time": 1.0,  "value": -178 }
+          ] },
+        { "type": "bone", "target": "forearm_b", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": 20 },
+            { "time": 0.25, "value": 8 },
+            { "time": 0.5,  "value": 20 },
+            { "time": 0.75, "value": 32 },
+            { "time": 1.0,  "value": 20 }
+          ] },
+        { "type": "bone", "target": "torso", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": 88 },
+            { "time": 0.25, "value": 87 },
+            { "time": 0.5,  "value": 88 },
+            { "time": 0.75, "value": 87 },
+            { "time": 1.0,  "value": 88 }
+          ] },
+        { "type": "bone", "target": "torso", "property": "shearX",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.5, "value": 4 }, { "time": 1.0, "value": 0 } ] },
+        { "type": "bone", "target": "torso", "property": "shearY",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.5, "value": -2 }, { "time": 1.0, "value": 0 } ] },
+        { "type": "slot", "target": "hand", "property": "attachment",
+          "keys": [ { "time": 0, "value": "hand" }, { "time": 0.5, "value": "hand_fist" }, { "time": 0.9, "value": "hand" } ] },
+        { "type": "slot", "target": "hair", "property": "darkColor",
+          "keys": [ { "time": 0, "value": [0.1, 0, 0.1] }, { "time": 1.0, "value": [0.2, 0, 0.1] } ] },
+        { "type": "drawOrder",
+          "keys": [
+            { "time": 0,    "value": [] },
+            { "time": 0.25, "value": [ { "slot": "arm", "offset": -2 } ] },
+            { "time": 0.75, "value": [] }
+          ] },
+        { "type": "constraint", "target": "ik_arm", "property": "mix",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.2, "value": 0.25 }, { "time": 0.8, "value": 0.25 }, { "time": 1.0, "value": 0 } ] },
+        { "type": "constraint", "target": "cape_follow", "property": "position",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.5, "value": 0.1 }, { "time": 1.0, "value": 0 } ] },
+        { "type": "constraint", "target": "cape_follow", "property": "spacing",
+          "keys": [ { "time": 0, "value": 0 } ] },
+        { "type": "event",
+          "keys": [
+            { "time": 0.25, "event": "step", "int": 1, "volume": 0.8, "balance": -0.3 },
+            { "time": 0.75, "event": "step", "int": 2, "balance": 0.3 }
+          ] },
+        { "type": "variable", "target": "speed", "property": "value",
+          "keys": [ { "time": 0, "value": 120 } ] },
+        { "type": "tag",
+          "keys": [ { "time": 0, "value": ["vulnerable"] } ] }
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.6,
+      "loop": false,
+      "blend": "replace",
+      "tags": [],
+      "timelines": [
+        { "type": "bone", "target": "arm", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": -160, "curve": [0.02, -160, 0.06, 30] },
+            { "time": 0.1,  "value": 30,   "curve": [0.13, 30, 0.17, -100] },
+            { "time": 0.2,  "value": -100 },
+            { "time": 0.35, "value": -130 },
+            { "time": 0.6,  "value": -160 }
+          ] },
+        { "type": "bone", "target": "forearm", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": 20, "curve": [0.02, 20, 0.06, 95] },
+            { "time": 0.1,  "value": 95, "curve": [0.13, 95, 0.17, 15] },
+            { "time": 0.2,  "value": 15 },
+            { "time": 0.35, "value": 30 },
+            { "time": 0.6,  "value": 20 }
+          ] },
+        { "type": "bone", "target": "arm_b", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": -185 },
+            { "time": 0.1,  "value": -163 },
+            { "time": 0.25, "value": -202 },
+            { "time": 0.6,  "value": -185 }
+          ] },
+        { "type": "bone", "target": "torso", "property": "rotation",
+          "keys": [
+            { "time": 0,    "value": 90 },
+            { "time": 0.1,  "value": 97 },
+            { "time": 0.2,  "value": 80 },
+            { "time": 0.4,  "value": 87 },
+            { "time": 0.6,  "value": 90 }
+          ] },
+        { "type": "bone", "target": "hips", "property": "x",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.2, "value": 8 }, { "time": 0.45, "value": 4 }, { "time": 0.6, "value": 0 } ] },
+        { "type": "bone", "target": "leg", "property": "rotation",
+          "keys": [ { "time": 0, "value": -85 }, { "time": 0.2, "value": -66 }, { "time": 0.4, "value": -70 }, { "time": 0.6, "value": -85 } ] },
+        { "type": "bone", "target": "leg_b", "property": "rotation",
+          "keys": [ { "time": 0, "value": -95 }, { "time": 0.2, "value": -114 }, { "time": 0.4, "value": -110 }, { "time": 0.6, "value": -95 } ] },
+        { "type": "bone", "target": "shin_b", "property": "rotation",
+          "keys": [ { "time": 0, "value": -5 }, { "time": 0.2, "value": -18 }, { "time": 0.6, "value": -5 } ] },
+        { "type": "bone", "target": "hand_target", "property": "inheritRotation",
+          "keys": [ { "time": 0, "value": false }, { "time": 0.3, "value": true } ] },
+        { "type": "bone", "target": "hand_target", "property": "inheritScale",
+          "keys": [ { "time": 0, "value": false } ] },
+        { "type": "bone", "target": "hand_target", "property": "inheritReflection",
+          "keys": [ { "time": 0, "value": false } ] },
+        { "type": "constraint", "target": "ik_arm", "property": "mix",
+          "keys": [ { "time": 0, "value": 0 } ] },
+        { "type": "constraint", "target": "ik_arm", "property": "bendPositive",
+          "keys": [ { "time": 0, "value": false }, { "time": 0.3, "value": true } ] },
+        { "type": "constraint", "target": "ik_arm", "property": "stretch",
+          "keys": [ { "time": 0, "value": false } ] },
+        { "type": "constraint", "target": "ik_arm", "property": "softness",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.3, "value": 10 } ] },
+        { "type": "constraint", "target": "hair_physics", "property": "reset",
+          "keys": [ { "time": 0 } ] },
+        { "type": "constraint", "target": "hair_physics", "property": "wind",
+          "keys": [ { "time": 0, "value": 0 }, { "time": 0.6, "value": 30 } ] },
+        { "type": "constraint", "target": "hair_physics", "property": "inertia",
+          "keys": [ { "time": 0, "value": 0.5 }, { "time": 0.3, "value": 0.8 } ] },
+        { "type": "constraint", "target": "head_lean", "property": "mixRotation",
+          "keys": [ { "time": 0, "value": 0.05 }, { "time": 0.2, "value": 0 }, { "time": 0.6, "value": 0.05 } ] },
+        { "type": "slot", "target": "weapon", "property": "visible",
+          "keys": [ { "time": 0, "value": true } ] },
+        { "type": "slot", "target": "hand", "property": "attachment",
+          "keys": [ { "time": 0, "value": "hand_fist" }, { "time": 0.55, "value": null } ] },
+        { "type": "slot", "target": "hair", "property": "darkColor",
+          "keys": [ { "time": 0, "value": null }, { "time": 0.3, "value": [0.3, 0, 0] } ] },
+        { "type": "event",
+          "keys": [ { "time": 0.2, "event": "hit", "string": "sword", "float": 1.5 } ] },
+        { "type": "tag",
+          "keys": [ { "time": 0, "value": ["attacking"] }, { "time": 0.4, "value": ["vulnerable"] } ] },
+        { "type": "nested", "target": "weapon", "property": "animation",
+          "keys": [ { "time": 0, "value": "brilho" } ] },
+        { "type": "nested", "target": "weapon", "property": "time",
+          "keys": [ { "time": 0, "value": 0, "curve": [0.1, 0, 0.5, 0.6] }, { "time": 0.6, "value": 0.6 } ] }
+      ],
+      "extras": { "descricao": "golpe curto com a espada" }
+    }
+  ],
+
+  "extensions": {
+    "RECORTE_editor_state": { "camera": { "x": 0, "y": 100, "zoom": 1.5 }, "selection": ["hips"] }
+  },
+  "extras": {
+    "projeto": "especificação 0.1",
+    "import": { "from": "manual", "version": "0", "warnings": [] }
+  }
+}

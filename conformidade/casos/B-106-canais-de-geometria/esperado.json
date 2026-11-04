@@ -1,0 +1,82 @@
+{
+  "probe": {
+    "times": [0],
+    "measure": [
+      "slots",
+      "vertices",
+      "uvs",
+      "points",
+      "boundingBoxes"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": -1
+        },
+        "caixa": {
+          "attachment": "caixa",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": -1
+        },
+        "mascara": {
+          "attachment": "mascara",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": -1
+        },
+        "trilho": {
+          "attachment": "trilho",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": -1
+        },
+        "marca": {
+          "attachment": "marca",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": true,
+          "sequenceIndex": -1
+        },
+        "escondido": {
+          "attachment": "escondido",
+          "color": [1, 1, 1, 1],
+          "darkColor": null,
+          "visible": false,
+          "sequenceIndex": -1
+        }
+      },
+      "vertices": {
+        "corpo/corpo": [2.679492, -7.320508, 37.320508, 12.679492, 17.320508, 47.320508, -17.320508, 27.320508],
+        "mascara/mascara": [-0.980762, -20.980762, 50.980762, 9.019238, 20.980762, 60.980762, -30.980762, 30.980762],
+        "trilho/trilho": [1.339746, 15, 10, 20, 18.660254, 25, 27.320508, 30, 35.980762, 35, 44.641016, 40],
+        "escondido/escondido": [8.169873, 13.169873, 16.830127, 18.169873, 11.830127, 26.830127, 3.169873, 21.830127]
+      },
+      "boundingBoxes": {
+        "caixa/caixa": [8.169873, 13.169873, 16.830127, 18.169873, 11.830127, 26.830127, 3.169873, 21.830127]
+      },
+      "uvs": {
+        "corpo/corpo": [0, 1, 1, 1, 1, 0, 0, 0],
+        "escondido/escondido": [0, 1, 1, 1, 1, 0, 0, 0]
+      },
+      "points": {
+        "marca/marca": {
+          "x": 14.562178,
+          "y": 26.098076,
+          "rotation": 45
+        }
+      }
+    }
+  ]
+}

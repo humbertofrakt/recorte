@@ -1,0 +1,392 @@
+/* ------------------------------------------------------------------ */
+/* draw-order.css — lote A6, plano arrumação (v11.2)                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A aba Ordem — a lista de desenho, a barra dos seis botões, as pastas e o
+ * losango da linha que uma chave tirou do lugar.
+ *
+ * Estes blocos moravam em `panels.css`, com os de todos os painéis. Vieram
+ * para cá sem mudar um seletor, na mesma ordem entre si; o `main.ts` carrega
+ * este arquivo logo depois do `panels.css`.
+ */
+
+/* ------------------------------------------------------------------ */
+/* A aba Ordem — a ordem de desenho, sozinha (lote 16)                 */
+/* ------------------------------------------------------------------ */
+
+/*
+ * É a **Z-order** do Spriter: uma lista plana, um desenho por linha, miniatura
+ * grande. Era uma seção espremida dentro da Árvore, com miniatura de 24px,
+ * abaixo de dezoito ossos — e a ordem de desenho é das coisas que mais se mexe
+ * ao montar um personagem.
+ */
+.ordem {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.ordem-lista {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.ordem-linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Rodada 43, lote 5 (doc 51): 4px virou 2px — mais peças à vista. A
+     miniatura de 40px fica: é ela que distingue a bota esquerda da direita. */
+  padding: 2px 10px;
+  border-bottom: 1px solid var(--painel-linha, #c3ccd8);
+  cursor: grab;
+}
+
+.ordem-linha:hover {
+  background: var(--painel-hover, #e7edfb);
+}
+
+.ordem-linha-escolhida {
+  background: var(--painel-realce-fraco, #e7edfb);
+  box-shadow: inset 3px 0 0 var(--painel-realce, #1a4fd8);
+}
+
+.ordem-linha:focus-visible {
+  outline: 3px solid var(--painel-realce, #1a4fd8);
+  outline-offset: -3px;
+}
+
+/* A linha em que a arrastada vai cair. */
+.ordem-alvo {
+  box-shadow: inset 0 -3px 0 var(--painel-realce, #1a4fd8);
+}
+
+/* Lote 50: soltar ENTRE duas linhas — a linha laranja fina diz onde entra. */
+.ordem-alvo-antes {
+  box-shadow: inset 0 3px 0 #ff9a1f;
+}
+
+.ordem-alvo-depois {
+  box-shadow: inset 0 -3px 0 #ff9a1f;
+}
+
+/*
+ * A barra da aba Ordem — anotação 25, lote 35.
+ *
+ * Seis botões numa linha só, e um espaço antes dos dois de pasta: mover e
+ * agrupar são duas coisas, e o olho separa por espaço antes de ler o nome.
+ */
+.ordem-barra {
+  flex: 0 0 auto;
+  display: flex;
+  /*
+   * QUEBRA em vez de cortar. Seis botões não cabem numa coluna estreita, e um
+   * botão fora da vista é um botão que não existe — foi o que este lote veio
+   * consertar. Uma segunda linha custa uma linha da lista; sumir custa a
+   * função inteira.
+   */
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 5px 6px;
+  border-bottom: 1px solid var(--painel-linha, #c3ccd8);
+}
+
+/*
+ * Compactos: aqui o ícone basta, e o nome inteiro está na dica.
+ *
+ * Seis botões de 48 px não cabem numa coluna de 258; de 38, cabem, e ainda
+ * sobra a folga do polegar. O `min-height` de 34 continua, que é a medida de
+ * alvo de clique da casa.
+ */
+.ordem-barra .painel-botao {
+  padding: 2px 4px;
+}
+
+.ordem-barra .painel-botao-icone {
+  padding: 4px 4px;
+}
+
+/* 16 px em vez de 18: é o que faz os seis caberem numa linha só em 258. */
+.ordem-barra .icone {
+  width: 16px;
+  height: 16px;
+}
+
+/*
+ * O degrau entre mover e agrupar é uma LINHA, e não um espaço: espaço custa
+ * largura, e largura é o que decide se os seis cabem numa linha só.
+ */
+.ordem-barra button[data-acao="nova-pasta"] {
+  margin-left: 5px;
+  border-left-color: var(--painel-linha, #c3ccd8);
+}
+
+/*
+ * A miniatura tem 40px — quase o dobro dos 24 da Árvore.
+ *
+ * Numa lista de vinte e três desenhos parecidos, 24px não distingue a bota
+ * esquerda da direita, e distinguir as duas é exatamente o que se está fazendo
+ * quando se mexe na ordem.
+ */
+.ordem-mini {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--painel-campo, #f4f6f9);
+  border: 1px solid var(--painel-linha, #c3ccd8);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/*
+ * A miniatura de quem NÃO tem imagem — anotação 18, lote 32.
+ *
+ * Um quadrado vazio na lista faz a pergunta que o Humberto fez: "o que é
+ * isso?". O ícone do tipo responde, e a dica escreve o nome do tipo — porque
+ * ícone sozinho é adivinhação.
+ */
+.mini-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft, #45505e);
+}
+
+/* O cantinho com quantos quadros tem a sequência. */
+.mini-caixa {
+  position: relative;
+  display: inline-flex;
+  line-height: 0;
+}
+
+.mini-conta {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  min-width: 12px;
+  padding: 0 2px;
+  border-radius: 3px 0 3px 0;
+  background: var(--accent, #1a4fd8);
+  color: var(--accent-ink, #ffffff);
+  font-size: 9px;
+  line-height: 12px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Rodada 43, lote 5 (doc 51): o nome e a imagem numa linha só — eram duas,
+   e a linha ia a ~52px; só 8 peças de 32 cabiam à vista em 1920×1080. */
+.ordem-nomes {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ordem-nome {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ordem-detalhe {
+  font-size: 12px;
+  color: var(--painel-texto-fraco, #45505e);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Rodada 11: as metades de uma entidade em volta ("Este boneco"). Presas: a
+   da frente em cima da lista, a de trás embaixo. Não se arrastam. */
+.ordem-presa {
+  cursor: default;
+  font-style: italic;
+  color: var(--painel-texto-fraco, #45505e);
+  border-left: 3px dashed var(--painel-texto-fraco, #45505e);
+}
+
+.ordem-vazio {
+  margin: 0;
+  padding: 12px 10px;
+  color: var(--painel-texto-fraco, #45505e);
+}
+
+/* ------------------------------------------------------------------ */
+/* As pastas da aba Ordem — anotação 11, lote 25                       */
+/* ------------------------------------------------------------------ */
+
+/*
+ * `slot.folder` já existia no formato e já vinha preenchido do importador de
+ * PSD; faltava a tela. Fechada, a pasta ocupa UMA linha, e é para isso que ela
+ * existe: a capa de oito pedaços vira uma linha e a lista volta a caber.
+ */
+.ordem-pasta-cabeca {
+  background: var(--painel-campo, #f4f6f9);
+  font-weight: 600;
+}
+
+.ordem-seta {
+  flex: 0 0 12px;
+  color: var(--painel-texto-fraco, #45505e);
+}
+
+/* A peça de dentro anda para a direita: a pasta se lê de relance. */
+.ordem-linha-dentro {
+  padding-left: 26px;
+}
+
+/*
+ * A peça que não tem imagem NESTA pele.
+ *
+ * Ela tem ordem de desenho — some da lista seria pior, porque ninguém
+ * conseguiria reordenar o que não vê. Fica apagada, e o texto diz por quê.
+ */
+.ordem-linha-apagada .ordem-nome {
+  color: var(--painel-texto-fraco, #45505e);
+  font-weight: 500;
+}
+
+/*
+ * A pasta quebrada em dois pedaços.
+ *
+ * `folder` é só agrupamento: a ordem de desenho continua sendo o array. Se uma
+ * peça de fora caiu no meio da pasta, o que a pasta parece dizer deixou de ser
+ * verdade, e mentir sobre isso sairia caro na cena.
+ */
+.ordem-quebrada {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: var(--painel-texto-fraco, #45505e);
+  border-bottom: 1px solid var(--painel-linha, #c3ccd8);
+}
+
+.ordem-quebrada-texto {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ordem-juntar {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 2px 10px;
+  font: inherit;
+  color: var(--painel-texto, #10151c);
+  background: var(--painel-fundo, #ffffff);
+  border: 2px solid var(--painel-linha, #c3ccd8);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.ordem-juntar:hover {
+  border-color: var(--painel-realce, #1a4fd8);
+}
+
+/* O menu do botão direito: pôr numa pasta, tirar, renomear. */
+.ordem-menu {
+  position: fixed;
+  z-index: 60;
+  min-width: 190px;
+  padding: 4px;
+  background: var(--painel-fundo, #ffffff);
+  border: 2px solid var(--painel-linha, #c3ccd8);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 22%);
+}
+
+.ordem-menu-item {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  font: inherit;
+  text-align: left;
+  color: var(--painel-texto, #10151c);
+  background: none;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ordem-menu-item:hover,
+.ordem-menu-item:focus-visible {
+  background: var(--painel-hover, #e7edfb);
+}
+
+/* Ordem, lote 66 — a linha que uma chave de ordem tirou do lugar, em Animando. */
+.ordem-losango {
+  margin-left: 6px;
+  color: var(--painel-realce);
+  font-size: 10px;
+}
+
+/* Rodada 43, lote 4: as pontas da lista — frente em cima, fundo embaixo. */
+.ordem-ponta {
+  padding: 1px 10px;
+  font-size: 11px;
+  color: var(--painel-texto-fraco);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Rodada 47, lote 6c (nota 1 do doc 90): em 1280×720 a Ordem mostrava UMA
+   linha (corpo 122 px: a barra de botões comia 47, a lista ficava com 75 e a
+   linha tem 45). Em tela baixa, a barra e a linha encolhem: miniatura de 28
+   px. Três linhas não cabem com a ficha inteira embaixo (decisão C2 do
+   Diretor: a ficha vence; o ▾ do grupo dela devolve a altura). */
+@media (max-height: 800px) {
+  .ordem-barra {
+    padding: 2px 6px;
+  }
+  /* Rodada 48 (o Diretor, 07/10): a v35.8 pôs três linhas em 1280×720
+     encolhendo a linha para 22 px — alvo apertado. A linha volta a 29 px
+     (≥ 28 de alvo), e os px saem da barra e da ponta. Medido no Chrome em
+     1280×720 (corpo de 122 px): barra 28 + 4 + 1 = 33, três linhas de 29 = 87. */
+  .ordem-barra .painel-botao {
+    min-height: 28px;
+    min-width: 28px;
+    width: 28px;
+    height: 28px;
+    padding: 2px 4px;
+  }
+  .ordem-linha {
+    padding: 2px 10px;
+  }
+  .ordem-nomes {
+    line-height: 20px;
+  }
+  .ordem-mini {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+  }
+  /* A ponta "frente" sai do alto da lista e vai para a barra, à direita: a
+     mesma palavra, sem comer linha. O "fundo" fica no fim da lista. */
+  .ordem-lista > .ordem-ponta:first-child {
+    display: none;
+  }
+  .ordem-barra::after {
+    content: 'frente ↓';
+    margin-left: auto;
+    align-self: center;
+    font-size: 10px;
+    color: var(--painel-texto-fraco);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .ordem-ponta {
+    padding: 0 10px;
+    font-size: 10px;
+    line-height: 12px;
+  }
+}

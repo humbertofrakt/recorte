@@ -1,0 +1,85 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+SPDX-License-Identifier: CC-BY-4.0
+
+Copyright (c) 2026 Humberto Frakt
+
+
+O QUE ESTA LICENÇA COBRE
+------------------------
+
+Tudo que descreve o formato bone, e não o programa que o implementa:
+
+    formato/ESPECIFICACAO 2026-09-06.md   a especificação
+    formato/bone.schema.json              o JSON Schema
+    formato/exemplos/                     os arquivos de exemplo
+    conformidade/                         a suíte de conformidade inteira,
+                                          casos, leiames e o guia
+    documentos/manual/                    o manual do usuário
+
+O código — runtime/, editor/, ferramentas/ — NÃO está sob esta licença. Está
+sob a Apache License 2.0, no arquivo LICENSE da raiz do projeto.
+
+
+A OUTORGA
+---------
+
+Esta obra está licenciada sob a Licença Creative Commons Atribuição 4.0
+Internacional (CC BY 4.0).
+
+O texto legal completo e canônico desta licença é o publicado pela Creative
+Commons em:
+
+    https://creativecommons.org/licenses/by/4.0/legalcode
+
+Esse texto é incorporado a este arquivo por referência, e é ele que vale em
+caso de qualquer divergência com o resumo abaixo. A versão em português está
+em https://creativecommons.org/licenses/by/4.0/legalcode.pt
+
+Em resumo, e sem substituir o texto acima, você tem permissão para:
+
+  COMPARTILHAR   copiar e redistribuir o material em qualquer suporte ou
+                 formato, para qualquer fim, inclusive comercial;
+
+  ADAPTAR        remixar, transformar e criar a partir do material, para
+                 qualquer fim, inclusive comercial;
+
+desde que:
+
+  ATRIBUIÇÃO     você dê o crédito apropriado, forneça um link para a licença
+                 e indique se mudanças foram feitas;
+
+  SEM RESTRIÇÕES você não aplique termos jurídicos ou medidas de caráter
+  ADICIONAIS     tecnológico que restrinjam legalmente outros de fazerem algo
+                 que a licença permita.
+
+O licenciante não pode revogar estes direitos desde que você respeite os
+termos da licença.
+
+
+POR QUE ESTA LICENÇA, E NÃO OUTRA
+---------------------------------
+
+A meta declarada do projeto é o formato bone virar padrão, como o PDF e o
+glTF. Um padrão que não pode ser copiado, traduzido, citado dentro de outra
+documentação e reimplementado por qualquer pessoa não vira padrão.
+
+A CC BY 4.0 é a licença que o glTF usa para a especificação dele, pelo mesmo
+motivo. E a §12.8 da especificação promete que a licença "nunca fica mais
+restritiva": esta é a linha de base que aquela promessa protege.
+
+
+COMO CITAR
+----------
+
+    Formato bone, versão 1.0. Humberto Frakt, 2026.
+    Licenciado sob CC BY 4.0.
+
+
+NOTA PARA O DONO DO PROJETO
+---------------------------
+
+Para publicar, baixe o texto legal completo da CC BY 4.0 do endereço acima e
+grave-o em `formato/LICENSE-CC-BY-4.0.txt` ao lado deste arquivo. A referência
+por URL é a forma que a própria Creative Commons recomenda e é válida, mas um
+arquivo local é o que um departamento jurídico prefere ler sem internet. Isso
+está anotado em ESTADO.md.

@@ -1,0 +1,851 @@
+/* ------------------------------------------------------------------ */
+/* palette.css — lote A6, plano arrumação (v11.2)                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A aba Imagens — a grade, a busca e o Carimbar, a pasta do projeto, a lista
+ * da mesma pasta, a faixa de trocar em todas as peles, e a janela do pivô.
+ *
+ * Estes blocos moravam em `panels.css`, com os de todos os painéis. Vieram
+ * para cá sem mudar um seletor, na mesma ordem entre si; o `main.ts` carrega
+ * este arquivo logo depois do `panels.css`.
+ */
+
+/*
+ * A lista da pasta — lote 60 (`panels/image-picker.ts`): as miniaturas da
+ * mesma subpasta, a de agora marcada. Também mora no `body`.
+ */
+.imagem-lista {
+  position: fixed;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 340px;
+  max-height: 380px;
+  padding: 8px;
+  font-family: "Segoe UI", "Verdana", system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--ink, #10151c);
+  background: var(--panel, #ffffff);
+  border: 2px solid var(--line, #c3ccd8);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 26%);
+}
+
+.imagem-lista-cabeca {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.imagem-lista-titulo {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imagem-lista-pasta,
+.imagem-lista-dica {
+  font-size: 13px;
+  color: var(--ink-soft, #45505e);
+}
+
+.imagem-lista-dica {
+  margin: 0;
+}
+
+.imagem-lista-busca {
+  min-height: 30px;
+  padding: 2px 8px;
+  font: inherit;
+  color: var(--ink, #10151c);
+  background: var(--paper, #f4f6f9);
+  border: 1px solid var(--line, #c3ccd8);
+  border-radius: 5px;
+}
+
+.imagem-lista-grade {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 6px;
+}
+
+.imagem-lista-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.imagem-lista-item:hover,
+.imagem-lista-item:focus-visible {
+  border-color: var(--accent, #1a4fd8);
+  outline: none;
+}
+
+.imagem-lista-atual {
+  border-color: var(--toggle-on, #ff9a1f);
+}
+
+.imagem-lista-mini {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagem-lista-nome {
+  max-width: 100%;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imagem-lista-vazia {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--ink-soft, #45505e);
+}
+
+/* ------------------------------------------------------------------ */
+/* O painel Imagens — a Palette do Spriter (lote 20)                   */
+/* ------------------------------------------------------------------ */
+
+.imagens {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/* O Carimbar mora ao lado da busca — lote 56, plano pivô. */
+.imagens-busca .imagens-campo {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/*
+ * Os botões da busca e da pasta NÃO encolhem — lote 3 da rodada final (Q6,
+ * J7). O campo de busca empurrava, o botão cedia, e o desenho do ícone ficava
+ * com 4 px de largura: o Carimbar e o Definir pivô viravam um pontinho, e
+ * quem procurava o pivô não o achava. O campo é que cede.
+ */
+.imagens-busca > .painel-botao,
+.imagens-pasta > .painel-botao {
+  flex: 0 0 auto;
+}
+
+.imagens-campo {
+  width: 100%;
+  min-height: 32px;
+  padding: 4px 8px;
+  font: inherit;
+  color: var(--painel-texto);
+  background: var(--painel-campo);
+  border: 2px solid var(--painel-linha);
+  border-radius: 6px;
+}
+
+/*
+ * A lista é uma GRADE, e não uma coluna.
+ *
+ * São dezenas de imagens, e o que se procura nelas é uma forma, não um nome.
+ * Numa coluna cabem seis por tela; numa grade de 48px, vinte e quatro.
+ */
+.imagens-lista {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 6px;
+  padding: 8px 10px;
+}
+
+.imagens-linha {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--painel-linha);
+  border-radius: 6px;
+  background: var(--painel-campo);
+  cursor: grab;
+}
+
+.imagens-linha:hover {
+  border-color: var(--painel-realce);
+  background: var(--painel-hover);
+}
+
+.imagens-mini {
+  /* A cruz do pivô guardado (lote 3 da rodada final) se põe por cima. */
+  position: relative;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.imagens-nome {
+  max-width: 100%;
+  font-size: 13px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Quantos slots usam a imagem. Zero é a que ninguém está usando. */
+.imagens-conta {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  min-width: 16px;
+  padding: 0 4px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--painel-realce-texto);
+  background: var(--painel-realce);
+  border-radius: 8px;
+}
+
+.imagens-sem-uso .imagens-conta {
+  color: var(--painel-texto-fraco);
+  background: transparent;
+  border: 1px solid var(--painel-linha);
+}
+
+/* A pasta do projeto — lote 59: a linha com o nome, e uma seção por subpasta. */
+.imagens-pasta {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  font-size: 13px;
+  color: var(--painel-texto-fraco);
+  border-bottom: 1px solid var(--painel-linha);
+}
+
+.imagens-pasta-nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imagens-secao {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 2px 6px;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  color: var(--painel-texto);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--painel-linha);
+  cursor: pointer;
+}
+
+.imagens-secao:hover {
+  background: var(--painel-hover);
+}
+
+.imagens-secao-seta {
+  flex: 0 0 12px;
+  text-align: center;
+}
+
+.imagens-secao-nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.imagens-secao-conta {
+  flex: 0 0 auto;
+  color: var(--painel-texto-fraco);
+}
+
+/*
+ * A subpasta numerada — degrau 8, tarefa 8.6. O triângulo à direita do número
+ * diz, sem uma palavra, que aquela pasta é UM desenho que pisca.
+ */
+.imagens-secao-sequencia {
+  flex: 0 0 auto;
+  margin-left: 4px;
+  font-size: 10px;
+  color: var(--painel-texto-fraco);
+}
+
+/*
+ * A célula de ENTIDADE dentro da grade da cena — degrau 8, tarefa 8.1 (E6).
+ *
+ * A grade é desenhada no palco, e o resto do estilo dela mora em
+ * `viewport/viewport.css`, que é da parte da Cena. Estas três regras são da
+ * aba Imagens (quem põe a entidade na grade é este painel), e CSS não tem
+ * dono por arquivo: ficam aqui para a parte da Cena não ter de mudar.
+ */
+.grade-entidade {
+  border-style: dashed;
+  border-color: rgba(27, 82, 214, 0.55);
+}
+
+.grade-entidade-sem-desenho {
+  color: var(--painel-texto-fraco);
+  font-size: 16px;
+}
+
+/* O arquivo sumiu da pasta, e um desenho ainda usa: a linha fica, tracejada. */
+.imagens-sumiu {
+  border-style: dashed;
+  opacity: 0.7;
+}
+
+.imagens-vazio {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--painel-texto-fraco);
+}
+
+/*
+ * Trocar a imagem em todas as peles — lote 39. A faixa diz o que o clique vai
+ * fazer; as linhas viram botão e o cursor deixa de ser a mão de arrastar.
+ */
+.imagens-troca {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  color: var(--painel-realce-texto);
+  background: var(--painel-realce);
+}
+
+.imagens-troca-texto {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.imagens-troca-fechar {
+  flex: 0 0 auto;
+  min-width: 28px;
+  min-height: 28px;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.imagens-escolhendo .imagens-linha {
+  cursor: pointer;
+}
+
+/* Os avisos do Carimbar, cada um com o botão que resolve — lote 56. */
+.imagens-avisos {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--painel-linha);
+}
+
+.imagens-aviso {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.imagens-aviso-texto {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--painel-texto);
+}
+
+/* A janela Definir pivô — lote 58. Fica no body, como as de ui/dialog.ts. */
+.pivo-corpo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+.pivo-quadro {
+  display: block;
+  max-width: 100%;
+  cursor: crosshair;
+  /* Xadrez atrás da imagem: o transparente aparece como transparente. */
+  background: repeating-conic-gradient(#8886 0 25%, #0000 0 50%) 0 0 / 16px 16px;
+}
+
+/* A caixa Repetir para a pasta, na janela do pivô — lote 61. */
+.pivo-pasta {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 4px 0 8px;
+  cursor: pointer;
+}
+
+.pivo-pasta-texto {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pivo-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 36px);
+  gap: 4px;
+}
+
+.pivo-ponto {
+  width: 36px;
+  height: 36px;
+  font: inherit;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.pivo-leitura {
+  text-align: center;
+}
+
+/* Rodada 44, lote 3: X e Y digitados, em px, debaixo da imagem. */
+.pivo-campos {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 8px 0 0;
+}
+
+.pivo-campo-rotulo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.pivo-campo {
+  width: 64px;
+  text-align: right;
+  font-size: 14px;
+}
+
+/* Rodada 44, lote 5 (doc 63): o campo que não é número, dito na janela. */
+.pivo-leitura-erro {
+  color: var(--painel-aviso, #b25000);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ */
+/* Entidades — degrau 5 (17/09/2026), E15 e E16                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A aba **Entidades** é a vizinha da Imagens, e usa a mesma grade: a peça se
+ * reconhece pela forma, não pelo nome. O que muda é o que está na miniatura —
+ * um corpo inteiro na pose de repouso, desenhado uma vez e **parado** (E16,
+ * veto do Humberto em 15/09). Por isso o estilo mora nesta folha, ao lado do da
+ * aba de que ele é irmão, e não numa folha só para três blocos.
+ */
+
+/*
+ * A cova sem desenho: o esqueleto daquela entidade não está carregado.
+ *
+ * Um quadrado cinza vazio pareceria uma peça toda transparente. A interrogação
+ * diz que falta informação, e a dica da linha diz qual — regra 21: onde o
+ * programa não entende, ele avisa.
+ */
+.entidades-sem-desenho {
+  align-items: center;
+  justify-content: center;
+  color: var(--painel-texto-fraco);
+  font-size: 22px;
+  background: var(--painel-linha);
+  border-radius: 4px;
+}
+
+/*
+ * A entidade que é um corpo REBAIXADO nesta sessão: o arquivo dela está aberto,
+ * e Promover a corpo a devolve na hora, sem perder nada. A marca é a borda, e
+ * não uma palavra: a linha tem 76px de largura e o nome já ocupa o que há.
+ */
+/* Rodada 39 (nota da conferência do lote 1): o TRACEJADO é só do teste. A
+   entidade com o arquivo aberto nesta sessão ganha a borda cheia, na cor de
+   destaque, e a dica diz por quê. */
+.entidades-aberta {
+  border-style: solid;
+  border-color: var(--painel-realce);
+}
+
+/* Uma base do projeto na prateleira: a borda mais forte, como o cartão de projeto. */
+.entidades-base {
+  border-color: var(--line-strong, #8b98a8);
+}
+
+/*
+ * A aba Entidades como árvore de cartões — rodada 39, lote 1 (06/10/2026).
+ * Caixa dentro de caixa, sem fio: o cartão de dentro mora na linha do slot.
+ * Um rolo só, com a montagem em cima e a prateleira embaixo.
+ */
+.entidades-rolo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 10px;
+}
+
+.entidades-titulo {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--painel-texto-fraco);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.entidades-titulo-dica {
+  margin-left: 8px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.entidades-grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+  gap: 6px;
+}
+
+.entidades-cartao {
+  min-width: 0;
+  border: 1px solid var(--painel-linha);
+  border-radius: 6px;
+  padding: 4px 6px;
+  background: var(--painel-fundo);
+}
+
+/* O projeto aberto: moldura dupla, cor de "você está aqui". */
+.entidades-cartao-aqui {
+  border: 3px double var(--painel-realce);
+  background: var(--painel-realce-fraco);
+}
+
+/* Ligação do projeto: borda cheia, mais forte que a de uma linha comum. */
+.entidades-cartao-projeto {
+  border: 2px solid var(--line-strong, #8b98a8);
+}
+
+.entidades-cartao-em-volta {
+  border: 1px solid var(--painel-linha);
+  background: var(--painel-campo);
+}
+
+.entidades-cartao-topo {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.entidades-cartao-nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entidades-cartao-palavra {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--painel-texto-fraco);
+}
+
+.entidades-cartao-aqui > .entidades-cartao-topo > .entidades-cartao-palavra {
+  color: var(--painel-realce);
+}
+
+.entidades-cartao-anima,
+.entidades-cartao-corte {
+  font-size: 12px;
+  color: var(--painel-texto-fraco);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Rodada 39b, lote 6: "anima ▾", "skins ▾" e "Trocar todas as iguais" são
+   botões no cartão — o texto de sempre, que abre a lista ao clicar. */
+.entidades-cartao-escolha {
+  display: block;
+  max-width: 100%;
+  padding: 1px 4px;
+  margin: 1px 0 0 -4px;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  color: var(--painel-texto-fraco);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entidades-cartao-escolha:hover {
+  color: var(--painel-texto, inherit);
+  border-color: var(--line, currentColor);
+}
+
+.entidades-cartao-escolha:focus-visible {
+  outline: 2px solid var(--painel-realce);
+  outline-offset: 1px;
+}
+
+.entidades-cartao-iguais {
+  margin-top: 4px;
+  border-color: var(--line, currentColor);
+}
+
+/* Rodada 39b, lote 7: a trilha dos níveis, o cartão dobrado, o sem lugar e o
+   arquivo que falta. Três sinais, nunca só a cor: a palavra, a borda, a cor. */
+.entidades-trilha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 4px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.entidades-trilha-nivel {
+  padding: 2px 6px;
+  font: inherit;
+  color: var(--painel-texto-fraco);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.entidades-trilha-nivel.is-ativo {
+  color: var(--painel-realce);
+  border-color: var(--painel-realce);
+}
+
+.entidades-trilha-nivel:focus-visible,
+.entidades-dobra:focus-visible {
+  outline: 2px solid var(--painel-realce);
+  outline-offset: 1px;
+}
+
+.entidades-trilha-seta {
+  color: var(--painel-texto-fraco);
+}
+
+.entidades-dobra {
+  flex: 0 0 auto;
+  padding: 0 4px 0 0;
+  font: inherit;
+  font-size: 12px;
+  color: var(--painel-texto-fraco);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.entidades-linha-sem-lugar > .entidades-linha-slot {
+  font-style: italic;
+  color: var(--warn, #8a4b00);
+}
+
+.entidades-cartao-falta-texto {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--warn, #8a4b00);
+}
+
+.entidades-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  min-width: 0;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.entidades-linha-slot {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entidades-linha-marcada > .entidades-linha-slot::after {
+  content: " · slot";
+  color: var(--painel-texto-fraco);
+}
+
+.entidades-linha-vazia,
+.entidades-linha-outras {
+  color: var(--painel-texto-fraco);
+}
+
+/* O que está dentro do slot entra 12 px: cada nível, um degrau. */
+.entidades-linha-dentro {
+  flex: 1 1 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 12px;
+}
+
+/* Lote 2: a ligação de teste. Três sinais, nunca só a cor: a borda
+   TRACEJADA, a palavra TESTE, e a cor de aviso. */
+.entidades-cartao-teste {
+  border: 2px dashed var(--warn, #8a4b00);
+  background: var(--warn-bg, #fff2dc);
+  cursor: grab;
+}
+
+.entidades-cartao-teste > .entidades-cartao-topo > .entidades-cartao-palavra {
+  color: var(--warn, #8a4b00);
+}
+
+/* A linha do slot que vai receber o que está sendo arrastado. */
+.entidades-linha.entidades-alvo {
+  outline: 2px solid var(--painel-realce);
+  outline-offset: 1px;
+  border-radius: 4px;
+  background: var(--painel-alvo);
+}
+
+/* A linha que recusa: a volta sem fim, ou o slot sem imagem. */
+.entidades-linha.entidades-recusa {
+  outline: 2px solid #c0392b;
+  outline-offset: 1px;
+  border-radius: 4px;
+  cursor: not-allowed;
+}
+
+.entidades-prateleira.entidades-alvo {
+  outline: 2px dashed var(--painel-realce);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* "+ N outras imagens" é um botão: abre e fecha as linhas de todas as imagens. */
+button.entidades-linha-outras {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.entidades-linha-outras:hover,
+button.entidades-linha-outras:focus-visible {
+  color: var(--painel-realce);
+  text-decoration: underline;
+}
+
+/* Lote 3: a barra de cima da aba. Ícone e palavra; a frase inteira na dica. */
+.entidades-barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.entidades-barra .painel-botao.is-ativo {
+  background: var(--painel-realce);
+  color: var(--painel-realce-texto);
+  border-color: var(--painel-realce);
+}
+
+/* Lote 3: a linha da montagem de teste, no fim da linha do tempo. Cinza e
+   tracejada: ela só se lê, e não entra na animação. */
+.dope-linha-teste .dope-faixa-teste {
+  border: 1px dashed var(--dope-texto-fraco, #8b98a8);
+  border-radius: 4px;
+  padding: 0 6px;
+  font-size: 12px;
+  line-height: 22px;
+  color: var(--dope-texto, var(--painel-texto, #10151c));
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*
+ * Rodada 42, lote 2 (doc 42, defeito 3): com três níveis, a Prateleira saía da
+ * tela, e para arrastar até ela era preciso puxar o divisor. A montagem rola
+ * por dentro e a Prateleira fica à vista, no pé da aba; alta demais, ela
+ * também rola por dentro. Sem `sticky`: a régua do lote 48 o guarda para a
+ * linha do tempo e o diálogo.
+ */
+.entidades-rolo > .entidades-montagem {
+  /* Rodada 47, lote 6 (nota 4 do doc 87): a Montagem era uma caixa de 60 px
+     com rolagem própria dentro da rolagem da aba — uma linha de quatro à
+     vista. Agora ela cresce com o que tem, e quem rola é a aba (o rolo, que é
+     a lista). Uma roda de mouse, não duas. */
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.entidades-rolo > .entidades-prateleira {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+/* A barra mora dentro do rolo: sem o respiro grande da barra de painel. */
+.entidades-rolo .entidades-barra {
+  padding: 0 0 8px;
+}

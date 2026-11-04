@@ -1,0 +1,87 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.2.0",
+    "id": "c4a7e0d3-8f16-4b52-a7d9-3e65b2f80c14",
+    "created": "2026-09-09T12:00:00Z",
+    "modified": "2026-09-17T12:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo da especificação bone 0.2 — a entidade num slot que não é de arma (7.11)"
+  },
+  "skeleton": {
+    "name": "capacete",
+    "x": -30, "y": -20, "width": 60, "height": 60,
+    "fps": 30,
+    "referenceScale": 100,
+    "pixelArt": false
+  },
+  "assets": {
+    "atlases": ["heroi.atlas.json"],
+    "imagesBase": "images/",
+    "audioBase": "",
+    "skeletonsBase": ""
+  },
+
+  "bones": [
+    { "name": "root",    "color": [0.6, 0.6, 0.6, 1] },
+    { "name": "viseira", "parent": "root", "x": 0, "y": 20, "length": 20 }
+  ],
+
+  "slots": [
+    { "name": "casco",   "bone": "root",    "attachment": "casco" },
+    { "name": "viseira", "bone": "viseira", "attachment": "viseira" },
+    { "name": "luz",     "bone": "root",    "attachment": "luz",
+      "color": [1, 1, 1, 0], "blend": "additive" }
+  ],
+
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "casco": {
+          "casco": { "type": "region", "path": "face", "x": 0, "y": 0, "width": 64, "height": 66 }
+        },
+        "viseira": {
+          "viseira": { "type": "region", "path": "hair", "x": 10, "y": 0, "width": 56, "height": 30 }
+        },
+        "luz": {
+          "luz": { "type": "region", "path": "hand_01", "x": 0, "y": 30, "width": 24, "height": 24 }
+        }
+      }
+    }
+  ],
+
+  "animations": [
+    {
+      "name": "falar",
+      "duration": 0.6,
+      "loop": false,
+      "timelines": [
+        { "type": "bone", "target": "viseira", "property": "rotation",
+          "keys": [
+            { "time": 0,   "value": 0 },
+            { "time": 0.2, "value": 15 },
+            { "time": 0.6, "value": 0 }
+          ] }
+      ]
+    },
+    {
+      "name": "piscar",
+      "duration": 1.0,
+      "loop": true,
+      "timelines": [
+        { "type": "slot", "target": "luz", "property": "color",
+          "keys": [
+            { "time": 0,   "value": [1, 1, 1, 0] },
+            { "time": 0.5, "value": [1, 1, 1, 1] },
+            { "time": 1.0, "value": [1, 1, 1, 0] }
+          ] }
+      ]
+    }
+  ],
+
+  "extras": {
+    "descricao": "Um capacete com esqueleto próprio: dois ossos, três slots e duas animações. Não é arma — é a prova de que a entidade (7.11) serve em qualquer slot. Entra no slot head de qualquer corpo pela pele, posto pela imagem (x, y do anexo), sem socket (rascunho 0.2). A luz pisca sempre (baseAnimation) e o falar responde ao falar do hospedeiro (inheritAnimation). O mecha-pele-inverno.bone o traz de fora, pela pele."
+  }
+}

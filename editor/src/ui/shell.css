@@ -1,0 +1,1421 @@
+/*
+ * Shell of the editor (owner A).
+ *
+ * Written for a reader with dyslexia: 16px base text, high contrast, plenty of
+ * space between lines, no italics, no ALL CAPS, every icon next to a word.
+ * Columns line up, and nothing important sits alone against an edge.
+ */
+
+/*
+ * ESCONDIDO É ESCONDIDO — anotação 27, lote 38.
+ *
+ * `[hidden] { display: none }` é regra da folha do NAVEGADOR, e qualquer regra
+ * de autor com `display` passa por cima dela. Isso derrubou o programa quatro
+ * vezes, sempre do mesmo jeito e sempre custando um lote para achar:
+ *
+ * | Lote | O que ficou desenhado por cima |
+ * |:---:|:---|
+ * | 14 | o menu do **⋯ Mais**, em cima da cena, pegando clique |
+ * | 16 | a barra da faixa de baixo |
+ * | 19 | três listas de painel |
+ * | 30 | as cinco ferramentas de estrutura, em Animando |
+ * | 37 | a caixa de boas-vindas, com o personagem já carregado |
+ *
+ * Uma linha com `!important` fecha a família inteira: `hidden` no elemento
+ * passa a valer mais do que qualquer `display` de autor, venha ele de que
+ * folha vier e em que ordem for. **Nenhum arquivo precisa mais do conserto
+ * local**, e um teste varre todo `.css` recusando `[hidden]` com `display`
+ * diferente de `none` — a quinta vez não nasce.
+ *
+ * `!important` é remédio forte e está aqui de propósito: esconder não é
+ * questão de estilo, é questão de existir na tela ou não.
+ */
+[hidden] {
+  display: none !important;
+}
+
+/*
+ * As cores de partida.
+ *
+ * São as do tema **claro**, e elas ficam aqui como CHÃO: o `ui/theme.ts`
+ * escreve as mesmas variáveis na raiz do documento assim que o editor abre, e
+ * ganha destas. Se o JavaScript não rodar — ou se alguém abrir esta folha
+ * sozinha —, o editor ainda tem cor.
+ *
+ * Toda cor nova entra AQUI e nos DOIS temas. Uma cor que só existe num tema é
+ * o jeito mais comum de o tema escuro ficar com um retângulo branco no meio.
+ */
+:root {
+  --ink: #10151c;
+  --ink-soft: #45505e;
+  --paper: #f4f6f9;
+  --panel: #ffffff;
+  --line: #c3ccd8;
+  --line-strong: #8b98a8;
+  --accent: #1a4fd8;
+  --accent-ink: #ffffff;
+  --warn: #8a4b00;
+  --warn-bg: #fff2dc;
+  --stage: #2b3240;
+  /* O laranja do "Show Bones" do Spriter. Igual nos dois temas. */
+  --toggle-on: #d98a2b;
+  --toggle-on-ink: #2b1600;
+
+  /* As cores da CENA. Elas viviam presas dentro do `viewport.ts`. */
+  --scene-background: #f2f2f0;
+  --scene-grid: #dcdcd6;
+  --scene-grid-strong: #c4c4bc;
+  --scene-axis-x: #c0392b;
+  --scene-axis-y: #1e7a3c;
+  --scene-bone: #2b2b2b;
+  --scene-bone-fill: #ffffff;
+  --scene-bone-selected: #1b52d6;
+  --scene-slot-selected: #d97a00;
+  --scene-box: #0b7a6a;
+  --scene-point: #a02090;
+  --scene-clipping: #d6008c;
+
+  --gap: 12px;
+  --radius: 6px;
+  --bar: 44px;
+  --font: 16px/1.5 "Segoe UI", "Verdana", "Tahoma", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  /*
+   * A JANELA NÃO ROLA. Cada painel rola dentro de si.
+   *
+   * Sem esta linha, um filho posicionado que passe da borda — as marcas de
+   * quadro da régua da Linha do tempo, por exemplo — estica a página inteira,
+   * e aí basta clicar num campo lá embaixo para a barra de menus sumir para
+   * cima. Quem tem dislexia perde o lugar na tela e não o recupera.
+   */
+  overflow: hidden;
+}
+
+body {
+  font: var(--font);
+  color: var(--ink);
+  background: var(--paper);
+}
+
+#app {
+  height: 100%;
+}
+
+/* Layout: top bar, then tools | stage | panels, then the status bar. */
+
+.shell {
+  display: grid;
+  /*
+   * `minmax(0, …)`, e não `1fr` seco — rodada final, chat P, lote 2 (J4, F5, L14).
+   *
+   * `1fr` tem mínimo "auto": a faixa cresce até caber o maior conteúdo que não
+   * quebra. A frase do Criar osso tem 1.154 px em `nowrap`, e alargava a grade
+   * inteira para 1.551 px numa janela de 1.440: a coluna da direita saía 111 px
+   * para fora da tela, e voltava ao trocar de ferramenta. Com o mínimo zero,
+   * quem cede é o texto (reticências), nunca a bancada.
+   */
+  grid-template-rows: var(--bar) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+
+  /*
+   * PRESA NA JANELA, e não só `height: 100vh`.
+   *
+   * Com a concha no fluxo normal, `overflow: hidden` no `html` segura a roda do
+   * mouse mas NÃO segura `scrollIntoView`: um campo que recebe foco lá embaixo
+   * ainda rola a página inteira por script, e a barra de menus sai da tela.
+   * Presa, a altura do documento passa a ser exatamente a da janela e não sobra
+   * para onde rolar. Medido: a altura do documento cai de 2.630 px para 900.
+   */
+  position: fixed;
+  inset: 0;
+}
+
+/* Flex and not grid: the tool strip disappears when the viewport shows its own
+   row of tools, and a grid would leave its empty column behind. */
+.shell-middle {
+  display: flex;
+  flex: 1 1 auto;
+  /*
+   * A cena nunca fica menor que 55% da altura entre o menu e o rodapé — rodada
+   * final, chat P, lote 2 (K13).
+   *
+   * Abrir **Detalhes** dava à faixa de baixo os 380 px dela, e a cena caía de
+   * 627 para 368 px em 1440×900, e de 447 para 250 em 1280×720: não se via o
+   * boneco enquanto se ajustava a curva. No Spriter a linha do tempo é baixa; no
+   * Spine a folha e as curvas dividem o MESMO lugar, em abas, e a cena é o que
+   * sobra. Aqui quem cede é a faixa (`.dock`, que encolhe e rola por dentro).
+   */
+  min-height: 55%;
+  min-width: 0;
+  /* A âncora da camada dos painéis descolados, que é `position: absolute`
+     dentro dela — 13/09/2026. Sem isto, o flutuante se mediria pela janela
+     inteira e nasceria por cima do menu. */
+  position: relative;
+}
+
+/*
+ * O meio e a faixa de baixo, empilhados.
+ *
+ * A faixa atravessa a janela inteira, por baixo da coluna da direita — como no
+ * Spriter. O tempo corre da esquerda para a direita, e cada pixel de largura é
+ * um pedaço de animação que se vê sem rolar.
+ */
+.shell-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+/*
+ * Onde a barra de ações mora: uma linha da janela inteira, sob o menu.
+ *
+ * Vazia, ela não ocupa nada — a cena pode não ter montado ainda, e uma tira
+ * cinza vazia antes do primeiro desenho seria um defeito à vista.
+ */
+.action-bar-host {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.action-bar-host:empty {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  padding: 0 var(--gap);
+  background: var(--panel);
+  border-bottom: 2px solid var(--line-strong);
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding-right: var(--gap);
+  border-right: 1px solid var(--line);
+}
+
+.menu {
+  position: relative;
+}
+
+.menu-button,
+.tool-button,
+.menu-item {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.menu-button {
+  padding: 6px 14px;
+}
+
+.menu-button:hover,
+.menu-button[aria-expanded='true'] {
+  background: var(--paper);
+  border-color: var(--line);
+}
+
+.menu-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  min-width: 260px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgb(16 21 28 / 22%);
+  /*
+   * O menu ROLA quando é mais alto que a janela — degrau 11, lote 4.
+   *
+   * O menu Janela tem treze painéis e, desde os arranjos com nome, mais sete
+   * linhas: numa tela de 900 px os últimos itens caíam para fora e não havia
+   * como chegar neles. Um item de menu que não se alcança é a porta prometida
+   * e não entregue de novo (regra 21).
+   */
+  max-height: calc(100vh - 52px);
+  overflow-y: auto;
+  /*
+   * **Um nome, uma linha** — rodada 6 (05/10/2026). A lista era tão larga
+   * quanto o botão do menu (mínimo 260 px), e "Abrir pasta do projeto…" e
+   * "Repetir a última exportação" quebravam em duas e três linhas: o menu
+   * Arquivo, com 17 itens, já rolava numa tela de 900 px. O nome tem no máximo
+   * 28 letras (`MAX_CHARS`, da auditoria): a lista cresce até caber.
+   */
+  width: max-content;
+  max-width: calc(100vw - 16px);
+}
+
+/*
+ * **A linha que separa os blocos** — rodada 6. O `<li>` do separador existia
+ * desde o lote 19 e não tinha estilo nenhum: tinha altura zero, e os blocos
+ * que o desenho dos menus separa apareciam colados.
+ */
+.menu-separator {
+  height: 1px;
+  margin: 4px 8px;
+  background: var(--line);
+}
+
+.menu-item {
+  display: grid;
+  /* Marca, nome e tecla em três colunas fixas: a coluna da tecla fica alinhada
+     de cima a baixo, e o olho desce por ela sem ler o resto. */
+  grid-template-columns: 18px 1fr auto;
+  align-items: center;
+  gap: 6px 24px;
+  width: 100%;
+  padding: 6px 10px;
+  /* O nome é uma linha só (rodada 6): a entrelinha de parágrafo sobrava. */
+  line-height: 1.3;
+  text-align: left;
+}
+
+/*
+ * **Numa tela baixa, o menu inteiro cabe** — rodada 6. O maior menu do desenho
+ * tem 21 linhas à vista (Animação); em 1280×720 sobram 668 px abaixo da barra.
+ * Com a linha de 8 px de folga, ele rolava. O texto não encolhe: só o vão.
+ */
+@media (max-height: 800px) {
+  .menu-item {
+    padding: 3px 10px;
+  }
+
+  .menu-separator {
+    margin: 2px 8px;
+  }
+}
+
+.menu-mark {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.menu-item:hover:not(:disabled):not(.menu-item-cinza) .menu-mark {
+  color: var(--accent-ink);
+}
+
+.menu-name {
+  white-space: nowrap;
+}
+
+/* Uma linha só, sem estilo de lista, para o <li> não somar recuo nenhum. */
+.menu-row {
+  position: relative;
+}
+
+/*
+ * Submenu.
+ *
+ * Sai pelo lado direito do item, na altura dele, e só aparece com o ponteiro em
+ * cima ou com o foco dentro. Nada de clicar para abrir: um submenu que exige
+ * clique é um submenu que fecha sozinho no caminho até ele.
+ */
+/*
+ * `fixed`, e não `absolute`: desde o degrau 11, lote 4, a lista de cima ROLA,
+ * e uma lista que rola recorta o que sai dela — o submenu abria invisível.
+ * A casca diz onde ele cai (`posicionar`, em `shell.ts`).
+ */
+.menu-sublist {
+  position: fixed;
+  min-width: 220px;
+  display: none;
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+}
+
+.menu-row-pai:hover > .menu-sublist,
+.menu-row-pai:focus-within > .menu-sublist {
+  display: block;
+}
+
+.menu-item:hover:not(:disabled):not(.menu-item-cinza) {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/*
+ * Item cinza.
+ *
+ * Ele fica na lista de propósito: o mapa inteiro do programa tem que estar à
+ * vista desde já, e a dica (`title`) diz em que lote aquele item chega. Some
+ * seria pior — o Humberto procuraria por uma coisa que não está escrita em
+ * lugar nenhum.
+ */
+.menu-item:disabled,
+.menu-item.menu-item-cinza {
+  color: var(--line-strong);
+  cursor: default;
+}
+
+.menu-key {
+  color: var(--ink-soft);
+}
+
+.menu-item:hover:not(:disabled):not(.menu-item-cinza) .menu-key {
+  color: var(--accent-ink);
+}
+
+.doc-name {
+  margin-left: auto;
+  font-weight: 600;
+  /* Rodada 4, lote 8: com o botão dos contextos, em 1280 falta lugar na
+     barra. Quem cede é o nome do arquivo (reticências), e não o nome de um
+     menu — "Malha e regras" chegou a quebrar em duas linhas (foto do lote 8). */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-bar {
+  flex: 0 0 auto;
+}
+
+.menu-bar > * {
+  white-space: nowrap;
+}
+
+/*
+ * O botão dos contextos — rodada 4, lote 8. O seletor de área de trabalho do
+ * Photoshop, no canto de cima à direita. Em ícone, com o nome na dica; o nome
+ * do contexto aparece ao lado só onde há largura (em 1280 a barra de menus
+ * deixa uns 48 px ali).
+ */
+.contexto-botao {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.contexto-botao:hover {
+  background: var(--hover);
+}
+
+.contexto-icone {
+  display: flex;
+}
+
+.contexto-seta {
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 1399px) {
+  .contexto-nome,
+  .contexto-seta {
+    display: none;
+  }
+}
+
+.doc-mark {
+  color: var(--warn);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------- tool strip */
+
+.tool-strip {
+  display: flex;
+  flex: 0 0 132px;
+  flex-direction: column;
+  gap: 6px;
+  width: 132px;
+  padding: var(--gap) 8px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+}
+
+.tool-strip h2,
+.panel-column h2 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.tool-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  text-align: left;
+  border-color: var(--line);
+  background: var(--paper);
+}
+
+.tool-button:hover {
+  border-color: var(--line-strong);
+}
+
+.tool-button[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.tool-key {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.tool-button[aria-pressed='true'] .tool-key {
+  color: var(--accent-ink);
+}
+
+.tool-empty,
+.panel-empty {
+  padding: 10px;
+  color: var(--ink-soft);
+}
+
+/* --------------------------------------- centre: stage over the bottom strip */
+
+/* The drawing area and the strip under it share one column, so the strip runs
+   the full width of the drawing and time reads left to right, the way it does
+   in every animation program. */
+.shell-center {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* -------------------------------------------------------------------- stage */
+
+.stage {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  background: var(--stage);
+  overflow: hidden;
+}
+
+.stage canvas {
+  display: block;
+}
+
+.stage-empty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: var(--gap);
+  color: #dfe5ee;
+  text-align: center;
+}
+
+/* -------------------------------------------------------- bottom strip (dock) */
+
+/*
+ * Fechada, a faixa não tem abas: Curvas e Prévia só existem abertas (lote 14).
+ * Quem esconde é o `hidden` no elemento, e quem manda nele é a regra do topo
+ * desta folha — lote 38.
+ */
+
+/* The height is written by the shell in pixels; the grip above changes it. */
+.dock {
+  display: flex;
+  /* Encolhe (o `1` do meio) quando a cena chega no chão dela, os 55% de
+     `.shell-middle` — K13, chat P. O que não cabe rola dentro de `.dock-panel`. */
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+}
+
+/* Thick enough to grab without aiming, and it says so with the cursor. */
+.dock-grip {
+  flex: 0 0 10px;
+  height: 10px;
+  background: var(--line);
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  cursor: ns-resize;
+  touch-action: none;
+}
+
+.dock-grip:hover {
+  background: var(--line-strong);
+}
+
+.dock-tabs {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 6px;
+  padding: 6px var(--gap) 0;
+  background: var(--paper);
+  border-bottom: 2px solid var(--line-strong);
+}
+
+.dock-tab {
+  padding: 8px 18px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  cursor: pointer;
+}
+
+/* Rodada 47, lote 1 (C3): dentro da linha do tocador, as abas são botões
+   da linha, sem a fileira própria. */
+.dock-tabs.na-linha {
+  flex: 0 0 auto;
+  gap: 4px;
+  padding: 0 8px 0 0;
+  background: transparent;
+  border-bottom: none;
+}
+
+.dock-tabs.na-linha .dock-tab {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.dock-tab:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+
+.dock-tab[aria-selected='true'] {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* The panels inside are absolute, so each one is exactly the size of this box
+   and their own `height: 100%` has something definite to measure against. */
+.dock-body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.dock-panel {
+  position: absolute;
+  inset: 0;
+  /* NOT `hidden`. The Curvas panel is 570px of content and the strip opens at
+     320px: with `hidden` the whole "Formato da curva" block and the channel
+     list vanished with no bar and no sign, and the wheel did nothing. */
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Dragging the grip, the ruler or a key used to select text across the whole
+   interface — buttons, labels, bone names all turned selection-blue. Text you
+   might actually want to copy asks for it back, right below. */
+.shell {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.shell input,
+.shell textarea,
+.shell [contenteditable='true'],
+.shell .status-warn-list,
+.shell .status-state {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* ------------------------------------------------------------ panel column */
+
+/* The column of panels shrinks on a narrow window instead of squeezing the
+   drawing area down to nothing. */
+/*
+ * As DUAS colunas — lote 16.
+ *
+ * A largura de cada uma é escrita pela casca, em pixels, e a alça ao lado da
+ * cena a muda. A borda vai do lado que dá para a cena, para as duas moldurarem
+ * o desenho em vez de encostarem nele.
+ */
+.panel-column {
+  display: flex;
+  flex: 0 0 260px;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+  /* A coluna não rola desde o lote 12: quem rola é a casa de cada grupo. Uma
+     coluna que rolasse esconderia a tira de abas do grupo de baixo, e uma aba
+     fora de vista é uma aba que não existe. */
+  overflow: hidden;
+}
+
+/*
+ * A coluna em ícones — rodada 4, lote 2 (05/10/2026). O Photoshop: a setinha
+ * dupla numa faixa fina no topo da coluna recolhe os painéis numa faixa de
+ * ícones; o ícone abre o painel ao lado. A setinha fica do lado de FORA (a
+ * parede) de cada coluna, como no dock do Photoshop.
+ */
+.panel-column-topo {
+  display: flex;
+  flex: 0 0 14px;
+  justify-content: flex-start;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-column-direita .panel-column-topo {
+  justify-content: flex-end;
+}
+
+.panel-column-setinha {
+  width: 27px;
+  height: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 12px;
+  cursor: pointer;
+}
+
+.panel-column-setinha:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.panel-column.is-icones .panel-group,
+.panel-column.is-icones .panel-split-grip {
+  display: none;
+}
+
+.panel-icones {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 0;
+  overflow-y: auto;
+}
+
+.panel-icone {
+  display: flex;
+  flex: 0 0 32px;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--ink-soft);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.panel-icone:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.panel-icone.is-aberto {
+  border-color: var(--accent, #3b82f6);
+  color: var(--ink);
+  background: var(--hover);
+}
+
+.panel-icones-sep {
+  flex: 0 0 1px;
+  width: 24px;
+  background: var(--line);
+}
+
+/* O painel aberto pelo ícone: a caixa do solto, presa à faixa. */
+.panel-voo {
+  border-color: var(--accent, #3b82f6);
+}
+
+/* Dois grupos de abas, um em cima do outro — item 19.
+
+   A coluna tinha seis painéis empilhados com título dobrável. Numa janela de
+   900px cabiam três abertos, e os outros três viravam "não existe". Num grupo
+   de abas só uma aparece por vez, e ela leva a altura inteira do grupo — que é
+   o que faz a Árvore caber sem rolar. Quem quer dois ao mesmo tempo põe um em
+   cada grupo, e é para isso que os dois grupos existem. */
+.panel-group {
+  display: flex;
+  flex-direction: column;
+  /* A fatia de cada um vem do JavaScript, da alça entre eles. */
+  flex: 1 1 0;
+  min-height: 90px;
+  overflow: hidden;
+}
+
+/* Rodada 47, lote 1 (doc 68, C1): UMA fileira. Oito abas em 258 px quebravam
+   em três fileiras, 103 px, um quarto do grupo em 1280×720. O que não cabe
+   mora no » (`tab-strip-model.ts`). */
+.panel-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  min-width: 0;
+  gap: 2px;
+  padding: 4px 4px 0;
+  background: var(--paper);
+  border-bottom: 2px solid var(--line-strong);
+}
+
+/*
+ * Os painéis DESCOLADOS, flutuando sobre a cena — 13/09/2026.
+ *
+ * A camada cobre o meio da casca e **não pega o ponteiro**: só as caixas dentro
+ * dela pegam. Sem o `pointer-events: none` aqui, uma camada transparente por
+ * cima da cena comeria todo clique de ferramenta, e descolar um painel
+ * quebraria o desenho — que é a pior troca possível.
+ */
+.panel-float-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.panel-float {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--panel);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 35%);
+  pointer-events: auto;
+}
+
+.panel-float.is-arrastando {
+  opacity: 0.92;
+}
+
+/* As abas de um grupo solto, na barra dele — rodada 4, lote 5. */
+.panel-float-aba {
+  padding: 2px 8px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.panel-float-aba.is-active {
+  border-bottom-color: var(--accent, #3b82f6);
+  color: var(--ink);
+}
+
+/* Recolhido até a barra por dois cliques nela — rodada 4, lote 4. O canto de
+   mudar o tamanho some: não há corpo para mudar. */
+.panel-float.is-recolhido .panel-float-canto {
+  display: none;
+}
+
+.panel-float-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  background: var(--paper);
+  border-bottom: 2px solid var(--line-strong);
+  cursor: move;
+  touch-action: none;
+}
+
+.panel-float-nome {
+  flex: 1 1 auto;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-float-x {
+  width: 20px;
+  padding: 0;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.panel-float-x::after {
+  content: '×';
+}
+
+.panel-float-x:hover {
+  background: var(--line);
+  color: var(--ink);
+}
+
+/* O `host` do painel, que veio da coluna, ocupa o resto da caixa. */
+.panel-float > .panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* O canto que muda o tamanho. Quadrado pequeno, no lugar de sempre. */
+.panel-float-canto {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  touch-action: none;
+}
+
+.panel-float-canto::after {
+  content: '';
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--ink-soft);
+  border-bottom: 2px solid var(--ink-soft);
+}
+
+/*
+ * O arrasto de painel — rodada 4, lote 1 (05/10/2026). Um só, para a aba e
+ * para a barra do painel solto (`ui/panel-drag.ts` decide, a casca desenha):
+ *
+ * - a LINHA azul onde a aba vai entrar na tira;
+ * - o CONTORNO azul do grupo que vai receber (a tira, ou a tira e o corpo);
+ * - a SOMBRA do painel inteiro onde ele vai ficar solto (`.is-painel`).
+ *
+ * Posição fixa, em coordenadas da tela: o arrasto atravessa colunas e cena.
+ */
+.panel-drop-linha {
+  position: fixed;
+  z-index: 40;
+  width: 4px;
+  border-radius: 2px;
+  background: var(--accent, #3b82f6);
+  pointer-events: none;
+}
+
+.panel-drop-contorno {
+  position: fixed;
+  z-index: 39;
+  box-sizing: border-box;
+  border: 2px solid var(--accent, #3b82f6);
+  border-radius: var(--radius);
+  background: rgb(59 130 246 / 10%);
+  pointer-events: none;
+}
+
+/* Enquanto a mão segura um painel: a mão fechada, e nada de selecionar texto
+   nos painéis por onde ela passa. */
+.is-arrastando-painel,
+.is-arrastando-painel * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+/*
+ * O × que fecha o painel, dentro da aba — 13/09/2026.
+ *
+ * Ele aparece só na aba EM USO: onze xis ao mesmo tempo, na tela de quem no
+ * mesmo dia reclamou de tela cheia de coisa, seria trocar um problema por
+ * outro.
+ *
+ * O LUGAR DELE NÃO É RESERVADO NAS OUTRAS, e isso é uma decisão medida, não um
+ * descuido. Reservar 20 px em cada aba somava 60 px numa tira de três e
+ * **quebrava a tira em duas linhas**: 33 px a menos para o painel, em todo
+ * grupo com três abas ou mais. A Prévia, que tinha acabado de passar na
+ * medição de altura, voltou a falhar por causa disso.
+ *
+ * Então o pulo existe, e é pequeno de propósito: uma aba a mais de 20 px, só
+ * ao trocar de aba — e nunca ao passar o mouse, que seria o pulo constante e
+ * insuportável. A aba que não está em uso fecha-se num clique (ela vira a em
+ * uso) ou pelo menu Janela, que fecha qualquer uma.
+ */
+.panel-tab {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  /* Rodada 47, lote 1: numa fileira só, o nome da aba não quebra; a que não
+     cabe vai para o » (`tab-strip-model.ts`). */
+  white-space: nowrap;
+}
+
+/* O desenho vem daqui, e não do HTML: um `×` dentro da aba entraria no
+   `textContent` dela, e o nome viraria "Ordem×" para quem procura a aba pelo
+   nome — o roteiro, a prova dos pesos e a medição fazem exatamente isso. */
+.panel-tab-x::after {
+  content: '×';
+}
+
+/* Rodada 50, lote 4 (doc 98, item E, a foto de 06/10): o × morava colado no
+   nome, no lugar onde o olho procura o ▾ — e um chat, querendo recolher as
+   Propriedades, fechou o painel. Agora ele tem caixa própria e distância do
+   nome: lê-se como um botão, e não como uma letra do nome. */
+.panel-tab-x {
+  display: none;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  font-size: 14px;
+  line-height: 14px;
+  color: var(--ink-soft);
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.panel-tab[aria-selected="true"] .panel-tab-x {
+  display: inline-block;
+}
+
+.panel-tab-x:hover {
+  background: var(--line);
+  color: var(--ink);
+}
+
+/* Fechar o grupo NÃO tem botão aqui: ele custava 27 px de largura na tira, que
+   quebrava em duas linhas e tirava 33 px de altura do painel. O gesto é o botão
+   direito no vão da tira, e a porta visível é Janela → Fechar o grupo. */
+
+/*
+ * O botão de recolher de cada grupo — 13/09/2026.
+ *
+ * O Humberto: *"podia ter também botões para recolher quando não estivesse
+ * usando"*. Ele fica no FIM da tira, empurrado pelo `margin-left: auto`, longe
+ * dos nomes das abas: recolher é sobre o grupo, e não sobre a aba que está à
+ * frente. O nome de cada painel do grupo está na dica, que é a regra da casa.
+ */
+.panel-group-fold {
+  margin-left: auto;
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--ink-soft);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.panel-tab.is-no-mais {
+  display: none;
+}
+
+/* O » das abas que não couberam: o mesmo desenho do ▾, ao lado dele. */
+.panel-tabs-mais {
+  flex: 0 0 auto;
+  padding: 6px 8px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-soft);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.panel-tabs-mais:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.panel-tabs-mais:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+.panel-group-fold:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.panel-group-fold:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+/* Recolhido: sobra a tira, e ela não estica nem encolhe. A altura que o grupo
+   largou vai inteira para o outro, que é o ponto do botão. */
+.panel-group.is-recolhido {
+  min-height: 0;
+}
+
+.panel-group.is-recolhido > .panel-tabs {
+  border-bottom-color: var(--line);
+}
+
+.panel-tab {
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: var(--radius) var(--radius) 0 0;
+  cursor: pointer;
+}
+
+.panel-tab:hover {
+  background: var(--panel);
+}
+
+/* Rodada 50, lote 4 (doc 98, item E): a marca da aba à frente era uma linha
+   azul EMBAIXO do nome — lida como sublinhado. Ela sobe para o topo da aba,
+   como as abas do Photoshop e do VS Code; a altura não muda (sombra por
+   dentro, sem borda nova). */
+.panel-tab.is-active {
+  color: var(--ink);
+  background: var(--panel);
+  border-bottom-color: transparent;
+  box-shadow: inset 0 3px 0 var(--accent);
+}
+
+.panel-tab:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+.panel-group-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* A alça entre os dois grupos. Alta o bastante para o dedo achar, e com o
+   cursor certo, porque uma alça que não parece alça não é arrastada. */
+.panel-split-grip {
+  flex: 0 0 8px;
+  background: var(--paper);
+  border-top: 2px solid var(--line-strong);
+  border-bottom: 2px solid var(--line-strong);
+  cursor: row-resize;
+}
+
+.panel-split-grip:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+/* No padding here: each panel brings its own, and its own scrollbar. */
+.panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* --------------------------------------------------------------- status bar */
+
+/*
+ * A faixa do arrasto de arquivo — anotação 23, lote 36.
+ *
+ * Ela diz o que VAI acontecer antes de acontecer: "Solte para abrir heroi.bone",
+ * "Solte para importar 3 imagens". Soltar um arquivo por engano e ver a sessão
+ * inteira ser trocada é o tipo de susto que se evita com uma frase.
+ *
+ * `pointer-events: none` porque ela não pode roubar o próprio arrasto.
+ */
+.drop-faixa {
+  position: fixed;
+  left: 50%;
+  top: 24px;
+  transform: translateX(-50%);
+  z-index: 60;
+  max-width: 80vw;
+  padding: 10px 18px;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+}
+
+/*
+ * O rodapé é UMA linha, e a altura dele nunca muda — rodada final, chat P,
+ * lote 2 (J4, F5, L14).
+ *
+ * Frase longa quebrava em duas linhas: o rodapé ia de 54 para 78 px, e a cena,
+ * a linha do tempo e o botão que a pessoa ia clicar subiam 24 px. O clique
+ * seguinte caía no lugar errado. Agora a frase corta com "…", e a frase inteira
+ * mora na dica (`title`), que a casca escreve junto com o texto. É o que o
+ * Spine faz: a ajuda longa é a dica, e não uma faixa que cresce.
+ *
+ * A ALTURA é a de sempre (54 px medidos com a caixa "Base" dentro), agora
+ * escrita. Quem não cabe encolhe e corta; ninguém empurra.
+ */
+.status-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--gap);
+  height: 54px;
+  min-width: 0;
+  padding: 8px var(--gap);
+  overflow: hidden;
+  background: var(--panel);
+  border-top: 2px solid var(--line-strong);
+}
+
+/* Rodada 47, lote 1 (C4): a resposta à última ação tem a largura dela, até a
+   metade do rodapé; o resto é da frase da ferramenta. As duas têm versões
+   curtas (`versoesDaFrase`), e à vista vai a que cabe: nada de "…". */
+.status-state {
+  flex: 0 1 auto;
+  max-width: 50%;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Which mode is on. The two modes do very different things with the same drag,
+   so this is never an icon and never a colour alone: it says the word. */
+.status-mode {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 4px 12px;
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+
+.status-mode strong {
+  white-space: nowrap;
+}
+
+.status-mode span {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-soft);
+  text-overflow: ellipsis;
+}
+
+/* Rodada 47, lote 1 (C4): em tela estreita o chip diz só onde se está
+   ("Animação: idle"); a explicação continua na dica dele. */
+@media (max-width: 1600px) {
+  .status-mode-explica {
+    display: none;
+  }
+}
+
+.status-mode-montagem {
+  background: var(--paper);
+}
+
+.status-mode-animando {
+  color: #7a1500;
+  background: #ffe9dc;
+  border-color: #9a3200;
+}
+
+.status-mode-animando span {
+  color: #7a1500;
+}
+
+/*
+ * A frase da FERRAMENTA na mão — lote 26.
+ *
+ * Ela só aparece quando há algo a dizer, e some assim que a pessoa faz o que a
+ * frase pediu. Uma linha de ajuda permanente no rodapé vira paisagem em dois
+ * dias, e aí ela deixa de ser lida justamente quando é necessária.
+ */
+.status-tool {
+  /* Sem `min-width: 0` um filho de flex não encolhe abaixo do próprio texto, e
+     o `nowrap` fazia a frase inteira empurrar a grade (J4). */
+  flex: 1 1 0;
+  min-width: 0;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-warn {
+  /* O botão dos avisos nunca encolhe: é uma porta, e porta cortada não se lê. */
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-left: auto;
+  padding: 4px 10px;
+  color: var(--warn);
+  background: var(--warn-bg);
+  border: 1px solid var(--warn);
+  border-radius: var(--radius);
+  font: inherit;
+  cursor: pointer;
+}
+
+.status-warn:disabled {
+  color: var(--ink-soft);
+  background: none;
+  border-color: transparent;
+  cursor: default;
+}
+
+.warn-list {
+  max-height: 180px;
+  margin: 0;
+  padding: var(--gap) var(--gap) var(--gap) 32px;
+  background: var(--warn-bg);
+  border-top: 1px solid var(--warn);
+  overflow-y: auto;
+}
+
+.warn-list li {
+  margin-bottom: 6px;
+}
+
+/* Lote 49 (R11): o aviso com nome, e os botões Ir para e do conserto. */
+.warn-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.warn-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.warn-go,
+.warn-fix {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  min-height: 28px;
+  padding: 2px 6px;
+  color: inherit;
+  background: var(--warn-bg);
+  border: 1px solid var(--warn);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Keyboard focus must always be obvious. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+
+/* ------------------------------------------------------ as duas colunas */
+
+.panel-column-esquerda {
+  border-right: 2px solid var(--line-strong);
+}
+
+.panel-column-direita {
+  border-left: 2px solid var(--line-strong);
+}
+
+/*
+ * A alça de LARGURA, entre cada coluna e a cena.
+ *
+ * Grossa o bastante para pegar sem mirar, e ela diz o que faz com o cursor.
+ * Some junto com as colunas no `Tab`: uma alça sozinha no meio da cena seria
+ * uma listra cinza que ninguém sabe o que é.
+ */
+.panel-width-grip {
+  flex: 0 0 8px;
+  background: var(--paper);
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.panel-width-grip:hover {
+  background: var(--line-strong);
+}
+
+.panel-width-grip:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+}
+
+
+/*
+ * Colar na quina — degrau 11, lote 3 (C1). A SOMBRA de onde o painel vai
+ * parar, enquanto a mão ainda segura: a mesma faixa azul do arrasto de aba.
+ * Tracejada e com fundo, para se ler sem depender só da cor.
+ */
+.panel-float-sombra {
+  position: absolute;
+  pointer-events: none;
+  border: 3px dashed var(--accent, #3b82f6);
+  border-radius: var(--radius);
+  background: rgb(59 130 246 / 22%);
+}
+
+/* A sombra do painel INTEIRO, puxado pela aba — rodada 4, lote 1. É o
+   "painel vem junto" do Photoshop: a mão vê o tamanho e o lugar. */
+.panel-float-sombra.is-painel {
+  border-style: solid;
+  background: rgb(59 130 246 / 16%);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 30%);
+}
+
+/* O painel colado perde a sombra do lado encostado: lê-se que ele faz parte da borda. */
+.panel-float[data-quina] {
+  box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
+  border-color: var(--accent, #3b82f6);
+}

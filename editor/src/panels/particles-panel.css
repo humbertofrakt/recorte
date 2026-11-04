@@ -1,0 +1,100 @@
+/* ------------------------------------------------------------------ */
+/* particles-panel.css — rodada 15 (04/10/2026)                         */
+/* ------------------------------------------------------------------ */
+
+/*
+ * O painel Partículas: a barra (Novo ▾, Duplicar, Apagar) e a lista dos
+ * emissores, uma linha por emissor, com o osso e o aviso curto.
+ */
+
+.particulas {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.particulas-novo .painel-botao-nome {
+  display: inline;
+}
+
+/* A barra apertada, como a da Árvore: os três controles numa linha só. */
+.particulas-barra {
+  gap: 6px;
+  padding: 8px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.particulas-barra .painel-botao-icone {
+  padding: 4px 4px;
+}
+
+.particulas-corpo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.particulas-vazio {
+  margin: 0;
+  padding: 10px;
+  font-size: 14px;
+  color: var(--painel-texto-fraco);
+}
+
+.particulas-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  font: inherit;
+  text-align: left;
+  color: var(--painel-texto);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--painel-linha);
+  cursor: pointer;
+}
+
+.particulas-linha:hover {
+  background: var(--painel-hover);
+}
+
+.particulas-linha:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+.particulas-escolhida {
+  font-weight: 700;
+  background: var(--painel-realce-fraco);
+  box-shadow: inset 3px 0 0 var(--painel-realce);
+}
+
+.particulas-icone {
+  flex: 0 0 auto;
+  display: inline-flex;
+  color: var(--painel-realce);
+}
+
+.particulas-nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.particulas-osso {
+  flex: 0 0 auto;
+  font-size: 13px;
+  color: var(--painel-texto-fraco);
+}
+
+.particulas-aviso {
+  flex: 0 0 auto;
+  font-size: 13px;
+  color: var(--warn);
+}

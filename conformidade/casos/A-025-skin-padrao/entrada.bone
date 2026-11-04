@@ -1,0 +1,20 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "skins" },
+  "bones": [ { "name": "root" } ],
+  "slots": [ { "name": "corpo", "bone": "root", "attachment": "corpo" } ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": { "corpo": { "type": "region", "path": "base", "width": 10, "height": 10 } }
+      }
+    },
+    {
+      "name": "armadura",
+      "attachments": {
+        "corpo": { "corpo": { "type": "region", "path": "armadura", "width": 20, "height": 30 } }
+      }
+    }
+  ]
+}

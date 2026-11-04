@@ -1,0 +1,18 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "coluna-zerada" },
+  "bones": [
+    { "name": "root" },
+    { "name": "alvo", "parent": "root", "x": 50, "y": 0 },
+    { "name": "zerado", "parent": "root", "x": 4, "y": 6, "rotation": 90,
+      "scaleX": 0, "scaleY": 0,
+      "inheritRotation": false, "inheritScale": false, "inheritReflection": false }
+  ],
+  "slots": [],
+  "constraints": [
+    { "type": "transform", "name": "tc", "bones": ["zerado"], "target": "alvo",
+      "local": false, "relative": false,
+      "mixRotation": 0, "mixX": 0, "mixY": 0,
+      "mixScaleX": 1, "mixScaleY": 0, "mixShearY": 0 }
+  ]
+}

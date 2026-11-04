@@ -1,0 +1,31 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "acmeProjeto": { "autor": "ninguem", "notas": [1, 2, 3] },
+  "skeleton": { "name": "desconhecido", "brilhoGlobal": 7 },
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root", "x": 10, "y": 20, "gingado": 3, "modoSecreto": "muito" }
+  ],
+  "slots": [
+    { "name": "corpo", "bone": "root", "attachment": "corpo", "blend": "acme_glow", "brilho": true }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": { "corpo": { "type": "region", "path": "corpo", "width": 20, "height": 20, "aura": 5 } }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "andar",
+      "duration": 1,
+      "timelines": [
+        { "type": "bone", "target": "osso", "property": "x",
+          "keys": [ { "time": 0, "value": 0, "curve": "elastic" }, { "time": 1, "value": 100 } ] },
+        { "type": "acme_brilho", "target": "corpo",
+          "keys": [ { "time": 0, "value": 1 } ] }
+      ] }
+  ]
+}

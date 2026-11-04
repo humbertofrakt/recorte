@@ -1,0 +1,87 @@
+{
+  "probe": {
+    "animation": "sobe",
+    "times": [
+      0.55
+    ],
+    "measure": [
+      "particles"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.55,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.5,
+            "life": 2,
+            "age": 0.05,
+            "x": 70.779204,
+            "y": 50.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.4,
+            "life": 2,
+            "age": 0.15,
+            "x": 75.363332,
+            "y": 40.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.3,
+            "life": 2,
+            "age": 0.25,
+            "x": 216.49375,
+            "y": 30.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.2,
+            "life": 2,
+            "age": 0.35,
+            "x": 103.13217,
+            "y": 20.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.1,
+            "life": 2,
+            "age": 0.45,
+            "x": 208.453059,
+            "y": 10.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 0.55,
+            "x": 113.402277,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    }
+  ]
+}

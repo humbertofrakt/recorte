@@ -1,0 +1,1328 @@
+/*
+ * Style of the "Linha do tempo" panel.
+ *
+ * Rules the whole project follows (the owner is dyslexic):
+ *  - 15px base text, never smaller than 14px;
+ *  - high contrast, no grey-on-grey;
+ *  - the names on the left form one aligned column, the track on the right
+ *    another, and the two never drift apart;
+ *  - every button carries a written label, never an icon alone;
+ *  - short sentences, no abbreviations.
+ */
+
+/*
+ * The panel now lives in the strip under the drawing area (`.dock` in
+ * `ui/shell.css`), whose height the user drags with the mouse. There is no
+ * height rule here any more; request 4 of `PEDIDOS-FASE3B.md` is answered.
+ */
+
+.dope {
+  /*
+   * A mesma paleta dos outros painéis, para a janela se ler como uma tela só.
+   *
+   * Do lote 18 em diante ela APONTA para a do programa, em vez de repetir os
+   * valores: trocar de tema escreve `--panel` e `--ink` na raiz, e a folha de
+   * chaves acompanha sem uma linha a mais. O valor depois da vírgula é o chão.
+   */
+  --dope-fundo: var(--panel, #ffffff);
+  --dope-texto: var(--ink, #10151c);
+  --dope-texto-fraco: var(--ink-soft, #45505e);
+  --dope-linha: var(--line, #c3ccd8);
+  --dope-campo: var(--paper, #f4f6f9);
+  --dope-realce: var(--accent, #1a4fd8);
+  --dope-realce-texto: var(--accent-ink, #ffffff);
+  --dope-hover: color-mix(in srgb, var(--accent, #1a4fd8) 12%, var(--panel, #ffffff));
+  /* O losango e o cursor não trocam de cor com o tema: eles são a informação
+     da folha, e trocá-los seria aprender a ler a folha duas vezes. */
+  --dope-chave: #26456f;
+  --dope-chave-escolhida: #d24500;
+  /* A agulha é VERMELHA e grossa desde a anotação 7: com 2px cor de tijolo ela
+     sumia entre os losangos, e ele não sabia em que quadro estava mexendo. O
+     laranja continua sendo do trecho de laço, que é outra coisa. */
+  --dope-cursor: #d21a1a;
+  --dope-trecho-borda: #d24500;
+  /* O laranja do campo de tempo quando a agulha está EM CIMA de uma chave. */
+  --dope-em-chave: #d24500;
+  --dope-nomes: 190px;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  /* When the strip is made very short the toolbar alone can fill it. Scrolling
+     the panel keeps every button and every row reachable instead of cutting
+     them off. */
+  overflow: auto;
+  background: var(--dope-fundo);
+  color: var(--dope-texto);
+  font-family: "Segoe UI", "Verdana", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.dope *,
+.dope *::before,
+.dope *::after {
+  box-sizing: border-box;
+}
+
+.dope:focus {
+  outline: none;
+}
+
+.dope:focus-visible {
+  outline: 3px solid var(--dope-realce);
+  outline-offset: -3px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Toolbars                                                            */
+/* ------------------------------------------------------------------ */
+
+/*
+ * One bar with two groups inside. Each group is a block that never breaks in
+ * the middle: on a wide window the whole bar is a single line, and on a narrow
+ * one each group takes a row of its own and slides sideways inside it. The
+ * buttons that belong together are therefore always next to each other.
+ */
+/* ------------------------------------------------------------------ */
+/* O tocador — a PRIMEIRA linha da linha do tempo (item 6, lote 2)     */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Treze controles numa linha só, e por isso só o símbolo aparece: decisão do
+ * Humberto, 08/09/2026. Com a palavra em cada botão a linha ia a duas, e a
+ * altura que ela roubava era justamente a das chaves. O nome e a tecla estão
+ * na dica e no `aria-label` — nenhum botão fica sem se explicar.
+ *
+ * Ela rola de lado numa janela estreita, como a segunda barra: cortar um botão
+ * ao meio é pior do que fazer o dedo arrastar.
+ */
+.dope-tocador {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  /* 4px, e não 6: no lote 15 a linha ganhou a barra de velocidade, o campo da
+     duração e os dois de Chavear com palavra. Treze folgas de 2px são 26px, e
+     26px é a diferença entre caber em 1440 e rolar de lado. */
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 8px 10px 6px;
+  border-bottom: 1px solid var(--dope-linha);
+}
+
+.dope-toc-botao {
+  flex: 0 0 auto;
+  /* Quadrado, e grande o bastante para o dedo: 34px ainda cabe o dedo, e foi
+     o que a linha do lote 15 pediu para caber inteira em 1440. */
+  min-width: 34px;
+  min-height: 36px;
+  padding: 4px 6px;
+  font-size: 16px;
+  line-height: 1;
+  border: 2px solid var(--dope-linha);
+  border-radius: 6px;
+  background: var(--dope-campo);
+  color: var(--dope-texto);
+  cursor: pointer;
+}
+
+.dope-toc-botao:hover:not(:disabled) {
+  background: var(--dope-hover);
+}
+
+.dope-toc-botao:disabled {
+  color: var(--dope-texto-fraco);
+  cursor: default;
+  opacity: 0.55;
+}
+
+.dope-toc-botao:focus-visible {
+  outline: 3px solid var(--dope-realce);
+  outline-offset: 1px;
+}
+
+/* Tocar aceso: azul, a cor de "está acontecendo". */
+.dope-toc-tocar.is-on {
+  border-color: var(--dope-realce);
+  background: var(--dope-realce);
+  color: var(--dope-realce-texto);
+}
+
+/*
+ * Repetir aceso: LARANJA. Gravar aceso: VERMELHO.
+ *
+ * As duas cores são diferentes de propósito e diferentes do azul de tocar.
+ * Vermelho é o que grava — é o que muda o arquivo sem pedir —, e é a cor que
+ * todo gravador do mundo usa para isso. Laranja é só uma escolha de como
+ * tocar, e não escreve nada em osso nenhum.
+ */
+.dope-toc-repetir.is-on {
+  border-color: #d24500;
+  background: #ffe7d8;
+  color: #7a2800;
+}
+
+/*
+ * O "Gravar sozinho" e o semáforo do Chavear (verde, vermelho, cinza) saíram
+ * no degrau 4a — M6 e G13, 17/09/2026: editar sempre grava, e a marca de
+ * chave fica na folha.
+ */
+
+.dope-toc-velocidade {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 4px 6px;
+  font: inherit;
+  border: 2px solid var(--dope-linha);
+  border-radius: 6px;
+  background: var(--dope-campo);
+  color: var(--dope-texto);
+}
+
+/* O tempo e o quadro andam juntos: são a mesma informação em duas unidades. */
+.dope-toc-tempo {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 4px;
+}
+
+.dope-toc-campo {
+  width: 64px;
+  min-height: 36px;
+  padding: 4px 6px;
+  font: inherit;
+  text-align: right;
+  border: 2px solid var(--dope-linha);
+  border-radius: 6px;
+  background: var(--dope-campo);
+  color: var(--dope-texto);
+}
+
+.dope-toc-campo:disabled {
+  color: var(--dope-texto-fraco);
+  opacity: 0.55;
+}
+
+/*
+ * A agulha está EM CIMA de uma chave — anotação 7.
+ *
+ * Laranja com texto branco, e não só uma borda: estar em cima de uma chave
+ * muda o que a próxima tecla faz, e uma borda de 2px some numa barra cheia de
+ * botões. A cor não vem sozinha — a bandeirinha da agulha diz o tempo e o
+ * quadro, e o losango do Resumo está bem embaixo.
+ */
+.dope-toc-campo.dope-toc-em-chave {
+  border-color: var(--dope-em-chave);
+  background: var(--dope-em-chave);
+  color: #ffffff;
+}
+
+.dope-toc-quadro,
+.dope-toc-duracao {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: var(--dope-texto-fraco);
+}
+
+.dope-toc-duracao {
+  margin-left: 4px;
+  padding-left: 10px;
+  border-left: 1px solid var(--dope-linha);
+}
+
+.dope-barra {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  /* Rodada 40, lote 2: era 8px; a barra media 58 px e a folha mostrava uma
+     linha de chave só (doc 39, §2.4). */
+  padding: 3px 10px;
+  border-bottom: 2px solid var(--dope-linha);
+}
+
+/* Rodada 40, lote 2: os botões da barra das chaves, mais baixos. */
+.dope-barra .dope-botao {
+  min-height: 28px;
+  padding: 2px 10px;
+}
+
+.dope-grupo-botoes {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+  /* Room for the sideways scrollbar, so it never covers a button. */
+  padding-bottom: 2px;
+}
+
+.dope-botao {
+  /* The label never breaks in two: a button two lines tall doubles the height
+     of the whole bar, and the bar eats the rows. It slides sideways with its
+     group instead. */
+  flex: 0 0 auto;
+  white-space: nowrap;
+  min-height: 34px;
+  padding: 4px 12px;
+  border: 2px solid var(--dope-linha);
+  border-radius: 6px;
+  background: var(--dope-campo);
+  color: var(--dope-texto);
+  font: inherit;
+  cursor: pointer;
+}
+
+.dope-botao:hover {
+  background: var(--dope-hover);
+}
+
+.dope-botao:disabled {
+  color: var(--dope-texto-fraco);
+  cursor: default;
+  opacity: 0.6;
+}
+
+.dope-botao-forte {
+  border-color: var(--dope-realce);
+  background: var(--dope-realce);
+  color: var(--dope-realce-texto);
+}
+
+.dope-botao-forte:hover {
+  background: #1642b4;
+}
+
+/* ------------------------------------------------------------------ */
+/* Segunda barra: esticar, espelhar, fechar o ciclo (A1 e A6)          */
+/* ------------------------------------------------------------------ */
+
+/* Ela quebra em linhas em vez de rolar de lado: aqui os controles vêm em
+   duplas (rótulo + campo + botão) e cortar uma dupla ao meio é pior do que
+   uma linha a mais. */
+.dope-barra-tempo {
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  background: var(--dope-campo);
+}
+
+.dope-barra-tempo .dope-grupo-botoes {
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  overflow-x: visible;
+}
+
+/* Rótulo do grupo: sempre em texto, sempre em contraste alto. */
+.dope-rotulo {
+  flex: 0 0 auto;
+  color: var(--dope-texto);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dope-campo {
+  flex: 0 0 auto;
+  min-height: 34px;
+  width: 5.5em;
+  padding: 4px 8px;
+  border: 2px solid var(--dope-linha);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--dope-texto);
+  font: inherit;
+}
+
+.dope-campo-largo {
+  width: 15em;
+}
+
+.dope-campo:focus-visible {
+  outline: 3px solid var(--dope-realce);
+  outline-offset: 1px;
+}
+
+/* Os pares encontrados, ANTES de trocar nada. Uma linha inteira, para caber a
+   lista sem cortar nome nenhum. */
+.dope-pares {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--dope-texto);
+}
+
+/* `.dope-gravar` e `.dope-relogio` saíram no lote 2 (v1.8): a caixa "Gravar
+   sozinho" virou o botão `●` do tocador e o relógio virou o campo de tempo do
+   tocador, os dois logo acima, em "O tocador". */
+
+/* ------------------------------------------------------------------ */
+/* Ruler                                                               */
+/* ------------------------------------------------------------------ */
+
+/*
+ * The ruler lives INSIDE the scrolling area, stuck to its top. If it were a
+ * sibling above it, the vertical scrollbar would make the rows narrower than
+ * the ruler and every key would sit a few pixels off its own tick.
+ */
+/*
+ * O cabeçalho tem DUAS linhas desde o lote 3b: a régua e o Resumo.
+ *
+ * As duas ficam presas no topo. Um Resumo que rolasse para fora da vista com
+ * os grupos fechados seria justamente inútil no caso para o qual ele existe.
+ */
+.dope-cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid var(--dope-linha);
+  background: var(--dope-campo);
+}
+
+.dope-cabecalho-linha {
+  display: flex;
+  min-width: 0;
+}
+
+/* A linha da régua tem a altura da régua, e nada mais. */
+.dope-cabecalho-linha:first-child {
+  align-items: center;
+  height: 32px;
+}
+
+/*
+ * A linha Resumo — item 8.
+ *
+ * Um losango em cada tempo que tem chave em QUALQUER linha. Com os grupos
+ * fechados, que é como se trabalha, ela é a única coisa na tela que responde
+ * "onde estão as poses?".
+ */
+.dope-resumo-linha {
+  border-top: 1px solid var(--dope-linha);
+  background: var(--dope-campo);
+}
+
+.dope-resumo-nome {
+  font-weight: 700;
+}
+
+.dope-resumo {
+  height: 30px;
+}
+
+/* Um pouco maior que a chave de uma linha só: ele vale por várias. */
+.dope-resumo-chave {
+  width: 15px;
+  height: 15px;
+  background: var(--dope-chave);
+}
+
+/*
+ * Branco quando o tempo junta mais de um TIPO de alvo — um osso e um evento,
+ * por exemplo. Quem arrasta precisa saber que está levando o evento junto com a
+ * pose. O contorno escuro é o que faz o branco aparecer contra o fundo claro.
+ */
+.dope-resumo-misto {
+  background: #ffffff;
+  border: 2px solid var(--dope-chave);
+}
+
+.dope-cabecalho-nome {
+  flex: 0 0 var(--dope-nomes);
+  width: var(--dope-nomes);
+  padding: 6px 10px;
+  border-right: 2px solid var(--dope-linha);
+  font-weight: 600;
+}
+
+/*
+ * The ruler and every track are the same element width, so a key and its tick
+ * always line up. The margin on the right is the room the last diamond needs:
+ * a key at the very end sits at `left: 100%`, and half of it would hang outside
+ * the panel without it.
+ */
+/*
+ * A régua tem UMA linha de texto: o segundo.
+ *
+ * Ela tinha duas — o segundo e "quadro N" embaixo — e 48px de altura. O quadro
+ * já aparece no tocador, ao lado do tempo, e repetir a mesma informação custava
+ * 18px em toda janela, com a faixa fechada e com ela aberta. Pedido do
+ * Humberto, 09/09/2026: *"se tirar o nome quadro da linha do tempo ele pode
+ * ficar ainda mais fina"*. O número do quadro continua na dica de cada marca.
+ */
+.dope-regua {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 30px;
+  /* Rodada 23, defeito 11: a chave do quadro 0 ficava meio escondida sob a
+     coluna dos nomes. A mesma folga do fim, no começo; régua e faixas juntas. */
+  margin-left: 12px;
+  margin-right: 14px;
+  cursor: ew-resize;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.dope-marca {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--dope-linha);
+}
+
+.dope-marca-texto {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  display: block;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--dope-texto);
+}
+
+/*
+ * Ficou sem uso quando o quadro saiu da régua (09/09/2026). A classe fica
+ * escrita para quem procurar por ela achar o motivo, e não o silêncio.
+ */
+.dope-marca-quadro {
+  color: var(--dope-texto-fraco);
+}
+
+/* ------------------------------------------------------------------ */
+/* Rows                                                                */
+/* ------------------------------------------------------------------ */
+
+/* The floor is the ruler plus about three rows: below that the sheet says
+   nothing, and the panel scrolls instead. */
+.dope-corpo {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 150px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.dope-grupo {
+  /* Rodada 40, lote 2: era 6px (38 px de altura por título de osso). */
+  padding: 2px 10px;
+  border-top: 2px solid var(--dope-linha);
+  border-bottom: 1px solid var(--dope-linha);
+  background: var(--dope-campo);
+  font-weight: 600;
+}
+
+.dope-linha {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--dope-linha);
+}
+
+.dope-linha-escolhida .dope-nome {
+  background: var(--dope-hover);
+}
+
+.dope-nome {
+  flex: 0 0 var(--dope-nomes);
+  width: var(--dope-nomes);
+  padding: 5px 10px 5px 24px;
+  border-right: 2px solid var(--dope-linha);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.dope-faixa {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 34px;
+  margin-left: 12px;
+  margin-right: 14px;
+  touch-action: none;
+}
+
+/*
+ * A célula em degrau — degrau 6 (17/09/2026), tarefas 6.3, 6.4 e 6.5.
+ *
+ * As linhas que carregam um NOME — a virada de corpo, o osso do desenho, a
+ * animação da entidade — ganham uma faixa com o nome escrito, da chave até a
+ * chave seguinte. Um losango sozinho diz QUANDO alguma coisa mudou e cala
+ * para o quê, e ler "o personagem virou lobisomem aqui" é o ponto inteiro
+ * dessas três linhas.
+ *
+ * Ela fica POR BAIXO dos losangos (`z-index` menor, e vem antes no DOM): o
+ * losango continua sendo o que se clica, se arrasta e se apaga. A célula é
+ * para ler, e por isso não recebe ponteiro nenhum.
+ */
+.dope-degrau {
+  position: absolute;
+  top: 50%;
+  height: 18px;
+  margin-top: -9px;
+  padding: 0 6px 0 12px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--dope-chave) 18%, transparent);
+  border-left: 2px solid var(--dope-chave);
+  color: var(--dope-texto);
+  font-size: 11px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dope-chave {
+  z-index: 1;
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid var(--dope-fundo);
+  background: var(--dope-chave);
+  transform: rotate(45deg);
+  cursor: grab;
+}
+
+/*
+ * A curva entre duas chaves — rodada 40, lote 1 (doc 39, §2.2).
+ *
+ * Como o dopesheet do Spine: reta cheia para a linear, um arco para as curvas
+ * (Suave, Entrada, Saída, à mão) e **pontilhado para a parada** — a que mais
+ * importa ver, porque uma chave parada por engano trava o movimento. Fica por
+ * baixo dos losangos (`z-index` 0) e não pega o clique.
+ */
+.dope-trecho-curva {
+  position: absolute;
+  top: 50%;
+  /* Rodada 40, lote 3 (doc 44, a): 24 px dos 34 da faixa — o arco de 8 px
+     não se via. O desenho é a curva de verdade, num SVG esticado. */
+  height: 24px;
+  margin-top: -12px;
+  pointer-events: none;
+  box-sizing: border-box;
+  z-index: 0;
+}
+.dope-trecho-curva svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.dope-trecho-curva path {
+  fill: none;
+  stroke: color-mix(in srgb, var(--dope-texto) 70%, transparent);
+  stroke-width: 2;
+}
+.dope-trecho-linear path {
+  stroke: color-mix(in srgb, var(--dope-texto) 50%, transparent);
+}
+.dope-trecho-parada path {
+  stroke-dasharray: 5 4;
+}
+
+/* Rodada 40, lote 3: o tempo novo junto do mouse, durante o arrasto. */
+.dope-arrasto-leitura {
+  position: fixed;
+  z-index: 70;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--dope-texto);
+  color: var(--dope-fundo);
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.dope-chave-escolhida {
+  background: var(--dope-chave-escolhida);
+  border-color: var(--dope-texto);
+}
+
+/*
+ * A agulha, por cima de todas as linhas — da régua até o fim do Resumo.
+ *
+ * Grossa e vermelha por pedido dele (anotação 7). A bandeirinha vai presa no
+ * alto, dentro da régua, com o tempo e o quadro escritos: `0,02 s · q 1`.
+ */
+.dope-cursor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 3px;
+  margin-left: -1.5px;
+  background: var(--dope-cursor);
+  pointer-events: none;
+}
+
+/*
+ * A bandeirinha da agulha.
+ *
+ * Encostada na agulha e para a DIREITA dela, e não centrada: centrada, no
+ * tempo zero, metade dela ficaria fora da régua. Quando a agulha chega perto
+ * do fim, a classe `.dope-cursor-bandeira-esquerda` a vira para o outro lado.
+ */
+.dope-cursor-bandeira {
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--dope-cursor);
+  color: #ffffff;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.dope-cursor-bandeira-esquerda {
+  left: auto;
+  right: 4px;
+}
+
+.dope-laco {
+  position: absolute;
+  border: 2px dashed var(--dope-realce);
+  background: rgba(26, 79, 216, 0.12);
+  pointer-events: none;
+}
+
+/* O tocador nunca apaga (M5): com a base aberta, um losango em 0. */
+.dope-base {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  color: var(--dope-texto-fraco);
+}
+
+.dope-base-nome {
+  font-weight: 600;
+  color: var(--dope-texto, inherit);
+}
+
+.dope-base-losango {
+  color: var(--dope-realce);
+}
+
+.dope-base-nota {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.dope-vazio {
+  padding: 16px 12px;
+  color: var(--dope-texto-fraco);
+}
+
+.dope-aviso {
+  padding: 10px 12px;
+  border-top: 2px solid var(--dope-linha);
+  color: var(--dope-texto-fraco);
+}
+
+/* O bloco "Chave de evento", no pé do painel (requisito A3).
+   Ver panels/event-key-editor.ts. */
+.dope-eventos {
+  flex: 0 0 auto;
+  max-height: 40%;
+  overflow-y: auto;
+  /* Rodada 40, lote 2: era 8px; fechado, o quadro é só a linha do título. */
+  padding: 2px 10px;
+  border-top: 2px solid var(--painel-linha);
+}
+
+/* ------------------------------------------------------------------ */
+/* O botão ⋯ Mais — lote 4 (item 15)                                   */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A segunda barra virou este menu. Ela era seis controles permanentes para
+ * gestos que se usam uma vez por animação, e a altura dela era altura tirada
+ * das chaves — que se olham o tempo todo.
+ */
+.dope-mais {
+  position: relative;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.dope-mais-botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dope-mais-lista {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 6px);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 320px;
+  padding: 10px;
+  background: var(--dope-campo);
+  border: 2px solid var(--dope-linha);
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgb(16 21 28 / 25%);
+}
+
+/* Abre para CIMA: a linha do tempo mora na faixa de baixo da janela, e um
+   menu que caísse para baixo sairia da tela. */
+.dope-mais-item {
+  width: 100%;
+  text-align: left;
+}
+
+.dope-mais-campo,
+.dope-mais-par {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.dope-mais-par .dope-pares {
+  flex: 1 1 100%;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Trecho de laço e marcas — itens 81 e 82, lote 9                     */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A faixa do trecho: uma sombra por baixo dos números da régua.
+ *
+ * Por BAIXO, e translúcida, porque ela é um recorte do tempo e não um objeto:
+ * ela não pode competir com as marcas de quadro nem esconder um número.
+ */
+.dope-trecho {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  background: rgb(210 69 0 / 14%);
+  border-left: 2px solid var(--dope-trecho-borda);
+  border-right: 2px solid var(--dope-trecho-borda);
+  pointer-events: none;
+}
+
+/*
+ * O triângulo de cada marca, preso no pé da régua.
+ *
+ * É um `<button>` de verdade: dá para chegar nele pelo Tab, ele diz o nome no
+ * `aria-label`, e o duplo clique nele dá nome à marca.
+ */
+.dope-marcador {
+  position: absolute;
+  bottom: 0;
+  z-index: 3;
+  transform: translateX(-50%);
+  padding: 0 2px;
+  font-size: 13px;
+  line-height: 1;
+  color: #1b7a3d;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.dope-marcador:hover {
+  color: #0d4423;
+}
+
+.dope-marcador:focus-visible {
+  outline: 2px solid var(--dope-realce);
+  outline-offset: 1px;
+}
+
+/* A casca de cebola no canto da régua — item 28.
+   Ela morava dobrada no fim do painel Exibição, do outro lado da tela. Ligar
+   fantasma é decisão que se toma olhando o tempo, e agora a mão fica aqui. */
+
+/*
+ * O canto da régua: a casca de cebola e o ⋯ dela.
+ *
+ * Os dois botões usam a altura de botão de barra, 34px, e eram ELES que
+ * mandavam na altura da linha da régua — 46px, com a régua de 30px dentro. A
+ * régua afinou (o quadro saiu dela, 09/09/2026) e não adiantou nada enquanto o
+ * canto continuasse grande. Aqui eles encolhem para 26px, e a linha inteira
+ * fica com a altura da régua.
+ */
+.dope-cebola {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.dope-cebola .dope-botao {
+  min-height: 26px;
+  padding: 2px 8px;
+}
+
+/*
+ * Os três botões do canto da régua — lote 29, anotação 15, itens a e b.
+ *
+ * Início e fim do trecho de laço, e a marca. Os três só existiam em gesto:
+ * `Alt` + clique na régua e a tecla `M`. Estreitos, porque o canto é estreito
+ * e porque eles não competem com o tocador — mas existindo, que é o ponto.
+ */
+.dope-cebola .dope-regua-botao {
+  width: 26px;
+  padding: 2px;
+  justify-content: center;
+}
+
+.dope-cebola-botao.is-active {
+  color: var(--realce, #1a4fd8);
+  background: var(--realce-fraco, #e6ecfb);
+}
+
+.dope-cebola-lista {
+  /* I-O4 (29/09): presa à janela, e não à folha — a folha rola e cortava a
+     lista ao meio. O lugar e a altura vêm do `popupPlacement`, ao abrir. */
+  position: fixed;
+  z-index: 60;
+  /* Larga o bastante para o rótulo e o campo caberem lado a lado; a lista sai
+     por cima das chaves, e por isso ela tem fundo e sombra próprios. */
+  width: 280px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 8px 10px;
+  /* Rodada 47, lote 5 (nota 1 do doc 85): o texto saía cinza-claro sobre branco
+     (contraste 1,3:1) — a lista vai no corpo da página, longe das variáveis
+     do painel. As cores da casa, as mesmas do resto. */
+  color: var(--ink, #10151c);
+  background: var(--panel, #fff);
+  border: 1px solid var(--painel-linha, #c3ccd8);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 18%);
+}
+
+.dope-cebola-ajuda {
+  margin: 6px 0 0;
+  color: var(--painel-texto-fraco, #45505e);
+}
+
+/* O menu da interpolação, no botão direito do losango — item 26.
+   Ele vai no `body`, e não dentro da faixa: dentro dela o `overflow` da folha
+   cortaria o menu ao meio na última linha. */
+
+.dope-curva-menu {
+  position: fixed;
+  z-index: 60;
+  min-width: 160px;
+  padding: 4px;
+  background: var(--painel-fundo, #fff);
+  border: 1px solid var(--painel-linha, #c3ccd8);
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 22%);
+}
+
+.dope-curva-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 8px;
+  font: inherit;
+  text-align: left;
+  color: var(--painel-texto, #10151c);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dope-curva-item:hover {
+  background: var(--realce-fraco, #e6ecfb);
+}
+
+.dope-curva-marca {
+  /* Largura fixa: com a marca e sem ela, os nomes ficam na mesma coluna. */
+  flex: 0 0 14px;
+  color: var(--realce, #1a4fd8);
+}
+
+/* As alças nas pontas da seleção de chaves — item 27.
+   Barras finas e altas, e não losangos: elas não são chaves, e confundir uma
+   com a outra faria alguém arrastar a alça achando que move uma chave. */
+
+.dope-borda {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 8px;
+  margin-left: -4px;
+  padding: 0;
+  background: var(--realce, #1a4fd8);
+  border: 1px solid var(--painel-fundo, #fff);
+  border-radius: 2px;
+  cursor: ew-resize;
+}
+
+.dope-borda:hover,
+.dope-borda:focus-visible {
+  background: #0b3bb0;
+}
+
+/*
+ * Os três consertos locais de `hidden` que moravam aqui — a barra dos botões
+ * em bloco, a faixa de eventos e o menu do **⋯ Mais** — saíram no lote 38: o
+ * `[hidden] { display: none !important }` do `shell.css` vale para o programa
+ * inteiro, e um teste recusa qualquer `display` de autor num seletor `[hidden]`.
+ */
+
+/*
+ * A linha 1: o tocador que rola de lado, e o Detalhes preso na ponta direita.
+ */
+.dope-linha1 {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding-right: 10px;
+  border-bottom: 1px solid var(--dope-linha);
+}
+
+.dope-linha1 > .dope-tocador {
+  flex: 0 1 auto;
+  border-bottom: none;
+}
+
+/*
+ * Rodada 40, lote 2: a barra das chaves divide a linha 1 com o tocador. Se não
+ * couber, ela desce inteira para a linha de baixo (com o Mais e o Detalhes),
+ * e a faixa fica como era; se couber, a linha de botões some e sobram 44 px
+ * para as linhas de chave.
+ */
+.dope-linha1 {
+  flex-wrap: wrap;
+}
+.dope-linha1 > .dope-barra {
+  flex: 0 1 auto;
+  border-bottom: none;
+  padding-left: 0;
+}
+.dope-linha1 > .dope-mais {
+  margin-left: auto;
+}
+
+/*
+ * A faixa FECHADA — lote 14, rodada 3.
+ *
+ * Três linhas e nada mais: o tocador, a régua e o Resumo. O corpo da folha
+ * perde o piso de 150px, porque fechado ele carrega só o cabeçalho — que é
+ * onde a régua e o Resumo moram. Sem isto o piso do corpo sozinho já passava
+ * da altura inteira da faixa fechada, e a faixa rolava por dentro.
+ */
+.dope-compacta .dope-corpo {
+  min-height: 0;
+  overflow-y: hidden;
+}
+
+/*
+ * O botão **Detalhes**, encostado na ponta direita da linha do tocador.
+ *
+ * Tem palavra, e não só o símbolo: os treze do tocador se aprendem uma vez e
+ * viram gesto, este é o que se procura quando não se está achando o resto do
+ * programa. A seta diz para que lado ele vai — ▴ abre, ▾ fecha.
+ */
+.dope-detalhes {
+  flex: 0 0 auto;
+  padding: 4px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ */
+/* A linha 1 como a do Spriter — lote 15                               */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A barra de velocidade e o número ao lado.
+ *
+ * No Spriter é `play speed [====|====] 100`. Aqui é o mesmo: arrastar a barra
+ * e digitar no número escrevem no MESMO `transport.setSpeed`, pela mesma conta
+ * de `speedFromSlider`. A lista de quatro velocidades saiu; ela não deixava
+ * tocar a 30% para conferir um contato, que é o uso que existe.
+ */
+.dope-toc-vel {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dope-toc-barra {
+  flex: 0 0 auto;
+  width: 80px;
+  height: 26px;
+  accent-color: var(--dope-realce);
+  cursor: ew-resize;
+}
+
+.dope-toc-barra:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.dope-toc-vel-numero {
+  width: 42px;
+  min-height: 30px;
+  padding: 2px 4px;
+  font: inherit;
+  text-align: right;
+  border: 2px solid var(--dope-linha);
+  border-radius: 6px;
+  background: var(--dope-campo);
+  color: var(--dope-texto);
+}
+
+/*
+ * A duração deixou de ser texto e virou campo: `0,37 s / 1,00 s`, os dois para
+ * digitar, como o `current time / 1000` do Spriter. A barra entre os dois diz
+ * que eles são a mesma medida — onde estou, de quanto.
+ */
+.dope-toc-duracao {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.dope-toc-barra-tempo {
+  color: var(--dope-texto-fraco);
+}
+
+/*
+ * Os dois de Chavear levam a PALAVRA.
+ *
+ * É assim no Spriter — "key selected" e "key all" —, e é assim que o Humberto
+ * os reconhece. Eles são os únicos dois com palavra na linha: os outros onze
+ * se aprendem uma vez e viram gesto, e estes dois são os que gravam.
+ */
+.dope-toc-palavra {
+  min-width: 0;
+  padding: 4px 10px;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Os botões em bloco viraram ícones — lote 23                         */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Pedido do Humberto, 09/09/2026: *"tem muitos nomes onde podia ser trocados
+ * por ícones, só isso já ganharíamos muito espaço"*.
+ *
+ * **Medido**: os sete botões desta linha ocupavam **889px** com a palavra; em
+ * ícone ocupam **378** — são 511px devolvidos à folha. A palavra continua no
+ * `title` e no `aria-label`, e volta ao
+ * lado do ícone com **Editar → Preferências → Mostrar nome das ferramentas**.
+ */
+.dope-botao-icone {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+}
+
+.dope-botao-icone .dope-botao-nome {
+  display: none;
+}
+
+.dope-barra.mostra-nome .dope-botao-nome {
+  display: inline;
+}
+
+/* ------------------------------------------------------------------ */
+/* A faixa da entidade — degrau 6, tarefa 6.4 (E13, E14)              */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A entidade não é uma fileira de losangos: é uma FAIXA. Ela começa onde a
+ * entidade foi solta, acaba onde ela sai de cena, e traz escrito o nome da
+ * animação que o filho está tocando. É como se lê "a mochila começa a acender
+ * aos 0,5 s e apaga aos 1,2" sem abrir mais nada.
+ *
+ * Verde, e não o azul dos losangos: a faixa é de OUTRA coisa — um esqueleto
+ * inteiro com relógio próprio, e não uma propriedade deste esqueleto. Duas
+ * coisas diferentes com a mesma cor se leem como a mesma coisa.
+ */
+.dope-entidade {
+  position: absolute;
+  top: 50%;
+  height: 20px;
+  margin-top: -10px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: #d9ece0;
+  border: 2px solid #1f7a4d;
+  color: #123f2a;
+  font-size: 11px;
+  line-height: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Rodada 8c, C14: a faixa se arrasta (era só desenho). */
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+}
+
+/*
+ * Rodada 8c, C13: a PONTA — o fim de uma volta da animação do filho. Puxar
+ * para fora deixa mais devagar; para dentro, mais rápido. Larga o bastante
+ * para o mouse achar, e da cor da borda: é a borda que se puxa.
+ */
+.dope-entidade-ponta {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  margin-left: -4px;
+  background: #1f7a4d;
+  cursor: ew-resize;
+}
+
+/* A volta passa do fim da faixa: a alça encosta por dentro, com a seta. */
+.dope-entidade-ponta-alem {
+  margin-left: -8px;
+}
+
+.dope-entidade-ponta-alem::after {
+  content: '›';
+  position: absolute;
+  left: -9px;
+  top: -1px;
+  color: #1f7a4d;
+  font-weight: 700;
+}
+
+/*
+ * Rodada 8c, C15 — sem laço: depois de uma volta a entidade para. O resto da
+ * faixa fica apagado, listrado: ela ainda está em cena, parada.
+ */
+.dope-entidade-parada {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0 4px, rgba(31, 122, 77, 0.18) 4px 8px);
+  pointer-events: none;
+}
+
+/* A emenda dá salto: a borda do fim fica vermelha, e a dica diz os números. */
+.dope-entidade-emenda {
+  border-right: 4px solid #c0392b;
+}
+
+/* As voltas seguintes, em laço: um traço fino onde cada uma começa. */
+.dope-entidade-volta {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  background: rgba(31, 122, 77, 0.55);
+  pointer-events: none;
+}
+
+/*
+ * A animação vem do PAI (`inheritAnimation`): tracejado, porque o nome não
+ * está escrito — ele depende de qual animação o pai estiver tocando, e
+ * escrever um palpite seria improvisar (regra 21).
+ */
+.dope-entidade-pai {
+  border-style: dashed;
+  background: #e8f2ec;
+}
+
+/* Sem animação por cima: o filho fica na pose de repouso dele. */
+.dope-entidade-muda {
+  background: var(--dope-campo);
+  border-color: var(--dope-linha);
+  color: var(--dope-texto-fraco);
+}
+
+/*
+ * A entidade existe no slot, e esta animação nunca a mostra. A linha fica, com
+ * a frase escrita: uma linha vazia diz "ela existe e não entra aqui"; linha
+ * nenhuma deixaria a pessoa procurando onde ela foi parar.
+ */
+.dope-faixa-vazia {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  margin-top: -9px;
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--dope-texto-fraco);
+  font-style: italic;
+  pointer-events: none;
+}
+
+/* O botão direito vale na faixa inteira, inclusive na vazia. */
+.dope-linha-entidade .dope-faixa {
+  cursor: context-menu;
+}
+
+/* O título e o recado do menu do botão direito da faixa. */
+.dope-curva-titulo {
+  padding: 4px 8px 6px;
+  border-bottom: 1px solid var(--dope-linha);
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: var(--dope-texto);
+}
+
+/*
+ * O editor não abriu o arquivo do filho. O menu DIZ isso, numa linha, em vez
+ * de aparecer vazio: um menu mudo faria pensar que a entidade não tem animação
+ * nenhuma, quando o que houve foi o editor não achar o arquivo (regra 21).
+ */
+.dope-curva-recado {
+  max-width: 280px;
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--dope-texto-fraco);
+}
+
+/* Rodada 47, lote 5 (nota 1 do doc 85): rótulo e ajuda da Cebola na cor da casa. */
+.dope-cebola-lista .prop-rotulo,
+.dope-cebola-lista .dope-cebola-ajuda {
+  color: var(--ink, #10151c);
+}

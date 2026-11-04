@@ -1,0 +1,121 @@
+{
+  "bone": {
+    "version": "1.1",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 34 (conta a mao)"
+  },
+  "extensionsUsed": [
+    "BONE_particles"
+  ],
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "emissor",
+      "parent": "root",
+      "x": 100,
+      "rotation": 90
+    }
+  ],
+  "slots": [
+    {
+      "name": "fx",
+      "bone": "emissor",
+      "attachment": "jato"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "fx": {
+          "jato": {
+            "type": "BONE_particle",
+            "path": "fx/faisca",
+            "seed": 42,
+            "rate": 0,
+            "lifetime": [
+              2,
+              2
+            ],
+            "speed": [
+              50,
+              50
+            ],
+            "direction": 0,
+            "spread": 0,
+            "gravity": [
+              0,
+              0
+            ],
+            "drag": 0,
+            "angle": [
+              0,
+              0
+            ],
+            "angularVelocity": [
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1
+            ],
+            "space": "world",
+            "looping": false,
+            "maxParticles": 1000,
+            "bursts": [
+              {
+                "time": 0,
+                "count": 4,
+                "cycles": 1,
+                "interval": 1,
+                "probability": 1
+              }
+            ],
+            "spherizeDirection": 1,
+            "shape": "mesh",
+            "mesh": "pele",
+            "meshMode": "triangle",
+            "x": 20
+          },
+          "pele": {
+            "type": "mesh",
+            "vertices": [
+              40,
+              -30,
+              80,
+              -30,
+              80,
+              30,
+              40,
+              30
+            ],
+            "uvs": [
+              0,
+              0,
+              1,
+              0,
+              1,
+              1,
+              0,
+              1
+            ],
+            "triangles": [
+              0,
+              1,
+              2,
+              0,
+              2,
+              3
+            ],
+            "hull": 4,
+            "width": 40,
+            "height": 60
+          }
+        }
+      }
+    }
+  ]
+}

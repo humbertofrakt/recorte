@@ -1,0 +1,19 @@
+; O projeto do leitor do Recorte para o Godot 4.7 (rodadas G1 e G2).
+; O addon está em addons/recorte/. O exemplo está em exemplo/.
+
+config_version=5
+
+[application]
+
+config/name="Recorte - o leitor"
+run/main_scene="res://exemplo/exemplo.tscn"
+config/features=PackedStringArray("4.7")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/recorte/plugin.cfg")

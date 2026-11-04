@@ -1,0 +1,67 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 11"
+  },
+  "skeleton": {
+    "name": "escudo"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "fundo",
+      "bone": "root",
+      "attachment": "fundo"
+    },
+    {
+      "name": "centro",
+      "bone": "root",
+      "attachment": "centro"
+    },
+    {
+      "name": "frente",
+      "bone": "root",
+      "attachment": "frente"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "fundo": {
+          "fundo": {
+            "type": "region",
+            "path": "fundo",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "centro": {
+          "centro": {
+            "type": "region",
+            "path": "centro",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "frente": {
+          "frente": {
+            "type": "region",
+            "path": "frente",
+            "width": 10,
+            "height": 10
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

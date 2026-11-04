@@ -1,0 +1,87 @@
+{
+  "probe": {
+    "skins": [
+      "default",
+      "armadura"
+    ],
+    "animation": "vestir",
+    "times": [
+      0.15,
+      0.45,
+      0.75
+    ],
+    "measure": [
+      "slots",
+      "vertices"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.15,
+      "body": null,
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "visible": true
+        }
+      },
+      "vertices": {
+        "corpo/corpo": [
+          -12.0,
+          76.0,
+          12.0,
+          76.0,
+          12.0,
+          124.0,
+          -12.0,
+          124.0
+        ]
+      }
+    },
+    {
+      "time": 0.45,
+      "body": "lobisomem.bone",
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "visible": true
+        }
+      },
+      "vertices": {
+        "corpo/corpo": [
+          -18.0,
+          84.0,
+          18.0,
+          84.0,
+          18.0,
+          156.0,
+          -18.0,
+          156.0
+        ]
+      }
+    },
+    {
+      "time": 0.75,
+      "body": null,
+      "slots": {
+        "corpo": {
+          "attachment": "corpo",
+          "visible": true
+        }
+      },
+      "vertices": {
+        "corpo/corpo": [
+          -10.0,
+          80.0,
+          10.0,
+          80.0,
+          10.0,
+          120.0,
+          -10.0,
+          120.0
+        ]
+      }
+    }
+  ]
+}

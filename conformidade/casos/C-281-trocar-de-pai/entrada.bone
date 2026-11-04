@@ -1,0 +1,105 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "trocar de pai"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "torso",
+      "parent": "root",
+      "y": 100,
+      "rotation": 90
+    },
+    {
+      "name": "hand",
+      "parent": "torso",
+      "x": 50
+    },
+    {
+      "name": "pack",
+      "parent": "root",
+      "x": -30,
+      "y": 10
+    }
+  ],
+  "animations": [
+    {
+      "name": "trocar",
+      "duration": 1.0,
+      "loop": false,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "hand",
+          "property": "parent",
+          "keys": [
+            {
+              "time": 0,
+              "value": null
+            },
+            {
+              "time": 0.5,
+              "value": "pack"
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "hand",
+          "property": "x",
+          "keys": [
+            {
+              "time": 0,
+              "value": 50,
+              "curve": "stepped"
+            },
+            {
+              "time": 0.5,
+              "value": 10,
+              "curve": "stepped"
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "hand",
+          "property": "y",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0,
+              "curve": "stepped"
+            },
+            {
+              "time": 0.5,
+              "value": 20,
+              "curve": "stepped"
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pack",
+          "property": "x",
+          "keys": [
+            {
+              "time": 0,
+              "value": -30
+            },
+            {
+              "time": 1.0,
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

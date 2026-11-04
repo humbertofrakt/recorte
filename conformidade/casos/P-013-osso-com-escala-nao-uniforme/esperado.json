@@ -1,0 +1,97 @@
+{
+  "probe": {
+    "times": [
+      0.3
+    ],
+    "measure": [
+      "particles"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.3,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.3,
+            "life": 2,
+            "age": 0,
+            "x": 0,
+            "y": 0,
+            "angle": 0,
+            "scale": 2
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.25,
+            "life": 2,
+            "age": 0.05,
+            "x": 7.071068,
+            "y": 10.606602,
+            "angle": 0,
+            "scale": 2
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.2,
+            "life": 2,
+            "age": 0.1,
+            "x": 14.142136,
+            "y": 21.213203,
+            "angle": 0,
+            "scale": 2
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.15,
+            "life": 2,
+            "age": 0.15,
+            "x": 21.213203,
+            "y": 31.819805,
+            "angle": 0,
+            "scale": 2
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.1,
+            "life": 2,
+            "age": 0.2,
+            "x": 28.284271,
+            "y": 42.426407,
+            "angle": 0,
+            "scale": 2
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.05,
+            "life": 2,
+            "age": 0.25,
+            "x": 35.355339,
+            "y": 53.033009,
+            "angle": 0,
+            "scale": 2
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 0.3,
+            "x": 42.426407,
+            "y": 63.63961,
+            "angle": 0,
+            "scale": 2
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "shear" },
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root", "x": 5, "y": 7, "rotation": 20,
+      "scaleX": 1.5, "scaleY": 2, "shearX": 45, "shearY": 30 }
+  ],
+  "slots": []
+}

@@ -1,0 +1,15 @@
+{
+  "probe": { "animation": "anda",
+             "times": [0, 0.15625, 0.1875, 0.3125, 0.328125, 0.34375, 2.15625],
+             "measure": ["bones"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,        "bones": { "osso": { "arotation": 0 } } },
+    { "time": 0.15625,  "bones": { "osso": { "arotation": 10 } } },
+    { "time": 0.1875,   "bones": { "osso": { "arotation": 12 } } },
+    { "time": 0.3125,   "bones": { "osso": { "arotation": 20 } } },
+    { "time": 0.328125, "bones": { "osso": { "arotation": 20 } } },
+    { "time": 0.34375,  "bones": { "osso": { "arotation": 22 } } },
+    { "time": 2.15625,  "bones": { "osso": { "arotation": 138 } } }
+  ]
+}

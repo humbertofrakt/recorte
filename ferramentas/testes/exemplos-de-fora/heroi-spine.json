@@ -1,0 +1,214 @@
+{
+  "skeleton": {
+    "hash": "provaFase4",
+    "spine": "4.1.23",
+    "x": -120,
+    "y": 0,
+    "width": 240,
+    "height": 280,
+    "images": "./images/",
+    "audio": "",
+    "fps": 30
+  },
+  "bones": [
+    { "name": "root" },
+    { "name": "quadril", "parent": "root", "y": 96, "length": 20 },
+    { "name": "torso", "parent": "quadril", "y": 42, "length": 84 },
+    { "name": "cabeca", "parent": "torso", "y": 75, "length": 60 },
+    { "name": "cabelo", "parent": "cabeca", "y": 27 },
+    { "name": "capa_alta", "parent": "torso", "y": 20 },
+    { "name": "capa_baixa", "parent": "capa_alta", "y": -46 },
+
+    { "name": "ombro_dir", "parent": "torso", "x": 38, "y": 24, "length": 48 },
+    { "name": "antebraco_dir", "parent": "ombro_dir", "y": -44, "length": 44 },
+    { "name": "mao_dir", "parent": "antebraco_dir", "y": -34 },
+    { "name": "espada", "parent": "mao_dir", "x": 30, "y": 45, "rotation": 0 },
+
+    { "name": "ombro_esq", "parent": "torso", "x": -38, "y": 24, "length": 48 },
+    { "name": "antebraco_esq", "parent": "ombro_esq", "y": -44, "length": 40 },
+    { "name": "mao_esq", "parent": "antebraco_esq", "y": -32 },
+
+    { "name": "coxa_dir", "parent": "quadril", "x": -16, "y": -25, "length": 50 },
+    { "name": "canela_dir", "parent": "coxa_dir", "y": -48, "length": 46 },
+    { "name": "pe_dir", "parent": "canela_dir", "x": 4, "y": -13 },
+
+    { "name": "coxa_esq", "parent": "quadril", "x": 16, "y": -25, "length": 50 },
+    { "name": "canela_esq", "parent": "coxa_esq", "y": -48, "length": 46 },
+    { "name": "pe_esq", "parent": "canela_esq", "x": 4, "y": -13 },
+
+    { "name": "alvo_pe_dir", "parent": "root", "x": -16, "y": 4 }
+  ],
+  "slots": [
+    { "name": "coxa_esq", "bone": "coxa_esq", "attachment": "thigh_back" },
+    { "name": "canela_esq", "bone": "canela_esq", "attachment": "shin_back" },
+    { "name": "pe_esq", "bone": "pe_esq", "attachment": "foot_back" },
+    { "name": "ombro_esq", "bone": "ombro_esq", "attachment": "arm_back" },
+    { "name": "antebraco_esq", "bone": "antebraco_esq", "attachment": "forearm_back" },
+    { "name": "mao_esq", "bone": "mao_esq", "attachment": "hand_back" },
+    { "name": "capa_baixa", "bone": "capa_baixa", "attachment": "cape_lower" },
+    { "name": "capa_alta", "bone": "capa_alta", "attachment": "cape_upper" },
+    { "name": "corpo", "bone": "torso", "attachment": "body" },
+    { "name": "coxa_dir", "bone": "coxa_dir", "attachment": "thigh" },
+    { "name": "canela_dir", "bone": "canela_dir", "attachment": "shin" },
+    { "name": "pe_dir", "bone": "pe_dir", "attachment": "foot" },
+    { "name": "cabeca", "bone": "cabeca", "attachment": "face" },
+    { "name": "cabelo", "bone": "cabelo", "attachment": "hair" },
+    { "name": "espada", "bone": "espada", "attachment": "blade", "color": "ffffffff" },
+    { "name": "ombro_dir", "bone": "ombro_dir", "attachment": "arm_back" },
+    { "name": "antebraco_dir", "bone": "antebraco_dir", "attachment": "forearm" },
+    { "name": "mao_dir", "bone": "mao_dir", "attachment": "hand_01" }
+  ],
+  "ik": [
+    { "name": "perna_dir", "order": 0, "bones": ["coxa_dir", "canela_dir"], "target": "alvo_pe_dir", "bendPositive": true, "mix": 0 }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": { "body": { "width": 76, "height": 84 } },
+        "cabeca": { "face": { "width": 64, "height": 66 } },
+        "cabelo": { "hair": { "width": 56, "height": 30 } },
+        "capa_alta": { "cape_upper": { "width": 40, "height": 32 } },
+        "capa_baixa": { "cape_lower": { "width": 46, "height": 42 } },
+
+        "ombro_dir": { "arm_back": { "rotation": 90, "width": 48, "height": 24 } },
+        "antebraco_dir": { "forearm": { "rotation": 90, "width": 44, "height": 22 } },
+        "mao_dir": { "hand_01": { "width": 24, "height": 24 } },
+        "espada": { "blade": { "rotation": 90, "width": 70, "height": 24 } },
+
+        "ombro_esq": { "arm_back": { "rotation": 90, "width": 48, "height": 24 } },
+        "antebraco_esq": { "forearm_back": { "rotation": 90, "width": 40, "height": 20 } },
+        "mao_esq": { "hand_back": { "width": 22, "height": 22 } },
+
+        "coxa_dir": { "thigh": { "rotation": 90, "width": 50, "height": 28 } },
+        "canela_dir": { "shin": { "rotation": 90, "width": 46, "height": 24 } },
+        "pe_dir": { "foot": { "width": 34, "height": 20 } },
+
+        "coxa_esq": { "thigh_back": { "rotation": 90, "width": 50, "height": 28 } },
+        "canela_esq": { "shin_back": { "rotation": 90, "width": 46, "height": 24 } },
+        "pe_esq": { "foot_back": { "width": 34, "height": 20 } }
+      }
+    },
+    {
+      "name": "armadura",
+      "attachments": {
+        "corpo": { "body": { "name": "armadura/body", "width": 76, "height": 84 } }
+      }
+    }
+  ],
+  "events": {
+    "passo": { "int": 1, "string": "pe", "audio": "passo.wav", "volume": 0.8 }
+  },
+  "animations": {
+    "andar": {
+      "bones": {
+        "quadril": {
+          "translate": [
+            { "time": 0, "x": 0, "y": 0, "curve": "stepped" },
+            { "time": 0.25, "x": 0, "y": 6 },
+            { "time": 0.5, "x": 0, "y": 0, "curve": [0.5625, 0, 0.6875, 6] },
+            { "time": 0.75, "x": 0, "y": 6 },
+            { "time": 1, "x": 0, "y": 0 }
+          ]
+        },
+        "torso": {
+          "rotate": [
+            { "time": 0, "value": 0 },
+            { "time": 0.5, "value": 6 },
+            { "time": 1, "value": 0 }
+          ],
+          "scale": [
+            { "time": 0, "x": 1, "y": 1 },
+            { "time": 0.5, "x": 1.04, "y": 0.98 },
+            { "time": 1, "x": 1, "y": 1 }
+          ]
+        },
+        "coxa_dir": {
+          "rotate": [
+            { "time": 0, "value": 22 },
+            { "time": 0.5, "value": -20 },
+            { "time": 1, "value": 22 }
+          ]
+        },
+        "coxa_esq": {
+          "rotate": [
+            { "time": 0, "value": -20 },
+            { "time": 0.5, "value": 22 },
+            { "time": 1, "value": -20 }
+          ]
+        },
+        "canela_dir": {
+          "rotate": [
+            { "time": 0, "value": -14 },
+            { "time": 0.5, "value": 4 },
+            { "time": 1, "value": -14 }
+          ]
+        },
+        "ombro_dir": {
+          "rotate": [
+            { "time": 0, "value": -18 },
+            { "time": 0.5, "value": 16 },
+            { "time": 1, "value": -18 }
+          ]
+        },
+        "ombro_esq": {
+          "rotate": [
+            { "time": 0, "value": 16 },
+            { "time": 0.5, "value": -18 },
+            { "time": 1, "value": 16 }
+          ]
+        },
+        "capa_alta": {
+          "rotate": [
+            { "time": 0, "value": 0 },
+            { "time": 0.5, "value": -8 },
+            { "time": 1, "value": 0 }
+          ]
+        }
+      },
+      "slots": {
+        "espada": {
+          "rgba": [
+            { "time": 0, "color": "ffffffff" },
+            { "time": 0.5, "color": "ffe08cff" },
+            { "time": 1, "color": "ffffffff" }
+          ]
+        },
+        "mao_dir": {
+          "attachment": [
+            { "time": 0, "name": "hand_01" },
+            { "time": 0.5, "name": "hand_01" }
+          ]
+        }
+      },
+      "events": [
+        { "time": 0.25, "name": "passo", "int": 1 },
+        { "time": 0.75, "name": "passo", "int": 2 }
+      ],
+      "ik": {
+        "perna_dir": [
+          { "time": 0, "mix": 0 },
+          { "time": 1, "mix": 0 }
+        ]
+      }
+    },
+    "parado": {
+      "bones": {
+        "torso": {
+          "rotate": [
+            { "time": 0, "value": 0 },
+            { "time": 1, "value": 3 },
+            { "time": 2, "value": 0 }
+          ]
+        },
+        "cabeca": {
+          "rotate": [
+            { "time": 0, "value": 0 },
+            { "time": 1, "value": -4 },
+            { "time": 2, "value": 0 }
+          ]
+        }
+      }
+    }
+  }
+}

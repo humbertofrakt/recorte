@@ -1,0 +1,83 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "hospedeiro"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "hand",
+      "parent": "root",
+      "x": 100,
+      "y": 50
+    }
+  ],
+  "slots": [
+    {
+      "name": "hand_point",
+      "bone": "hand",
+      "attachment": "hand_point"
+    },
+    {
+      "name": "weapon",
+      "bone": "hand",
+      "attachment": "sword"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "weapon": {
+          "sword": {
+            "type": "skeleton",
+            "uri": "arma.bone",
+            "x": 5,
+            "baseAnimation": "girar"
+          }
+        },
+        "hand_point": {
+          "hand_point": {
+            "type": "point",
+            "x": 10,
+            "y": 0,
+            "rotation": 90
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "esperar",
+      "duration": 2.0,
+      "loop": false,
+      "timelines": [
+        {
+          "type": "nested",
+          "target": "weapon",
+          "property": "animation",
+          "keys": [
+            {
+              "time": 0,
+              "value": null
+            },
+            {
+              "time": 1.0,
+              "value": "attack"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

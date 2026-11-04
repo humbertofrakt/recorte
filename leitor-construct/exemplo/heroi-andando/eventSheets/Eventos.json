@@ -1,0 +1,467 @@
+{
+	"name": "Eventos",
+	"events": [
+		{
+			"eventType": "comment",
+			"text": "Exemplo do leitor do Recorte. O heroi anda sozinho (propriedade Animacao inicial = walk). Espaco: ataca uma vez, e ao terminar o ataque volta a andar sozinho (gatilho Ao terminar a animacao). W: anda. A/S: veste e tira a armadura. F: liga e desliga o fogo. X: espelha. E: troca a espada pelo capacete (piscando) e volta. Q: liga e desliga a aura rosa EM VOLTA do heroi (uma bola atras dele inteiro, outra na frente). P: pausa. C: continua. O painel mostra a animacao, as skins, o ultimo evento do .bone (o passo, o golpe) e os avisos do leitor."
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 875673792421092,
+					"parameters": {
+						"key": 32
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "tocar",
+					"objectClass": "Heroi",
+					"sid": 671845854395987,
+					"parameters": {
+						"nome": "\"attack\"",
+						"laco": "uma-vez"
+					}
+				}
+			],
+			"sid": 189814123399423
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "ao-terminar",
+					"objectClass": "Heroi",
+					"sid": 280145175660798,
+					"parameters": {
+						"nome": "\"attack\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "tocar",
+					"objectClass": "Heroi",
+					"sid": 871963031861744,
+					"parameters": {
+						"nome": "\"walk\"",
+						"laco": "em-laco"
+					}
+				}
+			],
+			"sid": 258818977960438
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 546755128741930,
+					"parameters": {
+						"key": 87
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "tocar",
+					"objectClass": "Heroi",
+					"sid": 638553032219014,
+					"parameters": {
+						"nome": "\"walk\"",
+						"laco": "em-laco"
+					}
+				}
+			],
+			"sid": 933077765135970
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 424678542202245,
+					"parameters": {
+						"key": 65
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "vestir",
+					"objectClass": "Heroi",
+					"sid": 314034539666043,
+					"parameters": {
+						"nome": "\"armadura\""
+					}
+				}
+			],
+			"sid": 772366536169045
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 607979077781750,
+					"parameters": {
+						"key": 83
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "tirar",
+					"objectClass": "Heroi",
+					"sid": 427842801828805,
+					"parameters": {
+						"nome": "\"armadura\""
+					}
+				}
+			],
+			"sid": 585490252744381
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 207576076630995,
+					"parameters": {
+						"key": 70
+					}
+				}
+			],
+			"actions": [],
+			"sid": 650728858334038,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "vestindo",
+							"objectClass": "Heroi",
+							"sid": 817927694500947,
+							"parameters": {
+								"nome": "\"fogo\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "tirar",
+							"objectClass": "Heroi",
+							"sid": 755035378007544,
+							"parameters": {
+								"nome": "\"fogo\""
+							}
+						}
+					],
+					"sid": 773420139969551
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "else",
+							"objectClass": "System",
+							"sid": 904686675993041
+						}
+					],
+					"actions": [
+						{
+							"id": "vestir",
+							"objectClass": "Heroi",
+							"sid": 441097407267409,
+							"parameters": {
+								"nome": "\"fogo\""
+							}
+						}
+					],
+					"sid": 916767415731439
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 983264349929393,
+					"parameters": {
+						"key": 88
+					}
+				}
+			],
+			"actions": [],
+			"sid": 825018668226231,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "espelhado",
+							"objectClass": "Heroi",
+							"sid": 691046341775190
+						}
+					],
+					"actions": [
+						{
+							"id": "espelhar",
+							"objectClass": "Heroi",
+							"sid": 589742970849348,
+							"parameters": {
+								"lado": "normal"
+							}
+						}
+					],
+					"sid": 174908360950833
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "else",
+							"objectClass": "System",
+							"sid": 880034122848312
+						}
+					],
+					"actions": [
+						{
+							"id": "espelhar",
+							"objectClass": "Heroi",
+							"sid": 750685025645795,
+							"parameters": {
+								"lado": "espelhado"
+							}
+						}
+					],
+					"sid": 760175461886695
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 690026272351701,
+					"parameters": {
+						"key": 80
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "pausar",
+					"objectClass": "Heroi",
+					"sid": 121904218555158
+				}
+			],
+			"sid": 595200205637773
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 775784451788077,
+					"parameters": {
+						"key": 67
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "continuar",
+					"objectClass": "Heroi",
+					"sid": 213906695640952
+				}
+			],
+			"sid": 661255756112522
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 677641120980938,
+					"parameters": {
+						"key": 69
+					}
+				}
+			],
+			"actions": [],
+			"sid": 949230629991805,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "mostra-peca",
+							"objectClass": "Heroi",
+							"sid": 250294782476276,
+							"parameters": {
+								"slot": "\"weapon\"",
+								"peca": "\"capacete.bone\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "desencaixar",
+							"objectClass": "Heroi",
+							"sid": 204500922665864,
+							"parameters": {
+								"slot": "\"weapon\""
+							}
+						}
+					],
+					"sid": 355440831589241
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "else",
+							"objectClass": "System",
+							"sid": 375740202589469
+						}
+					],
+					"actions": [
+						{
+							"id": "encaixar",
+							"objectClass": "Heroi",
+							"sid": 679820480207952,
+							"parameters": {
+								"peca": "\"capacete.bone\"",
+								"slot": "\"weapon\"",
+								"meio": "\"\""
+							}
+						},
+						{
+							"id": "animar-peca",
+							"objectClass": "Heroi",
+							"sid": 526422926835617,
+							"parameters": {
+								"slot": "\"weapon\"",
+								"animacao": "\"piscar\"",
+								"laco": "em-laco"
+							}
+						}
+					],
+					"sid": 970933323977293
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "Teclado",
+					"sid": 174084172691939,
+					"parameters": {
+						"key": 81
+					}
+				}
+			],
+			"actions": [],
+			"sid": 929270794492195,
+			"children": [
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "mostra-peca",
+							"objectClass": "Heroi",
+							"sid": 326205489299212,
+							"parameters": {
+								"slot": "\"aura\"",
+								"peca": "\"aura.bone\""
+							}
+						}
+					],
+					"actions": [
+						{
+							"id": "desencaixar",
+							"objectClass": "Heroi",
+							"sid": 965932861657661,
+							"parameters": {
+								"slot": "\"aura\""
+							}
+						}
+					],
+					"sid": 377087821869715
+				},
+				{
+					"eventType": "block",
+					"conditions": [
+						{
+							"id": "else",
+							"objectClass": "System",
+							"sid": 147844027635183
+						}
+					],
+					"actions": [
+						{
+							"id": "encaixar",
+							"objectClass": "Heroi",
+							"sid": 464243750163865,
+							"parameters": {
+								"peca": "\"aura.bone\"",
+								"slot": "\"aura\"",
+								"meio": "\"meio\""
+							}
+						},
+						{
+							"id": "animar-peca",
+							"objectClass": "Heroi",
+							"sid": 982843455724984,
+							"parameters": {
+								"slot": "\"aura\"",
+								"animacao": "\"girar\"",
+								"laco": "em-laco"
+							}
+						}
+					],
+					"sid": 904441009668581
+				}
+			]
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "every-tick",
+					"objectClass": "System",
+					"sid": 911173495790941
+				}
+			],
+			"actions": [
+				{
+					"id": "set-text",
+					"objectClass": "Painel",
+					"sid": 578667132732378,
+					"parameters": {
+						"text": "\"Tocando: \" & Heroi.AnimacaoTocando & \"   Skins: \" & Heroi.Skins & \"   Arma: \" & Heroi.PecaDoSlot(\"weapon\") & \"   Ultimo evento: \" & Heroi.EventoNome & \" \" & Heroi.EventoInteiro & newline & \"Espaco: atacar   W: andar   A/S: armadura   F: fogo   X: espelhar   E: arma   Q: aura   P: pausar   C: continuar\" & newline & newline & \"Avisos do leitor:\" & newline & Heroi.Avisos"
+					}
+				}
+			],
+			"sid": 169282755238741
+		}
+	],
+	"sid": 501688482854550
+}

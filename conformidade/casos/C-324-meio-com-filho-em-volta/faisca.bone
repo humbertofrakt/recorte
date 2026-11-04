@@ -1,0 +1,67 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 34 (conta a mao)"
+  },
+  "skeleton": {
+    "name": "faisca"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "fagulha_a",
+      "bone": "root",
+      "attachment": "fagulha_a"
+    },
+    {
+      "name": "centro",
+      "bone": "root",
+      "attachment": "centro"
+    },
+    {
+      "name": "fagulha_b",
+      "bone": "root",
+      "attachment": "fagulha_b"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "fagulha_a": {
+          "fagulha_a": {
+            "type": "region",
+            "path": "fagulha_a",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "centro": {
+          "centro": {
+            "type": "region",
+            "path": "centro",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "fagulha_b": {
+          "fagulha_b": {
+            "type": "region",
+            "path": "fagulha_b",
+            "width": 10,
+            "height": 10
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

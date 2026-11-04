@@ -1,0 +1,12 @@
+{
+  "probe": { "animation": "andar", "times": [0, 0.5, 1], "measure": ["bones", "slots", "drawOrder", "vertices"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,   "bones": { "osso": { "ax": 0,  "ay": 20, "worldX": 0,  "worldY": 20 } },
+      "slots": { "corpo": { "attachment": "corpo", "visible": true, "color": [1, 1, 1, 1] } },
+      "drawOrder": ["corpo"],
+      "vertices": { "corpo/corpo": [-10, -10, 10, -10, 10, 10, -10, 10] } },
+    { "time": 0.5, "bones": { "osso": { "ax": 50, "ay": 20, "worldX": 50, "worldY": 20 } } },
+    { "time": 1,   "bones": { "osso": { "ax": 100, "ay": 20, "worldX": 100, "worldY": 20 } } }
+  ]
+}

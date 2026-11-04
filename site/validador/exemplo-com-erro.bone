@@ -1,0 +1,31 @@
+{
+  "bone": {
+    "version": "1.0",
+    "generator": "Recorte 0.1.0 (exemplo com erro, de propósito)"
+  },
+  "skeleton": { "name": "exemplo com erro" },
+  "assets": { "atlases": ["heroi.atlas.json"] },
+  "bones": [
+    { "name": "root" },
+    { "name": "quadril", "parent": "root", "y": 90 },
+    { "name": "torso", "parent": "quadril", "rotation": "noventa" },
+    { "name": "cabeca", "parent": "pescoco", "length": 40 },
+    { "name": "braco", "parent": "torso", "length": 60 },
+    { "name": "braco", "parent": "torso", "length": 60 },
+    { "name": "solto" }
+  ],
+  "slots": [
+    { "name": "corpo", "bone": "torso", "attachment": "corpo", "blend": "arco-iris" }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": {
+          "corpo": { "type": "region", "path": "corpo", "width": 64, "height": 64 }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

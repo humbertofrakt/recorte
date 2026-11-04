@@ -1,0 +1,277 @@
+/*
+ * Painel "Prévia" (A5, A7).
+ *
+ * Segue o mesmo desenho dos outros painéis: duas colunas alinhadas, rótulo à
+ * esquerda e controle à direita, nada abaixo de 14px, nenhum texto cortado.
+ * As variáveis (--painel-*) vêm de `panels.css`.
+ */
+
+.previa-tela {
+  padding: 8px 12px 4px;
+}
+
+.previa-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 2px solid var(--painel-linha);
+  border-radius: 6px;
+  background: var(--painel-campo);
+}
+
+/* Os botões em símbolo do tocador — 13/09/2026. Quadrados e estreitos, para os
+   quatro controles caberem numa LINHA só: em duas linhas eles comiam 106 px de
+   altura e o palco não cabia no que sobrava. */
+.previa-simbolo {
+  min-width: 34px;
+  padding: 6px 8px;
+  font-size: 15px;
+  line-height: 1;
+  text-align: center;
+}
+
+/* A dobra de cada camada e da caixa de copiar — 13/09/2026. O painel mostrava
+   as quatro camadas e o copiar abertos ao mesmo tempo: 1.933 px de conteúdo
+   numa caixa de cem. Fechado, cada um é uma linha que se lê. */
+.previa-dobra {
+  border-top: 2px solid var(--painel-linha);
+}
+
+.previa-dobra-titulo {
+  padding: 8px 12px;
+  color: var(--painel-texto);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.previa-dobra-titulo:hover {
+  background: var(--painel-campo);
+}
+
+/* Dentro da dobra o grupo não repete a moldura: o título da dobra já a faz. */
+.previa-dobra > .prop-grupo {
+  border: 0;
+}
+
+.previa-recado {
+  margin: 0;
+  padding: 0 12px 8px;
+  color: var(--painel-texto-fraco);
+  font-size: 14px;
+}
+
+.previa-recado:empty {
+  display: none;
+}
+
+/* A faixa de peso e o número que ela vale, lado a lado. O número está sempre
+   escrito: uma barra sem número obriga a adivinhar onde ela parou. */
+.previa-faixa-linha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.previa-faixa {
+  flex: 1 1 auto;
+  min-width: 0;
+  accent-color: var(--painel-realce);
+}
+
+.previa-numero {
+  flex: 0 0 auto;
+  min-width: 48px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.previa-tempo {
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.previa-dica {
+  margin: 4px 0 6px;
+  color: var(--painel-texto-fraco);
+  font-size: 14px;
+}
+
+.previa-ossos {
+  margin-bottom: 6px;
+}
+
+.previa-lista-ossos {
+  max-height: 180px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  border: 2px solid var(--painel-linha);
+  border-radius: 6px;
+  list-style: none;
+}
+
+.previa-osso {
+  margin: 0;
+  padding: 0;
+}
+
+.previa-osso-rotulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.previa-osso-rotulo:hover {
+  background: var(--painel-campo);
+}
+
+.previa-osso-nome {
+  overflow-wrap: break-word;
+  font-size: 14px;
+}
+
+.previa-perdas-titulo {
+  margin: 8px 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* A lista do que se perde fica sempre à vista. Esconder isso atrás de um
+   "saiba mais" transforma uma perda de trabalho em surpresa. */
+.previa-perdas {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  color: var(--painel-texto-fraco);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.previa-perdas li {
+  margin-bottom: 4px;
+}
+
+/* Tela cheia — item 102. A caixa estica e o canvas fica no meio dela. */
+
+.previa-tela:fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: #101418;
+}
+
+.previa-tela:fullscreen .previa-canvas {
+  /* Cresce até caber, sem passar do tamanho da tela nem esticar torto. */
+  width: auto;
+  height: auto;
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+/*
+ * A tela cheia da Visualização — degrau 11, lote 5 (C5).
+ *
+ * Três colunas: as animações à esquerda, o palco no meio (o maior possível) e
+ * as peles à direita. É o pedido do Humberto: *"rodar as animações e pôr e
+ * tirar peles para testar"*, sem sair da tela cheia para trocar nada.
+ */
+.previa-cheia {
+  display: grid;
+  grid-template-columns: 220px 1fr 220px;
+  grid-template-rows: auto 1fr;
+  gap: 12px;
+  width: 100vw;
+  height: 100vh;
+  padding: 12px;
+  background: #101418;
+  color: #f2f5f8;
+  box-sizing: border-box;
+}
+
+.previa-cheia-topo {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 18px;
+}
+
+.previa-cheia-dica {
+  color: #b7c2cd;
+}
+
+.previa-cheia-topo button {
+  margin-left: auto;
+}
+
+.previa-cheia-lado {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.previa-cheia-titulo {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: #b7c2cd;
+}
+
+.previa-cheia-item {
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid #3a4550;
+  border-radius: 6px;
+  background: #1b2026;
+  color: #f2f5f8;
+  cursor: pointer;
+}
+
+.previa-cheia-item:hover {
+  border-color: #8b98a8;
+}
+
+/* Ligada: laranja, o mesmo dos interruptores da barra — e a palavra junto. */
+.previa-cheia-item.is-ativa {
+  background: #d98a2b;
+  border-color: #d98a2b;
+  color: #2b1600;
+  font-weight: 600;
+}
+
+.previa-cheia-vazio {
+  margin: 4px 0 0;
+  color: #b7c2cd;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* O palco, no meio: cresce até caber, sem esticar torto. */
+.previa-cheia > .previa-tela {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+/*
+ * O palco CRESCE até a altura da tela, sem esticar torto: `object-fit` guarda
+ * a proporção do canvas. Sem isto ele ficava do tamanho de sempre (480×300)
+ * no meio de uma tela de 1440 — tela cheia que não aumenta o personagem não
+ * serve para julgar animação, que é o ponto dela.
+ */
+.previa-cheia > .previa-tela .previa-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

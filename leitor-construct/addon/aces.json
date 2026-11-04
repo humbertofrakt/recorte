@@ -1,0 +1,448 @@
+{
+	"animacao": {
+		"conditions": [
+			{
+				"id": "tocando",
+				"scriptName": "Tocando",
+				"highlight": true,
+				"params": [
+					{
+						"id": "nome",
+						"type": "string",
+						"initialValue": "\"walk\""
+					}
+				]
+			},
+			{
+				"id": "ao-terminar",
+				"scriptName": "AoTerminar",
+				"highlight": true,
+				"isTrigger": true,
+				"params": [
+					{
+						"id": "nome",
+						"type": "string",
+						"initialValue": "\"\""
+					}
+				]
+			},
+			{
+				"id": "ao-evento",
+				"scriptName": "AoEvento",
+				"highlight": true,
+				"isTrigger": true,
+				"params": [
+					{
+						"id": "nome",
+						"type": "string",
+						"initialValue": "\"\""
+					}
+				]
+			}
+		],
+		"actions": [
+			{
+				"id": "tocar",
+				"scriptName": "Tocar",
+				"highlight": true,
+				"params": [
+					{
+						"id": "nome",
+						"type": "string",
+						"initialValue": "\"walk\""
+					},
+					{
+						"id": "laco",
+						"type": "combo",
+						"items": [
+							"em-laco",
+							"uma-vez"
+						]
+					}
+				]
+			},
+			{
+				"id": "mudar-velocidade",
+				"scriptName": "MudarVelocidade",
+				"highlight": false,
+				"params": [
+					{
+						"id": "velocidade",
+						"type": "number",
+						"initialValue": "1"
+					}
+				]
+			},
+			{
+				"id": "pausar",
+				"scriptName": "Pausar",
+				"highlight": false
+			},
+			{
+				"id": "continuar",
+				"scriptName": "Continuar",
+				"highlight": false
+			}
+		],
+		"expressions": [
+			{
+				"id": "animacao-tocando",
+				"expressionName": "AnimacaoTocando",
+				"highlight": true,
+				"returnType": "string"
+			},
+			{
+				"id": "velocidade",
+				"expressionName": "Velocidade",
+				"highlight": false,
+				"returnType": "number"
+			},
+			{
+				"id": "evento-nome",
+				"expressionName": "EventoNome",
+				"highlight": false,
+				"returnType": "string"
+			},
+			{
+				"id": "evento-inteiro",
+				"expressionName": "EventoInteiro",
+				"highlight": false,
+				"returnType": "number"
+			},
+			{
+				"id": "evento-numero",
+				"expressionName": "EventoNumero",
+				"highlight": false,
+				"returnType": "number"
+			},
+			{
+				"id": "evento-texto",
+				"expressionName": "EventoTexto",
+				"highlight": false,
+				"returnType": "string"
+			}
+		]
+	},
+	"skin": {
+		"conditions": [
+			{
+				"id": "vestindo",
+				"scriptName": "Vestindo",
+				"highlight": true,
+				"params": [
+					{
+						"id": "nome",
+						"type": "string",
+						"initialValue": "\"armadura\""
+					}
+				]
+			}
+		],
+		"actions": [
+			{
+				"id": "vestir",
+				"scriptName": "Vestir",
+				"highlight": true,
+				"params": [
+					{
+						"id": "nome",
+						"type": "string",
+						"initialValue": "\"armadura\""
+					}
+				]
+			},
+			{
+				"id": "tirar",
+				"scriptName": "Tirar",
+				"highlight": true,
+				"params": [
+					{
+						"id": "nome",
+						"type": "string",
+						"initialValue": "\"armadura\""
+					}
+				]
+			}
+		],
+		"expressions": [
+			{
+				"id": "skins",
+				"expressionName": "Skins",
+				"highlight": false,
+				"returnType": "string"
+			}
+		]
+	},
+	"aparencia": {
+		"conditions": [
+			{
+				"id": "espelhado",
+				"scriptName": "Espelhado",
+				"highlight": false
+			}
+		],
+		"actions": [
+			{
+				"id": "espelhar",
+				"scriptName": "Espelhar",
+				"highlight": true,
+				"params": [
+					{
+						"id": "lado",
+						"type": "combo",
+						"items": [
+							"espelhado",
+							"normal"
+						]
+					}
+				]
+			}
+		],
+		"expressions": []
+	},
+	"avisos": {
+		"conditions": [],
+		"actions": [],
+		"expressions": [
+			{
+				"id": "avisos",
+				"expressionName": "Avisos",
+				"highlight": false,
+				"returnType": "string"
+			}
+		]
+	},
+	"conexao": {
+		"conditions": [
+			{
+				"id": "ao-encaixar",
+				"scriptName": "AoEncaixar",
+				"highlight": true,
+				"isTrigger": true,
+				"params": [
+					{
+						"id": "slot",
+						"type": "string",
+						"initialValue": "\"\""
+					}
+				]
+			},
+			{
+				"id": "mostra-peca",
+				"scriptName": "MostraPeca",
+				"highlight": true,
+				"params": [
+					{
+						"id": "slot",
+						"type": "string",
+						"initialValue": "\"weapon\""
+					},
+					{
+						"id": "peca",
+						"type": "string",
+						"initialValue": "\"espada.bone\""
+					}
+				]
+			}
+		],
+		"actions": [
+			{
+				"id": "encaixar",
+				"scriptName": "Encaixar",
+				"highlight": true,
+				"params": [
+					{
+						"id": "peca",
+						"type": "string",
+						"initialValue": "\"espada.bone\""
+					},
+					{
+						"id": "slot",
+						"type": "string",
+						"initialValue": "\"weapon\""
+					},
+					{
+						"id": "meio",
+						"type": "string",
+						"initialValue": "\"\""
+					}
+				]
+			},
+			{
+				"id": "desencaixar",
+				"scriptName": "Desencaixar",
+				"highlight": true,
+				"params": [
+					{
+						"id": "slot",
+						"type": "string",
+						"initialValue": "\"weapon\""
+					}
+				]
+			},
+			{
+				"id": "encaixar-todas",
+				"scriptName": "EncaixarTodas",
+				"highlight": false,
+				"params": [
+					{
+						"id": "de",
+						"type": "string",
+						"initialValue": "\"roda.bone\""
+					},
+					{
+						"id": "para",
+						"type": "string",
+						"initialValue": "\"roda-larga.bone\""
+					},
+					{
+						"id": "meio",
+						"type": "string",
+						"initialValue": "\"\""
+					}
+				]
+			},
+			{
+				"id": "animar-peca",
+				"scriptName": "AnimarPeca",
+				"highlight": true,
+				"params": [
+					{
+						"id": "slot",
+						"type": "string",
+						"initialValue": "\"weapon\""
+					},
+					{
+						"id": "animacao",
+						"type": "string",
+						"initialValue": "\"idle\""
+					},
+					{
+						"id": "laco",
+						"type": "combo",
+						"items": [
+							"em-laco",
+							"uma-vez"
+						]
+					}
+				]
+			},
+			{
+				"id": "soltar-peca",
+				"scriptName": "SoltarPeca",
+				"highlight": false,
+				"params": [
+					{
+						"id": "slot",
+						"type": "string",
+						"initialValue": "\"weapon\""
+					}
+				]
+			}
+		],
+		"expressions": [
+			{
+				"id": "slots",
+				"expressionName": "Slots",
+				"highlight": false,
+				"returnType": "string"
+			},
+			{
+				"id": "entidades",
+				"expressionName": "Entidades",
+				"highlight": false,
+				"returnType": "string"
+			},
+			{
+				"id": "peca-do-slot",
+				"expressionName": "PecaDoSlot",
+				"highlight": true,
+				"returnType": "string",
+				"params": [
+					{
+						"id": "slot",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"id": "slot-do-encaixe",
+				"expressionName": "SlotDoEncaixe",
+				"highlight": false,
+				"returnType": "string"
+			},
+			{
+				"id": "osso-x",
+				"expressionName": "OssoX",
+				"highlight": true,
+				"returnType": "number",
+				"params": [
+					{
+						"id": "osso",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"id": "osso-y",
+				"expressionName": "OssoY",
+				"highlight": false,
+				"returnType": "number",
+				"params": [
+					{
+						"id": "osso",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"id": "osso-angulo",
+				"expressionName": "OssoAngulo",
+				"highlight": false,
+				"returnType": "number",
+				"params": [
+					{
+						"id": "osso",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"id": "slot-x",
+				"expressionName": "SlotX",
+				"highlight": false,
+				"returnType": "number",
+				"params": [
+					{
+						"id": "slot",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"id": "slot-y",
+				"expressionName": "SlotY",
+				"highlight": false,
+				"returnType": "number",
+				"params": [
+					{
+						"id": "slot",
+						"type": "string"
+					}
+				]
+			},
+			{
+				"id": "slot-angulo",
+				"expressionName": "SlotAngulo",
+				"highlight": false,
+				"returnType": "number",
+				"params": [
+					{
+						"id": "slot",
+						"type": "string"
+					}
+				]
+			}
+		]
+	}
+}

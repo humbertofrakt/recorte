@@ -1,0 +1,1170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://recorte.dev/schemas/bone-0.2.schema.json",
+  "title": "bone 1.0 (rascunho 0.2) — esqueleto 2D por ossos",
+  "description": "Schema do arquivo .bone (JSON) e da árvore .boneb decodificada. Propriedades desconhecidas são permitidas em todo objeto (compatibilidade para frente, spec 2.5). Enums do núcleo são fechados; tipos de extensão usam prefixo registrado. Regras semânticas (L1) ficam no validador, não aqui. Toda propriedade com padrão na spec traz default (spec 12.7); x-fallback diz o que o leitor usa para valor desconhecido (2.5). definitions.atlas valida um .atlas.json; definitions.manifest valida o manifest.json do .bonez. ATENCAO AO NUMERO NO $id: o 0.2 do nome do arquivo e a versao DESTE schema (o rascunho), nao a versao do formato. Este schema descreve o formato bone 1.0, do rascunho de especificacao 0.2 de 2026-09-17 (formato/ESPECIFICACAO 2026-09-17.md). O rascunho 0.2 nao abre arquivo do 0.1 (M13): saem socket, childSocket e rig.sockets; entram as timelines body, weights e slot/bone (com transform na chave), animation.crop e rig.reference; a pele default deixa de ter regra especial (4.4). Os dois numeros ficam iguais no dia em que a 1.0 for congelada; ate la o $id e so um identificador, nunca um endereco de download, e o validador embute o schema.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["bone", "bones"],
+  "x-since": "1.0",
+  "x-level": "A",
+  "properties": {
+    "bone": { "$ref": "#/definitions/header" },
+    "extensionsUsed": { "type": "array", "items": { "$ref": "#/definitions/extensionName" }, "uniqueItems": true, "default": [] },
+    "extensionsRequired": { "type": "array", "items": { "$ref": "#/definitions/extensionName" }, "uniqueItems": true, "default": [] },
+    "skeleton": { "$ref": "#/definitions/skeleton", "default": {} },
+    "assets": { "$ref": "#/definitions/assets", "default": {} },
+    "rig": { "$ref": "#/definitions/rig" },
+    "bones": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/bone" } },
+    "slots": { "type": "array", "items": { "$ref": "#/definitions/slot" }, "default": [] },
+    "constraints": { "type": "array", "items": { "$ref": "#/definitions/constraint" }, "default": [] },
+    "skins": { "type": "array", "items": { "$ref": "#/definitions/skin" }, "default": [] },
+    "events": { "type": "array", "items": { "$ref": "#/definitions/event" }, "default": [] },
+    "parameters": { "type": "array", "items": { "$ref": "#/definitions/parameter" }, "default": [] },
+    "morphs": { "type": "array", "items": { "$ref": "#/definitions/morph" }, "default": [] },
+    "variables": { "type": "array", "items": { "$ref": "#/definitions/variable" }, "default": [] },
+    "tags": { "type": "array", "items": { "$ref": "#/definitions/name" }, "uniqueItems": true, "default": [] },
+    "animations": { "type": "array", "items": { "$ref": "#/definitions/animation" }, "default": [] },
+    "extensions": { "$ref": "#/definitions/extensions" },
+    "extras": { "$ref": "#/definitions/extras" }
+  },
+
+  "definitions": {
+
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "semver": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "uri": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?![a-zA-Z][a-zA-Z0-9+.-]*:)(?!/)(?!\\.\\.?(/|$))(?!.*/\\.\\.?(/|$))[^\\\\]*$"
+    },
+    "extensionName": { "type": "string", "pattern": "^[A-Z][A-Z0-9]{1,7}_[a-z0-9_]+$" },
+    "extensions": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[A-Z][A-Z0-9]{1,7}_[a-z0-9_]+$" },
+      "additionalProperties": { "type": "object" }
+    },
+    "extras": {},
+    "unit": { "type": "number", "minimum": 0, "maximum": 1 },
+    "color4": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "items": { "type": "number", "minimum": 0, "maximum": 1 }
+    },
+    "color3": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": { "type": "number", "minimum": 0, "maximum": 1 }
+    },
+    "numberArray": { "type": "array", "items": { "type": "number" } },
+    "integerArray": { "type": "array", "items": { "type": "integer", "minimum": 0 } },
+    "nameArray": { "type": "array", "items": { "$ref": "#/definitions/name" } },
+    "coreOrExtensionType": {
+      "description": "Usado com anyOf: enum fechado do núcleo OU tipo de extensão prefixado.",
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{1,7}_[a-z0-9_]+$"
+    },
+
+    "header": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["version", "minVersion", "generator"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "version": { "$ref": "#/definitions/semver" },
+        "minVersion": { "$ref": "#/definitions/semver" },
+        "generator": { "type": "string", "minLength": 1 },
+        "id": { "type": "string" },
+        "created": { "type": "string", "format": "date-time" },
+        "modified": { "type": "string", "format": "date-time" },
+        "license": { "type": "string" },
+        "copyright": { "type": "string" },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "skeleton": {
+      "type": "object",
+      "additionalProperties": true,
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "name": { "type": "string" },
+        "x": { "type": "number", "default": 0 },
+        "y": { "type": "number", "default": 0 },
+        "width": { "type": "number", "minimum": 0, "default": 0 },
+        "height": { "type": "number", "minimum": 0, "default": 0 },
+        "fps": { "type": "number", "exclusiveMinimum": 0, "default": 30 },
+        "referenceScale": { "type": "number", "exclusiveMinimum": 0, "default": 100 },
+        "pixelArt": { "type": "boolean", "default": false },
+        "hash": { "type": "string" },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "assets": {
+      "type": "object",
+      "additionalProperties": true,
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "atlases": { "type": "array", "items": { "$ref": "#/definitions/uri" }, "default": [] },
+        "imagesBase": { "anyOf": [ { "$ref": "#/definitions/uri" }, { "type": "string", "maxLength": 0 } ], "default": "" },
+        "audioBase": { "anyOf": [ { "$ref": "#/definitions/uri" }, { "type": "string", "maxLength": 0 } ], "default": "" },
+        "skeletonsBase": { "anyOf": [ { "$ref": "#/definitions/uri" }, { "type": "string", "maxLength": 0 } ], "default": "" },
+        "animations": { "type": "array", "items": { "$ref": "#/definitions/uri" }, "default": [], "x-since": "1.0", "x-level": "C",
+                        "description": "Arquivos .bone/.boneb/.bonez cujas animations entram neste esqueleto pelo nome (spec 2.8). Relativos a skeletonsBase. Sem encadeamento." },
+        "skins": { "type": "array", "items": { "$ref": "#/definitions/uri" }, "default": [], "x-since": "1.0", "x-level": "C",
+                   "description": "Arquivos cujas skins entram neste esqueleto pelo nome (spec 2.8). Relativos a skeletonsBase. Sem encadeamento." },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "bone": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "parent": { "$ref": "#/definitions/name" },
+        "length": { "type": "number", "minimum": 0, "default": 0 },
+        "x": { "type": "number", "default": 0 },
+        "y": { "type": "number", "default": 0 },
+        "rotation": { "type": "number", "default": 0 },
+        "scaleX": { "type": "number", "default": 1 },
+        "scaleY": { "type": "number", "default": 1 },
+        "shearX": { "type": "number", "default": 0 },
+        "shearY": { "type": "number", "default": 0 },
+        "inheritRotation": { "type": "boolean", "default": true },
+        "inheritScale": { "type": "boolean", "default": true },
+        "inheritReflection": { "type": "boolean", "default": true },
+        "skinRequired": { "type": "boolean", "default": false },
+        "color": { "$ref": "#/definitions/color4", "default": [0.61, 0.61, 0.61, 1] },
+        "icon": { "type": "string" },
+        "visible": { "type": "boolean", "default": true },
+        "folder": { "type": "string" },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "blendMode": {
+      "type": "string",
+      "enum": ["normal", "additive", "multiply", "screen"],
+      "x-fallback": "normal"
+    },
+
+    "slot": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "bone"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "bone": { "$ref": "#/definitions/name" },
+        "attachment": { "$ref": "#/definitions/name" },
+        "color": { "$ref": "#/definitions/color4", "default": [1, 1, 1, 1] },
+        "darkColor": { "$ref": "#/definitions/color3" },
+        "blend": { "$ref": "#/definitions/blendMode", "default": "normal" },
+        "visible": { "type": "boolean", "default": true },
+        "folder": { "type": "string" },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "constraintType": {
+      "anyOf": [
+        { "type": "string", "enum": ["ik", "transform", "path", "physics", "driver"], "x-fallback": "ignore" },
+        { "$ref": "#/definitions/coreOrExtensionType" }
+      ]
+    },
+
+    "constraint": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "name"],
+      "x-since": "1.0", "x-level": "C",
+      "properties": {
+        "type": { "$ref": "#/definitions/constraintType" },
+        "name": { "$ref": "#/definitions/name" },
+        "mix": { "$ref": "#/definitions/unit", "default": 1 },
+        "skinRequired": { "type": "boolean", "default": false },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "ik" } } }, "then": { "$ref": "#/definitions/constraintIk" } },
+        { "if": { "properties": { "type": { "const": "transform" } } }, "then": { "$ref": "#/definitions/constraintTransform" } },
+        { "if": { "properties": { "type": { "const": "path" } } }, "then": { "$ref": "#/definitions/constraintPath" } },
+        { "if": { "properties": { "type": { "const": "physics" } } }, "then": { "$ref": "#/definitions/constraintPhysics" } },
+        { "if": { "properties": { "type": { "const": "driver" } } }, "then": { "$ref": "#/definitions/constraintDriver" } }
+      ]
+    },
+
+    "constraintIk": {
+      "required": ["bones", "target"],
+      "properties": {
+        "bones": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "$ref": "#/definitions/name" } },
+        "target": { "$ref": "#/definitions/name" },
+        "bendPositive": { "type": "boolean", "default": true },
+        "compress": { "type": "boolean", "default": false },
+        "stretch": { "type": "boolean", "default": false },
+        "uniform": { "type": "boolean", "default": false },
+        "softness": { "type": "number", "minimum": 0, "default": 0 }
+      }
+    },
+
+    "constraintTransform": {
+      "required": ["bones", "target"],
+      "properties": {
+        "bones": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/name" } },
+        "target": { "$ref": "#/definitions/name" },
+        "local": { "type": "boolean", "default": false },
+        "relative": { "type": "boolean", "default": false },
+        "offsetRotation": { "type": "number", "default": 0 },
+        "offsetX": { "type": "number", "default": 0 },
+        "offsetY": { "type": "number", "default": 0 },
+        "offsetScaleX": { "type": "number", "default": 0 },
+        "offsetScaleY": { "type": "number", "default": 0 },
+        "offsetShearY": { "type": "number", "default": 0 },
+        "mixRotation": { "$ref": "#/definitions/unit", "default": 1 },
+        "mixX": { "$ref": "#/definitions/unit", "default": 1 },
+        "mixY": { "$ref": "#/definitions/unit", "default": 1 },
+        "mixScaleX": { "$ref": "#/definitions/unit", "default": 1 },
+        "mixScaleY": { "$ref": "#/definitions/unit", "default": 1 },
+        "mixShearY": { "$ref": "#/definitions/unit", "default": 1 }
+      }
+    },
+
+    "constraintPath": {
+      "required": ["bones", "target"],
+      "properties": {
+        "bones": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/name" } },
+        "target": { "$ref": "#/definitions/name" },
+        "positionMode": { "type": "string", "enum": ["fixed", "percent"], "x-fallback": "percent", "default": "percent" },
+        "spacingMode": { "type": "string", "enum": ["length", "fixed", "percent", "proportional"], "x-fallback": "length", "default": "length" },
+        "rotateMode": { "type": "string", "enum": ["tangent", "chain", "chainScale"], "x-fallback": "tangent", "default": "tangent" },
+        "offsetRotation": { "type": "number", "default": 0 },
+        "position": { "type": "number", "default": 0 },
+        "spacing": { "type": "number", "default": 0 },
+        "mixRotation": { "$ref": "#/definitions/unit", "default": 1 },
+        "mixX": { "$ref": "#/definitions/unit", "default": 1 },
+        "mixY": { "$ref": "#/definitions/unit", "default": 1 }
+      }
+    },
+
+    "constraintPhysics": {
+      "required": ["bone"],
+      "properties": {
+        "bone": { "$ref": "#/definitions/name" },
+        "x": { "$ref": "#/definitions/unit", "default": 0 },
+        "y": { "$ref": "#/definitions/unit", "default": 0 },
+        "rotation": { "$ref": "#/definitions/unit", "default": 0 },
+        "scaleX": { "$ref": "#/definitions/unit", "default": 0 },
+        "shearX": { "$ref": "#/definitions/unit", "default": 0 },
+        "inertia": { "$ref": "#/definitions/unit", "default": 0.5 },
+        "strength": { "type": "number", "minimum": 0, "default": 100 },
+        "damping": { "$ref": "#/definitions/unit", "default": 1 },
+        "mass": { "type": "number", "exclusiveMinimum": 0, "default": 1 },
+        "wind": { "type": "number", "default": 0 },
+        "gravity": { "type": "number", "default": 0 },
+        "limit": { "type": "number", "minimum": 0, "default": 5000 },
+        "fps": { "type": "number", "exclusiveMinimum": 0, "default": 60 }
+      }
+    },
+
+    "driverMode": { "type": "string", "enum": ["replace", "add"], "x-fallback": "replace" },
+
+    "constraintDriver": {
+      "required": ["parameter"],
+      "properties": {
+        "parameter": { "$ref": "#/definitions/name" },
+        "targets": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/driverTarget" } },
+        "animation": { "$ref": "#/definitions/name" },
+        "from": { "type": "number" },
+        "to": { "type": "number" },
+        "timeFrom": { "type": "number", "minimum": 0, "default": 0 },
+        "timeTo": { "type": "number", "minimum": 0 },
+        "mode": { "$ref": "#/definitions/driverMode", "default": "replace" }
+      },
+      "oneOf": [
+        { "required": ["targets"], "not": { "required": ["animation"] } },
+        { "required": ["animation"], "not": { "required": ["targets"] } }
+      ]
+    },
+
+    "driverTargetType": {
+      "anyOf": [
+        { "type": "string", "enum": ["bone", "slot", "drawOrder", "deform", "morph", "constraint", "parameter", "variable", "nested"], "x-fallback": "ignore" },
+        { "$ref": "#/definitions/coreOrExtensionType" }
+      ]
+    },
+
+    "driverTarget": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "keys"],
+      "x-since": "1.0", "x-level": "C",
+      "properties": {
+        "type": { "$ref": "#/definitions/driverTargetType" },
+        "target": { "$ref": "#/definitions/name" },
+        "property": { "type": "string" },
+        "skin": { "$ref": "#/definitions/name", "default": "default" },
+        "attachment": { "$ref": "#/definitions/name" },
+        "mode": { "$ref": "#/definitions/driverMode", "default": "replace" },
+        "keys": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/driverKey" } },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "enum": ["bone", "slot", "morph", "constraint", "parameter", "variable", "nested"] } } },
+          "then": { "required": ["target", "property"] } },
+        { "if": { "properties": { "type": { "const": "deform" } } },
+          "then": { "required": ["target", "attachment"], "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyDeform" } } } } },
+        { "if": { "properties": { "type": { "const": "drawOrder" } } },
+          "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyDrawOrder" } } } } },
+        { "if": { "properties": { "type": { "const": "bone" } } },
+          "then": { "properties": { "property": { "enum": ["x", "y", "rotation", "scaleX", "scaleY", "shearX", "shearY", "inheritRotation", "inheritScale", "inheritReflection", "parent"], "x-fallback": "ignore" } },
+                    "allOf": [
+                      { "if": { "properties": { "property": { "enum": ["x", "y", "rotation", "scaleX", "scaleY", "shearX", "shearY"] } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyNumber" } } } },
+                        "else": { "if": { "properties": { "property": { "const": "parent" } } },
+                                  "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyNameOrNull" } } } },
+                                  "else": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyBoolean" } } } } } }
+                    ] } },
+        { "if": { "properties": { "type": { "const": "slot" } } },
+          "then": { "properties": { "property": { "enum": ["attachment", "color", "darkColor", "visible"], "x-fallback": "ignore" } },
+                    "allOf": [
+                      { "if": { "properties": { "property": { "const": "attachment" } } }, "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyNameOrNull" } } } } },
+                      { "if": { "properties": { "property": { "const": "color" } } }, "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyColor4" } } } } },
+                      { "if": { "properties": { "property": { "const": "darkColor" } } }, "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyColor3OrNull" } } } } },
+                      { "if": { "properties": { "property": { "const": "visible" } } }, "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyBoolean" } } } } }
+                    ] } },
+        { "if": { "properties": { "type": { "const": "morph" } } },
+          "then": { "properties": { "property": { "const": "weight" }, "keys": { "items": { "$ref": "#/definitions/driverKeyNumber" } } } } },
+        { "if": { "properties": { "type": { "const": "parameter" } } },
+          "then": { "properties": { "property": { "const": "value" }, "keys": { "items": { "$ref": "#/definitions/driverKeyNumber" } } } } },
+        { "if": { "properties": { "type": { "const": "variable" } } },
+          "then": { "properties": { "property": { "const": "value" }, "keys": { "items": { "$ref": "#/definitions/driverKeyVariable" } } } } },
+        { "if": { "properties": { "type": { "const": "nested" } } },
+          "then": { "properties": { "property": { "enum": ["animation", "time", "timeScale"], "x-fallback": "ignore" } },
+                    "allOf": [
+                      { "if": { "properties": { "property": { "const": "animation" } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyNameOrNull" } } } },
+                        "else": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyNumber" } } } } }
+                    ] } },
+        { "if": { "properties": { "type": { "const": "constraint" } } },
+          "then": { "properties": { "property": { "$ref": "#/definitions/constraintProperty" } },
+                    "allOf": [
+                      { "if": { "properties": { "property": { "enum": ["bendPositive", "compress", "stretch", "uniform"] } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyBoolean" } } } } },
+                      { "if": { "properties": { "property": { "enum": ["mix", "softness", "mixRotation", "mixX", "mixY", "mixScaleX", "mixScaleY", "mixShearY", "position", "spacing", "inertia", "strength", "damping", "mass", "wind", "gravity"] } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/driverKeyNumber" } } } } }
+                    ] } }
+      ]
+    },
+
+    "driverKey": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["input", "value"],
+      "x-since": "1.0", "x-level": "C",
+      "properties": {
+        "input": { "type": "number" },
+        "value": {},
+        "curve": { "$ref": "#/definitions/curveAny", "default": "linear" },
+        "offset": { "type": "integer", "minimum": 0, "default": 0 },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "driverKeyNumber": {
+      "required": ["value"],
+      "properties": { "value": { "type": "number" }, "curve": { "$ref": "#/definitions/curve4" } }
+    },
+    "driverKeyBoolean": {
+      "required": ["value"],
+      "properties": { "value": { "type": "boolean" }, "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" } }
+    },
+    "driverKeyNameOrNull": {
+      "required": ["value"],
+      "properties": { "value": { "anyOf": [ { "type": "null" }, { "$ref": "#/definitions/name" } ] }, "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" } }
+    },
+    "driverKeyColor4": {
+      "required": ["value"],
+      "properties": { "value": { "$ref": "#/definitions/color4" }, "curve": { "$ref": "#/definitions/curve16" } }
+    },
+    "driverKeyColor3OrNull": {
+      "required": ["value"],
+      "properties": { "value": { "anyOf": [ { "type": "null" }, { "$ref": "#/definitions/color3" } ] }, "curve": { "$ref": "#/definitions/curve12" } }
+    },
+    "driverKeyDrawOrder": {
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["slot", "offset"],
+            "properties": { "slot": { "$ref": "#/definitions/name" }, "offset": { "type": "integer" } }
+          }
+        },
+        "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" }
+      }
+    },
+    "driverKeyDeform": {
+      "required": ["value"],
+      "properties": { "value": { "$ref": "#/definitions/numberArray" }, "offset": { "type": "integer", "minimum": 0, "default": 0 }, "curve": { "$ref": "#/definitions/curve4" } }
+    },
+    "driverKeyVariable": {
+      "required": ["value"],
+      "properties": { "value": { "type": ["number", "string", "boolean"] }, "curve": { "$ref": "#/definitions/curve4" } }
+    },
+
+    "constraintProperty": {
+      "type": "string",
+      "enum": ["mix", "softness", "bendPositive", "compress", "stretch", "uniform",
+               "mixRotation", "mixX", "mixY", "mixScaleX", "mixScaleY", "mixShearY",
+               "position", "spacing",
+               "inertia", "strength", "damping", "mass", "wind", "gravity", "reset"],
+      "x-fallback": "ignore"
+    },
+
+    "rig": {
+      "type": "object",
+      "additionalProperties": true,
+      "x-since": "1.0", "x-level": "C",
+      "description": "Contrato de rig (spec 4.8): os nomes que este arquivo exige de quem o usa. Um arquivo so de animacoes lista os ossos; uma pele de fora, os slots que preenche e os ossos em que pendura os seus. Nao atendido e L2 RIG_UNMET: o arquivo abre e diz o que falta. Dentro do arquivo, um nome do rig conta como existente (parent de osso, bone de slot, target de timeline). rig.sockets saiu no rascunho 0.2 (Apendice A, 62).",
+      "properties": {
+        "name": { "type": "string" },
+        "bones": { "$ref": "#/definitions/nameArray", "default": [] },
+        "slots": { "$ref": "#/definitions/nameArray", "default": [] },
+        "reference": { "$ref": "#/definitions/rigReference" },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "rigReference": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["bone", "length"],
+      "x-since": "1.0", "x-level": "C",
+      "description": "So arquivo de animacoes (spec 4.8, 2.8): o osso do hospedeiro cujo length da a escala, e o comprimento que ele tinha onde a animacao foi gravada. O leitor multiplica bone/x e bone/y por hospedeiro.length / length ao copiar. length <= 0 e L1 RIG_REFERENCE.",
+      "properties": {
+        "bone": { "$ref": "#/definitions/name" },
+        "length": { "type": "number", "exclusiveMinimum": 0 },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "skin": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "x-since": "1.0", "x-level": "A",
+      "description": "Uma pele (spec 4.4). A pilha de peles ativas e uma lista de baixo para cima; onde duas dao anexo ao mesmo placeholder, a de cima vence. A pele default e uma pele como as outras (rascunho 0.2): so esta ativa se estiver na pilha.",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "displayName": { "type": "string" },
+        "includes": { "$ref": "#/definitions/nameArray", "default": [] },
+        "bones": { "$ref": "#/definitions/nameArray", "default": [] },
+        "constraints": { "$ref": "#/definitions/nameArray", "default": [] },
+        "drawOrder": { "type": "array", "default": [], "x-since": "1.0",
+                       "description": "Deslocamentos na ordem de desenho enquanto a skin esta ativa (spec 4.4). Mesmo formato da timeline drawOrder (9.5).",
+                       "items": { "type": "object", "additionalProperties": true, "required": ["slot", "offset"],
+                                  "properties": { "slot": { "$ref": "#/definitions/name" }, "offset": { "type": "integer" } } } },
+        "attachments": {
+          "type": "object",
+          "default": {},
+          "description": "slotName -> { placeholderName -> attachment | null }",
+          "propertyNames": { "$ref": "#/definitions/name" },
+          "additionalProperties": {
+            "type": "object",
+            "propertyNames": { "$ref": "#/definitions/name" },
+            "additionalProperties": {
+              "anyOf": [ { "type": "null" }, { "$ref": "#/definitions/attachment" } ]
+            }
+          }
+        },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "attachmentType": {
+      "anyOf": [
+        { "type": "string", "enum": ["region", "mesh", "linkedmesh", "boundingbox", "clipping", "path", "point", "skeleton"], "x-fallback": "empty" },
+        { "$ref": "#/definitions/coreOrExtensionType" }
+      ]
+    },
+
+    "attachment": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "type": { "$ref": "#/definitions/attachmentType" },
+        "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\.\\.?(/|$))(?!.*/\\.\\.?(/|$))[^\\\\:]*$" },
+        "color": { "$ref": "#/definitions/color4", "default": [1, 1, 1, 1] },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "region" } } }, "then": { "$ref": "#/definitions/attachmentRegion" } },
+        { "if": { "properties": { "type": { "const": "mesh" } } }, "then": { "$ref": "#/definitions/attachmentMesh" } },
+        { "if": { "properties": { "type": { "const": "linkedmesh" } } }, "then": { "$ref": "#/definitions/attachmentLinkedmesh" } },
+        { "if": { "properties": { "type": { "const": "boundingbox" } } }, "then": { "$ref": "#/definitions/attachmentBoundingbox" } },
+        { "if": { "properties": { "type": { "const": "clipping" } } }, "then": { "$ref": "#/definitions/attachmentClipping" } },
+        { "if": { "properties": { "type": { "const": "path" } } }, "then": { "$ref": "#/definitions/attachmentPath" } },
+        { "if": { "properties": { "type": { "const": "point" } } }, "then": { "$ref": "#/definitions/attachmentPoint" } },
+        { "if": { "properties": { "type": { "const": "skeleton" } } }, "then": { "$ref": "#/definitions/attachmentSkeleton" } }
+      ]
+    },
+
+    "attachmentRegion": {
+      "x-level": "A",
+      "properties": {
+        "x": { "type": "number", "default": 0 },
+        "y": { "type": "number", "default": 0 },
+        "rotation": { "type": "number", "default": 0 },
+        "scaleX": { "type": "number", "default": 1 },
+        "scaleY": { "type": "number", "default": 1 },
+        "width": { "type": "number", "minimum": 0, "default": 0 },
+        "height": { "type": "number", "minimum": 0, "default": 0 },
+        "sequence": { "$ref": "#/definitions/sequence" }
+      }
+    },
+
+    "verticesOrBinding": {
+      "oneOf": [
+        { "required": ["vertices"], "not": { "required": ["binding"] } },
+        { "required": ["binding"], "not": { "required": ["vertices"] } }
+      ]
+    },
+
+    "attachmentMesh": {
+      "x-level": "B",
+      "required": ["uvs", "triangles"],
+      "allOf": [ { "$ref": "#/definitions/verticesOrBinding" } ],
+      "properties": {
+        "vertices": { "type": "array", "minItems": 6, "items": { "type": "number" } },
+        "binding": { "$ref": "#/definitions/binding" },
+        "uvs": { "type": "array", "minItems": 6, "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+        "triangles": { "type": "array", "minItems": 3, "items": { "type": "integer", "minimum": 0 } },
+        "hull": { "type": "integer", "minimum": 1 },
+        "edges": { "$ref": "#/definitions/integerArray", "default": [] },
+        "width": { "type": "number", "minimum": 0, "default": 0 },
+        "height": { "type": "number", "minimum": 0, "default": 0 },
+        "sequence": { "$ref": "#/definitions/sequence" }
+      }
+    },
+
+    "binding": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["counts", "bones", "positions", "weights"],
+      "x-since": "1.0", "x-level": "B",
+      "properties": {
+        "counts": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 1 } },
+        "bones": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } },
+        "positions": { "type": "array", "minItems": 2, "items": { "type": "number" } },
+        "weights": { "type": "array", "minItems": 1, "items": { "type": "number", "minimum": 0, "maximum": 1 } },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "attachmentLinkedmesh": {
+      "x-level": "B",
+      "required": ["parent"],
+      "properties": {
+        "parent": { "$ref": "#/definitions/name" },
+        "skin": { "$ref": "#/definitions/name", "default": "default" },
+        "inheritDeform": { "type": "boolean", "default": true },
+        "width": { "type": "number", "minimum": 0, "default": 0 },
+        "height": { "type": "number", "minimum": 0, "default": 0 },
+        "sequence": { "$ref": "#/definitions/sequence" }
+      }
+    },
+
+    "attachmentBoundingbox": {
+      "x-level": "B",
+      "properties": {
+        "shape": { "type": "string", "enum": ["polygon", "rectangle", "ellipse"], "x-fallback": "ignore", "default": "polygon" },
+        "vertices": { "type": "array", "minItems": 6, "items": { "type": "number" } },
+        "binding": { "$ref": "#/definitions/binding" },
+        "x": { "type": "number", "default": 0 },
+        "y": { "type": "number", "default": 0 },
+        "width": { "type": "number", "minimum": 0, "description": "Obrigatório em rectangle e ellipse. Sem padrão." },
+        "height": { "type": "number", "minimum": 0, "description": "Obrigatório em rectangle e ellipse. Sem padrão." },
+        "rotation": { "type": "number", "default": 0 }
+      },
+      "if": { "properties": { "shape": { "enum": ["rectangle", "ellipse"] } }, "required": ["shape"] },
+      "then": { "required": ["width", "height"] },
+      "else": { "$ref": "#/definitions/verticesOrBinding" }
+    },
+
+    "attachmentClipping": {
+      "x-level": "B",
+      "allOf": [ { "$ref": "#/definitions/verticesOrBinding" } ],
+      "properties": {
+        "end": { "$ref": "#/definitions/name" },
+        "slots": { "$ref": "#/definitions/nameArray" },
+        "invert": { "type": "boolean", "default": false },
+        "vertices": { "type": "array", "minItems": 6, "items": { "type": "number" } },
+        "binding": { "$ref": "#/definitions/binding" }
+      }
+    },
+
+    "attachmentPath": {
+      "x-level": "C",
+      "required": ["lengths"],
+      "allOf": [ { "$ref": "#/definitions/verticesOrBinding" } ],
+      "properties": {
+        "closed": { "type": "boolean", "default": false },
+        "constantSpeed": { "type": "boolean", "default": true },
+        "lengths": { "type": "array", "minItems": 1, "items": { "type": "number", "minimum": 0 } },
+        "vertices": { "type": "array", "minItems": 12, "items": { "type": "number" } },
+        "binding": { "$ref": "#/definitions/binding" }
+      }
+    },
+
+    "attachmentPoint": {
+      "x-level": "B",
+      "properties": {
+        "x": { "type": "number", "default": 0 },
+        "y": { "type": "number", "default": 0 },
+        "rotation": { "type": "number", "default": 0 }
+      }
+    },
+
+    "attachmentSkeleton": {
+      "x-level": "C",
+      "description": "A entidade (spec 7.11): um esqueleto inteiro no lugar de uma imagem. Segue a imagem: x, y, rotation, scaleX, scaleY sao a posicao da raiz do filho no osso do slot, como numa region. Sem socket (rascunho 0.2, Apendice A 62 e 72).",
+      "required": ["uri"],
+      "properties": {
+        "uri": { "$ref": "#/definitions/uri" },
+        "inheritAnimation": { "type": "boolean", "default": false, "x-since": "1.0",
+                              "description": "Canal de resposta: o filho toca a animacao com o mesmo nome da que o pai toca, se tiver." },
+        "baseAnimation": { "$ref": "#/definitions/name", "x-since": "1.0",
+                           "description": "Canal de fundo: animacao do filho que roda sempre, em laco, por baixo de tudo." },
+        "skins": { "$ref": "#/definitions/nameArray", "default": [] },
+        "animation": { "$ref": "#/definitions/name" },
+        "loop": { "type": "boolean", "default": true },
+        "timeScale": { "type": "number", "default": 1 },
+        "x": { "type": "number", "default": 0 },
+        "y": { "type": "number", "default": 0 },
+        "rotation": { "type": "number", "default": 0 },
+        "scaleX": { "type": "number", "default": 1 },
+        "scaleY": { "type": "number", "default": 1 },
+        "inheritColor": { "type": "boolean", "default": true },
+        "around": { "$ref": "#/definitions/name", "x-since": "1.1", "x-level": "C",
+                    "description": "Em volta de quem recebe (spec 7.11): nome do slot DO FILHO que marca o meio. O que vem antes dele e desenhado atras do pai inteiro; o que vem depois, na frente; o slot do meio nao e desenhado." }
+      }
+    },
+
+    "sequence": {
+      "type": "object",
+      "additionalProperties": true,
+      "x-since": "1.0", "x-level": "B",
+      "properties": {
+        "count": { "type": "integer", "minimum": 1 },
+        "frames": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!\\.\\.?(/|$))(?!.*/\\.\\.?(/|$))[^\\\\:]*$" } },
+        "start": { "type": "integer", "minimum": 0, "default": 1 },
+        "digits": { "type": "integer", "minimum": 0, "default": 0 },
+        "setup": { "type": "integer", "minimum": 0, "default": 0 },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      },
+      "anyOf": [ { "required": ["count"] }, { "required": ["frames"] } ]
+    },
+
+    "event": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "int": { "type": "integer", "default": 0 },
+        "float": { "type": "number", "default": 0 },
+        "string": { "type": "string", "default": "" },
+        "audio": { "$ref": "#/definitions/uri" },
+        "volume": { "$ref": "#/definitions/unit", "default": 1 },
+        "balance": { "type": "number", "minimum": -1, "maximum": 1, "default": 0 },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "boneProperty": {
+      "type": "string",
+      "enum": ["x", "y", "rotation", "scaleX", "scaleY", "shearX", "shearY"],
+      "x-fallback": "ignore"
+    },
+
+    "parameter": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "x-since": "1.0", "x-level": "C",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "min": { "type": "number", "default": 0 },
+        "max": { "type": "number", "default": 1 },
+        "default": { "type": "number", "default": 0 },
+        "repeat": { "type": "boolean", "default": false },
+        "group": { "type": "string" },
+        "displayName": { "type": "string" },
+        "source": { "$ref": "#/definitions/parameterSource" },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "parameterSource": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["bone", "property"],
+      "x-since": "1.0", "x-level": "C",
+      "properties": {
+        "bone": { "$ref": "#/definitions/name" },
+        "property": { "$ref": "#/definitions/boneProperty" },
+        "from": { "type": "number", "default": 0 },
+        "to": { "type": "number", "default": 1 },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "morph": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "targets"],
+      "x-since": "1.0", "x-level": "C",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "weight": { "type": "number", "default": 0 },
+        "min": { "type": "number", "default": 0 },
+        "max": { "type": "number", "default": 1 },
+        "group": { "type": "string" },
+        "targets": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/morphTarget" } },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "morphTarget": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["slot", "attachment", "offsets"],
+      "x-since": "1.0", "x-level": "C",
+      "properties": {
+        "slot": { "$ref": "#/definitions/name" },
+        "attachment": { "$ref": "#/definitions/name" },
+        "skin": { "$ref": "#/definitions/name", "default": "default" },
+        "offsets": { "$ref": "#/definitions/numberArray" },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "variable": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "type"],
+      "x-since": "1.0", "x-level": "B",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "type": { "type": "string", "enum": ["float", "int", "string", "bool"], "x-fallback": "ignore" },
+        "default": { "type": ["number", "string", "boolean"] },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "float" } } }, "then": { "properties": { "default": { "type": "number" } } } },
+        { "if": { "properties": { "type": { "const": "int" } } }, "then": { "properties": { "default": { "type": "integer" } } } },
+        { "if": { "properties": { "type": { "const": "string" } } }, "then": { "properties": { "default": { "type": "string" } } } },
+        { "if": { "properties": { "type": { "const": "bool" } } }, "then": { "properties": { "default": { "type": "boolean" } } } }
+      ]
+    },
+
+    "animation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "duration": { "type": "number", "minimum": 0 },
+        "loop": { "type": "boolean", "default": false },
+        "blend": { "type": "string", "enum": ["replace", "add", "multiply"], "x-fallback": "replace", "default": "replace" },
+        "defaultMix": { "type": "number", "minimum": 0 },
+        "tags": { "$ref": "#/definitions/nameArray", "default": [] },
+        "crop": { "$ref": "#/definitions/crop" },
+        "timelines": { "type": "array", "items": { "$ref": "#/definitions/timeline" }, "default": [] },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "crop": {
+      "type": "object",
+      "additionalProperties": true,
+      "x-since": "1.0", "x-level": "A",
+      "description": "Area de recorte da exportacao de imagem desta animacao (spec 4.6). Informativo: nenhum leitor de pose usa. Unidades do esqueleto, canto inferior esquerdo. width e height negativos sao L1 RANGE_CROP.",
+      "properties": {
+        "x": { "type": "number", "default": 0 },
+        "y": { "type": "number", "default": 0 },
+        "width": { "type": "number", "minimum": 0, "default": 0 },
+        "height": { "type": "number", "minimum": 0, "default": 0 },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "timelineType": {
+      "anyOf": [
+        { "type": "string", "enum": ["bone", "slot", "drawOrder", "deform", "weights", "sequence", "event", "constraint", "parameter", "morph", "variable", "tag", "nested", "body"], "x-fallback": "ignore" },
+        { "$ref": "#/definitions/coreOrExtensionType" }
+      ]
+    },
+
+    "timeline": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "keys"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "type": { "$ref": "#/definitions/timelineType" },
+        "target": { "$ref": "#/definitions/name" },
+        "property": { "type": "string" },
+        "skin": { "$ref": "#/definitions/name", "default": "default" },
+        "attachment": { "$ref": "#/definitions/name" },
+        "keys": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/key" } },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "bone" } } },
+          "then": { "required": ["target", "property"],
+                    "properties": { "property": { "enum": ["x", "y", "rotation", "scaleX", "scaleY", "shearX", "shearY", "inheritRotation", "inheritScale", "inheritReflection", "parent"], "x-fallback": "ignore" } },
+                    "allOf": [
+                      { "if": { "properties": { "property": { "enum": ["x", "y", "rotation", "scaleX", "scaleY", "shearX", "shearY"] } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyNumber" } } } },
+                        "else": { "if": { "properties": { "property": { "const": "parent" } } },
+                                  "then": { "x-level": "B", "x-since": "1.0", "properties": { "keys": { "items": { "$ref": "#/definitions/keyNameOrNull" } } } },
+                                  "else": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyBoolean" } } } } } }
+                    ] } },
+        { "if": { "properties": { "type": { "const": "slot" } } },
+          "then": { "required": ["target", "property"],
+                    "properties": { "property": { "enum": ["attachment", "color", "darkColor", "visible", "bone"], "x-fallback": "ignore" } },
+                    "allOf": [
+                      { "if": { "properties": { "property": { "const": "attachment" } } }, "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyNameOrNull" } } } } },
+                      { "if": { "properties": { "property": { "const": "color" } } }, "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyColor4" } } } } },
+                      { "if": { "properties": { "property": { "const": "darkColor" } } }, "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyColor3OrNull" } } } } },
+                      { "if": { "properties": { "property": { "const": "visible" } } }, "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyBoolean" } } } } },
+                      { "if": { "properties": { "property": { "const": "bone" } } }, "then": { "x-level": "B", "properties": { "keys": { "items": { "$ref": "#/definitions/keySlotBone" } } } } }
+                    ] } },
+        { "if": { "properties": { "type": { "const": "drawOrder" } } },
+          "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyDrawOrder" } } } } },
+        { "if": { "properties": { "type": { "const": "deform" } } },
+          "then": { "x-level": "B", "required": ["target", "attachment"], "properties": { "keys": { "items": { "$ref": "#/definitions/keyDeform" } } } } },
+        { "if": { "properties": { "type": { "const": "weights" } } },
+          "then": { "x-level": "B", "required": ["target", "attachment"], "properties": { "keys": { "items": { "$ref": "#/definitions/keyWeights" } } } } },
+        { "if": { "properties": { "type": { "const": "body" } } },
+          "then": { "x-level": "C", "properties": { "keys": { "items": { "$ref": "#/definitions/keyBody" } } } } },
+        { "if": { "properties": { "type": { "const": "sequence" } } },
+          "then": { "x-level": "B", "required": ["target", "attachment"], "properties": { "keys": { "items": { "$ref": "#/definitions/keySequence" } } } } },
+        { "if": { "properties": { "type": { "const": "event" } } },
+          "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyEvent" } } } } },
+        { "if": { "properties": { "type": { "const": "constraint" } } },
+          "then": { "x-level": "C", "required": ["target", "property"],
+                    "properties": { "property": { "$ref": "#/definitions/constraintProperty" } },
+                    "allOf": [
+                      { "if": { "properties": { "property": { "enum": ["bendPositive", "compress", "stretch", "uniform"] } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyBoolean" } } } } },
+                      { "if": { "properties": { "property": { "const": "reset" } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyReset" } } } } },
+                      { "if": { "properties": { "property": { "enum": ["mix", "softness", "mixRotation", "mixX", "mixY", "mixScaleX", "mixScaleY", "mixShearY", "position", "spacing", "inertia", "strength", "damping", "mass", "wind", "gravity"] } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyNumber" } } } } }
+                    ] } },
+        { "if": { "properties": { "type": { "const": "parameter" } } },
+          "then": { "x-level": "C", "required": ["target", "property"], "properties": { "property": { "const": "value" }, "keys": { "items": { "$ref": "#/definitions/keyNumber" } } } } },
+        { "if": { "properties": { "type": { "const": "morph" } } },
+          "then": { "x-level": "C", "required": ["target", "property"], "properties": { "property": { "const": "weight" }, "keys": { "items": { "$ref": "#/definitions/keyNumber" } } } } },
+        { "if": { "properties": { "type": { "const": "variable" } } },
+          "then": { "x-level": "B", "required": ["target", "property"], "properties": { "property": { "const": "value" }, "keys": { "items": { "$ref": "#/definitions/keyVariable" } } } } },
+        { "if": { "properties": { "type": { "const": "tag" } } },
+          "then": { "x-level": "B", "properties": { "keys": { "items": { "$ref": "#/definitions/keyTags" } } } } },
+        { "if": { "properties": { "type": { "const": "nested" } } },
+          "then": { "x-level": "C", "required": ["target", "property"],
+                    "properties": { "property": { "enum": ["animation", "time", "timeScale"], "x-fallback": "ignore" } },
+                    "allOf": [
+                      { "if": { "properties": { "property": { "const": "animation" } } },
+                        "then": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyNameOrNull" } } } },
+                        "else": { "properties": { "keys": { "items": { "$ref": "#/definitions/keyNumber" } } } } }
+                    ] } }
+      ]
+    },
+
+    "curveName": { "type": "string", "enum": ["linear", "stepped"], "x-fallback": "linear" },
+    "curve4": {
+      "anyOf": [
+        { "$ref": "#/definitions/curveName" },
+        { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } }
+      ]
+    },
+    "curve12": {
+      "anyOf": [
+        { "$ref": "#/definitions/curveName" },
+        { "type": "array", "minItems": 12, "maxItems": 12, "items": { "type": "number" } }
+      ]
+    },
+    "curve16": {
+      "anyOf": [
+        { "$ref": "#/definitions/curveName" },
+        { "type": "array", "minItems": 16, "maxItems": 16, "items": { "type": "number" } }
+      ]
+    },
+    "curveAny": {
+      "anyOf": [
+        { "type": "string" },
+        { "type": "array", "minItems": 4, "items": { "type": "number" } }
+      ]
+    },
+
+    "key": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["time"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "time": { "type": "number", "minimum": 0 },
+        "value": {},
+        "curve": { "$ref": "#/definitions/curveAny", "default": "linear" },
+        "offset": { "type": "integer", "minimum": 0, "default": 0, "description": "So deform: indice do primeiro numero de value no array de deform (spec 9.2)." },
+        "transform": { "$ref": "#/definitions/attachmentTransform", "description": "So slot/bone: a posicao do anexo no osso novo (spec 9.5)." },
+        "keepSkins": { "type": "boolean", "default": true, "description": "So body: a pilha de peles passa para o corpo novo (spec 9.13)." },
+        "event": { "$ref": "#/definitions/name" },
+        "int": { "type": "integer" },
+        "float": { "type": "number" },
+        "string": { "type": "string" },
+        "volume": { "$ref": "#/definitions/unit" },
+        "balance": { "type": "number", "minimum": -1, "maximum": 1 },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "keyNumber": {
+      "required": ["value"],
+      "properties": { "value": { "type": "number" }, "curve": { "$ref": "#/definitions/curve4" } }
+    },
+    "keyBoolean": {
+      "required": ["value"],
+      "properties": { "value": { "type": "boolean" }, "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" } }
+    },
+    "keyNameOrNull": {
+      "required": ["value"],
+      "properties": { "value": { "anyOf": [ { "type": "null" }, { "$ref": "#/definitions/name" } ] }, "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" } }
+    },
+    "keyColor4": {
+      "required": ["value"],
+      "properties": { "value": { "$ref": "#/definitions/color4" }, "curve": { "$ref": "#/definitions/curve16" } }
+    },
+    "keyColor3OrNull": {
+      "required": ["value"],
+      "properties": { "value": { "anyOf": [ { "type": "null" }, { "$ref": "#/definitions/color3" } ] }, "curve": { "$ref": "#/definitions/curve12" } }
+    },
+    "keyDrawOrder": {
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["slot", "offset"],
+            "properties": { "slot": { "$ref": "#/definitions/name" }, "offset": { "type": "integer" } }
+          }
+        },
+        "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" }
+      }
+    },
+    "keyDeform": {
+      "required": ["value"],
+      "properties": { "value": { "$ref": "#/definitions/numberArray" }, "offset": { "type": "integer", "minimum": 0, "default": 0 }, "curve": { "$ref": "#/definitions/curve4" } }
+    },
+    "attachmentTransform": {
+      "type": "object",
+      "additionalProperties": true,
+      "x-since": "1.0", "x-level": "B",
+      "description": "T(x, y) . R(rotation) . S(scaleX, scaleY), medida do osso novo (spec 9.5). Padrao: identidade.",
+      "properties": {
+        "x": { "type": "number", "default": 0 },
+        "y": { "type": "number", "default": 0 },
+        "rotation": { "type": "number", "default": 0 },
+        "scaleX": { "type": "number", "default": 1 },
+        "scaleY": { "type": "number", "default": 1 }
+      }
+    },
+    "keySlotBone": {
+      "required": ["value"],
+      "properties": {
+        "value": { "anyOf": [ { "type": "null" }, { "$ref": "#/definitions/name" } ] },
+        "transform": { "$ref": "#/definitions/attachmentTransform" },
+        "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" }
+      }
+    },
+    "keyWeights": {
+      "required": ["value"],
+      "properties": { "value": { "type": "array", "minItems": 1, "items": { "type": "number", "minimum": 0, "maximum": 1 } }, "curve": { "$ref": "#/definitions/curve4" } }
+    },
+    "keyBody": {
+      "required": ["value"],
+      "properties": {
+        "value": { "anyOf": [ { "type": "null" }, { "$ref": "#/definitions/uri" } ] },
+        "keepSkins": { "type": "boolean", "default": true },
+        "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" }
+      }
+    },
+    "keySequence": {
+      "required": ["value"],
+      "properties": {
+        "value": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "mode": { "type": "string", "enum": ["hold", "once", "loop", "pingpong", "onceReverse", "loopReverse", "pingpongReverse"], "x-fallback": "hold", "default": "hold" },
+            "index": { "type": "integer", "minimum": 0, "default": 0 },
+            "delay": { "type": "number", "minimum": 0, "default": 0 }
+          }
+        },
+        "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" }
+      }
+    },
+    "keyEvent": {
+      "required": ["event"],
+      "not": { "required": ["value"] }
+    },
+    "keyReset": {
+      "not": { "required": ["value"] }
+    },
+    "keyVariable": {
+      "required": ["value"],
+      "properties": { "value": { "type": ["number", "string", "boolean"] }, "curve": { "$ref": "#/definitions/curve4" } }
+    },
+    "keyTags": {
+      "required": ["value"],
+      "properties": { "value": { "$ref": "#/definitions/nameArray" }, "curve": { "$ref": "#/definitions/curveAny", "x-fallback": "stepped" } }
+    },
+
+    "atlas": {
+      "title": "Arquivo .atlas.json (spec seção 10)",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["atlas", "pages", "regions"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "atlas": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["version", "generator"],
+          "properties": {
+            "version": { "$ref": "#/definitions/semver" },
+            "generator": { "type": "string", "minLength": 1 },
+            "extensions": { "$ref": "#/definitions/extensions" },
+            "extras": { "$ref": "#/definitions/extras" }
+          }
+        },
+        "scale": { "type": "number", "exclusiveMinimum": 0, "default": 1 },
+        "pages": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/atlasPage" } },
+        "regions": { "type": "array", "items": { "$ref": "#/definitions/atlasRegion" } },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "atlasPage": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "image", "width", "height"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "image": { "anyOf": [ { "$ref": "#/definitions/uri" }, { "type": "string", "pattern": "^data:image/[a-z0-9.+-]+;base64," } ] },
+        "width": { "type": "integer", "minimum": 1, "maximum": 16384 },
+        "height": { "type": "integer", "minimum": 1, "maximum": 16384 },
+        "format": { "type": "string", "enum": ["rgba8", "rgb8", "rgba4", "rgb565", "alpha8"], "x-fallback": "rgba8", "default": "rgba8" },
+        "minFilter": { "type": "string", "enum": ["nearest", "linear", "mipmap"], "x-fallback": "linear", "default": "linear" },
+        "magFilter": { "type": "string", "enum": ["nearest", "linear"], "x-fallback": "linear", "default": "linear" },
+        "wrapU": { "type": "string", "enum": ["clamp", "repeat", "mirror"], "x-fallback": "clamp", "default": "clamp" },
+        "wrapV": { "type": "string", "enum": ["clamp", "repeat", "mirror"], "x-fallback": "clamp", "default": "clamp" },
+        "premultiplied": { "type": "boolean", "default": false },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "atlasRegion": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "page", "x", "y", "width", "height"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "name": { "$ref": "#/definitions/name" },
+        "aliases": { "$ref": "#/definitions/nameArray", "default": [] },
+        "page": { "type": "integer", "minimum": 0 },
+        "x": { "type": "integer", "minimum": 0 },
+        "y": { "type": "integer", "minimum": 0 },
+        "width": { "type": "integer", "minimum": 0 },
+        "height": { "type": "integer", "minimum": 0 },
+        "rotation": { "type": "integer", "enum": [0, 90], "x-fallback": 0, "default": 0 },
+        "offsetX": { "type": "integer", "minimum": 0, "default": 0 },
+        "offsetY": { "type": "integer", "minimum": 0, "default": 0 },
+        "originalWidth": { "type": "integer", "minimum": 0 },
+        "originalHeight": { "type": "integer", "minimum": 0 },
+        "pivotX": { "type": "number" },
+        "pivotY": { "type": "number" },
+        "extensions": { "$ref": "#/definitions/extensions" },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    },
+
+    "manifest": {
+      "title": "manifest.json do contêiner .bonez (spec 2.9)",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["bonez", "main"],
+      "x-since": "1.0", "x-level": "A",
+      "properties": {
+        "bonez": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["version"],
+          "properties": { "version": { "$ref": "#/definitions/semver" } }
+        },
+        "main": { "$ref": "#/definitions/uri" },
+        "skeletons": { "type": "array", "items": { "$ref": "#/definitions/uri" } },
+        "atlases": { "type": "array", "items": { "$ref": "#/definitions/uri" }, "default": [] },
+        "images": { "type": "array", "items": { "$ref": "#/definitions/uri" }, "default": [] },
+        "audio": { "type": "array", "items": { "$ref": "#/definitions/uri" }, "default": [] },
+        "hashes": { "type": "object", "additionalProperties": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" } },
+        "extras": { "$ref": "#/definitions/extras" }
+      }
+    }
+  }
+}

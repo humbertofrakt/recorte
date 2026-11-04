@@ -1,0 +1,9 @@
+{
+  "probe": { "skins": ["default"], "times": [0], "measure": ["slots", "vertices"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "slots": { "corpo": { "attachment": "corpo", "visible": true } },
+      "vertices": { "corpo/corpo": [-5, -5, 5, -5, 5, 5, -5, 5] } }
+  ]
+}

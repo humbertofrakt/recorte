@@ -1,0 +1,56 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "trocar de pai ciclo"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "torso",
+      "parent": "root",
+      "y": 100,
+      "rotation": 90
+    },
+    {
+      "name": "hand",
+      "parent": "torso",
+      "x": 50
+    },
+    {
+      "name": "pack",
+      "parent": "root",
+      "x": -30,
+      "y": 10
+    }
+  ],
+  "animations": [
+    {
+      "name": "ciclo",
+      "duration": 1.0,
+      "loop": false,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "torso",
+          "property": "parent",
+          "keys": [
+            {
+              "time": 0,
+              "value": null
+            },
+            {
+              "time": 0.5,
+              "value": "hand"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

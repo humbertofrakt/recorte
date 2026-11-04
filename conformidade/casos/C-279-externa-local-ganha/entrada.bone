@@ -1,0 +1,46 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "hospedeiro"
+  },
+  "assets": {
+    "skeletonsBase": "",
+    "animations": [
+      "biblioteca.bone"
+    ]
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "hips",
+      "parent": "root",
+      "y": 90
+    }
+  ],
+  "animations": [
+    {
+      "name": "idle",
+      "duration": 1.0,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "hips",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 45
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

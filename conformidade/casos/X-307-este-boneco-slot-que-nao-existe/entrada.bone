@@ -1,0 +1,79 @@
+{
+  "bone": {
+    "version": "1.1",
+    "minVersion": "1.1",
+    "generator": "suite de conformidade bone, rodada 11"
+  },
+  "skeleton": {
+    "name": "heroi"
+  },
+  "assets": {
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "perna",
+      "bone": "root",
+      "attachment": "perna"
+    },
+    {
+      "name": "tronco",
+      "bone": "root",
+      "attachment": "tronco"
+    },
+    {
+      "name": "aura",
+      "bone": "root",
+      "attachment": "poder"
+    },
+    {
+      "name": "cabeca",
+      "bone": "root",
+      "attachment": "cabeca"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "perna": {
+          "perna": {
+            "type": "region",
+            "path": "perna",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "tronco": {
+          "tronco": {
+            "type": "region",
+            "path": "tronco",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "cabeca": {
+          "cabeca": {
+            "type": "region",
+            "path": "cabeca",
+            "width": 10,
+            "height": 10
+          }
+        },
+        "aura": {
+          "poder": {
+            "type": "skeleton",
+            "uri": "poder.bone",
+            "around": "nao_existe"
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

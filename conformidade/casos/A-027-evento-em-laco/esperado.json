@@ -1,0 +1,17 @@
+{
+  "probe": { "animation": "andar", "loop": true, "times": [0.5, 1.5, 2.5], "measure": ["events"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0.5, "events": [
+      { "time": 0.25, "event": "passo", "int": 2, "float": 0.5, "string": "esquerdo", "volume": 0.8, "balance": 0 }
+    ] },
+    { "time": 1.5, "events": [
+      { "time": 0.75, "event": "pouso", "int": 0, "float": 0, "string": "", "volume": 1, "balance": 0 },
+      { "time": 1.25, "event": "passo", "int": 2, "float": 0.5, "string": "esquerdo", "volume": 0.8, "balance": 0 }
+    ] },
+    { "time": 2.5, "events": [
+      { "time": 1.75, "event": "pouso", "int": 0, "float": 0, "string": "", "volume": 1, "balance": 0 },
+      { "time": 2.25, "event": "passo", "int": 2, "float": 0.5, "string": "esquerdo", "volume": 0.8, "balance": 0 }
+    ] }
+  ]
+}

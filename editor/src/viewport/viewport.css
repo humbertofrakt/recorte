@@ -1,0 +1,841 @@
+/* Viewport (owner B).
+   Interface rules of this project: high contrast, 14px or more, clear
+   labels, nothing cramped against an edge. */
+
+.viewport-host {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+}
+
+.viewport {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  background: var(--scene-background, #f2f2f0);
+  color: var(--ink, #10151c);
+  font-family: "Segoe UI", "Verdana", system-ui, sans-serif;
+  font-size: 15px;
+  outline: none;
+  /* Nothing here may scroll: the browser scrolling a focused button into view
+     would carry the drawing area off the window with it. */
+  overflow: hidden;
+}
+
+.viewport:focus-visible {
+  box-shadow: inset 0 0 0 3px var(--accent, #1a4fd8);
+}
+
+/* -- toolbar --------------------------------------------------------------- */
+
+/*
+ * UMA linha, desde o lote 4.
+ *
+ * `flex-wrap` continua, porque numa janela muito estreita quebrar é melhor do
+ * que cortar um botão. Mas agora a linha cabe: as ferramentas são ícones, os
+ * Eixos são uma lista, Compensar foi para o painel Propriedades e o zoom foi
+ * para o canto da cena no lote 1.
+ */
+/*
+ * A barra de ações — UMA linha, sempre — lote 17.
+ *
+ * Ela quebrava em duas numa janela estreita, e a segunda linha era altura
+ * tirada do desenho. Agora ela **rola de lado**: `flex-wrap: nowrap` mais
+ * `overflow-x: auto`. Cortar um botão à direita é pior que uma segunda linha —
+ * mas fazer o dedo arrastar não corta nada, e a cena não encolhe nunca.
+ *
+ * `justify-content: flex-start`: a ordem é a do Spriter, da esquerda para a
+ * direita, e uma barra centralizada muda os botões de lugar toda vez que um
+ * grupo aparece ou some.
+ */
+.viewport-toolbar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  min-width: 0;
+  /* NÃO ROLA de lado — chat P, P48 (L16, I-O3). O que não cabe vai para o
+     "Mais ▾" do fim (`fitMore`, em `viewport-toolbar.ts`). Uma barra que rola
+     escondia "Travar desenhos" sem dizer que ele existia. */
+  overflow-x: hidden;
+  overflow-y: hidden;
+  /* Menos folga em cima e embaixo desde o lote 4: cada pixel aqui é um pixel a
+     menos de desenho, e o desenho é o que se olha o dia inteiro. */
+  padding: 4px 8px;
+  background: var(--panel, #ffffff);
+  border-bottom: 2px solid var(--line, #c3ccd8);
+}
+
+/*
+ * Um grupo da barra, com o traço fino que o separa do vizinho.
+ *
+ * O traço vale mais que um espaço maior: espaço em branco não diz onde um
+ * grupo acaba e o outro começa, e a barra tem cinco.
+ */
+.viewport-grupo {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 2px;
+  padding-right: 6px;
+  border-right: 1px solid var(--line, #c3ccd8);
+}
+
+.viewport-grupo:last-child {
+  padding-right: 0;
+  border-right: 0;
+}
+
+/*
+ * Os quatro de **ver e travar**: palavra escrita, laranja quando ligado.
+ *
+ * O pedido do Humberto, com a tela do Spriter aberta: *"observe que não temos
+ * isso"*. `--toggle-on` é o laranja do "Show Bones" dele, medido na foto. Ele
+ * nasce aqui, no tema claro; o lote 18 o define também no escuro.
+ *
+ * A cor **nunca vai sozinha**: `aria-pressed` acompanha, e a dica diz o que o
+ * botão faz. Oito por cento dos homens não separam laranja de cinza.
+ */
+/*
+ * O laranja mora no `:root` do `shell.css` e nos dois temas, e NÃO aqui.
+ *
+ * Ele era declarado neste bloco, e o lote 18 o transformou em
+ * `--toggle-on: var(--toggle-on, …)` — uma variável que se define por si
+ * mesma, o que o navegador trata como valor inválido. Os quatro botões
+ * acenderam TRANSPARENTES, e ninguém vê um botão transparente aceso.
+ */
+.viewport-interruptor {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 6px 10px;
+  font-weight: 600;
+}
+
+/*
+ * Três classes, e não duas: mais abaixo neste arquivo há
+ * `.viewport-button.is-active`, que pinta de AZUL a ferramenta ativa. As duas
+ * têm o mesmo peso, e a que vem depois ganha — os quatro interruptores saíam
+ * azuis. O laranja é o que o Humberto reconhece na tela do Spriter.
+ */
+.viewport-button.viewport-interruptor.is-active {
+  background: var(--toggle-on, #d98a2b);
+  border-color: var(--toggle-on, #d98a2b);
+  color: var(--toggle-on-ink, #2b1600);
+}
+
+.viewport-button.viewport-interruptor.is-active:hover {
+  background: color-mix(in srgb, var(--toggle-on, #d98a2b) 82%, black);
+  border-color: color-mix(in srgb, var(--toggle-on, #d98a2b) 82%, black);
+}
+
+/* O interruptor de modo saiu da barra no degrau 11 (18/09/2026): o rodapé diz onde se está. */
+
+/* Botão de ícone da barra: quadrado, sem folga de palavra. */
+.viewport-acao {
+  flex: 0 0 auto;
+  padding: 6px 8px;
+}
+
+.viewport-acao:disabled {
+  color: var(--ink-soft, #45505e);
+  border-color: var(--line, #c3ccd8);
+  background: var(--paper, #f4f6f9);
+  cursor: default;
+}
+
+/* They WRAP. With eight tools the row is wider than a narrow window, and a row
+   that overflows pushes the drawing area sideways out of sight instead of
+   going to a second line. */
+.viewport-tools,
+.viewport-travas,
+.viewport-espaco,
+.viewport-compensacao {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* -- eixos e compensação (R7) ---------------------------------------------- */
+
+/* Os dois grupos ficam cercados, para o olho separar "que ferramenta estou
+   usando" de "em que eixos ela trabalha". A borda vale mais do que um espaço
+   maior: espaço em branco some quando a barra quebra em duas linhas.
+   Lote 17: a cerca saiu do grupo dos Eixos — a barra inteira passou a ter
+   traços entre os cinco grupos, e uma cerca dentro de outra custava 10px de
+   altura numa barra que tem que caber em 48. */
+.viewport-espaco,
+.viewport-compensacao {
+  padding: 4px 10px;
+  border: 2px solid var(--line, #c3ccd8);
+  border-radius: 8px;
+}
+
+/* O título do grupo é texto, nunca só um ícone, e nunca em cinza claro. */
+.viewport-grupo-titulo {
+  color: var(--ink, #10151c);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* A caixa e a palavra andam juntas: clicar na palavra marca a caixa. */
+.viewport-caixa {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 4px 10px;
+  border: 2px solid var(--line-strong, #8b98a8);
+  border-radius: 6px;
+  background: var(--panel, #ffffff);
+  color: var(--ink, #10151c);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.viewport-caixa:hover {
+  background: color-mix(in srgb, var(--accent, #1a4fd8) 12%, var(--panel, #ffffff));
+  border-color: var(--accent, #1a4fd8);
+}
+
+.viewport-caixa input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent, #1a4fd8);
+}
+
+.viewport-caixa:focus-within {
+  outline: 3px solid var(--accent, #1a4fd8);
+  outline-offset: 2px;
+}
+
+.viewport-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 6px 14px;
+  border: 2px solid var(--line-strong, #8b98a8);
+  border-radius: 6px;
+  background: var(--panel, #ffffff);
+  color: var(--ink, #10151c);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+/*
+ * Quem esconde as cinco ferramentas de estrutura em Animando é o
+ * `syncToolModes`, escrevendo `hidden` no botão. O conserto local que morava
+ * aqui saiu no lote 38: `[hidden] { display: none !important }`, no
+ * `shell.css`, vale para o programa inteiro.
+ */
+
+.viewport-button:hover {
+  background: color-mix(in srgb, var(--accent, #1a4fd8) 12%, var(--panel, #ffffff));
+  border-color: var(--accent, #1a4fd8);
+}
+
+.viewport-button:focus-visible {
+  outline: 3px solid var(--accent, #1a4fd8);
+  outline-offset: 2px;
+}
+
+.viewport-button.is-active {
+  background: var(--accent, #1a4fd8);
+  border-color: color-mix(in srgb, var(--accent, #1a4fd8) 70%, black);
+  color: var(--accent-ink, #ffffff);
+}
+
+.viewport-button-label {
+  white-space: nowrap;
+}
+
+.viewport-button-key {
+  min-width: 20px;
+  padding: 1px 5px;
+  border: 1px solid var(--line-strong, #8b98a8);
+  border-radius: 4px;
+  background: var(--paper, #f4f6f9);
+  color: var(--ink-soft, #45505e);
+  font-size: 13px;
+  text-align: center;
+}
+
+.viewport-button.is-active .viewport-button-key {
+  border-color: var(--panel, #ffffff);
+  background: color-mix(in srgb, var(--accent, #1a4fd8) 70%, black);
+  color: var(--panel, #ffffff);
+}
+
+/* -- drawing area ---------------------------------------------------------- */
+
+/*
+ * O palco: o canvas e, por cima dele, a camada do zoom.
+ *
+ * Existe só para dar a que prender o canto. `.viewport` é uma coluna com a
+ * barra em cima; um filho absoluto DELA cobriria a barra também.
+ */
+.viewport-palco {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+/*
+ * O zoom, no canto inferior direito da cena.
+ *
+ * É onde o Spine põe o dele. Fica por cima do canvas, encostado no canto, e
+ * por isso nunca cobre o desenho — que fica no meio. Fundo quase opaco, para
+ * os números se lerem contra qualquer cor de fundo da cena.
+ */
+.viewport-zoom {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 7px;
+  background: rgb(255 255 255 / 92%);
+  border: 1px solid var(--line, #c3ccd8);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(26 26 26 / 18%);
+}
+
+.viewport-zoom-botao {
+  font: inherit;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--ink, #10151c);
+  background: var(--panel, #ffffff);
+  border: 1px solid var(--line, #c3ccd8);
+  border-radius: 6px;
+  padding: 6px 10px;
+  min-width: 34px;
+  cursor: pointer;
+}
+
+.viewport-zoom-botao:hover {
+  background: color-mix(in srgb, var(--accent, #1a4fd8) 10%, var(--panel, #ffffff));
+  border-color: var(--accent, #1a4fd8);
+}
+
+.viewport-zoom-botao:focus-visible {
+  outline: 3px solid var(--accent, #1a4fd8);
+  outline-offset: 1px;
+}
+
+/* Um campo, não um rótulo: digitar 200 e dar Enter vale por sete cliques. */
+.viewport-zoom-campo {
+  font: inherit;
+  font-size: 15px;
+  text-align: center;
+  width: 62px;
+  padding: 6px 4px;
+  color: var(--ink, #10151c);
+  background: var(--panel, #ffffff);
+  border: 1px solid var(--line, #c3ccd8);
+  border-radius: 6px;
+}
+
+.viewport-zoom-campo:focus-visible {
+  outline: 3px solid var(--accent, #1a4fd8);
+  outline-offset: 1px;
+}
+
+.viewport-canvas {
+  flex: 1 1 auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  background: var(--scene-background, #f2f2f0);
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.viewport-canvas.is-panning {
+  cursor: grab;
+}
+
+/*
+ * Os dois gestos de pai e filho — lote 31. O cursor é metade do recado: o
+ * rodapé diz o que fazer, e o cursor lembra, sem tirar o olho da cena.
+ * `alias` é a seta com o atalho, que é o que pendurar um filho é.
+ */
+.viewport-canvas.is-pegando-filhos {
+  cursor: alias;
+}
+
+.viewport-canvas.is-escolhendo-pai {
+  cursor: cell;
+}
+
+/* Transformar — lote 47: o cursor diz o que o arrasto vai fazer. */
+.viewport-canvas.is-transform-move {
+  cursor: move;
+}
+
+.viewport-canvas.is-transform-rotate {
+  cursor: grab;
+}
+
+.viewport-canvas.is-transform-scale-ew {
+  cursor: ew-resize;
+}
+
+.viewport-canvas.is-transform-scale-ns {
+  cursor: ns-resize;
+}
+
+.viewport-canvas.is-transform-scale-nesw {
+  cursor: nesw-resize;
+}
+
+.viewport-canvas.is-transform-scale-nwse {
+  cursor: nwse-resize;
+}
+
+/*
+ * Rodada 46, lote 2: Alt sobre o meio de um lado inclina, e o cursor diz o
+ * eixo. `col-resize` — o topo anda de lado; `row-resize` — um lado sobe.
+ */
+.viewport-canvas.is-transform-shear-x {
+  cursor: col-resize;
+}
+
+.viewport-canvas.is-transform-shear-y {
+  cursor: row-resize;
+}
+
+/*
+ * Rodada 46, lote 2: o botão do meio também mostra a mão (antes só o Espaço),
+ * e a mão vence o cursor da caixa embaixo dela — por isso o `[class]`, que
+ * pesa mais do que as regras do Transformar acima.
+ */
+.viewport-canvas.is-panning[class] {
+  cursor: grab;
+}
+
+/*
+ * Rodada 46, lote 5 (doc `66`, §4): em 1280×720 a cena tem 744×342 px e a
+ * caixa do zoom (225×60) tapava um canto dela. Em tela pequena, a caixa encolhe.
+ */
+@media (max-width: 1440px), (max-height: 800px) {
+  .viewport-zoom {
+    right: 8px;
+    bottom: 8px;
+    gap: 2px;
+    padding: 3px 4px;
+  }
+
+  .viewport-zoom-botao {
+    font-size: 13px;
+    padding: 3px 7px;
+    min-width: 26px;
+  }
+
+  .viewport-zoom-campo {
+    font-size: 13px;
+    width: 52px;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* As boas-vindas do documento vazio — anotação 24, lote 36                   */
+/* ------------------------------------------------------------------------- */
+
+/*
+ * No MEIO da cena, e não num canto: é a única coisa na tela, e no canto ela
+ * seria lida como decoração. Some no primeiro osso ou na primeira imagem.
+ */
+.viewport-boas-vindas {
+  position: absolute;
+  /*
+   * `left: 0; right: 0` com `width: fit-content` e `margin: auto`, e NÃO
+   * `left: 50%` com `translate`: com `left: 50%` a largura disponível para a
+   * caixa é só a metade direita do palco, e os três botões quebravam em duas
+   * linhas por falta de espaço que existia.
+   */
+  left: 0;
+  right: 0;
+  top: 50%;
+  width: fit-content;
+  margin: 0 auto;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: min(620px, 92%);
+  padding: 22px 20px;
+  border: 2px solid var(--line, #c3ccd8);
+  border-radius: 10px;
+  background: var(--panel, #ffffff);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  text-align: center;
+}
+
+.boas-vindas-titulo {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink, #10151c);
+}
+
+.boas-vindas-linha {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Botão GRANDE: ícone em cima, nome, e a frase do que acontece embaixo. */
+.boas-vindas-botao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 150px;
+  padding: 14px 8px;
+  border: 2px solid var(--line, #c3ccd8);
+  border-radius: 8px;
+  background: var(--paper, #f4f6f9);
+  color: var(--ink, #10151c);
+  font: inherit;
+  cursor: pointer;
+}
+
+.boas-vindas-botao:hover {
+  border-color: var(--accent, #1a4fd8);
+}
+
+.boas-vindas-icone {
+  display: inline-flex;
+  color: var(--accent, #1a4fd8);
+}
+
+.boas-vindas-nome {
+  font-weight: 600;
+}
+
+.boas-vindas-dica {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--ink-soft, #45505e);
+}
+
+.boas-vindas-rodape {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-soft, #45505e);
+}
+
+/* ------------------------------------------------------------------------- */
+/* A barra de uma linha só — lote 4 (item 15)                                 */
+/* ------------------------------------------------------------------------- */
+
+/*
+ * O botão de ferramenta é um quadrado com o ícone dentro.
+ *
+ * A palavra fica no DOM sempre e some por `display`, e não é removida: assim o
+ * leitor de tela continua achando o nome, e ligar a preferência não remonta a
+ * barra. A dica (`title`/`aria-label`) traz nome e tecla nos dois casos — um
+ * ícone sem nome é uma adivinhação.
+ */
+.viewport-ferramenta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  min-height: 36px;
+}
+
+.viewport-button-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.viewport-ferramenta .viewport-button-label,
+.viewport-acao .viewport-button-label,
+.viewport-trava .viewport-button-label {
+  display: none;
+}
+
+.viewport-ferramenta.mostra-nome .viewport-button-label,
+.viewport-acao.mostra-nome .viewport-button-label {
+  display: inline;
+}
+
+/* Os dois cadeados: o que se trava (osso, imagem) e um cadeado pequeno em cima. */
+.viewport-trava {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 7px 9px;
+  min-height: 36px;
+}
+
+.viewport-button-cadeado {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  opacity: 0.55;
+}
+
+.viewport-trava[aria-pressed="true"] .viewport-button-cadeado {
+  opacity: 1;
+}
+
+/* Os Eixos, agora uma lista: um controle no lugar de três botões. */
+/* Numa linha: o rótulo "Eixos" ao LADO da lista, não em cima dela. Em cima ele
+   fazia a barra inteira ter a altura de duas linhas de texto. */
+.viewport-espaco {
+  flex-wrap: nowrap;
+  gap: 8px;
+}
+
+.viewport-lista {
+  font: inherit;
+  font-size: 15px;
+  min-height: 36px;
+  padding: 4px 6px;
+  color: var(--ink, #10151c);
+  background: var(--panel, #ffffff);
+  border: 1px solid var(--line, #c3ccd8);
+  border-radius: 6px;
+}
+
+.viewport-lista:focus-visible {
+  outline: 3px solid var(--accent, #1a4fd8);
+  outline-offset: 1px;
+}
+
+.icone {
+  display: block;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* A barra numa linha só — lote 17                                     */
+/* ------------------------------------------------------------------ */
+
+/*
+ * O grupo dos Eixos era o mais alto da barra: 48px, contra 38 de todo botão.
+ * A cerca em volta dele e a folga dela custavam 10px em toda janela, e a barra
+ * inteira tem que caber em 48 com a folga de fora.
+ */
+.viewport-grupo-eixos,
+.viewport-espaco {
+  padding: 0 8px 0 0;
+  border: 0;
+  border-right: 1px solid var(--line, #c3ccd8);
+  gap: 6px;
+}
+
+.viewport-espaco .viewport-grupo-titulo {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.viewport-espaco .viewport-lista {
+  min-height: 32px;
+  padding: 2px 6px;
+}
+
+/*
+ * Os botões da barra encolheram de 38 para 34 de altura.
+ *
+ * 34 ainda cabe o dedo — é a mesma altura dos botões do tocador desde o lote
+ * 15 — e é o que faz a linha inteira caber em 48px com a folga de fora. Cada
+ * pixel aqui é um pixel a menos de desenho.
+ */
+.viewport-toolbar .viewport-button {
+  min-height: 34px;
+  padding: 4px 10px;
+}
+
+.viewport-toolbar .viewport-acao,
+.viewport-toolbar .viewport-ferramenta {
+  padding: 4px 5px;
+}
+
+.viewport-toolbar .viewport-interruptor {
+  padding: 4px 8px;
+}
+
+/*
+ * A barra de rolagem lateral é FINA.
+ *
+ * Ela precisa existir — é ela que diz que há mais botão à direita —, mas a
+ * barra de rolagem padrão do Windows tem 15px, e 15px numa barra de 48 é quase
+ * um terço dela gasto em barra de rolagem.
+ */
+/*
+ * Nada de `scrollbar-width: thin`: no Chrome ele GANHA do
+ * `::-webkit-scrollbar` e devolve 12px, que é o dobro do que se pede aqui.
+ * Medido: com `thin`, a barra de 42px de conteúdo media 54 de altura.
+ */
+.viewport-grupo-eixos,
+.viewport-espaco {
+  flex: 0 0 auto;
+}
+
+.viewport-toolbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.viewport-toolbar::-webkit-scrollbar-thumb {
+  background: var(--line, #c3ccd8);
+  border-radius: 3px;
+}
+
+
+/*
+ * A palavra "Eixos" saiu da barra — lote 23.
+ *
+ * Pedido do Humberto: *"tem muitos nomes onde podia ser trocados por ícones,
+ * só isso já ganharíamos muito espaço"*. Aqui não cabia um ícone: a lista já
+ * mostra a palavra escolhida (Local · Pai · Mundo), e o rótulo ao lado dela
+ * repetia o que a própria lista diz. Ele continua no `title` e no
+ * `aria-label`, e volta com **Mostrar nome das ferramentas**.
+ */
+.viewport-espaco .viewport-grupo-titulo {
+  display: none;
+}
+
+.viewport-toolbar.mostra-nome .viewport-espaco .viewport-grupo-titulo {
+  display: inline;
+}
+
+/* Lote 60b: a grade de imagens do Spriter, na cena, embaixo do desenho
+   escolhido. Até 6 por linha (`image-grid-model.ts`: 40 px, 4 de espaço,
+   6 de borda, 26 da linha da fonte); nunca rola de lado. */
+.grade-imagens {
+  position: absolute;
+  z-index: 3;
+  padding: 6px;
+  border-radius: 6px;
+  background: rgba(250, 250, 248, 0.92);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  max-height: calc(100% - 8px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.grade-imagens-celulas {
+  display: grid;
+  gap: 4px;
+}
+.grade-imagem {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.grade-imagem img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.grade-imagem-atual {
+  outline: 2px solid #f08a00;
+  outline-offset: -2px;
+}
+.grade-imagem:focus-visible {
+  outline: 2px solid #1b52d6;
+  outline-offset: -2px;
+}
+.grade-imagens-vazia {
+  margin: 0;
+  font-size: 12px;
+  color: #444444;
+  max-width: 240px;
+}
+.grade-imagens-fonte {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  height: 22px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #333333;
+}
+.grade-imagens-fonte-botao {
+  font-size: 12px;
+  padding: 1px 6px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  background: #ffffff;
+  color: #222222;
+  cursor: pointer;
+}
+.grade-imagens-fonte-botao[aria-pressed="true"] {
+  background: #f08a00;
+  color: #ffffff;
+}
+
+/* Lote 60c: as opções do botão direito, embaixo da grade, como no Spriter.
+   Cada uma com 22 px de altura, e 10 de espaço em cima delas
+   (`image-grid-model.ts`: GRID_OPTION_ROW e GRID_OPTIONS_TOP). */
+.grade-imagens-opcoes {
+  display: flex;
+  flex-direction: column;
+  min-width: 138px;
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+.grade-imagens-opcao {
+  box-sizing: border-box;
+  height: 22px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: #222222;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.grade-imagens-opcao:hover,
+.grade-imagens-opcao:focus-visible {
+  background: rgba(240, 138, 0, 0.18);
+}
+.grade-imagens-opcao[aria-pressed="true"] {
+  color: #b86200;
+  font-weight: 600;
+}
+
+/*
+ * O "Mais ▾" — chat P, P48. O que o `fitMore` esconde usa o atributo `hidden`,
+ * e quem o faz valer é a regra ÚNICA de `ui/shell.css` (lote 38).
+ */
+.viewport-toolbar .viewport-mais .viewport-button-label {
+  white-space: nowrap;
+}

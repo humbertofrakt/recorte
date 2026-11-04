@@ -1,0 +1,30 @@
+{
+  "probe": {
+    "times": [
+      0
+    ],
+    "measure": [
+      "drawList"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "drawList": [
+        {
+          "piece": "corpo/corpo",
+          "clips": []
+        },
+        {
+          "piece": "fx_bom/jato",
+          "clips": []
+        },
+        {
+          "piece": "cabeca/cabeca",
+          "clips": []
+        }
+      ]
+    }
+  ]
+}

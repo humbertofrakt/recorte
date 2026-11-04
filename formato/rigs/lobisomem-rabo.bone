@@ -1,0 +1,53 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.2.0",
+    "id": "a17d3c9e-2b64-4f8a-b0c5-6e91d4f27a83",
+    "created": "2026-09-17T12:00:00Z",
+    "modified": "2026-09-17T12:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo da especificação bone 0.2 — pele de fora que traz osso (2.8, F23)"
+  },
+  "skeleton": { "name": "lobisomem-rabo" },
+  "assets": {
+    "atlases": ["heroi.atlas.json"],
+    "imagesBase": "images/"
+  },
+
+  "rig": {
+    "name": "humanoide-v1",
+    "bones": ["quadril"]
+  },
+
+  "bones": [
+    { "name": "root" },
+    { "name": "rabo",       "parent": "quadril", "x": -6, "y": 0, "rotation": -120, "length": 40, "skinRequired": true, "color": [0.55, 0.4, 0.25, 1] },
+    { "name": "rabo_ponta", "parent": "rabo",    "x": 40, "y": 0, "rotation": 20,   "length": 30, "skinRequired": true, "color": [0.55, 0.4, 0.25, 1] }
+  ],
+
+  "slots": [
+    { "name": "rabo",       "bone": "rabo",       "attachment": "rabo" },
+    { "name": "rabo_ponta", "bone": "rabo_ponta", "attachment": "rabo_ponta" }
+  ],
+
+  "skins": [
+    {
+      "name": "lobisomem",
+      "displayName": "Lobisomem",
+      "bones": ["rabo", "rabo_ponta"],
+      "attachments": {
+        "rabo": {
+          "rabo": { "type": "region", "path": "hair", "x": 20, "y": 0, "width": 50, "height": 24 }
+        },
+        "rabo_ponta": {
+          "rabo_ponta": { "type": "region", "path": "hair", "x": 15, "y": 0, "width": 36, "height": 20 }
+        }
+      }
+    }
+  ],
+
+  "extras": {
+    "descricao": "A pele de fora que traz osso (2.8, Apêndice A 78). Serve a qualquer corpo que obedeça ao rig humanoide-v1 (rigs/humanoide-v1.bone): pede só o osso quadril, e traz os dois ossos do rabo (skinRequired), os dois slots e a pele lobisomem. O corpo que a cita em assets.skins ganha o rabo no fim de bones e de slots, calculado sempre e desenhado só com a pele na pilha. O osso root só existe porque bones é obrigatório; sem skinRequired, é ignorado."
+  }
+}

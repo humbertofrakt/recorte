@@ -1,0 +1,397 @@
+{
+	"languageTag": "en-US",
+	"fileDescription": "Textos do objeto Recorte. Em português de propósito: é a língua de quem usa.",
+	"text": {
+		"plugins": {
+			"recorte_leitor": {
+				"name": "Recorte",
+				"description": "Um boneco do Recorte (.bone), com ossos, imagens e animações.",
+				"help-url": "https://github.com/",
+				"properties": {
+					"arquivo": {
+						"name": "Arquivo .bone",
+						"desc": "O nome do boneco na pasta Files do projeto. O atlas e a imagem ficam ao lado dele."
+					},
+					"animacao": {
+						"name": "Animação inicial",
+						"desc": "A animação que toca ao começar. Vazio: o boneco fica parado."
+					},
+					"em-laco": {
+						"name": "Em laço",
+						"desc": "A animação inicial volta ao começo quando acaba."
+					},
+					"escala": {
+						"name": "Escala",
+						"desc": "Pixels do layout por pixel do boneco. 1 é o tamanho do editor do Recorte."
+					},
+					"skins": {
+						"name": "Skins iniciais",
+						"desc": "As skins vestidas ao começar, de baixo para cima, separadas por vírgula (ex.: armadura, capa). A última vence. Vazio: só a default."
+					}
+				},
+				"aceCategories": {
+					"animacao": "Animação",
+					"skin": "Skin",
+					"aparencia": "Aparência",
+					"avisos": "Avisos",
+					"conexao": "Conexão"
+				},
+				"conditions": {
+					"tocando": {
+						"list-name": "Está tocando a animação",
+						"display-text": "Está tocando a animação [b]{0}[/b]",
+						"description": "Verdade enquanto esta animação toca. Uma animação sem laço que já chegou ao fim não está mais tocando.",
+						"params": {
+							"nome": {
+								"name": "Animação",
+								"desc": "O nome da animação, como no editor do Recorte."
+							}
+						}
+					},
+					"ao-terminar": {
+						"list-name": "Ao terminar a animação",
+						"display-text": "Ao terminar a animação [b]{0}[/b]",
+						"description": "Dispara quando uma animação SEM laço chega ao fim. Animação em laço não termina: dá a volta. Nome vazio: qualquer uma.",
+						"params": {
+							"nome": {
+								"name": "Animação",
+								"desc": "O nome da animação. Vazio (\"\") vale para qualquer uma."
+							}
+						}
+					},
+					"ao-evento": {
+						"list-name": "Ao evento",
+						"display-text": "Ao evento [b]{0}[/b] da animação",
+						"description": "Dispara quando a animação passa por uma chave de evento do .bone (o passo, o golpe). Os valores da chave estão em EventoNome, EventoInteiro, EventoNumero e EventoTexto.",
+						"params": {
+							"nome": {
+								"name": "Evento",
+								"desc": "O nome do evento, como no editor do Recorte. Vazio (\"\") vale para qualquer um."
+							}
+						}
+					},
+					"vestindo": {
+						"list-name": "Está vestindo a skin",
+						"display-text": "Está vestindo a skin [b]{0}[/b]",
+						"description": "Verdade quando a skin está na pilha, em qualquer altura. Inverta para \"não está vestindo\".",
+						"params": {
+							"nome": {
+								"name": "Skin",
+								"desc": "O nome da skin, como no editor do Recorte."
+							}
+						}
+					},
+					"espelhado": {
+						"list-name": "Está espelhado",
+						"display-text": "Está espelhado",
+						"description": "Verdade quando o boneco está virado para o outro lado (ação Espelhar)."
+					},
+					"ao-encaixar": {
+						"list-name": "Ao encaixar",
+						"display-text": "Ao encaixar uma peça no slot [b]{0}[/b]",
+						"description": "Dispara depois de cada Encaixar (e de cada slot do Encaixar todas). O leitor não recusa encaixe: é aqui que o jogo diz \"não\", desencaixando. Nome vazio: qualquer slot; o slot da vez está em SlotDoEncaixe.",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot. Vazio (\"\") vale para qualquer um."
+							}
+						}
+					},
+					"mostra-peca": {
+						"list-name": "O slot mostra a peça",
+						"display-text": "O slot [b]{0}[/b] mostra [b]{1}[/b]",
+						"description": "Verdade quando o slot mostra agora esta peça (o arquivo da entidade) ou esta imagem (o nome dela). Inverta para \"não mostra\".",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							},
+							"peca": {
+								"name": "Peça",
+								"desc": "O arquivo da entidade (ex.: \"espada.bone\") ou o nome da imagem, como PecaDoSlot devolve."
+							}
+						}
+					}
+				},
+				"actions": {
+					"tocar": {
+						"list-name": "Tocar animação",
+						"display-text": "Tocar a animação [b]{0}[/b] ({1})",
+						"description": "Toca uma animação do boneco, do começo. Nome que o boneco não tem: não troca, e vira aviso.",
+						"params": {
+							"nome": {
+								"name": "Nome",
+								"desc": "O nome da animação, como no editor do Recorte."
+							},
+							"laco": {
+								"name": "Laço",
+								"desc": "Volta ao começo quando acaba, ou toca uma vez e para no fim.",
+								"items": {
+									"em-laco": "em laço",
+									"uma-vez": "uma vez"
+								}
+							}
+						}
+					},
+					"mudar-velocidade": {
+						"list-name": "Mudar a velocidade",
+						"display-text": "Mudar a velocidade para [b]{0}[/b]",
+						"description": "A velocidade da animação: 1 é a do editor, 2 é o dobro, 0,5 a metade, 0 para sem pausar.",
+						"params": {
+							"velocidade": {
+								"name": "Velocidade",
+								"desc": "1 = normal. Número de 0 para cima."
+							}
+						}
+					},
+					"pausar": {
+						"list-name": "Pausar",
+						"display-text": "Pausar o boneco",
+						"description": "O tempo do boneco para: a pose fica, e nenhum evento dispara. Continuar volta de onde parou."
+					},
+					"continuar": {
+						"list-name": "Continuar",
+						"display-text": "Continuar o boneco",
+						"description": "Volta a andar o tempo do boneco, de onde parou."
+					},
+					"vestir": {
+						"list-name": "Vestir skin",
+						"display-text": "Vestir a skin [b]{0}[/b]",
+						"description": "Põe a skin no topo da pilha: a de cima vence. Se já estava vestida, ela sobe para o topo.",
+						"params": {
+							"nome": {
+								"name": "Skin",
+								"desc": "O nome da skin, como no editor do Recorte."
+							}
+						}
+					},
+					"tirar": {
+						"list-name": "Tirar skin",
+						"display-text": "Tirar a skin [b]{0}[/b]",
+						"description": "Tira a skin da pilha. As outras ficam como estavam. Se ela não estava vestida, nada muda.",
+						"params": {
+							"nome": {
+								"name": "Skin",
+								"desc": "O nome da skin, como no editor do Recorte."
+							}
+						}
+					},
+					"espelhar": {
+						"list-name": "Espelhar",
+						"display-text": "Deixar [b]{0}[/b]",
+						"description": "Vira o boneco para o outro lado (como no espelho), ou o desvira.",
+						"params": {
+							"lado": {
+								"name": "Lado",
+								"desc": "Espelhado: virado para o outro lado. Normal: como no editor.",
+								"items": {
+									"espelhado": "espelhado",
+									"normal": "normal"
+								}
+							}
+						}
+					},
+					"encaixar": {
+						"list-name": "Encaixar",
+						"display-text": "Encaixar [b]{0}[/b] no slot [b]{1}[/b] (em volta de [b]{2}[/b])",
+						"description": "Põe uma entidade num slot. Ela cai no pino da imagem que estava lá, com a ordem e as chaves dela. Só aquele slot muda. A peça é lida da pasta Files na primeira vez. Slot ou peça que não existe: nada muda, e vira aviso.",
+						"params": {
+							"peca": {
+								"name": "Peça",
+								"desc": "O arquivo da entidade (.bone) na pasta Files, com a pasta se houver (ex.: \"pecas/motosserra.bone\")."
+							},
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							},
+							"meio": {
+								"name": "Em volta de",
+								"desc": "Vazio: a peça entra inteira no lugar da imagem. Com o nome de um slot DA PEÇA: o que ela tem antes desse slot fica atrás do boneco inteiro, o que tem depois fica na frente (o \"Este boneco\"). Esse slot não é desenhado."
+							}
+						}
+					},
+					"desencaixar": {
+						"list-name": "Desencaixar",
+						"display-text": "Desencaixar o slot [b]{0}[/b]",
+						"description": "Tira a peça que o jogo encaixou no slot. A imagem (ou a entidade) de antes volta.",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							}
+						}
+					},
+					"encaixar-todas": {
+						"list-name": "Encaixar todas",
+						"display-text": "Trocar [b]{0}[/b] por [b]{1}[/b] em todos os slots (em volta de [b]{2}[/b])",
+						"description": "Troca a peça em TODO slot que a mostra agora (as rodas da moto). Para trocar um slot só (uma das duas armas), use Encaixar.",
+						"params": {
+							"de": {
+								"name": "De",
+								"desc": "A peça que sai, como PecaDoSlot a mostra (ex.: \"roda.bone\")."
+							},
+							"para": {
+								"name": "Para",
+								"desc": "A peça que entra, na pasta Files."
+							},
+							"meio": {
+								"name": "Em volta de",
+								"desc": "Vazio: a peça entra inteira no lugar da imagem. Com o nome de um slot DA PEÇA: o que ela tem antes desse slot fica atrás do boneco inteiro, o que tem depois fica na frente (o \"Este boneco\"). Esse slot não é desenhado."
+							}
+						}
+					},
+					"animar-peca": {
+						"list-name": "Animar a peça",
+						"display-text": "Animar a peça do slot [b]{0}[/b]: [b]{1}[/b] ({2})",
+						"description": "A peça do slot toca uma animação DELA, do começo. Se a animação do boneco escolhe a animação da peça (no editor, na faixa), ela manda, e o leitor avisa. Animação que a peça não tem: ela fica parada, e vira aviso.",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							},
+							"animacao": {
+								"name": "Animação",
+								"desc": "O nome da animação da peça, como no editor do Recorte."
+							},
+							"laco": {
+								"name": "Laço",
+								"desc": "Volta ao começo quando acaba, ou toca uma vez e para no fim.",
+								"items": {
+									"em-laco": "em laço",
+									"uma-vez": "uma vez"
+								}
+							}
+						}
+					},
+					"soltar-peca": {
+						"list-name": "Soltar a peça",
+						"display-text": "Soltar a peça do slot [b]{0}[/b]",
+						"description": "Ninguém manda mais na peça: nenhuma animação por cima, ela fica na pose de repouso dela.",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							}
+						}
+					}
+				},
+				"expressions": {
+					"animacao-tocando": {
+						"translated-name": "AnimacaoTocando",
+						"description": "O nome da animação que está tocando. Vazio quando nenhuma."
+					},
+					"velocidade": {
+						"translated-name": "Velocidade",
+						"description": "A velocidade da animação (1 = normal)."
+					},
+					"evento-nome": {
+						"translated-name": "EventoNome",
+						"description": "O nome do último evento do .bone que disparou (use no \"Ao evento\")."
+					},
+					"evento-inteiro": {
+						"translated-name": "EventoInteiro",
+						"description": "O número inteiro da chave do último evento."
+					},
+					"evento-numero": {
+						"translated-name": "EventoNumero",
+						"description": "O número com vírgula da chave do último evento."
+					},
+					"evento-texto": {
+						"translated-name": "EventoTexto",
+						"description": "O texto da chave do último evento."
+					},
+					"skins": {
+						"translated-name": "Skins",
+						"description": "As skins vestidas agora, de baixo para cima, separadas por vírgula. A última é a que vence."
+					},
+					"avisos": {
+						"translated-name": "Avisos",
+						"description": "Tudo o que o leitor avisou sobre o boneco, um aviso por linha. Vazio quando está tudo certo."
+					},
+					"slots": {
+						"translated-name": "Slots",
+						"description": "Os slots do boneco, na ordem do arquivo, separados por vírgula."
+					},
+					"entidades": {
+						"translated-name": "Entidades",
+						"description": "As peças que o jogo já carregou da pasta Files, separadas por vírgula."
+					},
+					"peca-do-slot": {
+						"translated-name": "PecaDoSlot",
+						"description": "O que o slot mostra agora: o arquivo da entidade (ex.: \"espada.bone\"), o nome da imagem, ou vazio.",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							}
+						}
+					},
+					"slot-do-encaixe": {
+						"translated-name": "SlotDoEncaixe",
+						"description": "O slot do último encaixe (use no \"Ao encaixar\")."
+					},
+					"osso-x": {
+						"translated-name": "OssoX",
+						"description": "O X do osso no layout. Ponha um objeto do Construct aqui, a cada tique, e ele segue o osso. Nome que não existe: a posição do objeto, e vira aviso.",
+						"params": {
+							"osso": {
+								"name": "Osso",
+								"desc": "O nome do osso, como no editor do Recorte."
+							}
+						}
+					},
+					"osso-y": {
+						"translated-name": "OssoY",
+						"description": "O Y do osso no layout (o Y do Construct: para baixo). Nome que não existe: a posição do objeto, e vira aviso.",
+						"params": {
+							"osso": {
+								"name": "Osso",
+								"desc": "O nome do osso, como no editor do Recorte."
+							}
+						}
+					},
+					"osso-angulo": {
+						"translated-name": "OssoAngulo",
+						"description": "Para onde o osso aponta, em graus, como o ângulo do Construct (de 0 a 360, horário). Já conta o giro e o espelho do boneco. Nome que não existe: a posição do objeto, e vira aviso.",
+						"params": {
+							"osso": {
+								"name": "Osso",
+								"desc": "O nome do osso, como no editor do Recorte."
+							}
+						}
+					},
+					"slot-x": {
+						"translated-name": "SlotX",
+						"description": "O X do pino da peça do slot (onde a imagem ou a entidade está), no layout. Nome que não existe: a posição do objeto, e vira aviso.",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							}
+						}
+					},
+					"slot-y": {
+						"translated-name": "SlotY",
+						"description": "O Y do pino da peça do slot, no layout. Nome que não existe: a posição do objeto, e vira aviso.",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							}
+						}
+					},
+					"slot-angulo": {
+						"translated-name": "SlotAngulo",
+						"description": "O ângulo da peça do slot, em graus, como o ângulo do Construct. Nome que não existe: a posição do objeto, e vira aviso.",
+						"params": {
+							"slot": {
+								"name": "Slot",
+								"desc": "O nome do slot do boneco, como no editor do Recorte."
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

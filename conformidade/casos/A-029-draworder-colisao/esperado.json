@@ -1,0 +1,9 @@
+{
+  "probe": { "animation": "colisao", "times": [0, 0.5, 1], "measure": ["drawOrder"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,   "drawOrder": ["mao", "corpo", "braco"] },
+    { "time": 0.5, "drawOrder": ["mao", "corpo", "braco"] },
+    { "time": 1,   "drawOrder": ["mao", "braco", "corpo"] }
+  ]
+}

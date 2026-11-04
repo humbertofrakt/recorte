@@ -1,0 +1,270 @@
+{
+	"projectFormatVersion": 1,
+	"savedWithRelease": 44904,
+	"name": "Recorte - o heroi andando",
+	"runtime": "c3",
+	"useWorker": "auto",
+	"bundleAddons": false,
+	"usedAddons": [
+		{
+			"author": "Scirra",
+			"bundled": false,
+			"id": "Keyboard",
+			"name": "Keyboard",
+			"type": "plugin"
+		},
+		{
+			"type": "plugin",
+			"id": "Text",
+			"name": "Text",
+			"author": "Scirra",
+			"bundled": false
+		},
+		{
+			"type": "plugin",
+			"id": "Recorte_Leitor",
+			"name": "Recorte",
+			"author": "Recorte",
+			"bundled": false,
+			"version": "0.1.0.0",
+			"sdkVersion": 2
+		}
+	],
+	"uniqueId": "s3v5vcrufa2",
+	"objectTypes": {
+		"items": [
+			"Teclado",
+			"Painel",
+			"Heroi"
+		],
+		"subfolders": []
+	},
+	"functionsName": "Functions",
+	"autosaveData": null,
+	"containers": [],
+	"families": {
+		"items": [],
+		"subfolders": []
+	},
+	"layouts": {
+		"items": [
+			"Heroi"
+		],
+		"subfolders": []
+	},
+	"eventSheets": {
+		"items": [
+			"Eventos"
+		],
+		"subfolders": []
+	},
+	"rootFileFolders": {
+		"script": {
+			"items": [],
+			"subfolders": []
+		},
+		"sound": {
+			"items": [],
+			"subfolders": []
+		},
+		"music": {
+			"items": [],
+			"subfolders": []
+		},
+		"video": {
+			"items": [],
+			"subfolders": []
+		},
+		"font": {
+			"items": [],
+			"subfolders": []
+		},
+		"icon": {
+			"items": [
+				{
+					"name": "icon-32.png",
+					"type": "image/png",
+					"sid": 977420271134290,
+					"icon-info": {
+						"purpose": "app-icon"
+					}
+				},
+				{
+					"name": "icon-16.png",
+					"type": "image/png",
+					"sid": 864560315100522,
+					"icon-info": {
+						"purpose": "app-icon"
+					}
+				},
+				{
+					"name": "icon-64.png",
+					"type": "image/png",
+					"sid": 524696019099448,
+					"icon-info": {
+						"purpose": "app-icon"
+					}
+				},
+				{
+					"name": "icon-256.png",
+					"type": "image/png",
+					"sid": 739041104739336,
+					"icon-info": {
+						"purpose": "app-icon"
+					}
+				},
+				{
+					"name": "loading-logo.png",
+					"type": "image/png",
+					"sid": 142339141382526,
+					"icon-info": {
+						"purpose": "loading-logo"
+					}
+				},
+				{
+					"name": "icon-128.png",
+					"type": "image/png",
+					"sid": 206061708326373,
+					"icon-info": {
+						"purpose": "app-icon"
+					}
+				},
+				{
+					"name": "icon-512.png",
+					"type": "image/png",
+					"sid": 941563429147803,
+					"icon-info": {
+						"purpose": "app-icon"
+					}
+				}
+			],
+			"subfolders": []
+		},
+		"general": {
+			"items": [
+				{
+					"name": "heroi.bone",
+					"type": "application/octet-stream",
+					"sid": 666498464675089,
+					"file-info": {
+						"purpose": "none"
+					}
+				},
+				{
+					"name": "heroi.atlas.json",
+					"type": "application/json",
+					"sid": 584631548904355,
+					"file-info": {
+						"purpose": "none"
+					}
+				},
+				{
+					"name": "heroi.png",
+					"type": "image/png",
+					"sid": 753279765756559,
+					"file-info": {
+						"purpose": "none"
+					}
+				},
+				{
+					"name": "espada.bone",
+					"type": "application/octet-stream",
+					"sid": 847381885193928,
+					"file-info": {
+						"purpose": "none"
+					}
+				},
+				{
+					"name": "heroi-fogo.bone",
+					"type": "application/octet-stream",
+					"sid": 559784593374751,
+					"file-info": {
+						"purpose": "none"
+					}
+				},
+				{
+					"name": "capacete.bone",
+					"type": "application/octet-stream",
+					"sid": 445257006932922,
+					"file-info": {
+						"purpose": "none"
+					}
+				},
+				{
+					"name": "aura.bone",
+					"type": "application/octet-stream",
+					"sid": 384672159282073,
+					"file-info": {
+						"purpose": "none"
+					}
+				}
+			],
+			"subfolders": []
+		}
+	},
+	"timelines": {
+		"items": [],
+		"subfolders": []
+	},
+	"flowcharts": {
+		"items": [],
+		"subfolders": []
+	},
+	"properties": {
+		"description": "",
+		"version": "1.0.0.0",
+		"autoIncrementVersion": false,
+		"author": "",
+		"authorEmail": "",
+		"authorWebsite": "",
+		"appId": "",
+		"pixelRounding": false,
+		"zAxisScale": "regular",
+		"fov": 0.7853981633974483,
+		"useLoaderLayout": false,
+		"fullscreenMode": "letterbox-scale",
+		"fullscreenQuality": "high",
+		"viewportFit": "auto",
+		"backgroundColor": [
+			0,
+			0,
+			0,
+			0
+		],
+		"splashColor": [
+			1,
+			1,
+			1,
+			0
+		],
+		"useThemeColor": false,
+		"themeColor": [
+			1,
+			1,
+			1,
+			0
+		],
+		"orientations": "landscape",
+		"webgpu": "auto",
+		"multitexturing": "auto",
+		"gpuPreference": "high-performance",
+		"scriptsType": "module",
+		"framerateMode": "vsync",
+		"sampling": "trilinear",
+		"downscaling": "medium",
+		"renderingMode": "auto",
+		"anisotropicFiltering": "auto",
+		"zNear": 1,
+		"zFar": 10000,
+		"maxSpriteSheetSize": 2048,
+		"loaderStyle": "splash",
+		"preloadSounds": true,
+		"cordovaiOSScheme": "app",
+		"cordovaAndroidScheme": "https",
+		"exportFileStructure": "folders",
+		"uidAllocationMode": "increment"
+	},
+	"viewportWidth": 960,
+	"viewportHeight": 540,
+	"firstLayout": "Heroi"
+}

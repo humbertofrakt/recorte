@@ -1,0 +1,620 @@
+/*
+ * The message window (owner A).
+ *
+ * Same rules as the rest of the shell: 16px text, high contrast, generous
+ * spacing, no italics, no ALL CAPS. The list is the point of the window, so it
+ * gets the room; the button that closes it says the word "Fechar".
+ */
+
+.dialog-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap);
+  background: rgb(16 21 28 / 55%);
+}
+
+.dialog-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  width: min(640px, 100%);
+  max-height: min(80vh, 720px);
+  padding: 20px 24px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px rgb(16 21 28 / 35%);
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.dialog-lead {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.dialog-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 8px 12px;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--warn-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.dialog-list li {
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.dialog-list li:last-child {
+  border-bottom: 0;
+}
+
+.dialog-more {
+  color: var(--ink-soft);
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gap);
+}
+
+.dialog-close {
+  min-width: 140px;
+  padding: 10px 20px;
+  font: inherit;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.dialog-close:hover {
+  background: #1440b4;
+}
+
+.dialog-close:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/*
+ * A janela de tabela — Ajuda → Atalhos.
+ *
+ * Mais larga que a de aviso, porque são três colunas e não uma frase, e com o
+ * cabeçalho preso no topo: a lista passa de cinquenta linhas e sem isso quem
+ * rola até o fim já não sabe qual coluna é qual.
+ */
+.dialog-box-larga {
+  width: min(760px, 100%);
+}
+
+.dialog-table-box {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  background: var(--warn-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.dialog-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dialog-table th,
+.dialog-table td {
+  padding: 7px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.dialog-table th {
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  border-bottom: 2px solid var(--line-strong);
+}
+
+.dialog-table td:last-child {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.dialog-table tr:last-child td {
+  border-bottom: 0;
+}
+
+/*
+ * A janela das preferências: uma caixa por escolha.
+ *
+ * A caixa fica à esquerda e o nome à direita, com a explicação numa linha menor
+ * embaixo. O rótulo inteiro é clicável, que é o que faz a caixa ser fácil de
+ * acertar sem mira.
+ */
+.dialog-options {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.dialog-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.dialog-options li:last-child .dialog-option {
+  border-bottom: 0;
+}
+
+.dialog-option-box {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  flex: 0 0 auto;
+}
+
+.dialog-option-nome {
+  display: block;
+  font-weight: 600;
+}
+
+.dialog-option-dica {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-soft);
+}
+
+/*
+ * A janela de campos — "Substituir nomes" usa.
+ *
+ * A prévia fica logo abaixo dos campos e acima dos botões, que é onde o olho
+ * passa antes de clicar: ela existe para ser lida ANTES da troca, não depois.
+ */
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dialog-form-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.dialog-form-rotulo {
+  flex: 0 0 90px;
+  font-weight: 600;
+}
+
+.dialog-form-campo {
+  flex: 1 1 200px;
+  font: inherit;
+  padding: 7px 9px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+
+.dialog-form-dica {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/* ------------------------------------------------------------------ */
+/* A janela guiada — anotação 13, lote 28                              */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Rótulo à esquerda, valor à direita, uma linha por pergunta — o desenho da
+ * janela de regra do Spine (`ik_properties1.png`). O rótulo é maior aqui
+ * porque as perguntas são frases: "Que ossos dobram?" não cabe em 90px.
+ */
+.dialog-guiado .dialog-form-rotulo {
+  flex: 0 0 170px;
+}
+
+.dialog-guiado-lista {
+  flex: 1 1 200px;
+  min-width: 0;
+  font: inherit;
+  padding: 7px 9px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+
+/* As caixas dos ossos: em coluna, com a lista rolando quando há muitos. */
+.dialog-guiado-varios {
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 220px;
+  padding: 6px 8px;
+  overflow-y: auto;
+  background: var(--paper);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+
+.dialog-guiado-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 2px;
+  cursor: pointer;
+}
+
+.dialog-guiado-item:hover {
+  background: var(--panel);
+}
+
+.dialog-guiado-caixa,
+.dialog-guiado-liga {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+/* O exemplo do herói, embaixo da frase do que a regra faz. */
+.dialog-guiado-nota {
+  margin: 0 0 4px;
+  color: var(--ink-soft);
+}
+
+/*
+ * O que está errado.
+ *
+ * Enquanto ela aparece, o botão de confirmar fica cinza: a janela **não fecha
+ * errada**. Uma janela que fecha e depois avisa faz a pessoa refazer o caminho
+ * inteiro por causa de uma palavra.
+ */
+.dialog-guiado-erro {
+  margin: 0;
+  padding: 8px 12px;
+  color: #7a1500;
+  background: #ffe9dc;
+  border: 2px solid #9a3200;
+  border-radius: var(--radius);
+}
+
+.dialog-form-previa {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--warn-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow-wrap: anywhere;
+}
+
+/*
+ * A1 (29/09/2026): sem aviso, sem barra. A linha da prévia nasce em toda
+ * janela de formulário, e vazia ela era uma barra marrom sem nada escrito —
+ * a janela de renomear pasta mostrava o lugar de um aviso que não existia.
+ * O mesmo gesto da `.dialog-teclas-aviso:empty`, logo abaixo.
+ */
+.dialog-form-previa:empty {
+  display: none;
+}
+
+/* A paleta de comandos — item 110. Campo em cima, lista embaixo, e nada mais. */
+
+.dialog-pick {
+  width: min(640px, 92vw);
+}
+
+.dialog-pick-campo {
+  width: 100%;
+  font: inherit;
+  font-size: 1.05em;
+  padding: 10px 12px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+
+.dialog-pick-lista {
+  /* Altura fixa: a janela não pode pular de tamanho a cada letra digitada. */
+  max-height: 46vh;
+  min-height: 46vh;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.dialog-pick-linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: default;
+}
+
+.dialog-pick-linha + .dialog-pick-linha {
+  border-top: 1px solid var(--line);
+}
+
+.dialog-pick-linha.is-active {
+  color: var(--on-accent, #fff);
+  background: var(--accent);
+}
+
+.dialog-pick-nome {
+  flex: 1 1 auto;
+  font-weight: 600;
+}
+
+.dialog-pick-lado {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.dialog-pick-dica {
+  flex: 1 1 100%;
+  opacity: 0.85;
+}
+
+.dialog-pick-conta {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/*
+ * Ajuda → Atalhos com a troca de teclas — degrau 11, lote 2 (G7).
+ * A linha trocada tem uma faixa à esquerda e diz a tecla de fábrica; o
+ * conflito aparece em cima da tabela, com borda, e nunca só com cor.
+ */
+.dialog-teclas-aviso {
+  flex: 0 0 auto;
+  min-height: 1.4em;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+}
+
+.dialog-teclas-aviso:empty {
+  padding: 0;
+  min-height: 0;
+  margin: 0;
+}
+
+.dialog-teclas-aviso.is-conflito {
+  border-color: #9a3200;
+  background: #ffe9dc;
+  color: #7a1500;
+  font-weight: 600;
+}
+
+.dialog-teclas tr.is-trocada td:first-child {
+  box-shadow: inset 4px 0 0 var(--toggle-on, #d98a2b);
+}
+
+.dialog-teclas .dialog-teclas-tecla {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.dialog-teclas-era,
+.dialog-teclas-fixa {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.dialog-teclas-espera {
+  color: #7a1500;
+  background: #ffe9dc;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+}
+
+.dialog-teclas .dialog-teclas-acoes {
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+.dialog-icone {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  margin-right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.dialog-icone:hover {
+  border-color: var(--ink);
+}
+
+.dialog-close.dialog-secundario {
+  margin-right: auto;
+  color: var(--ink);
+  background: transparent;
+  border: 2px solid var(--line-strong);
+}
+
+.dialog-close.dialog-secundario:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/*
+ * A Janela de Problemas — degrau 11, lote 6. Uma linha por problema, com o
+ * texto por extenso, a frase do conserto e os botões com nome escrito.
+ */
+.dialog-problemas {
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-problema {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.dialog-problema:last-child {
+  border-bottom: 0;
+}
+
+.dialog-problema-texto {
+  margin: 0;
+  font-weight: 600;
+}
+
+.dialog-problema-conserto {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.dialog-problema-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.dialog-problemas-conta {
+  margin: 8px 0 0;
+  font-weight: 600;
+}
+
+/*
+ * A escolha entre caminhos — degrau 11, lote 7 (A2). Um botão por caminho,
+ * com a frase do que ele faz embaixo: nunca "OK" e "Cancelar".
+ */
+.dialog-escolhas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0 4px;
+}
+
+.dialog-escolha {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dialog-escolha button {
+  align-self: flex-start;
+}
+
+.dialog-escolha-frase {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.dialog-close.dialog-perigo {
+  color: #7a1500;
+  background: #ffe9dc;
+  border: 2px solid #9a3200;
+}
+
+/* Rodada 17, PL-21: as teclas dos painéis, numa seção dobrada da Ajuda → Atalhos. */
+.dialog-teclas-paineis {
+  margin: 10px 0 0;
+}
+
+.dialog-teclas-paineis > summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 6px 0;
+}
+
+/* Rodada 17, N-16b: o meio de uma janela que rola, entre o título e o rodapé
+   fixo (a janela Exportar imagem). A caixa inteira não rola. */
+.dialog-rolagem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Rodada 45, lote 2 (doc 57, 2.7): a janela Exportar imagem larga, com os
+   campos em duas colunas, para caber sem rolar em 1920x1080 e em 1280x720.
+   As notas (recorte da animação, relógio do vídeo) atravessam as duas. */
+.dialog-exportar {
+  width: min(960px, 100%);
+  max-height: min(92vh, 900px);
+}
+
+/* Rodada 50, lote 4 (doc 100): a janela que muda de altura conforme o que se
+   escolhe mora no TOPO, e não no meio — centrada, cada linha que aparece ou
+   some empurrava todas as outras meia linha, e a caixa sob o mouse fugia. */
+.dialog-veil.dialog-veil-topo {
+  align-items: flex-start;
+}
+
+.dialog-exportar .dialog-rolagem {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
+  row-gap: 6px;
+  align-content: start;
+}
+
+.dialog-exportar .dialog-exportar-nota {
+  grid-column: 1 / -1;
+}
+
+.dialog-close.dialog-close-secundario {
+  color: var(--ink);
+  background: transparent;
+  border: 2px solid var(--line-strong);
+}
+
+/* Rodada 47, lote 3 (doc 68, a nota do doc 54): a frase do que está errado, no lugar da prévia. */
+.dialog-form-previa.dialog-form-erro {
+  color: var(--danger, #b3261e);
+  font-weight: 600;
+}

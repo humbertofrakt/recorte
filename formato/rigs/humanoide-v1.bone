@@ -1,0 +1,68 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.2.0",
+    "id": "e2f5a8c1-7d3b-4e96-a0f4-9b6c2d8e1f57",
+    "created": "2026-09-17T12:00:00Z",
+    "modified": "2026-09-17T12:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Convenção de nomes do formato bone — rig humanoide-v1 (4.8, 14.4)"
+  },
+  "skeleton": {
+    "name": "humanoide-v1",
+    "x": -60, "y": 0, "width": 120, "height": 220,
+    "fps": 30,
+    "referenceScale": 100
+  },
+
+  "rig": {
+    "name": "humanoide-v1",
+    "bones": ["raiz", "quadril", "tronco", "pescoco", "cabeca",
+              "braco_e", "antebraco_e", "mao_e", "braco_d", "antebraco_d", "mao_d",
+              "coxa_e", "canela_e", "pe_e", "coxa_d", "canela_d", "pe_d"],
+    "slots": ["arma_d", "arma_e", "costas", "cabeca_acessorio"]
+  },
+
+  "bones": [
+    { "name": "raiz",        "color": [0.6, 0.6, 0.6, 1] },
+    { "name": "quadril",     "parent": "raiz",        "x": 0,  "y": 90,  "length": 10, "folder": "corpo" },
+    { "name": "tronco",      "parent": "quadril",     "x": 0,  "y": 0,   "rotation": 90,   "length": 70, "folder": "corpo" },
+    { "name": "pescoco",     "parent": "tronco",      "x": 70, "y": 0,   "length": 12, "folder": "corpo" },
+    { "name": "cabeca",      "parent": "pescoco",     "x": 12, "y": 0,   "length": 40, "folder": "corpo", "icon": "head" },
+    { "name": "braco_e",     "parent": "tronco",      "x": 55, "y": 10,  "rotation": -185, "length": 40, "folder": "braco_e" },
+    { "name": "antebraco_e", "parent": "braco_e",     "x": 40, "y": 0,   "rotation": 15,   "length": 35, "folder": "braco_e" },
+    { "name": "mao_e",       "parent": "antebraco_e", "x": 35, "y": 0,   "length": 20, "folder": "braco_e" },
+    { "name": "braco_d",     "parent": "tronco",      "x": 55, "y": -10, "rotation": -160, "length": 40, "folder": "braco_d" },
+    { "name": "antebraco_d", "parent": "braco_d",     "x": 40, "y": 0,   "rotation": 20,   "length": 35, "folder": "braco_d" },
+    { "name": "mao_d",       "parent": "antebraco_d", "x": 35, "y": 0,   "length": 20, "folder": "braco_d" },
+    { "name": "coxa_e",      "parent": "quadril",     "x": -4, "y": -4,  "rotation": -95,  "length": 44, "folder": "perna_e" },
+    { "name": "canela_e",    "parent": "coxa_e",      "x": 44, "y": 0,   "rotation": -5,   "length": 40, "folder": "perna_e" },
+    { "name": "pe_e",        "parent": "canela_e",    "x": 40, "y": 0,   "rotation": 85,   "length": 24, "folder": "perna_e" },
+    { "name": "coxa_d",      "parent": "quadril",     "x": 4,  "y": -4,  "rotation": -85,  "length": 44, "folder": "perna_d" },
+    { "name": "canela_d",    "parent": "coxa_d",      "x": 44, "y": 0,   "rotation": -5,   "length": 40, "folder": "perna_d" },
+    { "name": "pe_d",        "parent": "canela_d",    "x": 40, "y": 0,   "rotation": 95,   "length": 24, "folder": "perna_d" }
+  ],
+
+  "slots": [
+    { "name": "costas",           "bone": "tronco", "folder": "tomadas" },
+    { "name": "arma_e",           "bone": "mao_e",  "folder": "tomadas" },
+    { "name": "arma_d",           "bone": "mao_d",  "folder": "tomadas" },
+    { "name": "cabeca_acessorio", "bone": "cabeca", "folder": "tomadas" }
+  ],
+
+  "skins": [
+    { "name": "default", "attachments": {} }
+  ],
+
+  "animations": [],
+
+  "extras": {
+    "descricao": "A convenção de nomes do projeto (ARQUITETO 3 §10; decisão A6 do Humberto, 17/09/2026). Um corpo sem arte: os ossos com os comprimentos de referência, as quatro tomadas reservadas (arma_d, arma_e, costas, cabeca_acessorio) e nenhuma animação. Quem grava um personagem com estes nomes recebe qualquer animação de fora (assets.animations, com rig.reference apontando para o tronco de 70) e qualquer pele de fora (assets.skins, como lobisomem-rabo.bone) sem acertar nome nenhum. O par _e/_d é o que o editor espelha. As animações de fábrica (parado, andar, correr, pular, cair, ataque, dano, morrer) entram na biblioteca do degrau 12, gravadas contra este rig.",
+    "convencao": {
+      "eixo": "lado esquerdo _e, lado direito _d; o lado é o do personagem, não o de quem olha",
+      "comprimentos": "quadril 10 · tronco 70 · pescoco 12 · cabeca 40 · braco 40 · antebraco 35 · mao 20 · coxa 44 · canela 40 · pe 24",
+      "referencia_para_rig_reference": { "bone": "tronco", "length": 70 }
+    }
+  }
+}

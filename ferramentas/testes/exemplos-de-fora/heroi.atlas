@@ -1,0 +1,132 @@
+
+heroi.png
+size: 256, 256
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+body
+  rotate: false
+  xy: 2, 2
+  size: 76, 84
+  orig: 76, 84
+  offset: 0, 0
+  index: -1
+armadura/body
+  rotate: false
+  xy: 80, 2
+  size: 72, 78
+  orig: 76, 84
+  offset: 2, 3
+  index: -1
+face
+  rotate: false
+  xy: 154, 2
+  size: 64, 66
+  orig: 64, 66
+  offset: 0, 0
+  index: -1
+hair
+  rotate: false
+  xy: 92, 88
+  size: 56, 30
+  orig: 56, 30
+  offset: 0, 0
+  index: -1
+forearm
+  rotate: false
+  xy: 74, 158
+  size: 44, 22
+  orig: 44, 22
+  offset: 0, 0
+  index: -1
+hand_01
+  rotate: false
+  xy: 2, 132
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: -1
+arm_back
+  rotate: false
+  xy: 80, 132
+  size: 48, 24
+  orig: 48, 24
+  offset: 0, 0
+  index: -1
+forearm_back
+  rotate: false
+  xy: 144, 158
+  size: 40, 20
+  orig: 40, 20
+  offset: 0, 0
+  index: -1
+hand_back
+  rotate: false
+  xy: 120, 158
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+thigh
+  rotate: false
+  xy: 150, 88
+  size: 50, 28
+  orig: 50, 28
+  offset: 0, 0
+  index: -1
+shin
+  rotate: false
+  xy: 130, 132
+  size: 46, 24
+  orig: 46, 24
+  offset: 0, 0
+  index: -1
+foot
+  rotate: false
+  xy: 186, 158
+  size: 34, 20
+  orig: 34, 20
+  offset: 0, 0
+  index: -1
+thigh_back
+  rotate: false
+  xy: 202, 88
+  size: 50, 28
+  orig: 50, 28
+  offset: 0, 0
+  index: -1
+shin_back
+  rotate: false
+  xy: 178, 132
+  size: 46, 24
+  orig: 46, 24
+  offset: 0, 0
+  index: -1
+foot_back
+  rotate: false
+  xy: 2, 184
+  size: 34, 20
+  orig: 34, 20
+  offset: 0, 0
+  index: -1
+blade
+  rotate: false
+  xy: 2, 158
+  size: 70, 24
+  orig: 70, 24
+  offset: 0, 0
+  index: -1
+cape_upper
+  rotate: false
+  xy: 50, 88
+  size: 40, 32
+  orig: 40, 32
+  offset: 0, 0
+  index: -1
+cape_lower
+  rotate: false
+  xy: 2, 88
+  size: 46, 42
+  orig: 46, 42
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,14 @@
+[remap]
+
+importer="recorte.arquivo"
+type="Resource"
+uid="uid://o6pgakrfkqxg"
+path="res://.godot/imported/capacete.bone-63d5115b4779466af4bec6b009a8f1f7.res"
+
+[deps]
+
+source_file="res://exemplo/capacete.bone"
+dest_files=["res://.godot/imported/capacete.bone-63d5115b4779466af4bec6b009a8f1f7.res"]
+
+[params]
+

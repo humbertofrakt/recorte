@@ -1,0 +1,223 @@
+{
+  "probe": {
+    "animation": "rodar",
+    "times": [
+      0,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6
+    ],
+    "measure": [
+      "slots"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "slots": {
+        "hold": {
+          "sequenceIndex": 1
+        },
+        "once": {
+          "sequenceIndex": 1
+        },
+        "loop": {
+          "sequenceIndex": 1
+        },
+        "pingpong": {
+          "sequenceIndex": 1
+        },
+        "onceReverse": {
+          "sequenceIndex": 2
+        },
+        "loopReverse": {
+          "sequenceIndex": 2
+        },
+        "pingpongReverse": {
+          "sequenceIndex": 2
+        },
+        "sem_timeline": {
+          "sequenceIndex": 2
+        }
+      }
+    },
+    {
+      "time": 0.1,
+      "slots": {
+        "hold": {
+          "sequenceIndex": 1
+        },
+        "once": {
+          "sequenceIndex": 2
+        },
+        "loop": {
+          "sequenceIndex": 2
+        },
+        "pingpong": {
+          "sequenceIndex": 2
+        },
+        "onceReverse": {
+          "sequenceIndex": 1
+        },
+        "loopReverse": {
+          "sequenceIndex": 1
+        },
+        "pingpongReverse": {
+          "sequenceIndex": 1
+        },
+        "sem_timeline": {
+          "sequenceIndex": 2
+        }
+      }
+    },
+    {
+      "time": 0.2,
+      "slots": {
+        "hold": {
+          "sequenceIndex": 1
+        },
+        "once": {
+          "sequenceIndex": 3
+        },
+        "loop": {
+          "sequenceIndex": 3
+        },
+        "pingpong": {
+          "sequenceIndex": 3
+        },
+        "onceReverse": {
+          "sequenceIndex": 0
+        },
+        "loopReverse": {
+          "sequenceIndex": 0
+        },
+        "pingpongReverse": {
+          "sequenceIndex": 0
+        },
+        "sem_timeline": {
+          "sequenceIndex": 2
+        }
+      }
+    },
+    {
+      "time": 0.3,
+      "slots": {
+        "hold": {
+          "sequenceIndex": 1
+        },
+        "once": {
+          "sequenceIndex": 3
+        },
+        "loop": {
+          "sequenceIndex": 0
+        },
+        "pingpong": {
+          "sequenceIndex": 2
+        },
+        "onceReverse": {
+          "sequenceIndex": 0
+        },
+        "loopReverse": {
+          "sequenceIndex": 3
+        },
+        "pingpongReverse": {
+          "sequenceIndex": 1
+        },
+        "sem_timeline": {
+          "sequenceIndex": 2
+        }
+      }
+    },
+    {
+      "time": 0.4,
+      "slots": {
+        "hold": {
+          "sequenceIndex": 1
+        },
+        "once": {
+          "sequenceIndex": 3
+        },
+        "loop": {
+          "sequenceIndex": 1
+        },
+        "pingpong": {
+          "sequenceIndex": 1
+        },
+        "onceReverse": {
+          "sequenceIndex": 0
+        },
+        "loopReverse": {
+          "sequenceIndex": 2
+        },
+        "pingpongReverse": {
+          "sequenceIndex": 2
+        },
+        "sem_timeline": {
+          "sequenceIndex": 2
+        }
+      }
+    },
+    {
+      "time": 0.5,
+      "slots": {
+        "hold": {
+          "sequenceIndex": 1
+        },
+        "once": {
+          "sequenceIndex": 3
+        },
+        "loop": {
+          "sequenceIndex": 2
+        },
+        "pingpong": {
+          "sequenceIndex": 0
+        },
+        "onceReverse": {
+          "sequenceIndex": 0
+        },
+        "loopReverse": {
+          "sequenceIndex": 1
+        },
+        "pingpongReverse": {
+          "sequenceIndex": 3
+        },
+        "sem_timeline": {
+          "sequenceIndex": 2
+        }
+      }
+    },
+    {
+      "time": 0.6,
+      "slots": {
+        "hold": {
+          "sequenceIndex": 1
+        },
+        "once": {
+          "sequenceIndex": 3
+        },
+        "loop": {
+          "sequenceIndex": 3
+        },
+        "pingpong": {
+          "sequenceIndex": 1
+        },
+        "onceReverse": {
+          "sequenceIndex": 0
+        },
+        "loopReverse": {
+          "sequenceIndex": 0
+        },
+        "pingpongReverse": {
+          "sequenceIndex": 2
+        },
+        "sem_timeline": {
+          "sequenceIndex": 2
+        }
+      }
+    }
+  ]
+}

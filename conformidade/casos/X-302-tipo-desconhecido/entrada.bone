@@ -1,0 +1,25 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "tipos-desconhecidos" },
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root", "x": 10, "y": 20 },
+    { "name": "alvo", "parent": "root", "x": 300, "y": 300 }
+  ],
+  "slots": [
+    { "name": "conhecido", "bone": "root", "attachment": "corpo" },
+    { "name": "estranho", "bone": "root", "attachment": "holograma" }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "conhecido": { "corpo": { "type": "region", "path": "corpo", "width": 20, "height": 20 } },
+        "estranho": { "holograma": { "type": "acme_hologram", "path": "holo", "brilho": 3 } }
+      }
+    }
+  ],
+  "constraints": [
+    { "type": "acme_magnet", "name": "ima", "bones": ["osso"], "target": "alvo", "forca": 9 }
+  ]
+}

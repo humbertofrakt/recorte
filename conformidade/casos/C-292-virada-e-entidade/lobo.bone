@@ -1,0 +1,44 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "lobo"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "tronco",
+      "parent": "root",
+      "y": 80,
+      "length": 50
+    }
+  ],
+  "slots": [
+    {
+      "name": "corpo",
+      "bone": "tronco",
+      "attachment": "corpo"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "corpo": {
+          "corpo": {
+            "type": "region",
+            "width": 40,
+            "height": 20,
+            "path": "lobo"
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

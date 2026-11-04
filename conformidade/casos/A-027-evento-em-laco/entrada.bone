@@ -1,0 +1,23 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "eventos" },
+  "bones": [ { "name": "root" } ],
+  "slots": [],
+  "events": [
+    { "name": "passo", "int": 1, "float": 0.5, "string": "esquerdo", "volume": 0.8 },
+    { "name": "pouso" }
+  ],
+  "animations": [
+    {
+      "name": "andar",
+      "duration": 1,
+      "loop": true,
+      "timelines": [
+        { "type": "event",
+          "keys": [
+            { "time": 0.25, "event": "passo", "int": 2 },
+            { "time": 0.75, "event": "pouso" }
+          ] }
+      ] }
+  ]
+}

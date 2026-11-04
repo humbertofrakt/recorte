@@ -1,0 +1,35 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "pesos" },
+  "bones": [
+    { "name": "root" },
+    { "name": "a", "parent": "root" },
+    { "name": "b", "parent": "root", "x": 100, "y": 0 }
+  ],
+  "slots": [
+    { "name": "malha", "bone": "root", "attachment": "malha" }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "malha": {
+          "malha": {
+            "type": "mesh",
+            "path": "malha",
+            "width": 100, "height": 100,
+            "binding": {
+              "counts":    [2, 2, 1],
+              "bones":     [1, 2, 1, 2, 1],
+              "positions": [10, 0, -10, 0,  0, 20, 0, -20,  0, 0],
+              "weights":   [0.5, 0.25, 1.5, 0.5, 1]
+            },
+            "uvs": [0, 0, 1, 0, 0, 1],
+            "triangles": [0, 1, 2],
+            "hull": 3
+          }
+        }
+      }
+    }
+  ]
+}

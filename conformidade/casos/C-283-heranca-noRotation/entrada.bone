@@ -1,0 +1,12 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "heranca-noRotation" },
+  "bones": [
+    { "name": "root" },
+    { "name": "pai", "parent": "root", "x": 10, "y": 20, "rotation": 90, "scaleX": 2, "scaleY": -1 },
+
+    { "name": "noRotation", "parent": "pai", "x": 10, "y": 0, "rotation": 30,
+      "inheritRotation": false, "inheritScale": true, "inheritReflection": true }
+  ],
+  "slots": []
+}

@@ -1,0 +1,9 @@
+{
+  "probe": { "animation": "ordem", "times": [0, 0.5, 1], "measure": ["drawOrder"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,   "drawOrder": ["s3", "s0", "s1", "s2"] },
+    { "time": 0.5, "drawOrder": ["s3", "s0", "s1", "s2"] },
+    { "time": 1,   "drawOrder": ["s1", "s2", "s0", "s3"] }
+  ]
+}

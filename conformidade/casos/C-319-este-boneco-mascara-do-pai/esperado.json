@@ -1,0 +1,46 @@
+{
+  "probe": {
+    "times": [
+      0
+    ],
+    "measure": [
+      "drawList"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "drawList": [
+        {
+          "piece": "aura/bola_a/bola_a",
+          "clips": []
+        },
+        {
+          "piece": "aura/anel/anel",
+          "clips": []
+        },
+        {
+          "piece": "perna/perna",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "cabeca/cabeca",
+          "clips": [
+            "recorte/recorte"
+          ]
+        },
+        {
+          "piece": "aura/brilho/brilho",
+          "clips": []
+        },
+        {
+          "piece": "aura/bola_b/bola_b",
+          "clips": []
+        }
+      ]
+    }
+  ]
+}

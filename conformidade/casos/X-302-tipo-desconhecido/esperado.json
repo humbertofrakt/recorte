@@ -1,0 +1,11 @@
+{
+  "probe": { "times": [0], "measure": ["bones", "slots", "drawOrder", "vertices"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "bones": { "osso": { "worldX": 10, "worldY": 20, "ax": 10, "ay": 20, "arotation": 0, "ascaleX": 1, "ascaleY": 1 } },
+      "slots": { "conhecido": { "attachment": "corpo" }, "estranho": { "attachment": null } },
+      "drawOrder": ["conhecido", "estranho"],
+      "vertices": { "conhecido/corpo": [-10, -10, 10, -10, 10, 10, -10, 10] } }
+  ]
+}

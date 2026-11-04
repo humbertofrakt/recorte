@@ -1,0 +1,15 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "transform-shear" },
+  "bones": [
+    { "name": "root" },
+    { "name": "alvo", "parent": "root", "x": 100, "y": 0, "shearY": 30 },
+    { "name": "osso", "parent": "root", "x": 10, "y": 20 }
+  ],
+  "slots": [],
+  "constraints": [
+    { "type": "transform", "name": "tc", "bones": ["osso"], "target": "alvo",
+      "local": false, "relative": false,
+      "mixRotation": 0, "mixX": 0, "mixY": 0, "mixScaleX": 0, "mixScaleY": 0, "mixShearY": 1 }
+  ]
+}

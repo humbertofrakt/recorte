@@ -1,0 +1,83 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.1.0",
+    "id": "9c2e7b14-3a5d-4f60-8b1c-2d7e9f4a6c31",
+    "created": "2026-09-09T12:00:00Z",
+    "modified": "2026-09-09T12:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo da especificação bone — arquivo só de animações, com contrato de rig (4.8, 2.8)"
+  },
+  "skeleton": { "name": "mecha-animacoes" },
+
+  "rig": {
+    "name": "mecha-humanoide-v1",
+    "bones": ["hips", "torso", "arm", "hand", "head"],
+    "slots": []
+  },
+
+  "bones": [
+    { "name": "root" }
+  ],
+
+  "animations": [
+    {
+      "name": "walk",
+      "duration": 1.0,
+      "loop": true,
+      "timelines": [
+        { "type": "bone", "target": "hips", "property": "y",
+          "keys": [
+            { "time": 0,    "value": 90 },
+            { "time": 0.25, "value": 94 },
+            { "time": 0.5,  "value": 90 },
+            { "time": 0.75, "value": 94 },
+            { "time": 1.0,  "value": 90 }
+          ] },
+        { "type": "bone", "target": "arm", "property": "rotation",
+          "keys": [
+            { "time": 0,   "value": -160 },
+            { "time": 0.5, "value": -140 },
+            { "time": 1.0, "value": -160 }
+          ] }
+      ]
+    },
+    {
+      "name": "attack",
+      "duration": 0.6,
+      "loop": false,
+      "timelines": [
+        { "type": "bone", "target": "arm", "property": "rotation",
+          "keys": [
+            { "time": 0,   "value": -160 },
+            { "time": 0.2, "value": -60 },
+            { "time": 0.6, "value": -160 }
+          ] },
+        { "type": "bone", "target": "hand", "property": "rotation",
+          "keys": [
+            { "time": 0,   "value": 20 },
+            { "time": 0.2, "value": -30 },
+            { "time": 0.6, "value": 20 }
+          ] }
+      ]
+    },
+    {
+      "name": "falar",
+      "duration": 0.6,
+      "loop": false,
+      "timelines": [
+        { "type": "bone", "target": "head", "property": "rotation",
+          "keys": [
+            { "time": 0,   "value": 0 },
+            { "time": 0.2, "value": 5 },
+            { "time": 0.6, "value": 0 }
+          ] }
+      ]
+    }
+  ],
+
+  "extras": {
+    "descricao": "Biblioteca de animações. Serve a qualquer esqueleto que tenha os ossos do rig. O osso root só existe porque bones é obrigatório (2.2); nada aqui é desenhado."
+  }
+}

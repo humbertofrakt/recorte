@@ -1,0 +1,42 @@
+{
+  "probe": {
+    "times": [
+      0
+    ],
+    "measure": [
+      "drawList"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "drawList": [
+        {
+          "piece": "aura/meio/fagulha_a/fagulha_a",
+          "clips": []
+        },
+        {
+          "piece": "aura/bola_a/bola_a",
+          "clips": []
+        },
+        {
+          "piece": "perna/perna",
+          "clips": []
+        },
+        {
+          "piece": "cabeca/cabeca",
+          "clips": []
+        },
+        {
+          "piece": "aura/bola_b/bola_b",
+          "clips": []
+        },
+        {
+          "piece": "aura/meio/fagulha_b/fagulha_b",
+          "clips": []
+        }
+      ]
+    }
+  ]
+}

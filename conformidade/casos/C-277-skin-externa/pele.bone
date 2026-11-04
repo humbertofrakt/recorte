@@ -1,0 +1,36 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone 0.2"
+  },
+  "skeleton": {
+    "name": "pele"
+  },
+  "rig": {
+    "name": "boneco-v1",
+    "slots": [
+      "corpo"
+    ]
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "skins": [
+    {
+      "name": "inverno",
+      "attachments": {
+        "corpo": {
+          "corpo": {
+            "type": "region",
+            "path": "inverno",
+            "width": 20,
+            "height": 30
+          }
+        }
+      }
+    }
+  ]
+}

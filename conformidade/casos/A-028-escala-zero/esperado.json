@@ -1,0 +1,50 @@
+{
+  "probe": {
+    "times": [
+      0
+    ],
+    "measure": [
+      "bones"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "bones": {
+        "pai": {
+          "a": 0,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 10,
+          "worldY": 20
+        },
+        "filho": {
+          "a": 0,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 10,
+          "worldY": 23
+        },
+        "neto": {
+          "a": 0,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "worldX": 10,
+          "worldY": 25
+        },
+        "nulo": {
+          "a": 0,
+          "b": 0,
+          "c": 0,
+          "d": 0,
+          "worldX": 1,
+          "worldY": 2
+        }
+      }
+    }
+  ]
+}

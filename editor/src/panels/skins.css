@@ -1,0 +1,325 @@
+/* ------------------------------------------------------------------ */
+/* skins.css — lote A6, plano arrumação (v11.2)                        */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A aba Peles — a lista, o olho e o lápis, a pele em edição.
+ *
+ * Estes blocos moravam em `panels.css`, com os de todos os painéis. Vieram
+ * para cá sem mudar um seletor, na mesma ordem entre si; o `main.ts` carrega
+ * este arquivo logo depois do `panels.css`.
+ */
+
+/* ------------------------------------------------------------------ */
+/* A aba Peles — anotação 12, lote 27                                  */
+/* ------------------------------------------------------------------ */
+
+/*
+ * *"Não sei onde estão as skins e como faço para usar."* A pele morava em três
+ * lugares e em nenhum inteira. Agora é uma aba, com o mesmo desenho do painel
+ * Animações: ícones numa linha em cima, lista embaixo.
+ */
+.peles {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+/*
+ * A frase de ajuda, no topo — como a da janela Character Maps do Spriter.
+ *
+ * Ela some quando não há pele nenhuma: explicar uma lista vazia é explicar algo
+ * que não está na tela.
+ */
+.peles-ajuda {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--painel-texto-fraco);
+  background: var(--painel-campo);
+  border-bottom: 1px solid var(--painel-linha);
+}
+
+.peles-lista {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.peles-linha {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 3px 12px 3px 6px;
+}
+
+.peles-linha:hover {
+  background: var(--painel-hover);
+}
+
+/* A pele em que se está editando, em laranja — o realce do Spriter. */
+.peles-linha-editavel {
+  background: var(--painel-realce-fraco);
+}
+
+/* O olho e o lápis: dois botões de ícone, sem moldura até a mão chegar. */
+.peles-acao {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--painel-texto-fraco);
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.peles-acao:hover:not(:disabled) {
+  border-color: var(--painel-linha);
+}
+
+.peles-acao:focus-visible {
+  outline: 3px solid var(--painel-realce);
+  outline-offset: -3px;
+}
+
+/* Aceso: a pele está sendo desenhada. */
+.peles-acao-ligada {
+  color: var(--painel-realce);
+}
+
+/* Editando aqui: laranja, e é a única laranja da lista. */
+.peles-acao-editando {
+  color: #d24500;
+}
+
+/*
+ * A `default` não desliga: ela é o corpo por baixo das outras. Apagada, e com
+ * a dica dizendo por quê — um botão cinza mudo é um botão que se aprende a
+ * ignorar.
+ */
+.peles-acao:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.peles-nome {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Quantos slots a pele veste. Diz de relance qual é a roupa inteira. */
+.peles-conta {
+  flex: 0 0 auto;
+  min-width: 24px;
+  text-align: right;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--painel-texto-fraco);
+}
+
+/* ------------------------------------------------------------------ */
+/* As duas colunas — degrau 9 (18/09/2026), I7                         */
+/* ------------------------------------------------------------------ */
+
+/*
+ * *"No lugar do olho, eu queria poder clicar na skin e arrastar"* — Humberto,
+ * 17/09/2026. Feitas de um lado, Ativas do outro, como o Character Map do
+ * Spriter. Em coluna de 260 px as duas cabem lado a lado porque cada linha
+ * perdeu um botão: o olho saiu, e ligar passou a ser o arrasto.
+ */
+.peles-colunas {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.peles-coluna {
+  flex: 1 1 50%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.peles-coluna + .peles-coluna {
+  border-left: 1px solid var(--painel-linha);
+  padding-left: 6px;
+}
+
+.peles-coluna-titulo {
+  margin: 0;
+  padding: 4px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--painel-texto-fraco);
+}
+
+/* A pilha: a de CIMA vence, e por isso ela é a primeira linha da lista. */
+.peles-pilha {
+  flex: 1 1 auto;
+}
+
+/* Já está ligada: a linha de Feitas fica apagada, para a mão não a arrastar duas vezes. */
+.peles-linha-ligada .peles-nome {
+  color: var(--painel-texto-fraco);
+}
+
+/* Onde a pele vai cair. A mesma marca da aba Ordem, que já se aprendeu. */
+.peles-alvo {
+  outline: 2px solid var(--painel-realce);
+  outline-offset: -2px;
+}
+
+/*
+ * O fundo da pilha, escrito: sem ele, pôr uma pele EMBAIXO de todas não teria
+ * onde ser solta — e "embaixo de todas" é o que faz a `default` voltar a ser o
+ * corpo por baixo depois de ter saído.
+ */
+.peles-fundo {
+  margin: 2px 6px 6px;
+  padding: 6px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--painel-texto-fraco);
+  border: 1px dashed var(--painel-linha);
+  border-radius: 6px;
+}
+
+/* Nome de pele que a pilha cita e o corpo não tem: dito, nunca escondido. */
+.peles-perdidas {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--painel-aviso, #b25000);
+  background: var(--painel-campo);
+  border-bottom: 1px solid var(--painel-linha);
+}
+
+/*
+ * A pele que veio de outro arquivo — degrau 9 (F23), spec 2.8.
+ *
+ * Ela liga, desliga e reordena como as outras; renomear e apagar são do
+ * arquivo dela. A borda da esquerda diz isso sem gastar uma palavra de linha.
+ */
+.peles-linha-de-fora {
+  border-left: 3px solid var(--painel-realce);
+  padding-left: 3px;
+}
+
+/*
+ * A barra da aba Peles tem SETE controles desde o degrau 9 (nova, duplicar,
+ * de uma pasta, importar, exportar, promover a base, apagar). Com o passo
+ * padrão ela ia a três linhas e comia a altura das duas colunas; aqui ela é
+ * mais apertada, como a barra da Árvore, que tem sete pela mesma razão.
+ */
+.peles .painel-barra {
+  gap: 6px;
+  padding: 8px;
+  align-items: center;
+}
+
+/*
+ * Rodada 44, lote 4: os sete numa linha só. Em duas linhas a barra comia a
+ * lista: 75 px de lista em 1920×1080 e 20 px em 1280×720 (doc 55). Cada ícone
+ * fica com 28 px — acima dos 24 que a mão precisa.
+ */
+.peles .painel-barra {
+  flex-wrap: nowrap;
+  gap: 4px;
+  padding: 6px 8px;
+}
+
+.peles .painel-barra .painel-botao {
+  min-height: 28px;
+  min-width: 0;
+  flex: 1 1 0;
+  padding: 3px 0;
+  justify-content: center;
+}
+
+/* O recado e a ajuda numa linha só; a frase inteira mora na dica. */
+.peles-ajuda {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 13px;
+}
+
+/*
+ * **As duas listas, uma embaixo da outra, quando a aba é estreita** — I6,
+ * chat I, 29/09/2026.
+ *
+ * Lado a lado, numa coluna de 260 px, cada linha de Ativas gasta 120 px com o
+ * lápis, a conta, o `×` e as folgas — e a coluna tem uns 118. O nome sumia:
+ * a pele "pele" saía "p." e a `default` saía "d". Em Feitas, as duas
+ * armaduras saíam iguais: "armad…". Nome que não se lê é pele que não se
+ * acha.
+ *
+ * A medida é da ABA, e não da janela (`@container`): quem alarga a coluna
+ * volta a ver as duas lado a lado, como a janela Character Maps do Spriter.
+ */
+.peles {
+  container-type: inline-size;
+}
+
+@container (max-width: 400px) {
+  .peles-colunas {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .peles-coluna + .peles-coluna {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--painel-linha);
+    padding-top: 4px;
+  }
+}
+
+/* O passo seguinte (I7): a mesma cara da frase de ajuda, com a cor do realce. */
+.peles-proximo {
+  color: var(--painel-texto);
+  border-left: 3px solid var(--painel-realce);
+}
+
+/* ------------------------------------------------------------------ */
+/* Nesta pele — rodada 12 (04/10/2026), S3, S4 e S9                    */
+/* ------------------------------------------------------------------ */
+
+/*
+ * A coluna da esquerda do "Edit Character Map" do Spriter: o que a pele do
+ * lápis troca, esconde e apaga, uma linha por desenho, com Esconder e Ignorar
+ * na própria linha. Embaixo das duas colunas, dentro da mesma caixa que rola.
+ */
+.peles-efeitos {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--painel-linha);
+}
+
+.peles-efeito .peles-nome {
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Escondida e osso apagado: o que não se desenha, em cinza. */
+.peles-efeito[data-efeito='esconde'] .peles-nome,
+.peles-efeito[data-efeito='osso'] .peles-nome {
+  color: var(--painel-texto-fraco);
+  font-style: italic;
+}

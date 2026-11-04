@@ -1,0 +1,14 @@
+{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "extensao-exigida" },
+  "extensionsUsed": ["VENDOR_malha_volumetrica"],
+  "extensionsRequired": ["VENDOR_malha_volumetrica"],
+  "extensions": {
+    "VENDOR_malha_volumetrica": { "camadas": 4 }
+  },
+  "bones": [
+    { "name": "root" },
+    { "name": "osso", "parent": "root", "x": 40, "y": 10 }
+  ],
+  "slots": []
+}

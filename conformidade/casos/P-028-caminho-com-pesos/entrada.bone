@@ -1,0 +1,176 @@
+{
+  "bone": {
+    "version": "1.1",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone, rodada 34 (conta a mao)"
+  },
+  "extensionsUsed": [
+    "BONE_particles"
+  ],
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "ancora",
+      "parent": "root"
+    },
+    {
+      "name": "ponta",
+      "parent": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "trilha",
+      "bone": "root",
+      "attachment": "caminho"
+    },
+    {
+      "name": "fx",
+      "bone": "root",
+      "attachment": "jato"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "trilha": {
+          "caminho": {
+            "type": "path",
+            "closed": false,
+            "constantSpeed": true,
+            "lengths": [
+              300
+            ],
+            "binding": {
+              "counts": [
+                1,
+                1,
+                1,
+                2,
+                2,
+                2
+              ],
+              "bones": [
+                1,
+                1,
+                1,
+                1,
+                2,
+                1,
+                2,
+                1,
+                2
+              ],
+              "positions": [
+                0,
+                0,
+                0,
+                0,
+                100,
+                0,
+                200,
+                0,
+                200,
+                0,
+                300,
+                0,
+                300,
+                0,
+                300,
+                0,
+                300,
+                0
+              ],
+              "weights": [
+                1,
+                1,
+                1,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5
+              ]
+            }
+          }
+        },
+        "fx": {
+          "jato": {
+            "type": "BONE_particle",
+            "path": "fx/faisca",
+            "seed": 42,
+            "rate": 0,
+            "lifetime": [
+              2,
+              2
+            ],
+            "speed": [
+              0,
+              0
+            ],
+            "direction": 0,
+            "spread": 0,
+            "gravity": [
+              0,
+              0
+            ],
+            "drag": 0,
+            "angle": [
+              0,
+              0
+            ],
+            "angularVelocity": [
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1
+            ],
+            "space": "local",
+            "looping": false,
+            "maxParticles": 1000,
+            "bursts": [
+              {
+                "time": 0,
+                "count": 4,
+                "cycles": 1,
+                "interval": 1,
+                "probability": 1
+              }
+            ],
+            "shape": "path",
+            "curve": "trilha/caminho"
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "estica",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "ponta",
+          "property": "x",
+          "keys": [
+            {
+              "time": 0,
+              "value": 60
+            },
+            {
+              "time": 1,
+              "value": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

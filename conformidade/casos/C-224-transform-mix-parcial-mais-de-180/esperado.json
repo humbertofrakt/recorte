@@ -1,0 +1,15 @@
+{
+  "probe": { "times": [0], "measure": ["bones"] },
+  "version": "1.0",
+  "samples": [
+    { "time": 0,
+      "bones": {
+        "alvo": { "a": -0.984808, "b": -0.173648, "c": 0.173648, "d": -0.984808,
+                  "worldX": 100, "worldY": 0, "ax": 100, "ay": 0,
+                  "arotation": 170, "ascaleX": 1, "ascaleY": 1, "ashearX": 0, "ashearY": 0 },
+        "osso": { "a": -0.819152, "b": 0.573576, "c": -0.573576, "d": -0.819152,
+                  "worldX": 30, "worldY": 0, "ax": 30, "ay": 0,
+                  "arotation": -145, "ascaleX": 1, "ascaleY": 1, "ashearX": 0, "ashearY": 0 }
+      } }
+  ]
+}
