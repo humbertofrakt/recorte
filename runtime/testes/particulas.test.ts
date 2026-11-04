@@ -25,8 +25,8 @@ import type { SkeletonData } from '../src/data.js';
 // leitores independentes bateram — quem os escreveu, este runtime e o Python.
 // O P-002 voltou para `casos-pendentes/` no mesmo dia: ele passa sem exercitar
 // o que o nome dele promete, e só sai de lá quando a 2ª fase abrir.
-const CASOS = 'C:/Users/F-rak/Desktop/animador/conformidade/casos/';
-const PENDENTES = 'C:/Users/F-rak/Desktop/animador/conformidade/casos-pendentes/';
+const CASOS = process.cwd().replace(/\\/g, '/') + '/conformidade/casos/';
+const PENDENTES = process.cwd().replace(/\\/g, '/') + '/conformidade/casos-pendentes/';
 
 /**
  * Onde um caso P mora AGORA. Um caso muda de pasta por decisão do Planejador, e

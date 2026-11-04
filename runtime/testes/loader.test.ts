@@ -9,7 +9,7 @@ import { Skeleton, collectDrawables, pose, type AtlasData } from '../src/index.j
 import { BodyTimelineData, SlotBoneTimelineData } from '../src/data.js';
 import { selfIntersection, loadAnimationsFor } from '../src/loader.js';
 
-const EXAMPLES = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXAMPLES = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 const readJson = (name: string): unknown => JSON.parse(readFileSync(EXAMPLES + name, 'utf8'));
 
 const header = { version: '1.0', minVersion: '1.0', generator: 'test' };

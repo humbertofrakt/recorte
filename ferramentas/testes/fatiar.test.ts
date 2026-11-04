@@ -39,7 +39,7 @@ import type { PageImage, RemovedItem } from '../src/exportar/fatiar.js';
 import { computeRegionUV } from '../src/atlas/packer.js';
 import { decodePng } from '../src/atlas/png.js';
 
-const RAIZ = 'C:/Users/F-rak/Desktop/animador';
+const RAIZ = process.cwd().replace(/\\/g, '/') + '';
 const EXEMPLOS = `${RAIZ}/formato/exemplos/`;
 
 const ZLIB = {

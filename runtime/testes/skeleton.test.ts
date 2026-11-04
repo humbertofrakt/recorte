@@ -8,7 +8,7 @@ import '../src/constraints/transform.js';
 import '../src/constraints/physics.js';
 import type { BoneDef } from '../src/types.js';
 
-const EXAMPLES = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXAMPLES = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 
 function skeletonFromBones(bones: BoneDef[]): Skeleton {
   const data = loadSkeletonData({

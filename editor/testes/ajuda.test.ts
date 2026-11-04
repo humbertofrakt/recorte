@@ -8,7 +8,7 @@
  * Juntou: `lote30-manual`, `lote30-manual-completo`.
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { describeManual } from './manual-pausado.js';
@@ -675,7 +675,7 @@ describe('a lista de isentos', () => {
 });
 
 describe('rodada 23, defeito 13: o Sobre diz a versão guardada, e não 0.1.0', () => {
-  it('o Vite escreve a última versão de backup/versoes; sem ela, cai no pacote', async () => {
+  it.skipIf(!existsSync(resolve(__dirname, '../../backup/versoes')))('o Vite escreve a última versão de backup/versoes; sem ela, cai no pacote', async () => {
     const { aboutVersion } = await import('../src/ui/shell-actions.js');
     // Pela config da raiz o Vite não define a constante e cai no pacote, sem
     // quebrar; pela do editor ela vale, e é a última versão guardada.

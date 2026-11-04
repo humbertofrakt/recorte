@@ -745,7 +745,7 @@ describe('entre linhas (lote 50)', () => {
  * o índice de destino (peça e pasta), e o "pronto quando" do plano: `hair`
  * entre `cape_upper` e `cape_lower` num arrasto, e o desfazer devolve numa vez.
  */
-const EXEMPLOS = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXEMPLOS = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 
 function heroi(): BoneFile {
   return JSON.parse(readFileSync(`${EXEMPLOS}heroi.bone`, 'utf8')) as BoneFile;
@@ -1295,7 +1295,7 @@ describe('a chave de ordem e a virada de corpo se mostram na linha do tempo (P12
 // ---------------------------------------------------------------------------
 
 describe('a miniatura da entidade não põe a espada viva em repouso (rodada 8c, o salto)', () => {
-  const EX = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+  const EX = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
   const lerTexto = (nome: string): string => readFileSyncSalto(EX + nome, 'utf8');
 
   it('desenhar a miniatura do slot weapon deixa a lâmina da espada onde a animação a pôs', () => {

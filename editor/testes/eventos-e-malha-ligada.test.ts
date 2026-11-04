@@ -43,7 +43,7 @@ import {
   namesInSlot, whyNotLink,
 } from '../src/mesh/linked-mesh.js';
 
-const EXEMPLOS = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXEMPLOS = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 const CRU = readFileSync(`${EXEMPLOS}heroi.bone`, 'utf8');
 
 /** Uma cópia nova do exemplo, para um caso nunca herdar o estado do outro. */

@@ -16,7 +16,7 @@ import type { Command, EditorDoc, Selection, ToolEvent, Tool } from '../src/cont
 import { ChildGrab, chooseBoneNotice, grabChildren, grabCloseNotice, grabMenuNotice, grabOpenNotice, parentGesture, stepNotice } from '../src/viewport/parent-gesture.js';
 import { resetViewSettings } from '../src/viewport/onion.js';
 import { selectTool, nudgeSelection } from '../src/viewport/tools/select.js';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { Reparent, reparentTargets, setupWorldMatrices, liveWorldMatrices, runReparent } from '../src/doc/reparent.js';
 import { findTimeline, slotTarget } from '../src/anim/keying.js';
@@ -2178,7 +2178,7 @@ function ouvindo(doc: Doc): string[] {
     expect(plano).toEqual({ kind: 'icone', icon: 'particle', tipo: 'emissor de partículas' });
   });
 
-  it('o defeito EXISTIA: sem a linha do POR_TIPO, o tipo caía no buraco do fim', () => {
+  it.skipIf(!existsSync(resolve(__dirname, '../../backup')))('o defeito EXISTIA: sem a linha do POR_TIPO, o tipo caía no buraco do fim', () => {
     // Esta é a prova de que o teste de cima pega alguma coisa. O `POR_TIPO` do
     // `thumbnail-kind.ts` é o que tapa o buraco; a cópia de antes do lote está
     // no `backup/`, e ela NÃO cita o emissor — era o buraco.

@@ -30,8 +30,8 @@ import {
   exportGltf, gltfToGlb, gltfJsonText, quaternionZ, boneMatrix4, inverseBindMatrix4, imageMimeType,
 } from '../src/exportar/gltf.js';
 
-const EXAMPLES = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
-const RAIZ = 'C:/Users/F-rak/Desktop/animador';
+const EXAMPLES = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
+const RAIZ = process.cwd().replace(/\\/g, '/') + '';
 
 function readAtlas(): AtlasData {
   return loadAtlas(JSON.parse(readFileSync(EXAMPLES + 'heroi.atlas.json', 'utf8')));

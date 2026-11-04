@@ -22,7 +22,7 @@ import '../src/constraints/ik.js';
 import '../src/constraints/transform.js';
 import '../src/constraints/physics.js';
 
-const EXAMPLES = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXAMPLES = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 
 function heroi(): Skeleton {
   const atlas = loadAtlas(JSON.parse(readFileSync(EXAMPLES + 'heroi.atlas.json', 'utf8')));

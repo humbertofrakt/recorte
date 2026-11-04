@@ -7,7 +7,7 @@ import { PointAttachment } from '../src/attachments/point.js';
 import { SequenceData, formatNumber } from '../src/attachments/sequence.js';
 import type { BoneDef } from '../src/types.js';
 
-const EXAMPLES = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXAMPLES = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 
 function skeletonFromBones(bones: BoneDef[], extra: Record<string, unknown> = {}): Skeleton {
   return new Skeleton(loadSkeletonData({

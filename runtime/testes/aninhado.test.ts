@@ -24,7 +24,7 @@ import {
 import { readBonez, readBonezAsync, writeBonez } from '../src/binario/bonez.js';
 import { NestedSkeleton } from '../src/index.js';
 
-const EXAMPLES = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXAMPLES = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 
 function readAtlas(): AtlasData {
   return loadAtlas(JSON.parse(readFileSync(EXAMPLES + 'heroi.atlas.json', 'utf8')));
@@ -569,7 +569,7 @@ describe('esqueleto aninhado: as leituras do Apêndice C', () => {
  * runtimes ficam verdes: o teste acha a pasta onde ela estiver.
  */
 function casoDoAround(nome: string): Skeleton {
-  const raiz = 'C:/Users/F-rak/Desktop/animador/conformidade/';
+  const raiz = process.cwd().replace(/\\/g, '/') + '/conformidade/';
   const dir = [`${raiz}casos/${nome}/`, `${raiz}casos-pendentes/${nome}/`].find((d) => existsSync(d));
   if (dir === undefined) throw new Error(`o caso ${nome} sumiu de casos/ e de casos-pendentes/`);
   const arquivo = loadSkeletonFile(new Uint8Array(readFileSync(dir + 'entrada.bone')), {

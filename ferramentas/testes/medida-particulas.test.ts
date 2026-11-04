@@ -20,8 +20,8 @@ import {
   type Probe, type PoseDump, type ParticleDumpSample,
 } from '../src/conformidade/pose-dump.js';
 
-const CASOS = 'C:/Users/F-rak/Desktop/animador/conformidade/casos';
-const PENDENTES = 'C:/Users/F-rak/Desktop/animador/conformidade/casos-pendentes';
+const CASOS = process.cwd().replace(/\\/g, '/') + '/conformidade/casos';
+const PENDENTES = process.cwd().replace(/\\/g, '/') + '/conformidade/casos-pendentes';
 
 /**
  * Onde um caso P mora AGORA. Os dois lugares são legítimos e querem dizer

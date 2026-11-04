@@ -48,7 +48,7 @@ import { DropImageAsSlot } from '../src/panels/palette-model.js';
 import { ReorderSlots } from '../src/panels/draw-order-model.js';
 import { DuplicateSkin } from '../src/panels/skins-model.js';
 
-const ROOT = 'C:/Users/F-rak/Desktop/animador/';
+const ROOT = process.cwd().replace(/\\/g, '/') + '/';
 const HEROI = `${ROOT}formato/exemplos/heroi.bone`;
 const SCHEMA = `${ROOT}formato/bone.schema.json`;
 

@@ -29,7 +29,7 @@ import {
   renderSequence, sheetGridFor, unionBox, type RgbaFrame,
 } from '../src/exportar/quadros.js';
 
-const RAIZ = 'C:/Users/F-rak/Desktop/animador';
+const RAIZ = process.cwd().replace(/\\/g, '/') + '';
 const EXEMPLO = `${RAIZ}/formato/exemplos/heroi.bone`;
 
 // ---------------------------------------------------------------------------

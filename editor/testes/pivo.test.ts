@@ -44,7 +44,7 @@ describe('pivo carimbo (lote 56)', () => {
  * miniatura. Tudo sem navegador (regra 8): os comandos rodam num documento de
  * teste que só tem `file`, `atlases` e `setAssets`.
  */
-const EXEMPLOS = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXEMPLOS = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 
 function heroiFile(): BoneFile {
   return JSON.parse(readFileSync(`${EXEMPLOS}heroi.bone`, 'utf8')) as BoneFile;

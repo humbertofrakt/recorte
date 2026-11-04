@@ -1479,12 +1479,12 @@ describe('o Ctrl+Z depois de cada gesto de entrada (rodada final, lote 1)', () =
 // do programa não é tratado duas vezes (J5)
 // ---------------------------------------------------------------------------
 
-describe('o projeto do Spriter do Humberto entra com as imagens (E2)', () => {
+const LISTA_SPRITER = resolve(__dirname, '..', '..', 'backup', 'fotos-rodada-final', 'arquivo', 'lote-3_spriter-lista.json');
+// A lista mora em backup/, que fica fora do GitHub: sem ela, o bloco pula.
+describe.skipIf(!existsSync(LISTA_SPRITER))('o projeto do Spriter do Humberto entra com as imagens (E2)', () => {
   const RAIZ_S = resolve(__dirname, '..', '..');
   const GAME = resolve(RAIZ_S, 'exemplo', 'game');
-  const LISTA = JSON.parse(readFileSync(
-    resolve(RAIZ_S, 'backup', 'fotos-rodada-final', 'arquivo', 'lote-3_spriter-lista.json'), 'utf8',
-  )) as string[];
+  const LISTA = existsSync(LISTA_SPRITER) ? JSON.parse(readFileSync(LISTA_SPRITER, 'utf8')) as string[] : [];
 
   /** Os arquivos como o arrasto da PASTA os entrega: cada um com o caminho de dentro. */
   function soltos(): File[] {

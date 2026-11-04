@@ -19,7 +19,7 @@ import { loadAtlas } from '../../runtime/src/index.js';
 import type { AtlasFile } from '../../runtime/src/types.js';
 import { atlasToJson } from '../../editor/src/io/save-binary.js';
 
-const RAIZ = 'C:/Users/F-rak/Desktop/animador';
+const RAIZ = process.cwd().replace(/\\/g, '/') + '';
 
 /** A transparent image with one opaque block inside it. */
 function withBlock(

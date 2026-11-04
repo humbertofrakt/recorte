@@ -336,7 +336,7 @@ describe('avisos com nome (lote 49)', () => {
  * nomes, as frases do leitor em português, o conserto, e o aviso de verdade
  * que o leitor dá para uma imagem que falta.
  */
-const EXEMPLOS = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXEMPLOS = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 
 function heroi(): BoneFile {
   return JSON.parse(readFileSync(`${EXEMPLOS}heroi.bone`, 'utf8')) as BoneFile;

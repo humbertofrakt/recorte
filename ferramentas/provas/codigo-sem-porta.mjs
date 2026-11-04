@@ -1,5 +1,5 @@
 import fs from 'fs'; import path from 'path';
-const root='C:/Users/F-rak/Desktop/animador/editor/src';
+const root=process.cwd().replace(/\\/g, '/') + '/editor/src';
 const files=[];(function w(d){for(const f of fs.readdirSync(d)){const p=d+'/'+f;if(fs.statSync(p).isDirectory())w(p);else if(p.endsWith('.ts')&&!p.endsWith('.d.ts'))files.push(p);}})(root);
 const src=Object.fromEntries(files.map(f=>[f,fs.readFileSync(f,'utf8')]));
 const imp={};

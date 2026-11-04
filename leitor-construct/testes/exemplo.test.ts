@@ -149,8 +149,17 @@ describe('a conexão no exemplo (rodada K5): as teclas E e Q', () => {
       i = ini + comp;
     }
     const pasta = arquivosDoExemplo() as { nome: string; bytes: Buffer }[];
+    // Os *.uistate.json são o arranjo de tela do Construct: o .gitignore do
+    // exemplo os deixa fora do GitHub. Num clone eles não existem na pasta,
+    // mas continuam no .c3p — e não mudam o que o projeto faz.
+    const noGit = existsSync(join(EXEMPLO, 'project.uistate.json'));
+    for (const nome of [...lidos.keys()]) if (!noGit && nome.endsWith('.uistate.json')) lidos.delete(nome);
     expect([...lidos.keys()]).toEqual(pasta.map((a) => a.nome));
-    for (const a of pasta) expect(lidos.get(a.nome)!.equals(a.bytes), a.nome).toBe(true);
+    // O git troca CRLF por LF nos .json ao subir: compara sem o \r.
+    const igual = (nome: string, a: Buffer, b: Buffer) => nome.endsWith('.json')
+      ? a.toString('utf8').replace(/\r\n/g, '\n') === b.toString('utf8').replace(/\r\n/g, '\n')
+      : a.equals(b);
+    for (const a of pasta) expect(igual(a.nome, lidos.get(a.nome)!, a.bytes), a.nome).toBe(true);
   });
 
   it('E troca a espada pelo capacete e volta; Q põe a aura em volta do herói e tira', async () => {

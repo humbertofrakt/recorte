@@ -17,7 +17,7 @@
  * Aseprite. Os retângulos entram um para um.
  */
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { describe, expect, it } from 'vitest';
@@ -37,7 +37,7 @@ import { DropImageAsSlot } from '../src/panels/palette-model.js';
 
 /** O schema do formato, o mesmo de `documento.test.ts`. */
 const validateAgainstSchema = (() => {
-  const schema = JSON.parse(readFileSync('C:/Users/F-rak/Desktop/animador/formato/bone.schema.json', 'utf8')) as object;
+  const schema = JSON.parse(readFileSync(process.cwd().replace(/\\/g, '/') + '/formato/bone.schema.json', 'utf8')) as object;
   const ajv = new Ajv({ allErrors: true, strict: false, allowUnionTypes: true });
   addFormats(ajv);
   return ajv.compile(schema);
@@ -365,7 +365,7 @@ describe('o que acontecia com as etiquetas antes do lote 2', () => {
    * o `repeat` caíam no chão. Sem a direção, uma etiqueta `pingpong` só podia
    * virar uma ida — um vai-e-volta errado que ninguém veria no teste.
    */
-  it('o leitor antigo jogava fora a direção: `pingpong` e `forward` saíam iguais', async () => {
+  it.skipIf(!existsSync(new URL('../../backup', import.meta.url)))('o leitor antigo jogava fora a direção: `pingpong` e `forward` saíam iguais', async () => {
     const antigo = await import('../../backup/aseprite-sheet_2026-09-28_antes-do-lote-2-das-etiquetas.js');
     const texto = folhaCom([100, 100], [{ name: 'vai', from: 0, to: 1, direction: 'pingpong' }]);
     expect(antigo.asepriteSheet(texto, 'heroi.png')!.tags).toEqual([{ name: 'vai', from: 0, to: 1 }]);

@@ -22,7 +22,7 @@ import { PointAttachment, WeightsTimelineData } from '../src/data.js';
 import { evaluateWeights } from '../src/animation.js';
 import { runStart } from '../src/animation.js';
 
-const EXAMPLES = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXAMPLES = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 const header = { version: '1.0', minVersion: '1.0', generator: 'test' };
 
 const mesh = { type: 'mesh', vertices: [0, 0, 10, 0, 0, 10], uvs: [0, 0, 1, 0, 0, 1], triangles: [0, 1, 2] };

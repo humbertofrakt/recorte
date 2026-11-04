@@ -8,7 +8,7 @@
  * Juntou: `paineis`, `lote38-escondido-e-escondido`, `lote52-altura-dos-paineis`, `lote65-paineis-que-cabem`.
  */
 
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import type { BoneFile } from '../../runtime/src/index.js';
 import { emptySelection } from '../src/contract.js';
@@ -76,7 +76,7 @@ describe('paineis', () => {
  * the DOM files only draw. These tests cover the models and the commands
  * against the real example file.
  */
-const EXAMPLE = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/heroi.bone';
+const EXAMPLE = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/heroi.bone';
 const RAW = readFileSync(EXAMPLE, 'utf8');
 
 /** A fresh copy of the example, so tests never share state. */
@@ -1242,7 +1242,7 @@ const chaves = (grupos: FieldGroup[], titulo: string): string[] =>
     expect(path.label).toBe('Imagem da partícula');
   });
 
-  it('o defeito EXISTIA: sem o ramo, a ficha era "Nome" e "Imagem"', () => {
+  it.skipIf(!existsSync(resolve(__dirname, '../../backup')))('o defeito EXISTIA: sem o ramo, a ficha era "Nome" e "Imagem"', () => {
     // A prova de que o teste de cima pega alguma coisa. Um tipo que
     // `attachmentFields` não conhece cai no `identity` do fim — e é ali que o
     // emissor caía. A cópia de antes do lote está no `backup/` e não cita o
@@ -2162,7 +2162,7 @@ describe('J9: o número digitado na ficha GIRA o osso na cena, com a base aberta
 describe('J9: quando uma REGRA desfaz o número digitado, o rodapé diz qual', () => {
   it('no herói, Ângulo 90 no arm: o ik_arm manda nele, e a frase diz isso', async () => {
     const { heldByRuleAfterWrite } = await import('../src/panels/quick-model.js');
-    const doc = new Doc(parseBoneText(readFileSync('C:/Users/F-rak/Desktop/animador/formato/exemplos/heroi.bone', 'utf8')) as BoneFile);
+    const doc = new Doc(parseBoneText(readFileSync(process.cwd().replace(/\\/g, '/') + '/formato/exemplos/heroi.bone', 'utf8')) as BoneFile);
     const angulo = quickFieldsL2(doc.file, quickSubjectL2({ ...emptySelection(), bones: ['arm'] })).find((f) => f.key === 'rotation')!;
     writeQuickValueJ9(doc, angulo, 90);
     expect(doc.skeleton!.findBone('arm')!.rotation).toBe(90);

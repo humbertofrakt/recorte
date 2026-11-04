@@ -489,7 +489,7 @@ describe('animando livre (lote 57)', () => {
  * aberta, a partir do tempo da agulha. E apagar um osso animado passa a levar
  * as linhas dele junto — antes elas ficavam órfãs.
  */
-const EXEMPLOS = 'C:/Users/F-rak/Desktop/animador/formato/exemplos/';
+const EXEMPLOS = process.cwd().replace(/\\/g, '/') + '/formato/exemplos/';
 
 function heroi(): BoneFile {
   return JSON.parse(readFileSync(`${EXEMPLOS}heroi.bone`, 'utf8')) as BoneFile;
