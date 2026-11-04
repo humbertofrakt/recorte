@@ -366,7 +366,9 @@ describe('o que acontecia com as etiquetas antes do lote 2', () => {
    * virar uma ida — um vai-e-volta errado que ninguém veria no teste.
    */
   it.skipIf(!existsSync(new URL('../../backup', import.meta.url)))('o leitor antigo jogava fora a direção: `pingpong` e `forward` saíam iguais', async () => {
-    const antigo = await import('../../backup/aseprite-sheet_2026-09-28_antes-do-lote-2-das-etiquetas.js');
+    // O caminho numa variável: backup/ fica fora do GitHub, e o tsc não deve procurá-lo.
+    const copia: string = '../../backup/aseprite-sheet_2026-09-28_antes-do-lote-2-das-etiquetas.js';
+    const antigo = await import(/* @vite-ignore */ copia) as { asepriteSheet: (t: string, p: string) => { tags: unknown } | null };
     const texto = folhaCom([100, 100], [{ name: 'vai', from: 0, to: 1, direction: 'pingpong' }]);
     expect(antigo.asepriteSheet(texto, 'heroi.png')!.tags).toEqual([{ name: 'vai', from: 0, to: 1 }]);
   });
