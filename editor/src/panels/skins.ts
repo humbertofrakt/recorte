@@ -53,7 +53,7 @@ import {
 } from './skins-model.js';
 import type { SkinRow } from './skins-model.js';
 import {
-  editingSkinOf, setEditingSkin, skinStackOf,
+  editingSkinOf, setEditingSkin, setSkinStack, skinStackOf,
 } from '../viewport/onion.js';
 import { dropAt, dropOnColumn } from './skins-model.js';
 import type { SkinDrop } from './skins-model.js';
@@ -63,7 +63,7 @@ import {
 } from './skins-model.js';
 import { redrawPlan, signature } from './list-redraw.js';
 import { openWardrobe } from './skins-wardrobe.js';
-import { skinStateLine } from './skins-wardrobe-model.js';
+import { previewStack, skinStateLine } from './skins-wardrobe-model.js';
 import type { ListShape } from './list-redraw.js';
 
 /** O tipo do arrasto: só o painel Peles o entende, e por isso nada mais o pega. */
@@ -90,6 +90,20 @@ class SkinsPanel implements Panel {
   private drawn: ListShape = { rows: '', picked: null };
   /** A pele na mão, enquanto o arrasto dura. */
   private dragged: string | null = null;
+  /** A pilha de antes da prova do mouse; `null` sem prova na cena. */
+  private provando: string[] | null = null;
+
+  private startPreview(doc: EditorDoc, name: string): void {
+    if (this.provando === null) this.provando = skinStackOf(doc);
+    setSkinStack(doc, previewStack(name));
+  }
+
+  private stopPreview(doc: EditorDoc): void {
+    if (this.provando === null) return;
+    const antes = this.provando;
+    this.provando = null;
+    setSkinStack(doc, antes);
+  }
 
   mount(doc: EditorDoc, host: HTMLElement): void {
     this.doc = doc;
@@ -188,6 +202,7 @@ class SkinsPanel implements Panel {
   }
 
   unmount(): void {
+    if (this.doc !== null) this.stopPreview(this.doc);
     this.doc = null;
     this.feitas = null;
     this.ativas = null;
@@ -679,6 +694,18 @@ class SkinsPanel implements Panel {
       if (event.dataTransfer !== null) event.dataTransfer.effectAllowed = 'move';
     });
     item.addEventListener('dragend', () => { this.dragged = null; });
+
+    // Noite de 04/11: passar o mouse numa skin de Todas PROVA na cena — ela
+    // sozinha, por cima da base — e tirar o mouse volta o que estava vestido.
+    // Não é passo de desfazer e não suja o arquivo: é só olhar.
+    if (coluna === 'feitas') {
+      item.addEventListener('mouseenter', () => {
+        if (this.dragged !== null) return;
+        this.startPreview(doc, row.name);
+      });
+      item.addEventListener('mouseleave', () => this.stopPreview(doc));
+      item.addEventListener('mousedown', () => this.stopPreview(doc), true);
+    }
 
     if (coluna === 'ativas') {
       item.addEventListener('dragover', (event) => {
