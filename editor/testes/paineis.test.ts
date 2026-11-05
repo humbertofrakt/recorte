@@ -1206,6 +1206,15 @@ describe('a Malha em 1280×720 rola com régua própria, e a régua não isenta'
     expect(prova).toContain("el.dataset?.rolagem === 'ferramenta' && window.innerHeight <= 800");
   });
 
+  it('a prova mede também o caso ALTO: a Malha com a ferramenta Pesos, e conta no total', () => {
+    expect(prova).toContain("r.setActiveTool('weights', __m.vp.doc)");
+    expect(prova).toContain('Malha e pesos (ferramenta Pesos)');
+    // Conta no total: se não couber, o número cai.
+    const passada = prova.slice(prova.indexOf("SO === 'Malha e pesos (Pesos)'"));
+    expect(passada.slice(0, 3000)).toContain('medicoes += 1;');
+    expect(passada.slice(0, 3000)).toContain('altas += 1;');
+  });
+
   it('os botões da Forma vão dois por linha, com o nome inteiro (quebra entre palavras)', () => {
     const bloco = css.slice(css.lastIndexOf('@media (max-height: 800px)'));
     expect(bloco).toContain('grid-template-columns: 1fr 1fr');
@@ -3497,13 +3506,32 @@ describe('rodada 47, lote 6c: a ficha completa dobra os grupos e abre o do nome'
 
   it('a ficha usa a regra, e o título é o botão', () => {
     const ficha = readFileSync(resolve(__dirname, '../src/panels/properties.ts'), 'utf8');
-    expect(ficha).toContain('const abertos = groupsOpen(juntos, gruposDaMao);');
+    // 04/11/2026: a chamada leva a tela baixa (a ficha completa dobrada com a rápida em cima).
+    expect(ficha).toContain('const abertos = groupsOpen(juntos, gruposDaMao, baixaComRapida);');
+    expect(ficha).toContain('if (juntos.length > 2 || baixaComRapida) this.dobrarGrupo(');
     expect(ficha).toContain("legenda.setAttribute('role', 'button');");
     // Compensar dobra também, e nasce aberto só com alguma caixa ligada.
     expect(ficha).toContain("this.dobrarGrupo(box, 'Compensar', gruposDaMao.get('Compensar') ?? ligadas > 0);");
   });
 });
 
+describe('04/11/2026: na tela baixa, com a Ficha rápida em cima, a ficha completa nasce dobrada', () => {
+  const g = (title: string, extra: { problem?: string; nome?: boolean } = {}) => ({
+    title, fields: [{ key: extra.nome === true ? 'name' : 'x' }], ...(extra.problem === undefined ? {} : { problem: extra.problem }),
+  });
+  it('dois grupos: na tela grande abrem os dois (como sempre); na baixa, os dois dobram', () => {
+    const grupos = [g('Desenho', { nome: true }), g('Tamanho da imagem')];
+    expect(groupsOpenN(grupos)).toEqual([true, true]);
+    expect(groupsOpenN(grupos, new Map(), true)).toEqual([false, false]);
+  });
+  it('o grupo com problema abre sempre, e o que a mão escolheu fica', () => {
+    const grupos = [g('Desenho', { nome: true }), g('Tamanho da imagem', { problem: 'arquivo sumiu' })];
+    expect(groupsOpenN(grupos, new Map(), true)).toEqual([false, true]);
+    expect(groupsOpenN(grupos, new Map([['Desenho', true]]), true)).toEqual([true, true]);
+  });
+});
+
+import { groupsOpen as groupsOpenN } from '../src/panels/properties-model.js';
 // Rodada 48 (a mão do Humberto, 07/10/2026), item 1: trocou a Cor ao nascer e a
 // barra da Cor na vida ficou igual; o rótulo "Só a Cor ao nascer" aparecia POR
 // CIMA de um degradê. A conta é a do Unity e do Godot (§9.7 da extensão): a Cor
