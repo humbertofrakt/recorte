@@ -36,6 +36,8 @@ jobs:
       - name: Rodar a suíte
         run: npx vitest run
       - name: Montar o editor
+        env:
+          RECORTE_VERSAO: "37.0"
         run: npx vite build editor --outDir "$PWD/_site/editor" --emptyOutDir
       - name: Gerar o runtime do visualizador e do validador
         run: npx tsc -p ferramentas/visualizador/tsconfig.json
