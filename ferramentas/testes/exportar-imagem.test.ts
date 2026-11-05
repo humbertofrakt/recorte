@@ -685,3 +685,92 @@ describe('linha de comando', () => {
     expect(FFMPEG_HINT).toContain('%04d.png');
   });
 });
+
+describe('QA 04/11/2026 — D10: a linha de comando desenha as partículas', () => {
+  // A prova: o projeto gravado pelo editor (fumaça, fogo e faísca) desenhado
+  // pelo `render-png` saía "0 attachment(s) desenhado(s), 3 sem imagem", e o
+  // `exportar-imagem` gravava um GIF de 729 bytes, vazio — o editor, a cena e a
+  // exportação de dentro dele mostram as três.
+  const PASTA = join(RAIZ, 'ferramentas', 'testes', 'dados', 'particulas-do-editor');
+
+  it('render-png: os três emissores desenhados, nenhum "sem imagem", e há pixel pintado', async () => {
+    const saida = mkdtempSync(join(tmpdir(), 'part-'));
+    try {
+      const png = join(saida, 'q.png');
+      const texto = execFileSync(process.execPath, [
+        join(RAIZ, 'ferramentas', 'render-png.mjs'), 'animação', '0.4', png, '--bone', join(PASTA, 'fogo.bone'), '--sem-ossos',
+      ], { encoding: 'utf8' });
+      expect(texto).not.toMatch(/sem imagem/);
+      expect(texto).toMatch(/3 emissor\(es\) com \d+ partícula\(s\)/);
+      const { decodePng } = await import('../src/atlas/png.js');
+      const zlib = await import('node:zlib');
+      const img = decodePng(new Uint8Array(readFileSync(png)), {
+        inflate: (d) => new Uint8Array(zlib.inflateSync(d)), deflate: (d) => new Uint8Array(zlib.deflateSync(d)),
+      });
+      let pintados = 0;
+      for (let i = 3; i < img.pixels.length; i += 4) if (img.pixels[i]! > 0) pintados++;
+      expect(pintados).toBeGreaterThan(200);
+      // A câmera conta as partículas: sem isso, a tela inteira era uma cor só.
+      expect(pintados).toBeLessThan(img.width * img.height * 0.9);
+    } finally {
+      rmSync(saida, { recursive: true, force: true });
+    }
+  }, 60_000);
+
+  it('render-png com --bone não diz mais "Nenhum esqueleto passado" (D11)', () => {
+    const saida = mkdtempSync(join(tmpdir(), 'part-'));
+    try {
+      const texto = execFileSync(process.execPath, [
+        join(RAIZ, 'ferramentas', 'render-png.mjs'), 'animação', '0', join(saida, 'q.png'), '--bone', join(PASTA, 'fogo.bone'),
+      ], { encoding: 'utf8' });
+      expect(texto).not.toMatch(/Nenhum esqueleto passado/);
+    } finally {
+      rmSync(saida, { recursive: true, force: true });
+    }
+  }, 60_000);
+
+  it('exportar-imagem: o GIF do fogo tem quadros pintados, e não 729 bytes de nada', () => {
+    const saida = mkdtempSync(join(tmpdir(), 'part-'));
+    try {
+      execFileSync(process.execPath, [
+        join(RAIZ, 'ferramentas', 'exportar-imagem.mjs'), join(PASTA, 'fogo.bone'), 'animação', join(saida, 'fogo'), '--formato', 'gif',
+      ], { encoding: 'utf8' });
+      expect(readFileSync(join(saida, 'fogo.gif')).length).toBeGreaterThan(20_000);
+    } finally {
+      rmSync(saida, { recursive: true, force: true });
+    }
+  }, 120_000);
+});
+
+describe('QA 04/11/2026 — D20: o GIF se monta aos pedaços, e a tela respira', () => {
+  // A prova (Chromium sem janela): o projeto do Spriter (exemplo/game, bcp) →
+  // Exportar → GIF: 30 quadros de 2837x1197. A página ficou 64 s SEM
+  // RESPONDER — o Andamento parado, nenhum clique. Medido fora: o encodeGif
+  // leva ~53 s nesses quadros (a paleta, 7 s), num pedaço só.
+  const quadros = (n: number) => Array.from({ length: n }, (_, f) => {
+    const rgba = new Uint8Array(40 * 30 * 4);
+    for (let i = 0; i < rgba.length; i += 4) {
+      rgba[i] = (i * 7 + f * 40) & 255; rgba[i + 1] = (i * 3) & 255; rgba[i + 2] = f * 50; rgba[i + 3] = i % 12 === 0 ? 0 : 255;
+    }
+    return { width: 40, height: 30, rgba };
+  });
+
+  it('com pausa: os MESMOS bytes do encodeGif, e uma pausa por quadro na paleta e no desenho', async () => {
+    const { encodeGif, encodeGifPaced } = await import('../src/exportar/quadros.js');
+    const fs = quadros(5);
+    const passos: string[] = [];
+    let pausas = 0;
+    const bytes = await encodeGifPaced(fs, { fps: 12, loop: 0 }, (feito, total, fase) => passos.push(`${fase}${feito}/${total}`), async () => { pausas++; });
+    expect(Array.from(bytes)).toEqual(Array.from(encodeGif(fs, { fps: 12, loop: 0 })));
+    expect(pausas).toBe(10);
+    expect(passos[0]).toBe('paleta1/5');
+    expect(passos[passos.length - 1]).toBe('quadro5/5');
+  });
+
+  it('a exportação do editor usa a versão com pausa, e pausa entre quadros desenhados', () => {
+    const fonte = readFileSync(join(RAIZ, 'editor', 'src', 'io', 'export-image.ts'), 'utf8');
+    expect(fonte).toContain('await encodeGifPaced(');
+    const laco = fonte.slice(fonte.indexOf("onProgress(i + 1, times.length, 'Desenhando');"));
+    expect(laco.slice(0, 200)).toContain('await respirar();');
+  });
+});

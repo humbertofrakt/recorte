@@ -15,7 +15,7 @@ import { createEmptyFile } from '../doc/new-file.js';
 import { describeDraftTime, draftsToOffer, readDraft, takeKeptDraft } from '../doc/rascunho.js';
 import {
   abrindoPelaPasta, cameFromOutside, deliverBody, deliveredLine, entitySaveLines, forgetHandle, forgetOutside,
-  hasOpenHandle, lastSaveNote, lastSaveWarns, saveStatusLine, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
+  abertoNotice, hasOpenHandle, lastSaveNote, lastSaveWarns, saveStatusLine, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
   saveDocument, uriForOpened, useOpenHandle,
 } from '../io/open-save.js';
 import { perguntaSalvarComAvisos } from './salvar-avisos.js';
@@ -35,7 +35,7 @@ import type { GestoSemPasta } from '../io/pedir-pasta.js';
 import type { ProjectFolder } from '../io/project-folder.js';
 import { openProjectFiles, openProjectInto, projectOpenedNotice, readManifestInFolder } from '../io/project-open.js';
 import { Projeto } from '../doc/projeto.js';
-import { FORMAT_LABELS, adoptForeignImages, agruparAvisos, importFromOtherProgram } from '../io/import-foreign.js';
+import { FORMAT_LABELS, adoptForeignImages, agruparAvisos, importFromOtherProgram, importedStatusLine } from '../io/import-foreign.js';
 import { importPsd, psdWarningsNote } from '../io/import-psd.js';
 import { saveAsBinary, saveAsPackage, savingLine, stem as fileStem } from '../io/save-binary.js';
 import { gltfLine, saveAsGltf } from '../io/export-gltf.js';
@@ -186,6 +186,10 @@ export async function askFolderFirst(
   setProjectFolder(shell.doc, folder);
   const faltam = soltas.filter((image) => !folder.images.has(image.name));
   if (faltam.length > 0) addFolderImages(shell.doc, faltam);
+  // QA 04/11/2026 (D19): as imagens que o desenho usa e estão nesta pasta voltam
+  // à cena agora — senão o Salvar seguinte dizia "Faltam 2 imagens" de imagens
+  // que estão na pasta recém-escolhida (o rascunho recuperado vem sem elas).
+  await adoptFolderAtlases(shell.doc);
   void rememberFolder(folder);
   shell.showPanel('imagens');
   return 'pasta';
@@ -307,7 +311,8 @@ async function abrirNaPasta(shell: Shell, folder: ProjectFolder, boneEscolhido?:
         if (lido.mainHandle !== null) useOpenHandle(lido.mainHandle);
         await adoptFolderAtlases(shell.doc);
         shell.statusState.textContent = lido.warnings.length > 0
-          ? `${projectOpenedNotice(folder.name, lido.lists)}. ${avisoNoRodape(lido.warnings[0]!)}`
+          // QA 04/11/2026: o aviso primeiro — o rodapé corta na 1ª frase.
+          ? `${avisoNoRodape(lido.warnings[0]!)}. ${projectOpenedNotice(folder.name, lido.lists)}`
           : projectOpenedNotice(folder.name, lido.lists);
         return;
       }
@@ -368,6 +373,8 @@ export async function open(shell: Shell): Promise<void> {
     else if (/\.bonez$/i.test(opened.path ?? '')) {
       shell.statusState.textContent = pacoteAbertoNotice(opened.path ?? '', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);
     }
+    // QA 04/11/2026: sem aviso, o rodapé diz o que abriu (dizia "Sem mudanças por salvar.").
+    else shell.statusState.textContent = abertoNotice(opened.path ?? '', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);
   } catch (error) {
     shell.statusState.textContent = error instanceof Error ? error.message : String(error);
   }
@@ -435,6 +442,8 @@ export async function save(shell: Shell, saveAs: boolean): Promise<void> {
   try {
     const name = await saveDocument(shell.doc, {
       saveAs,
+      // QA 04/11/2026 (D22): o projeto grande diz que está salvando.
+      onProgress: (feito, total, fase) => { shell.statusState.textContent = `Salvando: ${fase}, ${feito} de ${total}…`; },
       // Rodada 45, lote 1: a pergunta da casa, em português. Sem este gancho
       // o `saveDocument` caía no `confirm()` do navegador, em inglês (doc 57).
       confirmProblems: (problems) => askUser(perguntaSalvarComAvisos(shell.doc.file, problems)),
@@ -585,8 +594,11 @@ export async function deliverOneBody(shell: Shell): Promise<void> {
     shell.statusState.textContent = deliveredLine(result);
     await tellUser({
       title: 'Base entregue',
-      lead: result.atlas === null
-        ? `Saiu ${result.name}, sozinho. Não havia imagem da pasta para fatiar: vale a folha de imagens (atlas) que ele já citava.`
+      // QA 04/11/2026 (D17): sem imagem da pasta, o atlas citado vai junto, inteiro.
+      lead: result.atlas === null && (result.carried ?? []).length > 0
+        ? `Saiu ${result.name} com ${(result.carried ?? []).join(', ')} e as páginas, inteiros: não havia imagem da pasta para fatiar.`
+        : result.atlas === null
+        ? `Saiu ${result.name}, sozinho: esta base não cita folha de imagens (atlas) nenhuma.`
         : `Saíram ${result.name} e ${result.atlas}, com ${result.images} ${result.images === 1 ? 'imagem' : 'imagens'} — só as que ESTA base usa.`,
       // Rodada 45, lote 4: sem atlas novo, a frase de cima já diz o aviso de baixo.
       lines: result.atlas === null ? result.warnings.filter((aviso) => !aviso.startsWith('As imagens desta base não vieram da pasta')) : result.warnings,
@@ -836,7 +848,8 @@ export async function reopenClosed(shell: Shell): Promise<void> {
   try {
     const file = JSON.parse(draft.json) as BoneFile;
     forgetImportedImages(shell.doc);
-    shell.doc.setFile(file, { path: draft.path, atlases: [], images: new Map() });
+    // QA 04/11/2026 (D18): o guardado não está no disco — nasce "não salvo", como no D4.
+    shell.doc.setFile(file, { path: draft.path, atlases: [], images: new Map(), unsaved: true });
     // As imagens NÃO voltam: o rascunho guarda o `.bone`, e não os PNG. Com o
     // arquivo já salvo em disco, abrir por Arquivo → Abrir traz tudo.
     // Rodada 50, lote 4 (doc 100): a frase dizia o porquê e não o remédio.
@@ -1064,8 +1077,8 @@ export async function importForeign(shell: Shell): Promise<void> {
         `Importado do ${program}: ${imported.path}. Lendo as imagens… ${feitas} de ${total}`;
     });
     if (ligadas.notice !== null) shell.showPanel('imagens');
-    shell.statusState.textContent = `Importado do ${program}: ${imported.path}. `
-      + `${imported.warnings.length} avisos.${ligadas.notice === null ? '' : ` ${ligadas.notice}`}`;
+    // QA 04/11/2026 (D23): faltando imagem, o conselho vem primeiro.
+    shell.statusState.textContent = importedStatusLine(program, imported.path, ligadas, `${imported.warnings.length} avisos.`);
 
     // A `.bone` holds one skeleton. When the source file had several, say so
     // in the same window, with the names, instead of leaving them silent.
@@ -1104,8 +1117,9 @@ export async function importPsdFile(shell: Shell, bones = false): Promise<void> 
     if (result === null) return;
     // Lote A4: a janela dos avisos saiu do `io/`; a casca mostra, como antes.
     const aviso = psdWarningsNote(result);
-    if (aviso !== null) await tellUser(aviso);
+    // QA 04/11/2026: o resumo no rodapé ANTES da janela (dizia "Importar PSD.").
     shell.statusState.textContent = result.summary;
+    if (aviso !== null) await tellUser(aviso);
   } catch (error) {
     await shell.reportFailure('Não deu para importar o PSD', error);
   }

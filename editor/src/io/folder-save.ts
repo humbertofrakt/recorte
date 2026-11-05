@@ -26,7 +26,8 @@ import type { AtlasData, AtlasPageData, BoneFile } from '../../../runtime/src/in
 import type { EditorDoc } from '../contract.js';
 import { atlasTreesOf } from './pivot-atlas.js';
 import { stampPivots } from './pivot-model.js';
-import { ensureProvisional } from './folder-atlas.js';
+import { ensureProvisional, ensureProvisionalMany } from './folder-atlas.js';
+import { findAtlasRegion } from '../../../runtime/src/index.js';
 import {
   imagesInUse, isProvisionalAtlas, projectFolder, type FolderDirectoryHandle,
 } from './project-folder.js';
@@ -295,7 +296,17 @@ export interface FolderPack {
  * quando não há nada da pasta em uso. Chamar **antes** de `serialize`: o
  * `.bone` que sai tem que citar o atlas que sai junto.
  */
-export async function buildFolderPack(doc: EditorDoc, stem: string): Promise<FolderPack | null> {
+/** Devolve a vez à tela por um instante — QA de 04/11/2026 (D22). */
+function respirar(): Promise<void> {
+  return new Promise((done) => { setTimeout(done, 0); });
+}
+
+export async function buildFolderPack(
+  doc: EditorDoc, stem: string,
+  // QA 04/11/2026 (D22): o projeto do Spriter (91 imagens) levava 7,2 s aqui,
+  // num pedaço só, com a página parada e o rodapé mudo. Agora diz e respira.
+  onProgress?: (feito: number, total: number, fase: string) => void,
+): Promise<FolderPack | null> {
   const plan = atlasForSave(doc);
   if (plan.reuse) return null;
   const folder = projectFolder(doc);
@@ -307,7 +318,10 @@ export async function buildFolderPack(doc: EditorDoc, stem: string): Promise<Fol
   if (folder?.handle) for (const page of await ownPagesOnDisk(folder.handle, primeiro.atlas)) paths.delete(page);
   const names = folderAtlasNames(doc.file, stem, own, paths);
   const items: PackerItem[] = [];
+  let lidas = 0;
   for (const item of plan.items) {
+    onProgress?.(++lidas, plan.items.length, 'lendo as imagens do atlas');
+    if (onProgress !== undefined && lidas % 8 === 0) await respirar();
     const pixels = regionPixels(doc, item.page, item.crop);
     if (pixels === null) continue;
     const packerItem: PackerItem = { name: item.name, width: pixels.width, height: pixels.height, pixels: pixels.data };
@@ -320,7 +334,11 @@ export async function buildFolderPack(doc: EditorDoc, stem: string): Promise<Fol
   withAtlasName(doc.file, names.atlas, own);
   ownAtlas.set(doc, names.atlas);
   const pages: FolderPack['pages'] = [];
-  for (const page of packed.pages) pages.push({ name: page.image, bytes: await pngOf(page) });
+  for (const page of packed.pages) {
+    onProgress?.(pages.length + 1, packed.pages.length, 'gravando as páginas do atlas');
+    if (onProgress !== undefined) await respirar();
+    pages.push({ name: page.image, bytes: await pngOf(page) });
+  }
   return { atlasName: names.atlas, text: `${JSON.stringify(packed.atlas, null, 2)}\n`, pages, count: items.length };
 }
 
@@ -360,7 +378,27 @@ export async function descend(root: FolderDirectoryHandle, path: readonly string
 export async function adoptFolderAtlases(doc: EditorDoc): Promise<number> {
   const folder = projectFolder(doc);
   if (folder === null || folder.images.size === 0) return 0;
-  const names = new Set(folder.images.keys());
+  const count = await adoptOwnAtlases(doc, new Set(folder.images.keys()));
+  // QA 04/11/2026 (D14): o `.bone` sem atlas (o Spriter convertido pela linha
+  // de comando, `exemplo/game/bcp 2026-09-09.bone`) cita imagens soltas que
+  // ESTÃO na pasta. Elas ficavam "não encontradas" — 176 avisos —, e a aba
+  // Imagens mostrava as 128. Agora entram como as do arrasto: região provisória.
+  const soltas = await ensureProvisionalMany(doc, looseImagesInFolder(doc.file, doc.atlases, new Set(folder.images.keys())));
+  return count + soltas.made.length;
+}
+
+/**
+ * As imagens que o `.bone` mostra, que nenhum atlas aberto tem e que a pasta
+ * tem — D14. Pura: o teste a chama com o arquivo e a pasta de verdade.
+ */
+export function looseImagesInFolder(
+  file: BoneFile, atlases: readonly AtlasData[], folderNames: ReadonlySet<string>,
+): string[] {
+  return [...imagesInUse(file)].filter((name) => folderNames.has(name) && findAtlasRegion(atlases, name) === null);
+}
+
+/** O atlas que o Salvar gravou a partir da pasta volta a vir dela — lote 62. */
+async function adoptOwnAtlases(doc: EditorDoc, names: ReadonlySet<string>): Promise<number> {
   const ours = doc.atlases.filter((atlas) => isOwnFolderAtlas(atlas, names));
   if (ours.length === 0) return 0;
   const holder = doc as EditorDoc & {

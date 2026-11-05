@@ -34,6 +34,16 @@ Com `npm run`, as opções vêm depois de `--`. Sem ele, não.
 Toda ferramenta responde `--ajuda` com a lista completa de opções. É a fonte
 que vale: esta tabela é o mapa, não o manual.
 
+**Como elas saem** (conferido no QA de 04/11/2026, `ferramentas/testes/linha-de-comando.test.ts`):
+
+| Código | Quando |
+|:---:|:---|
+| 0 | deu certo, ou foi `--ajuda` |
+| 1 | o trabalho deu errado: arquivo que não abre, animação que não existe, arquivo inválido |
+| 2 | a pergunta está errada: opção que não existe, caminho faltando |
+
+Uma opção que a ferramenta não conhece **nunca passa calada**: ela para e diz qual.
+
 ---
 
 ## Exemplos que rodam como estão

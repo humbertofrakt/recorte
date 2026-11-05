@@ -26,11 +26,11 @@
  */
 
 import {
-  CanvasRenderer, Skeleton, applyResets, pose,
+  CanvasRenderer, ParticleCache, Skeleton, applyResets, collectDrawables, isParticleAttachment, particleFrame, pose,
   type AnimationData, type AtlasPageData,
 } from '../../../runtime/src/index.js';
 import {
-  autoCropFrames, buildSpriteSheet, cameraFor, encodeGif, frameFileName, frameTimes,
+  autoCropFrames, buildSpriteSheet, cameraFor, encodeGifPaced, frameFileName, frameTimes,
   unionBox,
   type Box, type FrameCamera, type RgbaFrame, type SheetIndex,
 } from '../../../ferramentas/src/exportar/quadros.js';
@@ -587,9 +587,34 @@ export function freshSkeleton(doc: Doc): Skeleton | null {
   return skeleton;
 }
 
+/**
+ * **A caixa do esqueleto posado, com as partículas** — QA de 04/11/2026 (D12).
+ * O `getBounds` conta os desenhos e não as partículas: um arquivo só de
+ * fumaça, fogo e faísca exportava "1 quadro de 1x1". Cada partícula entra com
+ * o quadrado da imagem dela, na escala dela — a mesma conta do `render-png`
+ * da linha de comando (`limitesComParticulas`).
+ */
+export function boxWithParticles(skeleton: Skeleton, cache: ParticleCache = new ParticleCache()): Box | null {
+  const b = skeleton.getBounds();
+  let box: Box | null = b !== null && (b.width > 0 || b.height > 0) ? b : null;
+  for (const d of collectDrawables(skeleton)) {
+    if (!isParticleAttachment(d.attachment)) continue;
+    const frame = particleFrame(skeleton, d.slot, d.attachment, cache);
+    if (frame.silence !== null) continue;
+    const region = d.attachment.region;
+    const side = region === null ? 1 : Math.max(region.originalWidth, region.originalHeight);
+    for (const p of frame.particles) {
+      const r = (side * Math.abs(p.scale)) / 2;
+      box = unionBox(box, { x: p.x - r, y: p.y - r, width: r * 2, height: r * 2 });
+    }
+  }
+  return box;
+}
+
 /** A caixa da base, na pose de repouso — rodada 45, lote 5. */
 function baseBounds(doc: Doc): Box {
-  return freshSkeleton(doc)?.getBounds() ?? { x: 0, y: 0, width: 1, height: 1 };
+  const skeleton = freshSkeleton(doc);
+  return (skeleton === null ? null : boxWithParticles(skeleton)) ?? { x: 0, y: 0, width: 1, height: 1 };
 }
 
 /** The box every frame of the animation draws inside, in world units. */
@@ -598,15 +623,40 @@ export function boundsOverAnimation(
 ): Box {
   const skeleton = freshSkeleton(doc);
   if (skeleton === null) return { x: 0, y: 0, width: 1, height: 1 };
-  let box: Box | null = skeleton.getBounds();
+  let box: Box | null = boxWithParticles(skeleton);
   let previous: number | null = null;
   for (const time of times) {
     poseAt(skeleton, animation, time, step, previous);
     previous = time;
     skeleton.updateWorldTransform(0);
-    box = unionBox(box, skeleton.getBounds());
+    box = unionBox(box, boxWithParticles(skeleton));
   }
   return box ?? { x: 0, y: 0, width: 1, height: 1 };
+}
+
+/**
+ * **As frases fixas do desenhador, em português** — QA de 04/11/2026 (D21). O
+ * `CanvasRenderer` do runtime fala inglês (é a língua do runtime); a janela
+ * "Imagem exportada" mostrava a frase crua. A que não bate fica como veio.
+ */
+export function rendererWarningPt(message: string): string {
+  let m = /^attachment "(.*)" has no atlas region; not drawn$/.exec(message);
+  if (m !== null) return `o desenho "${m[1]}" não tem imagem no atlas: ficou de fora`;
+  m = /^emitter "(.*)" has no atlas region; not drawn$/.exec(message);
+  if (m !== null) return `o emissor "${m[1]}" não tem imagem no atlas: ficou de fora`;
+  m = /^atlas page "(.*)" has no image; nothing drawn from it$/.exec(message);
+  if (m !== null) return `a página "${m[1]}" do atlas não tem imagem: nada dela foi desenhado`;
+  m = /^nested skeleton "(.*)" is not loaded; nothing drawn \(spec 7\.11\)$/.exec(message);
+  if (m !== null) return `a entidade "${m[1]}" não foi aberta: ficou de fora`;
+  if (message === 'no scratch canvas available; slot tint and dark color are ignored') {
+    return 'o navegador não deu uma tela de rascunho: a cor do slot e a cor escura ficaram de fora';
+  }
+  return message;
+}
+
+/** Devolve a vez à tela por um instante: o Andamento anda, e um clique responde — D20. */
+function respirar(): Promise<void> {
+  return new Promise((done) => { setTimeout(done, 0); });
 }
 
 /** A canvas of the camera's size, with the world transform already set. */
@@ -789,12 +839,14 @@ async function buildTaskExport(
     if (ctx === null) throw new Error('O navegador não deu um contexto 2D.');
     const renderer = new CanvasRenderer(ctx, {
       images: (page: AtlasPageData) => doc.imageFor(page),
-      onWarning: (message) => { if (!warnings.includes(message)) warnings.push(message); },
+      onWarning: (cru) => { const message = rendererWarningPt(cru); if (!warnings.includes(message)) warnings.push(message); },
       debug: options.bones ? { bones: true } : {},
     });
     renderer.draw(skeleton);
     frames.push(readPixels(ctx, time));
     onProgress(i + 1, times.length, 'Desenhando');
+    // QA 04/11/2026 (D20): a tela respira entre um quadro e outro.
+    await respirar();
   }
 
   // Com o retângulo da animação, a borda NÃO é cortada: o retângulo é o
@@ -809,8 +861,11 @@ async function buildTaskExport(
   let index: SheetIndex | null = null;
 
   if (options.format === 'gif') {
-    onProgress(times.length, times.length, 'Montando o GIF');
-    const bytes = encodeGif(frames, { fps, loop: options.loop, maxColors: options.maxColors });
+    onProgress(0, times.length, 'Montando o GIF');
+    // QA 04/11/2026 (D20): aos pedaços — eram 53 s num pedaço só, a página parada.
+    const bytes = await encodeGifPaced(frames, { fps, loop: options.loop, maxColors: options.maxColors },
+      (feito, total, fase) => onProgress(feito, total, fase === 'paleta' ? 'Escolhendo as cores do GIF' : 'Montando o GIF'),
+      respirar);
     files.push({ name: `${base}.gif`, blob: new Blob([bytes.slice().buffer as ArrayBuffer], { type: 'image/gif' }) });
   } else if (options.format === 'webm') {
     const support = webmSupport(browserWebmEnv());

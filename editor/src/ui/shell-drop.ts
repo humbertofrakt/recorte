@@ -27,7 +27,7 @@ import { corpoDe, wentToBase } from '../contract.js';
 import { forgetImportedImages } from '../io/import-images.js';
 import { addLooseFiles, projectFolder, rootFileNames } from '../io/project-folder.js';
 import type { FolderDirectoryHandle } from '../io/project-folder.js';
-import { FORMAT_LABELS, adoptForeignImages, importForeignProject } from '../io/import-foreign.js';
+import { FORMAT_LABELS, adoptForeignImages, importForeignProject, importedStatusLine } from '../io/import-foreign.js';
 import { dropEntries, filesOfEntries, hasFolder, pedirAlcas, planoDaPastaSolta } from '../io/drop-folder.js';
 import { importPsd, psdWarningsNote } from '../io/import-psd.js';
 import { askChoice, askPick, tellUser } from './dialog.js';
@@ -300,8 +300,9 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
         const feito = await importPsd(shell.doc, { file: alvo });
         if (feito !== null) {
           const aviso = psdWarningsNote(feito);
-          if (aviso !== null) await tellUser(aviso);
+          // QA 04/11/2026: o resumo no rodapé ANTES da janela.
           shell.statusState.textContent = feito.summary;
+          if (aviso !== null) await tellUser(aviso);
         }
         return;
       }
@@ -324,8 +325,8 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
             `Importado do ${programa}: ${importado.path}. Lendo as imagens… ${feitas} de ${total}`;
         });
         if (ligadas.notice !== null) shell.showPanel('imagens');
-        shell.statusState.textContent =
-          `Importado do ${programa}: ${importado.path}.${ligadas.notice === null ? '' : ` ${ligadas.notice}`}`;
+        // QA 04/11/2026 (D23): faltando imagem, o conselho vem primeiro.
+        shell.statusState.textContent = importedStatusLine(programa, importado.path, ligadas);
         return;
       }
       default: {

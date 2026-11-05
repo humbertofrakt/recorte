@@ -1961,3 +1961,188 @@ describe('QA 04/11/2026 — D7: o projeto importado de outro programa nasce "nã
     expect(corpo).toMatch(/shell\.doc\.setFile\(importado\.file, \{[^}]*unsaved: true/);
   });
 });
+
+describe('QA 04/11/2026 — D12: a exportação de imagem conta as partículas na caixa', () => {
+  // A prova (Chromium sem janela): Abrir pasta com o fogo.bone gravado pelo
+  // editor (fumaça, fogo e faísca, nenhum desenho) → Exportar → "GIF, PNG,
+  // folha, vídeo…" → Só este quadro (0,4 s). Saiu "1 quadro de 1x1, 88 bytes":
+  // a caixa era a do `getBounds`, que conta desenhos e não partículas — a mesma
+  // forma do D10 na linha de comando.
+  const PASTA = resolve(__dirname, '../../ferramentas/testes/dados/particulas-do-editor');
+  const posado = (t: number) => {
+    const file = JSON.parse(readFileSync(join(PASTA, 'fogo.bone'), 'utf8'));
+    const atlas = loadAtlas(JSON.parse(readFileSync(join(PASTA, 'particulas.atlas.json'), 'utf8')));
+    const data = loadSkeletonData(file, { atlases: [atlas] });
+    return { data, t };
+  };
+
+  it('em 0,4 s a caixa tem o tamanho do fogo, e não 1x1', async () => {
+    const { boxWithParticles } = await import('../src/io/export-image.js');
+    const { Skeleton, pose } = await import('../../runtime/src/index.js');
+    const { data } = posado(0.4);
+    const sk = new Skeleton(data);
+    sk.setToSetupPose();
+    sk.updateWorldTransform(0);
+    expect(sk.getBounds()?.width ?? 0).toBe(0);
+    pose(sk, data.animations[0]!, 0.4, 0.4);
+    const caixa = boxWithParticles(sk);
+    expect(caixa).not.toBeNull();
+    expect(caixa!.width).toBeGreaterThan(40);
+    expect(caixa!.height).toBeGreaterThan(40);
+  });
+
+  it('as duas caixas da janela usam a conta nova', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/export-image.ts'), 'utf8');
+    const base = fonte.slice(fonte.indexOf('function baseBounds('), fonte.indexOf('/** The box every frame'));
+    expect(base).toContain('boxWithParticles(');
+    const anim = fonte.slice(fonte.indexOf('export function boundsOverAnimation('), fonte.indexOf('/** A canvas of the camera'));
+    expect(anim.match(/boxWithParticles\(skeleton\)/g)?.length).toBe(2);
+  });
+});
+
+describe('QA 04/11/2026 — D13: o nome sugerido das animações de uma base sem rig', () => {
+  // A prova (Chromium sem janela): herói aberto → Exportar → Animações, para
+  // outra base… → idle, walk, attack. O seletor sugeriu "animacoes-animacoes.bone":
+  // o herói não tem `rig`, e a palavra de reserva entrava duas vezes.
+  it('sem rig, vale o nome da base: heroi-animacoes.bone', () => {
+    const file = { skeleton: { name: 'heroi' }, bones: [{ name: 'root' }] } as unknown as BoneFile;
+    expect(suggestedAnimationName(file, { animations: ['idle', 'walk', 'attack'] })).toBe('heroi-animacoes.bone');
+  });
+
+  it('sem rig e sem nome: animacoes.bone, uma vez só', () => {
+    const file = { bones: [{ name: 'root' }] } as unknown as BoneFile;
+    expect(suggestedAnimationName(file, { animations: ['a', 'b'] })).toBe('animacoes.bone');
+  });
+});
+
+describe('QA 04/11/2026 — o rodapé do PSD diz o resultado com a janela aberta', () => {
+  // A prova (Chromium sem janela): Importar → PSD…; com a janela de avisos
+  // aberta, o rodapé dizia "Importar PSD." (o nome do passo), e o resumo
+  // ("19 camadas lidas, 19 slots criados…") só chegava depois de Fechar.
+  const fonte = (arquivo: string): string => readFileSync(resolve(__dirname, '../src/ui', arquivo), 'utf8');
+  it('pelo menu e pelo arrasto: primeiro o rodapé, depois a janela', () => {
+    for (const [arquivo, resumo] of [['shell-file.ts', 'result.summary'], ['shell-drop.ts', 'feito.summary']] as const) {
+      const f = fonte(arquivo);
+      const rodape = f.indexOf(`shell.statusState.textContent = ${resumo};`);
+      const janela = f.indexOf('if (aviso !== null) await tellUser(aviso);', f.indexOf('psdWarningsNote(', f.indexOf('import { importPsd') + 40));
+      expect(rodape, arquivo).toBeGreaterThan(0);
+      expect(rodape, arquivo).toBeLessThan(janela);
+    }
+  });
+});
+
+describe('QA 04/11/2026 — D21: os avisos do desenhador chegam em português na exportação', () => {
+  // A prova (Chromium sem janela): o projeto do Spriter → Exportar → GIF. A
+  // janela "Imagem exportada" terminava com 'attachment
+  // "mao/_0000_Camada-1-copiar_tmp5068" has no atlas region; not drawn' — a
+  // frase crua do desenhador do runtime, em inglês.
+  it('as frases fixas do CanvasRenderer viram português; a desconhecida fica como veio', async () => {
+    const { rendererWarningPt } = await import('../src/io/export-image.js');
+    expect(rendererWarningPt('attachment "mao/x" has no atlas region; not drawn'))
+      .toBe('o desenho "mao/x" não tem imagem no atlas: ficou de fora');
+    expect(rendererWarningPt('emitter "fogo" has no atlas region; not drawn'))
+      .toBe('o emissor "fogo" não tem imagem no atlas: ficou de fora');
+    expect(rendererWarningPt('atlas page "p" has no image; nothing drawn from it'))
+      .toBe('a página "p" do atlas não tem imagem: nada dela foi desenhado');
+    expect(rendererWarningPt('nested skeleton "espada.bone" is not loaded; nothing drawn (spec 7.11)'))
+      .toBe('a entidade "espada.bone" não foi aberta: ficou de fora');
+    expect(rendererWarningPt('uma frase qualquer')).toBe('uma frase qualquer');
+  });
+
+  it('a exportação passa todo aviso do desenhador pela tradução', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/export-image.ts'), 'utf8');
+    expect(fonte).toContain('onWarning: (cru) => { const message = rendererWarningPt(cru);');
+  });
+});
+
+describe('QA 04/11/2026 — D23: importar sem as imagens põe o conselho na frente do rodapé', () => {
+  // A prova (Chromium sem janela): soltar SÓ o bcp.scml na cena. 184 avisos, e
+  // o rodapé dizia só "Importado do Spriter: bcp.bone." — a frase "0 de 92
+  // imagens… Solte a PASTA do projeto inteira" vinha depois, e o rodapé corta
+  // na primeira frase que cabe. A mesma forma do D3.
+  it('faltando imagem, a frase das imagens vem primeiro', async () => {
+    const { importedStatusLine } = await import('../src/io/import-foreign.js');
+    const { versoesDaFrase } = await import('../src/ui/shell-status.js');
+    const nota = '0 de 92 imagens do boneco estão na cena. Faltam 92: "a". Procurei entre os arquivos que vieram junto. Solte a PASTA do projeto inteira, e não só os arquivos de dentro.';
+    const linha = importedStatusLine('Spriter', 'bcp.bone', { shown: 0, missing: Array(92).fill('a'), notice: nota });
+    expect(linha.startsWith('0 de 92 imagens do boneco estão na cena.')).toBe(true);
+    expect(versoesDaFrase(linha).every((v) => v.includes('92'))).toBe(true);
+    expect(linha).toContain('Importado do Spriter: bcp.bone.');
+  });
+
+  it('com todas as imagens, como antes: o nome primeiro', async () => {
+    const { importedStatusLine } = await import('../src/io/import-foreign.js');
+    expect(importedStatusLine('Spriter', 'bcp.bone', { shown: 91, missing: [], notice: 'As 91 imagens que o boneco usa vieram junto e estão na cena e na aba Imagens.' }))
+      .toBe('Importado do Spriter: bcp.bone. As 91 imagens que o boneco usa vieram junto e estão na cena e na aba Imagens.');
+    expect(importedStatusLine('Spine', 'h.bone', { shown: 0, missing: [], notice: null })).toBe('Importado do Spine: h.bone.');
+  });
+
+  it('o menu e o arrasto usam a frase nova', () => {
+    for (const arquivo of ['shell-file.ts', 'shell-drop.ts']) {
+      const f = readFileSync(resolve(__dirname, '../src/ui', arquivo), 'utf8');
+      expect(f, arquivo).toContain('importedStatusLine(');
+    }
+  });
+});
+
+describe('QA 04/11/2026 — D23b: o .scml sozinho, sem imagem nenhuma, diz quantas faltam', () => {
+  // Sem imagem nenhuma junto, o adoptForeignImages saía calado (notice null):
+  // a pessoa via só "184 avisos". Agora diz "0 de 92… Solte a PASTA".
+  it('nenhuma imagem solta, e o boneco usa imagens fora de atlas: a frase das que faltam', async () => {
+    const { adoptForeignImages } = await import('../src/io/import-foreign.js');
+    const file = {
+      bones: [{ name: 'root' }], slots: [{ name: 'a', bone: 'root', attachment: 'a' }, { name: 'b', bone: 'root', attachment: 'b' }],
+      skins: [{ name: 'default', attachments: { a: { a: { type: 'region' } }, b: { b: { type: 'region' } } } }],
+    } as unknown as BoneFile;
+    const doc = new Doc(file);
+    const r = await adoptForeignImages(doc as never, { format: 'spriter', looseImages: [], folderName: '' } as never);
+    expect(r.missing).toEqual(['a', 'b']);
+    expect(r.notice).toMatch(/^0 de 2 imagens do boneco estão na cena\./);
+    expect(r.notice).toMatch(/Solte a PASTA do projeto inteira/);
+  });
+});
+
+describe('QA 04/11/2026 — D24: importar com atlas, pela pasta: a conta certa e a pasta do projeto', () => {
+  // A prova (Chromium sem janela): Importar → De outro programa… → a pasta do
+  // DragonBones (heroi_ske.json, heroi_tex.json, heroi_tex.png). O rodapé disse
+  // "0 de 1 imagens do boneco estão na cena" — corpo e mao ESTAVAM na cena,
+  // pelo atlas; só "malha" faltava. E o Ctrl+S seguinte perguntou "O projeto
+  // ainda não tem pasta": a pasta escolhida no importar não virou a do projeto
+  // (com o Spriter, vira).
+  const arquivo = {
+    bones: [{ name: 'root' }],
+    slots: [{ name: 'a', bone: 'root', attachment: 'corpo' }, { name: 'b', bone: 'root', attachment: 'mao' }, { name: 'c', bone: 'root', attachment: 'malha' }],
+    skins: [{ name: 'default', attachments: { a: { corpo: { type: 'region' } }, b: { mao: { type: 'region' } }, c: { malha: { type: 'region' } } } }],
+  } as unknown as BoneFile;
+  const atlas = () => loadAtlas({
+    atlas: { version: '1.0' }, pages: [{ name: 'p', image: 'p.png', width: 64, height: 64 }],
+    regions: [{ name: 'corpo', page: 0, x: 0, y: 0, width: 8, height: 8 }, { name: 'mao', page: 0, x: 8, y: 0, width: 8, height: 8 }],
+  });
+
+  it('as do atlas contam como na cena: 2 de 3, falta malha', async () => {
+    const { adoptForeignImages } = await import('../src/io/import-foreign.js');
+    const doc = new Doc(arquivo, { atlases: [atlas()] });
+    const r = await adoptForeignImages(doc as never, { format: 'dragonbones', looseImages: [], folderName: 'db', folderHandle: {} } as never);
+    expect(r.shown).toBe(2);
+    expect(r.missing).toEqual(['malha']);
+    expect(r.notice).toMatch(/^2 de 3 imagens do boneco estão na cena\./);
+  });
+
+  it('a pasta escolhida vira a do projeto, mesmo sem imagem solta', async () => {
+    const { adoptForeignImages } = await import('../src/io/import-foreign.js');
+    const { projectFolder } = await import('../src/io/project-folder.js');
+    const doc = new Doc(arquivo, { atlases: [atlas()] });
+    await adoptForeignImages(doc as never, { format: 'dragonbones', looseImages: [], folderName: 'db', folderHandle: {} } as never);
+    expect(projectFolder(doc as never)?.name).toBe('db');
+  });
+
+  it('sem pasta (arquivos soltos) e sem nada faltando: calado, e nenhuma pasta inventada', async () => {
+    const { adoptForeignImages } = await import('../src/io/import-foreign.js');
+    const { projectFolder } = await import('../src/io/project-folder.js');
+    const so = { ...arquivo, slots: arquivo.slots!.slice(0, 2), skins: [{ name: 'default', attachments: { a: { corpo: { type: 'region' } }, b: { mao: { type: 'region' } } } }] } as unknown as BoneFile;
+    const doc = new Doc(so, { atlases: [atlas()] });
+    const r = await adoptForeignImages(doc as never, { format: 'spine', looseImages: [], folderName: '' } as never);
+    expect(r.notice).toBeNull();
+    expect(projectFolder(doc as never)).toBeNull();
+  });
+});

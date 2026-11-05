@@ -78,7 +78,8 @@ function lerArgumentos(argv) {
       case 'max': op.max = Number(valor()); break;
       case 'padding': op.padding = Number(valor()); break;
       case 'ajuda': case 'help': op.ajuda = true; break;
-      default: throw new Error(`opção desconhecida: --${chave}`);
+      // QA 04/11/2026: a pergunta errada sai com 2 (o 1 é do erro do trabalho).
+      default: throw Object.assign(new Error(`opção desconhecida: --${chave}`), { codigo: 2 });
     }
   }
   op.entrada = posicionais[0];
@@ -623,5 +624,5 @@ async function principal() {
 }
 
 if (process.argv[1] !== undefined && process.argv[1].endsWith('fatiar.mjs')) {
-  principal().catch((erro) => { process.stderr.write(`erro: ${erro.message}\n`); process.exit(1); });
+  principal().catch((erro) => { process.stderr.write(`erro: ${erro.message}\n`); process.exit(erro.codigo ?? 1); });
 }

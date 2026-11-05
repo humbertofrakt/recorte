@@ -1,0 +1,30 @@
+import { subirEditor, abrir, foto, log, esperar, pararEditor, menu, rodape, fila, SAIDA, janelaTexto, clicar } from './harness.mjs';
+const url = await subirEditor(5292);
+const { browser, page } = await abrir({ url });
+await clicar(page, /Começar vazio/);
+await menu(page, 'Partículas', 'Fogo');
+await esperar(500);
+// aba Cor da ficha
+const abas = page.locator('.panel-body button[title], .panel-body [role=tab]');
+const tits = await page.evaluate(() => [...document.querySelectorAll('button')].filter(b => b.getClientRects().length && /Cor/.test(b.title || b.getAttribute('aria-label') || '')).map(b => (b.title || b.getAttribute('aria-label')).slice(0, 60)));
+console.log('botões com Cor:', tits);
+const aba = page.locator('button[title^="Cor"], button[aria-label^="Cor"]').first();
+await aba.click(); await esperar(400);
+await foto(page, 'F2-aba-cor');
+const info = () => page.evaluate(() => {
+  const vis = (e) => e.getClientRects().length > 0;
+  const cores = [...document.querySelectorAll('input[type=color]')].filter(vis).map(i => `${i.title || i.getAttribute('aria-label') || i.closest('label,div')?.textContent?.trim().slice(0, 30)}=${i.value}`);
+  const faixas = [...document.querySelectorAll('[class*=faixa], [class*=stripe], [class*=vida]')].filter(vis).map(e => `${e.className}: ${getComputedStyle(e).backgroundImage.slice(0, 160)}`);
+  return { cores, faixas };
+});
+console.log('ANTES', JSON.stringify(await info(), null, 1));
+const de = page.locator('input[type=color]:visible').first();
+await de.evaluate((i) => { i.value = '#ff0000'; i.dispatchEvent(new Event('input', { bubbles: true })); i.dispatchEvent(new Event('change', { bubbles: true })); });
+await esperar(500);
+console.log('DEPOIS', JSON.stringify(await info(), null, 1));
+console.log('startColor no doc:', await page.evaluate(async () => { const d = (await import('/src/viewport/viewport.ts')).viewportPanel.doc; for (const s of d.file.skins) for (const m of Object.values(s.attachments ?? {})) for (const a of Object.values(m ?? {})) if (a?.type === 'BONE_particle') return JSON.stringify(a.startColor); }));
+console.log('rodapé', await rodape(page));
+const txt = await page.evaluate(async () => (await import('/src/viewport/viewport.ts')).viewportPanel.doc.serialize());
+(await import('node:fs')).writeFileSync(SAIDA + '/F-fogo-vermelho.bone', txt);
+await foto(page, 'F2-depois');
+await browser.close(); pararEditor();

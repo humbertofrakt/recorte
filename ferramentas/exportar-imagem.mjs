@@ -23,7 +23,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
 import {
-  abrirEsqueleto, cameraDe, carregarRuntime, desenharPose, gravarPng, juntarLimites, posarAte,
+  abrirEsqueleto, cameraDe, carregarRuntime, desenharPose, gravarPng, juntarLimites, limitesComParticulas, posarAte,
 } from './render-png.mjs';
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
@@ -86,7 +86,8 @@ function lerArgumentos(argv) {
       case 'laco': op.laco = Number(valor()); break;
       case 'com-ossos': op.ossos = true; break;
       case 'ajuda': case 'help': op.ajuda = true; break;
-      default: throw new Error(`opção desconhecida: --${chave}`);
+      // QA 04/11/2026: a pergunta errada sai com 2 (o 1 é do erro do trabalho).
+      default: throw Object.assign(new Error(`opção desconhecida: --${chave}`), { codigo: 2 });
     }
   }
   op.entrada = posicionais[0];
@@ -146,7 +147,8 @@ function limitesDaAnimacao(rt, dados, animacao, tempos, passo) {
   for (const t of tempos) {
     posarAte(rt, esqueleto, animacao, t, passo, anterior);
     anterior = t;
-    caixa = juntarLimites(caixa, esqueleto.getBounds());
+    // QA 04/11/2026 (D10): as partículas entram na caixa.
+    caixa = juntarLimites(caixa, limitesComParticulas(rt, esqueleto));
   }
   return caixa;
 }
@@ -281,5 +283,5 @@ async function principal() {
 }
 
 if (process.argv[1] !== undefined && process.argv[1].endsWith('exportar-imagem.mjs')) {
-  principal().catch((e) => { process.stderr.write(`erro: ${e.message}\n`); process.exit(1); });
+  principal().catch((e) => { process.stderr.write(`erro: ${e.message}\n`); process.exit(e.codigo ?? 1); });
 }

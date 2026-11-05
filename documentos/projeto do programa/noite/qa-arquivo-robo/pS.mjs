@@ -1,0 +1,20 @@
+import { subirEditor, abrir, foto, log, esperar, pararEditor, menu, rodape, fila, SAIDA, janelaTexto, clicar } from './harness.mjs';
+import { cpSync, mkdirSync, rmSync, readdirSync, statSync } from 'node:fs';
+const D = `${SAIDA}/S`; rmSync(D, { recursive: true, force: true }); mkdirSync(D, { recursive: true });
+cpSync('/home/user/recorte/exemplo/game', `${D}/game`, { recursive: true }); rmSync(`${D}/game/bcp 2026-09-09.bone`);
+const url = await subirEditor(5292);
+const { browser, page } = await abrir({ url, dirDownload: `${D}/dl` });
+page.setDefaultTimeout(600000);
+fila.push(`${D}/game`);
+await menu(page, 'Arquivo', 'Importar', 'De outro programa'); await esperar(800);
+await clicar(page, /^bcp\.scml$/); await esperar(800); await clicar(page, /^Abrir com as imagens/); await esperar(9000); await clicar(page, /^Fechar/);
+console.log('rodapé', await rodape(page));
+void ('MEDIDA', await page.evaluate(async () => { const d = (await import('/src/viewport/viewport.ts')).viewportPanel.doc; const fs = await import('/src/io/folder-save.ts'); const t = performance.now(); const pack = await fs.buildFolderPack(d, 'x'); const t2 = performance.now(); const txt = d.serialize(); const t3 = performance.now(); return { pack: ((t2 - t) / 1000).toFixed(1), paginas: pack?.pages.length, serialize: ((t3 - t2) / 1000).toFixed(2) }; }));
+const t0 = Date.now();
+await page.evaluate(() => { setTimeout(() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 's', code: 'KeyS', ctrlKey: true, bubbles: true })), 10); });
+const batidas = [];
+for (let i = 0; i < 120; i++) { await esperar(1000); const t1 = Date.now(); const r = await rodape(page); batidas.push(`${((t1 - t0) / 1000).toFixed(0)}s:${((Date.now() - t1) / 1000).toFixed(1)}s:${r.split(' | ')[0].slice(0, 60)}`); const j = await janelaTexto(page); if (j) { console.log('JANELA', j.replace(/\n+/g, ' / ').slice(0, 300)); await clicar(page, /^Salvar mesmo assim|^Escolher a pasta/); } if (/Salvo em/.test(r)) { console.log('rodapé', r); break; } }
+console.log('respostas', batidas.join(' '));
+console.log('tempo', ((Date.now() - t0) / 1000).toFixed(1));
+for (const n of readdirSync(`${D}/game`)) if (/\.(bone|json)$|atlas/.test(n)) console.log(n, statSync(`${D}/game/${n}`).size);
+await browser.close(); pararEditor();

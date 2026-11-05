@@ -1,0 +1,29 @@
+{
+  "atlas": {
+    "version": "1.0",
+    "generator": "Recorte editor"
+  },
+  "scale": 1,
+  "pages": [
+    {
+      "name": "particulas",
+      "image": "particulas.png",
+      "width": 30,
+      "height": 30
+    }
+  ],
+  "regions": [
+    {
+      "name": "fx/ponto-suave",
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "offsetX": 1,
+      "offsetY": 1,
+      "originalWidth": 32,
+      "originalHeight": 32
+    }
+  ]
+}

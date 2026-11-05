@@ -93,6 +93,15 @@ export function sliceDoc(doc: Doc, choice: SkinExportChoice): SliceResult {
   });
 }
 
+/**
+ * O arquivo inteiro pela MESMA régua do recorte — QA de 04/11/2026 (D16). A
+ * tabela comparava o recorte (com o carimbo "Recorte editor 0.1.0") com o
+ * `doc.file` cru, e tudo marcado dava o recorte 7 bytes maior que o inteiro.
+ */
+export function wholeText(doc: Doc): string {
+  return slicedText(sliceDoc(doc, { skins: skinNames(doc), animations: animationNames(doc) }));
+}
+
 /** The bytes this window would write, with the editor's own writer. */
 export function slicedText(result: SliceResult): string {
   return `${JSON.stringify(result.file, null, 2)}\n`;
@@ -450,7 +459,7 @@ export function exportSkinWindow(doc: Doc, host?: HTMLElement): Promise<SkinExpo
     go.disabled = false;
     latest = result;
     latestText = slicedText(result);
-    const whole = `${JSON.stringify(doc.file, null, 2)}\n`;
+    const whole = wholeText(doc);
     for (const row of countRows(result, textBytes(latestText), textBytes(whole))) {
       const node = valueNodes.get(row.label);
       if (node === undefined) continue;

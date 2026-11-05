@@ -11,7 +11,7 @@
  * Portuguese, never into a silent half-import.
  */
 
-import { loadAtlas } from '../../../runtime/src/index.js';
+import { findAtlasRegion, loadAtlas } from '../../../runtime/src/index.js';
 import type { AtlasData, BoneFile } from '../../../runtime/src/index.js';
 import { importSpine } from '../../../ferramentas/src/importar/spine.js';
 import { dragonBonesParts, importDragonBones } from '../../../ferramentas/src/importar/dragonbones.js';
@@ -586,18 +586,48 @@ export interface AdoptedImages {
 export async function adoptForeignImages(
   doc: EditorDoc, imported: ForeignProject, onProgress?: (done: number, total: number) => void,
 ): Promise<AdoptedImages> {
-  if (imported.looseImages.length === 0) return { shown: 0, missing: [], notice: null };
-  // Rodada 45, lote 3: com a pasta escolhida, o projeto mora nela (S5).
-  setProjectFolder(doc, {
-    name: imported.folderName, handle: imported.folderHandle ?? null,
-    images: new Map(imported.looseImages.map((image) => [image.name, image])),
-  });
-  const { made, missing } = await ensureProvisionalMany(doc, imagesInUse(doc.file), onProgress);
+  // QA 04/11/2026 (D24): a pasta escolhida no importar vira a do projeto
+  // SEMPRE — também no Spine e no DragonBones, que trazem atlas e nenhuma
+  // imagem solta. Senão o Ctrl+S seguinte perguntava a pasta de novo.
+  if (imported.looseImages.length > 0 || imported.folderHandle !== undefined) {
+    // Rodada 45, lote 3: com a pasta escolhida, o projeto mora nela (S5).
+    setProjectFolder(doc, {
+      name: imported.folderName, handle: imported.folderHandle ?? null,
+      images: new Map(imported.looseImages.map((image) => [image.name, image])),
+    });
+  }
+  // D24: as que um atlas já mostra contam como na cena ("0 de 1" com corpo e
+  // mão desenhados era mentira).
+  const usadas = [...imagesInUse(doc.file)];
+  const peloAtlas = usadas.filter((name) => findAtlasRegion(doc.atlases, name) !== null).length;
+  const programa = FORMAT_LABELS[imported.format];
+  if (imported.looseImages.length === 0) {
+    // QA 04/11/2026 (D23): o .scml sozinho, sem imagem nenhuma, saía calado —
+    // só "184 avisos". As que o boneco usa e nenhum atlas tem: a frase diz.
+    const faltam = usadas.filter((name) => findAtlasRegion(doc.atlases, name) === null);
+    if (faltam.length === 0) return { shown: peloAtlas, missing: [], notice: null };
+    return {
+      shown: peloAtlas, missing: faltam,
+      notice: looseImagesNotice(programa, peloAtlas, faltam, imported.folderName ?? '', imported.folderHandle !== undefined),
+    };
+  }
+  const { made, missing } = await ensureProvisionalMany(doc, usadas, onProgress);
   return {
-    shown: made.length,
+    shown: made.length + peloAtlas,
     missing,
-    notice: looseImagesNotice(FORMAT_LABELS[imported.format], made.length, missing, imported.folderName, imported.folderHandle !== undefined),
+    notice: looseImagesNotice(programa, made.length + peloAtlas, missing, imported.folderName, imported.folderHandle !== undefined),
   };
+}
+
+/**
+ * **A frase do rodapé depois de importar** — QA de 04/11/2026 (D23). O rodapé
+ * mostra a primeira frase que cabe; quando falta imagem, a frase das imagens
+ * (com o conselho de soltar a PASTA) vem primeiro, e o nome do arquivo depois.
+ */
+export function importedStatusLine(program: string, path: string, adopted: AdoptedImages, extra = ''): string {
+  const nome = `Importado do ${program}: ${path}.${extra === '' ? '' : ` ${extra}`}`;
+  if (adopted.notice === null) return nome;
+  return adopted.missing.length > 0 ? `${adopted.notice} ${nome}` : `${nome} ${adopted.notice}`;
 }
 
 /**

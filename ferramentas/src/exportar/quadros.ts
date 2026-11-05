@@ -411,11 +411,26 @@ interface ColorCount {
  * has to come out with those four colours and no dithered approximation of
  * them, and that is only true if the histogram never rounded them away.
  */
-function histogramOf(
+/** Um passo do GIF aos pedaços: a fase e o quadro que acabou — QA de 04/11/2026 (D20). */
+export interface GifStep {
+  readonly fase: 'paleta' | 'quadro';
+  readonly feito: number;
+  readonly total: number;
+}
+
+/** Roda um gerador até o fim, sem pausa nenhuma: o caminho de sempre. */
+function drain<T>(steps: Generator<GifStep, T>): T {
+  let r = steps.next();
+  while (!r.done) r = steps.next();
+  return r.value;
+}
+
+function* histogramSteps(
   frames: readonly RgbaFrame[], alphaThreshold: number,
-): { colors: ColorCount[]; anyTransparent: boolean } {
+): Generator<GifStep, { colors: ColorCount[]; anyTransparent: boolean }> {
   const seen = new Map<number, ColorCount>();
   let anyTransparent = false;
+  let feito = 0;
   for (const frame of frames) {
     const px = frame.rgba;
     for (let i = 0; i < px.length; i += 4) {
@@ -431,6 +446,7 @@ function histogramOf(
       if (found === undefined) seen.set(key, { r, g, b, n: 1 });
       else found.n++;
     }
+    yield { fase: 'paleta', feito: ++feito, total: frames.length };
   }
   return { colors: [...seen.values()], anyTransparent };
 }
@@ -482,8 +498,14 @@ function averageOf(bucket: readonly ColorCount[]): [number, number, number] {
 export function buildPalette(
   frames: readonly RgbaFrame[], maxColors = 256, alphaThreshold = 128,
 ): Palette {
+  return drain(paletteSteps(frames, maxColors, alphaThreshold));
+}
+
+function* paletteSteps(
+  frames: readonly RgbaFrame[], maxColors: number, alphaThreshold: number,
+): Generator<GifStep, Palette> {
   const limit = Math.max(2, Math.min(256, Math.round(maxColors)));
-  const { colors, anyTransparent } = histogramOf(frames, alphaThreshold);
+  const { colors, anyTransparent } = yield* histogramSteps(frames, alphaThreshold);
   const room = Math.max(1, anyTransparent ? limit - 1 : limit);
 
   let chosen: Array<[number, number, number]>;
@@ -728,6 +750,32 @@ export const GIF87A = 'GIF87a';
  * Every frame must be the same size, because a GIF has one logical screen.
  */
 export function encodeGif(frames: readonly RgbaFrame[], options: GifOptions = {}): Uint8Array {
+  return drain(gifSteps(frames, options));
+}
+
+/**
+ * **O GIF aos pedaços** — QA de 04/11/2026 (D20). Os MESMOS bytes do
+ * `encodeGif`, com uma pausa depois de cada quadro da paleta e de cada quadro
+ * escrito. No editor a pausa devolve a vez à tela: o GIF do Spriter (30
+ * quadros de 2837x1197) prendia a página 64 s sem responder, com o Andamento
+ * parado. A linha de comando continua no `encodeGif`, sem pausa.
+ */
+export async function encodeGifPaced(
+  frames: readonly RgbaFrame[], options: GifOptions = {},
+  onStep: (feito: number, total: number, fase: GifStep['fase']) => void = () => {},
+  pause: () => Promise<void> = () => new Promise((done) => { setTimeout(done, 0); }),
+): Promise<Uint8Array> {
+  const steps = gifSteps(frames, options);
+  let r = steps.next();
+  while (!r.done) {
+    onStep(r.value.feito, r.value.total, r.value.fase);
+    await pause();
+    r = steps.next();
+  }
+  return r.value;
+}
+
+function* gifSteps(frames: readonly RgbaFrame[], options: GifOptions): Generator<GifStep, Uint8Array> {
   if (frames.length === 0) throw new Error('não há quadro nenhum para o GIF');
   const first = frames[0]!;
   for (const frame of frames) {
@@ -737,7 +785,7 @@ export function encodeGif(frames: readonly RgbaFrame[], options: GifOptions = {}
   }
 
   const alphaThreshold = options.alphaThreshold ?? 128;
-  const palette = buildPalette(frames, options.maxColors ?? 256, alphaThreshold);
+  const palette = yield* paletteSteps(frames, options.maxColors ?? 256, alphaThreshold);
   const bits = paletteBits(palette.count);
   const tableSize = 1 << bits;
   const old = options.gif87a === true;
@@ -792,6 +840,7 @@ export function encodeGif(frames: readonly RgbaFrame[], options: GifOptions = {}
     out.push(minCodeSize);
     subBlocks(lzwEncode(indexFrame(frame, palette, alphaThreshold, cache), minCodeSize), out);
     if (old) break; // 87a carries one frame and no more.
+    yield { fase: 'quadro', feito: i + 1, total: frames.length };
   }
 
   out.push(0x3B);

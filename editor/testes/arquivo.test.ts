@@ -2434,3 +2434,85 @@ describe('QA 04/11/2026 — D8: o .boneb aberto sozinho fala português', () => 
     expect(aberto!.warnings[0]).toMatch(/^Esta base usa heroi\.atlas\.json, que mora na pasta do projeto, e ela veio sozinha/);
   });
 });
+
+describe('QA 04/11/2026 — D17: Entregar uma base leva o atlas que ela cita', () => {
+  // A prova (Chromium sem janela): Importar → De outro programa… → a pasta do
+  // Spine (heroi-spine.json, heroi.atlas, heroi.png) → Exportar → Entregar uma
+  // base… Saiu SÓ entregue.bone, citando heroi-spine.atlas.json — um arquivo
+  // que não existe em lugar nenhum (o atlas importado mora na memória). A
+  // janela dizia "o atlas que ele já citava vale". No jogo, nenhuma imagem.
+  it('sem imagem da pasta para fatiar, os atlas citados e as páginas deles vão junto', async () => {
+    const { deliveryAtlasPlan } = await import('../src/io/open-save.js');
+    const plano = deliveryAtlasPlan(
+      [{ name: 'heroi-spine.atlas.json', text: '{}' }],
+      [{ pages: [{ image: 'heroi.png' }, { image: 'heroi2.png' }] }],
+    );
+    expect(plano.atlas).toEqual(['heroi-spine.atlas.json']);
+    expect(plano.paginas).toEqual(['heroi.png', 'heroi2.png']);
+  });
+
+  it('a entrega usa o plano quando não há pack, e a janela não diz mais "vale"', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/open-save.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('export async function deliverBody('), fonte.indexOf('/** Uma linha de rodapé para o que a entrega gravou. */'));
+    expect(corpo).toContain('deliveryAtlasPlan(');
+    expect(corpo).not.toContain('o atlas que ela já citava vai como está, sem fatiar.');
+    const casca = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(casca).not.toContain('o atlas que ele já citava vale');
+  });
+});
+
+describe('QA 04/11/2026 — D19: a pasta escolhida no Salvar liga as imagens que o desenho usa', () => {
+  // A prova (Chromium sem janela): rascunho recuperado (sem imagens: 4 avisos)
+  // → Salvar → "O projeto ainda não tem pasta" → Escolher a pasta → mao. Em
+  // seguida: "Salvar com avisos? Faltam 2 imagens: _0000_Camada-1,
+  // _0001_Camada-2" — as duas estão NA pasta que acabou de ser escolhida. A
+  // pasta entrava no projeto, e o desenho não era ligado a ela.
+  it('askFolderFirst: depois de pôr a pasta no projeto, liga as imagens (adoptFolderAtlases)', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('export async function askFolderFirst('), fonte.indexOf('export async function openFolder('));
+    const pos = corpo.indexOf('setProjectFolder(shell.doc, folder);');
+    const liga = corpo.indexOf('await adoptFolderAtlases(shell.doc);');
+    expect(pos).toBeGreaterThan(0);
+    expect(liga).toBeGreaterThan(pos);
+    expect(liga).toBeLessThan(corpo.indexOf("return 'pasta';"));
+  });
+});
+
+describe('QA 04/11/2026 — o projeto com manifesto aberto com aviso: o aviso primeiro', () => {
+  // A mesma forma do D3 e do D23: "Projeto X aberto: …. <aviso>" — o rodapé
+  // corta na primeira frase, e o aviso some. Achado na varredura da forma.
+  it('o aviso vem antes da notícia', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(fonte).toContain('? `${lido.warnings[0]}. ${projectOpenedNotice(folder.name, lido.lists)}`');
+  });
+});
+
+describe('QA 04/11/2026 — Ctrl+O diz o que abriu, como o arrasto', () => {
+  // A prova (Chromium sem janela): Ctrl+O → heroi.bone, heroi.atlas.json,
+  // heroi.png e espada.bone. Abriu inteiro, e o rodapé dizia só "Sem mudanças
+  // por salvar." — o arrasto diz "heroi.bone aberto pelo arrasto.", e o
+  // pacote diz o que veio dentro.
+  it('a frase do .bone aberto conta a entidade e o atlas', async () => {
+    const { abertoNotice } = await import('../src/io/open-save.js');
+    expect(abertoNotice('heroi.bone', ['espada.bone'], 1)).toBe('heroi.bone aberto, com a entidade espada.bone e o atlas com as imagens.');
+    expect(abertoNotice('a.bone', [], 0)).toBe('a.bone aberto.');
+  });
+
+  it('o abrir da casca usa a frase quando não há aviso', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(fonte).toContain('else shell.statusState.textContent = abertoNotice(opened.path ?? \'\', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);');
+  });
+});
+
+describe('QA 04/11/2026 — D24b: o atlas importado vai para a pasta do projeto, e não para os Downloads', () => {
+  // A prova (Chromium sem janela): DragonBones importado pela pasta → Ctrl+S.
+  // heroi_ske.atlas.json foi gravado NA pasta (o "levar") e TAMBÉM baixado:
+  // sem imagem da pasta para empacotar (pack null), o gravarAtlasAoLado pulava
+  // a rota da pasta e caía no download.
+  it('com a pasta e o .bone dentro dela, o atlas mudado é gravado na pasta mesmo sem pack', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/open-save.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('async function gravarAtlasAoLado('), fonte.indexOf('async function directoryOf('));
+    expect(corpo).toContain("if (route.kind === 'pasta' && folder.handle !== null && out.length > 0) {");
+    expect(corpo.indexOf('if (pack === null) {')).toBeLessThan(corpo.indexOf("if (route.kind === 'pasta' && folder.handle !== null && out.length > 0) {"));
+  });
+});

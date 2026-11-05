@@ -159,3 +159,25 @@ describe('o nome e o relatório', () => {
     for (const linha of linhas) expect(linha).toContain(' — ');
   });
 });
+
+describe('QA 04/11/2026 — D16: sem cortar nada, o tamanho é o do arquivo inteiro', () => {
+  // A prova (Chromium sem janela): herói → Exportar → "Uma imagem por skin…",
+  // tudo marcado. A tabela dizia "Tamanho em bytes 48.326 / 48.319": o recorte
+  // 7 bytes MAIOR que o inteiro (doc 57 já anotava 48.485 / 48.478). A conta do
+  // inteiro era o `doc.file` cru; a do recorte, o mesmo arquivo com o carimbo
+  // "Recorte editor 0.1.0" no `generator` — sete letras a mais.
+  it('tudo marcado: agora == inteiro', async () => {
+    const { sliceDoc, slicedText, textBytes, wholeText } = await import('../src/io/export-skin.js');
+    const doc = exampleDoc();
+    const skins = (doc.file.skins ?? []).map((s) => s.name);
+    const animations = (doc.file.animations ?? []).map((a) => a.name);
+    const agora = textBytes(slicedText(sliceDoc(doc, { skins, animations })));
+    expect(agora).not.toBe(textBytes(`${JSON.stringify(doc.file, null, 2)}\n`));
+    expect(agora).toBe(textBytes(wholeText(doc)));
+  });
+
+  it('a janela conta o inteiro pela mesma régua', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/export-skin.ts'), 'utf8');
+    expect(fonte).toContain('const whole = wholeText(doc);');
+  });
+});
