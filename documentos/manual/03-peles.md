@@ -36,6 +36,22 @@ Serve para:
 
 ---
 
+## O jeito mais fácil: o Guarda-roupa
+
+Tudo de skin cabe numa janela só.
+
+| # | Ação |
+|:---:|:---|
+| 1 | **Skins → Guarda-roupa: desenho × skin…** (ou o botão **Guarda-roupa** na aba Skins) |
+| 2 | Cada **coluna** é uma skin. Cada **linha** é um desenho |
+| 3 | **+ Nova skin**: digite o nome, **Criar a skin** |
+| 4 | Clique na casa do desenho, e depois na imagem nova, embaixo |
+| 5 | **+ Cópia**: uma skin igual, para mudar só um pouco |
+| 6 | Passe o mouse numa coluna: o boneco **prova** a roupa, sem mudar nada |
+| 7 | **Vestir só esta**: o boneco fica com esta roupa |
+
+O resto do capítulo explica as mesmas coisas pela aba Skins.
+
 ## A aba Skins
 
 **Janela → Skins.** Coluna da direita, junto de Animações e Regras.
