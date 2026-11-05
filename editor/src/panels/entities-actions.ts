@@ -521,7 +521,7 @@ export async function chooseTestAnima(doc: EditorDoc): Promise<boolean> {
   const itens = animaChoices(doc, card);
   const id = await askPick({
     title: `O que ${card.nome} toca`,
-    placeholder: 'Parada, a de quem recebe, ou uma animação dela',
+    placeholder: 'Parada, mexe junto com quem segura, ou uma animação dela',
     search: (text) => itens
       .map((c, i) => ({ id: String(i), label: c.label, hint: c.hint, ...(c.atual ? { aside: 'agora' } : {}) }))
       .filter((item) => item.label.toLowerCase().includes(String(text).trim().toLowerCase())),

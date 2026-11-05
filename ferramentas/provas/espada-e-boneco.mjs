@@ -465,11 +465,11 @@ async function pessoaB(browser) {
     return !e.slots.includes('weapon') || 'o herói veio com a espada';
   });
 
-  await passo('B: Entidades → Trazer entidade de fora…, só o espada.bone da pessoa A', async () => {
+  await passo('B: Tomadas → Trazer entidade de fora…, só o espada.bone da pessoa A', async () => {
     // A pessoa escolhe SÓ o espada.bone, como faria. O programa pede a pasta
     // dela (o atlas mora ao lado), e a pessoa aponta a pasta da pessoa A.
     await page.evaluate((p) => { window.__proximosArquivos = [p + '/espada.bone']; window.__proximaPasta = p; }, PASTA_A);
-    await menu(page, 'Entidades', 'Trazer entidade de fora…');
+    await menu(page, 'Tomadas', 'Trazer entidade de fora…');
     const pergunta = page.locator('.dialog-box', { hasText: 'falta espada.atlas.json' });
     await pergunta.waitFor({ timeout: 4000 }).catch(() => {});
     if (await pergunta.count() === 0) return `o programa não perguntou pela pasta · rodapé: ${await rodape(page)}`;
@@ -478,7 +478,7 @@ async function pessoaB(browser) {
     await page.waitForTimeout(1200);
     const janelas = await page.evaluate(() => [...document.querySelectorAll('[role=dialog]')].filter((e) => e.getClientRects().length).map((e) => e.innerText.slice(0, 300)));
     if (janelas.length > 0) { await page.keyboard.press('Escape'); return `abriu com avisos: ${janelas.join(' | ')}`; }
-    await aba(page, 'Entidades');
+    await aba(page, 'Tomadas');
     await foto(page, 'b-prateleira');
     const n = await page.locator('.imagens-linha[data-entidade="espada.bone"]').count();
     return n > 0 || `a espada não está na prateleira · rodapé: ${await rodape(page)}`;
@@ -517,12 +517,12 @@ async function pessoaB(browser) {
     return errados.length === 0 || `o anexo ficou ${JSON.stringify(a)}`;
   });
 
-  await passo('B: no cartão da espada, anima ▾ → "a de quem recebe" (inheritAnimation)', async () => {
+  await passo('B: no cartão da espada, anima ▾ → "mexe junto com quem segura" (inheritAnimation)', async () => {
     const cartao = page.locator('.entidades-cartao', { hasText: 'PROJETO' }).filter({ hasText: 'espada' }).first();
     await cartao.locator('button.entidades-cartao-anima').first().click();
     await page.waitForTimeout(200);
     await foto(page, 'b-anima-a-de-quem-recebe');
-    await page.locator('.menu-flutuante-item', { hasText: 'a de quem recebe' }).first().click();
+    await page.locator('.menu-flutuante-item', { hasText: 'mexe junto com quem segura' }).first().click();
     await page.waitForTimeout(300);
     const a = await page.evaluate(docJs((d) => d.file.skins[0].attachments.espada?.espada ?? null));
     return a?.inheritAnimation === true || `o anexo ficou ${JSON.stringify(a)} · rodapé: ${await rodape(page)}`;
@@ -696,7 +696,7 @@ async function pessoaBReabre(browser) {
     await menu(page, 'Arquivo', 'Abrir pasta do projeto…');
     for (let i = 0; i < 40; i++) { if (await page.evaluate(docJs((d) => (d.file.slots ?? []).length > 0))) break; await page.waitForTimeout(250); }
     await page.waitForTimeout(800);
-    await aba(page, 'Entidades');
+    await aba(page, 'Tomadas');
     await foto(page, 'b-reabriu-espada-nova');
     const e = await page.evaluate(docJs((d) => {
       const slot = d.skeleton?.findSlot('espada');

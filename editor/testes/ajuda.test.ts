@@ -319,7 +319,7 @@ const ROTULOS: readonly string[] = Object.freeze([
   // Montagem ⇄ Animando e o interruptor Montagem | Animando, e Peles (Skins).
   // Menus
   'Arquivo', 'Editar', 'Imagens', 'Base', 'Malha e regras', 'Animação', 'Skins',
-  'Entidades', 'Partículas', 'Exibir', 'Janela', 'Ajuda',
+  'Tomadas', 'Partículas', 'Exibir', 'Janela', 'Ajuda',
   // Arquivo
   'Novo projeto…', 'Abrir projeto…', 'Abrir pasta do projeto…', 'Abrir o herói (exemplo)',
   'Salvar', 'Salvar como…', 'Salvar como binário…', 'Salvar como pacote…',

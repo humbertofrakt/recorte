@@ -10,7 +10,6 @@ O nome da JANELA é o papel. O **endereço** é outra coisa: é o nome que o
 |:---|:---|:---|:---|
 | **Diretor** | DIRETOR · animador-01 | `animador-01` | fala com o Humberto e planeja. É a **única** porta que dá nele |
 | **Planejador** | PLANEJADOR · animador-f6 | `animador-f6` | escreve os planos, divide em partes, manda e administra os executores |
-| Executor | EXECUTANDO · a espada de um, o boneco de outro | `recorte-54` (05/11/2026; ramo `obra/entidades`) | a aba Entidades e o que ela usa para salvar e abrir |
 | Executor | LINHA DO TEMPO · animador-97 | `animador-97` | copiar e colar chaves — itens 4 e 8 (`panels/dopesheet*.ts`, `panels/graph.ts`, `anim/timeline-tools.ts`, `anim/keying.ts`) |
 
 **Os endereços de 14/09 morreram todos** (animador-36, animador-c1, animador-47,

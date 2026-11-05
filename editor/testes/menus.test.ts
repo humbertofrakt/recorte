@@ -108,7 +108,7 @@ describe('a barra de menus', () => {
   it('tem doze menus, na ordem do trabalho, e Esqueleto virou Base', () => {
     expect(menus().map((group) => group.label)).toEqual([
       'Arquivo', 'Editar', 'Imagens', 'Base', 'Malha e regras', 'Animação',
-      'Skins', 'Entidades', 'Partículas', 'Exibir', 'Janela', 'Ajuda',
+      'Skins', 'Tomadas', 'Partículas', 'Exibir', 'Janela', 'Ajuda',
     ]);
     expect(menus().some((group) => group.label === 'Esqueleto')).toBe(false);
   });

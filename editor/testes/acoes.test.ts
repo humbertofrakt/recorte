@@ -174,7 +174,8 @@ describe('a tabela das ações', () => {
     // 309 (noite de 04/11/2026, obra/skins): +1, `guarda-roupa` (Skins → Guarda-roupa).
     // 311 (noite de 04/11/2026, obra/reaproveitar): +2, `usar-animacoes` e `seguir-esqueleto-padrao`.
     // 312 (noite de 04/11/2026, obra/manual): +1, `quero-fazer` (Ajuda → Quero fazer…).
-    expect(tabela.length).toBe(312);
+    // 315 (05/11/2026, obra/entidades): +3, as tomadas (encaixar-projeto, por-tomada, tirar-peca).
+    expect(tabela.length).toBe(315);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');
@@ -263,7 +264,8 @@ describe('as ações de arranque, sem painel montado', () => {
     // Rodada 44, lote 7: + 'caber-na-antiga'.
     // +1 (noite de 04/11/2026, obra/skins): `guarda-roupa`. 132.
     // +2 (noite de 04/11/2026, obra/reaproveitar): `usar-animacoes`, `seguir-esqueleto-padrao`. 134.
-    expect(arranque().length).toBe(134);
+    // +3 (05/11/2026, obra/entidades): as tomadas. 137.
+    expect(arranque().length).toBe(137);
   });
 
   it('a função que ela devolve tira todas', () => {
@@ -302,6 +304,19 @@ describe('pelo menu, com as abas fechadas', () => {
     expect(runAction('fundo-de-tudo')).toBe(true);
     const fundo = (doc.file.slots ?? []).map((slot) => slot.name);
     expect(fundo.indexOf('arm_back')).toBeLessThan(depois.indexOf('arm_back'));
+  });
+
+  it('Tomadas → Tirar a peça, com a aba fechada: a espada sai da mão, a tomada fica (05/11/2026)', () => {
+    const { doc } = heroi();
+    registerCoreActions(doc);
+    expect(runAction('tirar-peca')).toBe(false); // nada escolhido: cinza
+    doc.select({ ...emptySelection(), slots: ['weapon'] });
+    expect(runAction('tirar-peca')).toBe(true);
+    const weapon = (doc.file.slots ?? []).find((slot) => slot.name === 'weapon')!;
+    expect(weapon.attachment).toBeUndefined();
+    expect(doc.file.skins![0]!.attachments!['weapon']).toBeUndefined();
+    doc.undo();
+    expect((doc.file.slots ?? []).find((slot) => slot.name === 'weapon')!.attachment).toBe('sword');
   });
 
   it('novo osso, duplicar e apagar, com a Árvore fechada', () => {

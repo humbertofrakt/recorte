@@ -463,6 +463,10 @@ export const TAREFAS: readonly TarefaDef[] = Object.freeze([
   // Noite de 04/11/2026 (obra/skins): a grade peça × skin.
   { action: 'guarda-roupa', grupo: 'Peles: trocar a roupa', tarefa: 'Ver todas as roupas lado a lado e trocar a imagem de uma peça numa roupa' },
   { action: 'por-entidade', grupo: 'Corpos, animações e entidades', tarefa: 'Pôr uma entidade na cena, presa ao osso escolhido' },
+  // 05/11/2026: as tomadas.
+  { action: 'encaixar-projeto', grupo: 'Corpos, animações e entidades', tarefa: 'Encaixar um projeto (a espada, o piloto) na tomada de um osso' },
+  { action: 'por-tomada', grupo: 'Corpos, animações e entidades', tarefa: 'Pôr uma tomada num osso: a mão, as costas, a cabine' },
+  { action: 'tirar-peca', grupo: 'Corpos, animações e entidades', tarefa: 'Tirar a peça encaixada de uma tomada' },
   { action: 'escolher-animacao-entidade', grupo: 'Corpos, animações e entidades', tarefa: 'Escolher qual animação da entidade toca daqui em diante' },
   // Rodada 8c, C15.
   { action: 'entidade-em-laco', grupo: 'Corpos, animações e entidades', tarefa: 'Fazer a entidade rodar em laço, ou tocar uma volta e parar' },

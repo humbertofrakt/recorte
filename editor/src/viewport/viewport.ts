@@ -105,6 +105,8 @@ import {
   onCropEditing, removeCrop, setCropEditing, startCropEditing, type CropBox, type CropZone,
 } from './crop-model.js';
 import { CropNumbersBox } from './crop-box.js';
+// 05/11/2026: as tomadas na cena — o ícone no osso, e o botão direito no osso.
+import { TomadasLayer, abrirMenuDaTomada } from '../panels/tomadas.js';
 import { HELD_DOOR, drifted, gripOfLabel, heldNotice, rulesOn, type BoneNumbers } from './held-by-rule.js';
 
 // ---------------------------------------------------------------------------
@@ -364,6 +366,7 @@ export class ViewportPanel implements Panel {
     // N-4b: os números do recorte, no canto oposto ao do zoom.
     this.cropBox = new CropNumbersBox((d) => { d.notice(this.cropDoneNotice(d)); this.root?.focus(); });
     stage.appendChild(this.cropBox.node);
+    stage.appendChild(this.tomadas.node);
     // As boas-vindas do documento vazio — anotação 24. Ela mora no palco, por
     // cima do canvas, e some sozinha no primeiro osso ou na primeira imagem.
     this.welcome = this.buildWelcome();
@@ -1261,6 +1264,19 @@ export class ViewportPanel implements Panel {
    * `false` quando não há desenho com imagem debaixo do ponteiro — e na parte
    * transparente não há: o clique passa direto.
    */
+  /** O botão direito num osso: o menu das tomadas dele. `false` fora de osso. */
+  private openBoneMenu(e: PointerEvent): boolean {
+    const doc = this.doc;
+    if (doc === null) return false;
+    const screen = this.screenOf(e);
+    const world = this.camera.screenToWorld(screen.x, screen.y);
+    const hit = pickAll(doc.skeleton, world.x, world.y, this.camera.zoom, currentLocks()).find((item) => item.kind === 'bone') ?? null;
+    if (hit === null) return false;
+    doc.select({ ...emptySelection(), bones: [hit.bone] });
+    abrirMenuDaTomada(doc, e.clientX, e.clientY, { bone: hit.bone });
+    return true;
+  }
+
   private openDrawingMenu(e: PointerEvent): boolean {
     const doc = this.doc;
     const stage = this.stage;
@@ -1431,6 +1447,13 @@ export class ViewportPanel implements Panel {
   cropDragSays: string | null = null;
   /** N-4b: a caixa dos números do recorte, no canto da cena. */
   private cropBox: CropNumbersBox | null = null;
+  /** 05/11/2026: os ícones das tomadas, por cima do desenho. */
+  private readonly tomadas = new TomadasLayer();
+
+  /** Repõe os ícones das tomadas, a cada quadro desenhado. */
+  syncTomadas(): void {
+    this.tomadas.sync(this.doc, (x, y) => this.camera.worldToScreen(x, y));
+  }
   /** A classe de cursor que o recorte pôs na cena, ou `null`. */
   private cropCursorClass: string | null = null;
 
@@ -1444,6 +1467,8 @@ export class ViewportPanel implements Panel {
       // grade das imagens com as opções. Fora de desenho (e na parte
       // transparente dele), continua voltando à ferramenta anterior.
       if (this.openDrawingMenu(e)) return;
+      // 05/11/2026: em cima de um osso, o menu da tomada — "Encaixar um projeto…".
+      if (this.openBoneMenu(e)) return;
       const back = toolBack(this.doc);
       const tool = back === null ? null : getTool(back);
       this.doc?.notice(tool === null

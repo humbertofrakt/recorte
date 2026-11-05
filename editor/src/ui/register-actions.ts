@@ -28,6 +28,7 @@ import { registerImageActions } from '../panels/palette-actions.js';
 // Partículas, que só existiam em botão de aba ou em gesto.
 import { registerMeshActions } from '../panels/mesh-actions.js';
 import { registerEntityActions } from '../panels/entities-actions.js';
+import { registerTomadasActions } from '../panels/tomadas-actions.js';
 import { registerParticleActions } from '../panels/particles-actions.js';
 
 /** Registra todas as ações de arranque. Devolve a função que tira todas. */
@@ -56,6 +57,7 @@ export function registerCoreActions(doc: EditorDoc): () => void {
     // Rodada 6: com a aba fechada, o menu traz a aba à frente e age.
     ...registerMeshActions(doc),
     ...registerEntityActions(doc),
+    ...registerTomadasActions(doc),
     ...registerParticleActions(doc),
   ];
   return () => {

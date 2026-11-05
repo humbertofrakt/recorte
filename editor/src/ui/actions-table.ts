@@ -289,6 +289,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
     // `panels/entities-actions.ts` e `panels/particles-actions.ts`.
     owner: 'imagens', where: 'arranque', ids: [
       'por-entidade', 'escolher-animacao-entidade', 'promover-entidade', 'prender-emissor',
+      // 05/11/2026: as tomadas (`panels/tomadas.ts`).
+      'encaixar-projeto', 'por-tomada', 'tirar-peca',
       // Rodada 8c, C15.
       'entidade-em-laco',
       // Rodada 11: "Este boneco" (7.11, `around`).

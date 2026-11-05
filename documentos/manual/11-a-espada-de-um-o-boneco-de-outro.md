@@ -97,7 +97,7 @@ Agora o golpe:
 
 ### 2. Trazer a espada
 
-1. **Entidades → Trazer entidade de fora…**
+1. **Tomadas → Trazer entidade de fora…**
 2. Escolha só o `espada.bone`.
 3. O programa pergunta pela pasta dela: as imagens moram ao lado.
 4. Clique **Escolher a pasta de espada.bone…**
@@ -105,12 +105,12 @@ Agora o golpe:
 
 ![A pergunta: a espada pede o atlas dela, e o botão escolhe a pasta](imagens/11-4-pede-a-pasta.png)
 
-A espada entra na **Prateleira** da aba **Entidades**.
+A espada entra na lista **Peças** da aba **Tomadas**.
 
 ### 3. Pôr na mão
 
 1. Clique **Base — montar**, na aba **Animações**. Assim vale em todas.
-2. Arraste a espada da **Prateleira** até a mão, na cena.
+2. Arraste a espada da lista **Peças** até a mão, na cena.
 3. Ela fica presa ao osso em que caiu.
 
 ![A espada na mão do herói; na Montagem, o cartão espada com a palavra projeto](imagens/11-5-espada-na-mao.png)
@@ -128,10 +128,10 @@ Com a espada escolhida, na ficha das **Propriedades**:
 
 ### 5. Responder à animação
 
-1. Na aba **Entidades**, no cartão **espada**, clique **anima ▾**.
-2. Escolha **a de quem recebe**.
+1. Na aba **Tomadas**, no cartão **espada**, clique **anima ▾**.
+2. Escolha **mexe junto com quem segura**.
 
-![O menu anima no cartão da espada, com a de quem recebe](imagens/11-6-a-de-quem-recebe.png)
+![O menu anima no cartão da espada, com mexe junto com quem segura](imagens/11-6-a-de-quem-recebe.png)
 
 | O herói toca | A espada toca |
 |:---|:---|
@@ -189,12 +189,85 @@ recebe" e o golpe continuam.
 
 ---
 
+## As tomadas: encaixar com um clique
+
+Desde 05/11. Uma **tomada** é um lugar num osso onde uma peça entra. Uma
+**peça encaixada** é outro projeto: a espada na mão, o herói na cabine.
+
+Na cena, cada tomada tem um ícone redondo. Cheio: tem peça. Vazado: vazia.
+Passe o mouse: a dica diz o nome e o que ela segura.
+
+### O herói segura a espada
+
+1. Botão direito no osso da mão, na **Árvore** (ou na cena).
+2. **Encaixar um projeto…**
+3. Escolha o `espada.bone`.
+
+![O botão direito no osso da mão, com Encaixar um projeto e Pôr uma tomada aqui](imagens/11-11-menu-do-osso.png)
+
+A tomada nasce ali, com a espada dentro. A espada nasce em pé.
+
+Clique no ícone da tomada: **Trocar a peça…** e **Tirar a peça**.
+
+![O menu do ícone da tomada: trocar ou tirar a peça](imagens/11-12-icone-da-tomada.png)
+
+Outro jeito: arraste a peça da lista **Peças**, na aba **Tomadas**, até o
+ícone da tomada. Um `.bone` do disco também pode ser solto ali.
+
+### O herói entra no mecha
+
+É o mesmo gesto, do outro lado. Abra o mecha.
+
+1. Botão direito no tronco, na **Árvore**.
+2. **Pôr uma tomada aqui…**
+3. Escreva `cabine`. Clique **Pôr a tomada**.
+
+![A janela do nome da tomada, com cabine escrito](imagens/11-13-nome-da-tomada.png)
+
+4. Clique no ícone da tomada **cabine**, na cena.
+5. **Encaixar um projeto…**
+6. Escolha o `heroi.bone`.
+
+O herói entra, com a espada dele junto.
+
+![O herói dentro do mecha, com os ícones das tomadas](imagens/11-14-heroi-na-cabine.png)
+
+### O que a peça toca
+
+Clique no ícone da tomada:
+
+| Item | Quer dizer |
+|:---|:---|
+| **✓ Mexe junto com a animação de quem segura** | o mecha toca `idle`, o herói toca o `idle` dele. Vem ligado |
+| **Animação própria, sempre ligada: …** | uma animação da peça que roda sempre, por baixo |
+
+![O menu da cabine: mexe junto, e as animações próprias](imagens/11-15-menu-da-cabine.png)
+
+A aba **Tomadas** mostra a cadeia: mecha › cabine › heroi › a espada.
+
+### O jogo vê o mesmo
+
+`Ctrl+S` no mecha. O validador aceita, e o jogo desenha o herói na cabine,
+com a espada.
+
+![O runtime: o mecha com o herói dentro, e a espada](imagens/11-16-runtime-mecha.png)
+
+| Palavra na tela | No arquivo |
+|:---|:---|
+| Tomada | slot |
+| Peça encaixada | anexo `skeleton` (7.11) |
+| Mexe junto com a animação de quem segura | `inheritAnimation` |
+| Animação própria, sempre ligada | `baseAnimation` |
+| Este boneco entra em… | o projeto dentro de outro, em teste |
+
+---
+
 ## O que ainda não funciona
 
 | O quê | Como é hoje |
 |:---|:---|
 | A espada nova chegar **sozinha** | a pessoa B põe os três arquivos na pasta dela. O navegador não deixa o programa ler a pasta da pessoa A de novo, sem pedir |
-| Trazer a mesma espada de novo | entra como cópia, `espada-2.bone`. Para trocar, substitua os arquivos na pasta |
+| Trazer a mesma espada de novo por **Trazer entidade de fora…** | entra como cópia, `espada-2.bone`. **Encaixar um projeto…** usa a que já está no projeto |
 | Duas entidades com páginas de atlas de **mesmo nome** | o editor separa; o leitor do jogo pode confundir. Dê nomes diferentes aos projetos |
 
 ---

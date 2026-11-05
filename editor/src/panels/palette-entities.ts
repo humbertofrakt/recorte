@@ -55,7 +55,8 @@ export { ENTITY_THUMB, entityThumbnail };
 
 class EntitiesPanel implements Panel {
   readonly id = 'entidades';
-  readonly title = 'Entidades';
+  // 05/11/2026: a aba das tomadas (era Entidades). O id fica: é o que a arrumação guarda.
+  readonly title = 'Tomadas';
   readonly listensTo = ['file', 'structure', 'assets'] as const;
 
   private doc: EditorDoc | null = null;
@@ -154,8 +155,8 @@ class EntitiesPanel implements Panel {
     // Rodada 42 (v32.1): a montagem e a prateleira rolam por dentro e crescem com
     // o projeto: são listas, como o rolo (a medição de altura as deixa rolar).
     // Rodada 47, lote 6: a Montagem não rola mais por dentro (quem rola é o rolo).
-    montagem.setAttribute('aria-label', 'Montagem');
-    const tituloM = el('h3', 'entidades-titulo', 'Montagem');
+    montagem.setAttribute('aria-label', 'Encaixes');
+    const tituloM = el('h3', 'entidades-titulo', 'Encaixes');
     tituloM.title = MONTAGEM_HINT;
     montagem.append(tituloM);
     // Lote 7: a tela baixa dobra os cartões e põe os de fora numa trilha.
@@ -175,8 +176,8 @@ class EntitiesPanel implements Panel {
 
     const prateleira = el('section', 'entidades-prateleira');
     prateleira.dataset['rolagem'] = 'lista';
-    prateleira.setAttribute('aria-label', 'Prateleira');
-    const tituloP = el('h3', 'entidades-titulo', 'Prateleira');
+    prateleira.setAttribute('aria-label', 'Peças');
+    const tituloP = el('h3', 'entidades-titulo', 'Peças');
     tituloP.title = PRATELEIRA_HINT;
     tituloP.append(el('span', 'entidades-titulo-dica', 'arraste para um slot'));
     prateleira.append(tituloP);

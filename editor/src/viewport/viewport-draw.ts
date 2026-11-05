@@ -196,6 +196,7 @@ export function draw(panel: ViewportPanel): void {
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   panel.syncImageGridLayer();
+  panel.syncTomadas();
 }
 
 // ---------------------------------------------------------------------------
