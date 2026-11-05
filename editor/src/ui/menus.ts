@@ -1078,6 +1078,12 @@ export function meshRulesMenu(): MenuItem[] {
  */
 export function skinsMenu(): MenuItem[] {
   return [
+    // Noite de 04/11/2026: a grade peça × skin — trocar, comparar, vestir.
+    {
+      label: 'Guarda-roupa: peça × skin…', action: 'guarda-roupa', enabled: true,
+      hint: 'Uma grade: cada coluna é uma skin (uma roupa), cada linha uma peça. Clique numa casa para trocar a imagem',
+    },
+    SEP,
     {
       label: 'Nova skin', action: 'nova-pele', enabled: true,
       hint: 'Uma skin nova, vazia, que passa a ser a do lápis. Era Esqueleto → Novo → Pele',

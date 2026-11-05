@@ -453,6 +453,8 @@ export const TAREFAS: readonly TarefaDef[] = Object.freeze([
   { action: 'pele-de-pasta', grupo: 'Peles: trocar a roupa', tarefa: 'Fazer uma roupa inteira de uma pasta, pelos nomes iguais' },
   { action: 'apagar-pele', grupo: 'Peles: trocar a roupa', tarefa: 'Apagar uma roupa' },
   { action: 'editar-pele', grupo: 'Peles: trocar a roupa', tarefa: 'Escolher em qual roupa nasce o que eu crio agora' },
+  // Noite de 04/11/2026 (obra/skins): a grade peça × skin.
+  { action: 'guarda-roupa', grupo: 'Peles: trocar a roupa', tarefa: 'Ver todas as roupas lado a lado e trocar a imagem de uma peça numa roupa' },
   { action: 'por-entidade', grupo: 'Corpos, animações e entidades', tarefa: 'Pôr uma entidade na cena, presa ao osso escolhido' },
   { action: 'escolher-animacao-entidade', grupo: 'Corpos, animações e entidades', tarefa: 'Escolher qual animação da entidade toca daqui em diante' },
   // Rodada 8c, C15.

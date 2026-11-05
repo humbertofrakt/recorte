@@ -2826,3 +2826,122 @@ describe('exportar, apagar e importar uma skin com malha de pesos (rodada 44, lo
     expect(JSON.stringify(doc.file)).toBe(antes);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Noite de 04/11/2026 — o Guarda-roupa, a grade peça × skin (ramo obra/skins)
+// ---------------------------------------------------------------------------
+
+import {
+  DuplicateSkinNamed, WARDROBE_HELP, cellHint, cellText, chooserTitle, previewStack, skinStateLine,
+  toggleOnTopStack, wardrobeCell, wardrobeColumns, wardrobePieces, wearOnlyStack,
+} from '../src/panels/skins-wardrobe-model.js';
+import { SwapSlotImage as trocaGR } from '../src/panels/palette-model.js';
+
+describe('Guarda-roupa: a grade peça × skin', () => {
+  const CAMINHO_GR = resolve(__dirname, '../../formato/exemplos/heroi.bone');
+  const heroiGR = (): Doc => new Doc(JSON.parse(readFileSync(CAMINHO_GR, 'utf8')) as BoneFile, { path: CAMINHO_GR });
+
+  it('as peças são os slots que mostram imagem; máscara, caixa, ponto e caminho não entram', () => {
+    const pecas = wardrobePieces(heroiGR().file).map((p) => p.slot);
+    expect(pecas).toContain('body');
+    expect(pecas).toContain('head');
+    expect(pecas).toContain('hand');
+    for (const fora of ['mask', 'hitbox', 'hand_point', 'cape_path']) expect(pecas).not.toContain(fora);
+    // A ordem é a do arquivo.
+    expect(pecas.indexOf('cape_upper')).toBeLessThan(pecas.indexOf('body'));
+  });
+
+  it('a casa diz o que a skin faz: troca, igual à base, ou esconde (§4.4)', () => {
+    const file = heroiGR().file;
+    const peca = (slot: string) => wardrobePieces(file).find((p) => p.slot === slot)!;
+    expect(wardrobeCell(file, 'armadura', peca('body'))).toEqual({ kind: 'imagem', image: 'armadura/body' });
+    expect(wardrobeCell(file, 'armadura', peca('hair'))).toEqual({ kind: 'escondida' });
+    expect(wardrobeCell(file, 'armadura', peca('cape_upper'))).toEqual({ kind: 'base' });
+    expect(wardrobeCell(file, 'default', peca('cape_upper'))).toEqual({ kind: 'imagem', image: 'cape_upper' });
+    expect(cellText({ kind: 'base' })).toBe('= base');
+    expect(cellHint({ kind: 'base' }, peca('hair'), 'ferro', false)).toContain('não mexe em hair');
+    expect(cellHint({ kind: 'base' }, peca('hair'), 'capacete', true)).toContain('outro arquivo');
+  });
+
+  it('a skin de fora é lida pelo que o runtime montou', () => {
+    const file = heroiGR().file;
+    const peca = wardrobePieces(file).find((p) => p.slot === 'head')!;
+    const fora = [{ name: 'capacete', attachments: { head: { [peca.placeholder]: { type: 'region', path: 'capacete' } } } }];
+    expect(wardrobeCell(file, 'capacete', peca, fora)).toEqual({ kind: 'imagem', image: 'capacete' });
+  });
+
+  it('as colunas: a base primeiro, depois as do arquivo, depois as de fora; vestida e "só esta"', () => {
+    const file = heroiGR().file;
+    const cols = wardrobeColumns(file, ['default', 'armadura'], 'armadura', ['capacete']);
+    expect(cols.map((c) => c.name)).toEqual(['default', 'armadura', 'armadura_capa', 'capacete']);
+    expect(cols.find((c) => c.name === 'armadura')).toMatchObject({ worn: true, only: true, editing: true });
+    expect(cols.find((c) => c.name === 'default')).toMatchObject({ worn: true, only: false, isDefault: true });
+    expect(cols.find((c) => c.name === 'capacete')).toMatchObject({ worn: false, external: true });
+    const so = wardrobeColumns(file, ['default'], null);
+    expect(so[0]).toMatchObject({ name: 'default', only: true });
+  });
+
+  it('vestir só esta, por cima, e a prova', () => {
+    expect(wearOnlyStack('armadura')).toEqual(['default', 'armadura']);
+    expect(wearOnlyStack('default')).toEqual(['default']);
+    expect(toggleOnTopStack(['default', 'armadura'], 'armadura_capa')).toEqual(['default', 'armadura', 'armadura_capa']);
+    expect(toggleOnTopStack(['default', 'armadura', 'armadura_capa'], 'armadura')).toEqual(['default', 'armadura_capa']);
+    // A base não sai por "por cima".
+    expect(toggleOnTopStack(['default'], 'default')).toEqual(['default']);
+    expect(previewStack('ferro')).toEqual(['default', 'ferro']);
+  });
+
+  it('a escolha de imagem diz a peça E a skin (diagnóstico T3)', () => {
+    const peca = { slot: 'body', placeholder: 'body' };
+    expect(chooserTitle(peca, 'ferro')).toBe('Trocar body na skin "ferro"');
+    expect(chooserTitle(peca, 'default')).toContain('na base');
+    expect(WARDROBE_HELP).toContain('Clique numa casa');
+  });
+
+  it('a linha de estado da aba diz o que está vestido e onde está o lápis (T6)', () => {
+    expect(skinStateLine(['default'], null)).toBe('Vestida: só a base · Lápis: base');
+    expect(skinStateLine(['default', 'armadura', 'armadura_capa'], 'armadura'))
+      .toBe('Vestida: armadura_capa + armadura · Lápis: armadura');
+    expect(skinStateLine([], null)).toBe('Nada vestido · Lápis: base');
+  });
+
+  it('trocar uma peça numa skin nova pela casa: só ela muda, e o desfazer devolve', () => {
+    const doc = heroiGR();
+    const antes = JSON.stringify(doc.file);
+    addSkinNamedGR(doc, 'ferro');
+    const peca = wardrobePieces(doc.file).find((p) => p.slot === 'body')!;
+    expect(wardrobeCell(doc.file, 'ferro', peca)).toEqual({ kind: 'base' });
+    doc.run(new trocaGR('body', 'armadura/body', 'default', peca.placeholder, 'ferro'));
+    expect(wardrobeCell(doc.file, 'ferro', peca)).toEqual({ kind: 'imagem', image: 'armadura/body' });
+    expect(wardrobeCell(doc.file, 'default', peca)).toEqual({ kind: 'imagem', image: 'body' });
+    doc.undo();
+    doc.undo();
+    expect(JSON.stringify(doc.file)).toBe(antes);
+  });
+
+  it('nova a partir desta: uma cópia com o nome pedido, num passo só do desfazer', () => {
+    const doc = heroiGR();
+    const antes = JSON.stringify(doc.file);
+    const copia = new DuplicateSkinNamed(doc, 'armadura', 'ferro');
+    doc.run(copia);
+    expect(copia.name).toBe('ferro');
+    const peca = wardrobePieces(doc.file).find((p) => p.slot === 'body')!;
+    expect(wardrobeCell(doc.file, 'ferro', peca)).toEqual({ kind: 'imagem', image: 'armadura/body' });
+    doc.undo();
+    expect(JSON.stringify(doc.file)).toBe(antes);
+  });
+
+  it('o menu Skins abre com o Guarda-roupa (T2: a porta à vista)', () => {
+    const primeiro = skinsMenu()[0] as MenuEntry;
+    expect(primeiro.action).toBe('guarda-roupa');
+    expect(primeiro.label).toContain('Guarda-roupa');
+  });
+
+  it('a skin vazia aponta para o Guarda-roupa, e não para "arrastar para a cena" (T1)', () => {
+    const frase = emptySkinHint([{ name: 'ferro', editable: true, slots: 0 }])!;
+    expect(frase).toContain('Guarda-roupa');
+    expect(frase).not.toContain('para a cena');
+  });
+});
+
+import { addSkinNamed as addSkinNamedGR } from '../src/panels/skins-actions.js';

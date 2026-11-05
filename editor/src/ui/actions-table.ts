@@ -277,7 +277,9 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
   },
   {
     // `panels/skins-actions.ts`: os botões e o lápis da aba Peles.
-    owner: 'peles', where: 'arranque', ids: ['clonar-pele', 'pele-de-pasta', 'apagar-pele', 'editar-pele'],
+    owner: 'peles', where: 'arranque', ids: ['clonar-pele', 'pele-de-pasta', 'apagar-pele', 'editar-pele',
+      // Noite de 04/11/2026: a grade peça × skin.
+      'guarda-roupa'],
   },
   {
     // `panels/entities-actions.ts` e `panels/particles-actions.ts`.

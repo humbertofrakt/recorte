@@ -33,6 +33,8 @@ import { openAnotherSkeleton } from '../io/open-save.js';
 import { bodyUriFor } from './animations-model.js';
 import type { BoneFile } from '../../../runtime/src/index.js';
 import { takePickerProblem } from '../io/picker-problem.js';
+// Noite de 04/11: a grade peça × skin.
+import { openWardrobe } from './skins-wardrobe.js';
 
 /** A pilha e o lápis de um instante: o que a aba Peles mostra. */
 export interface SkinView {
@@ -250,12 +252,14 @@ export function emptySkinHint(
 ): string | null {
   const lapis = rows.find((row) => row.editable);
   if (lapis === undefined || lapis.name === 'default' || lapis.slots > 0) return null;
-  return `A skin "${lapis.name}" está vazia. Arraste uma imagem da aba Imagens para a cena: ela nasce nesta skin`;
+  // Noite de 04/11 (diagnóstico T1): "arrastar para a cena" CRIA peça nova;
+  // quem fez uma roupa quer TROCAR as que existem. A frase aponta a grade.
+  return `A skin "${lapis.name}" está vazia. Abra o Guarda-roupa e clique numa peça na coluna dela para trocar a imagem`;
 }
 
 /** A frase de "Nova pele": o que aconteceu, e o passo seguinte. */
 export function newSkinNotice(name: string): string {
-  return `Skin "${name}" criada, com o lápis nela. Agora arraste uma imagem da aba Imagens para a cena: ela nasce nesta skin`;
+  return `Skin "${name}" criada, com o lápis nela. Agora troque as peças: Skins → Guarda-roupa, clique na casa da peça`;
 }
 
 /** A pele em que as três ações agem: a do lápis, ou a de cima da pilha. */
@@ -563,6 +567,10 @@ export function registerSkinActions(doc: EditorDoc): Array<() => void> {
     }),
     registerAction('editar-pele', {
       run: () => { void pickEditingSkin(doc); },
+    }),
+    // Noite de 04/11/2026: o Guarda-roupa, a grade peça × skin.
+    registerAction('guarda-roupa', {
+      run: () => { runAction('mostrar-painel-peles'); openWardrobe(doc); },
     }),
   ];
 }

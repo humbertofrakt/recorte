@@ -62,6 +62,8 @@ import {
   folderSkinNotice, folderSkinPlan, imageFolders, MakeSkinFromFolder,
 } from './skins-model.js';
 import { redrawPlan, signature } from './list-redraw.js';
+import { openWardrobe } from './skins-wardrobe.js';
+import { skinStateLine } from './skins-wardrobe-model.js';
 import type { ListShape } from './list-redraw.js';
 
 /** O tipo do arrasto: só o painel Peles o entende, e por isso nada mais o pega. */
@@ -83,6 +85,8 @@ class SkinsPanel implements Panel {
   private aviso: HTMLElement | null = null;
   /** O passo seguinte, enquanto a pele do lápis está vazia — I7. */
   private proximo: HTMLElement | null = null;
+  /** Noite de 04/11: a linha que diz o que está vestido e onde está o lápis. */
+  private estado: HTMLElement | null = null;
   private drawn: ListShape = { rows: '', picked: null };
   /** A pele na mão, enquanto o arrasto dura. */
   private dragged: string | null = null;
@@ -127,6 +131,14 @@ class SkinsPanel implements Panel {
     this.proximo = el('p', 'peles-ajuda peles-proximo');
     this.proximo.hidden = true;
 
+    // Noite de 04/11/2026: a porta do Guarda-roupa, com texto — um ícone a
+    // mais na barra não seria achado (diagnóstico T2).
+    const guarda = el('button', 'peles-guarda-roupa', 'Guarda-roupa: peça × skin…') as HTMLButtonElement;
+    guarda.type = 'button';
+    guarda.title = 'Abre a grade: cada coluna é uma skin, cada linha uma peça. Clique numa casa para trocar a imagem';
+    guarda.addEventListener('click', () => openWardrobe(doc));
+    this.estado = el('p', 'peles-estado');
+
     const corpo = el('div', 'painel-corpo peles-corpo');
     // As duas listas crescem com o arquivo, e por isso podem rolar: a prova
     // `medir-paineis.mjs` lê esta marca e deixa esta caixa em paz.
@@ -136,8 +148,10 @@ class SkinsPanel implements Panel {
     this.feitas = el('ul', 'peles-lista');
     this.ativas = el('ul', 'peles-lista peles-pilha');
     colunas.append(
-      this.coluna('Feitas', 'Todas as skins desta base. Arraste para Ativas para ligar', this.feitas),
-      this.coluna('Ativas', 'A pilha, de cima para baixo. A de cima vence onde duas vestem o mesmo lugar', this.ativas),
+      // Noite de 04/11: "Feitas" e "Ativas" viraram "Todas" e "Vestidas" —
+      // palavras de quem veste boneco (diagnóstico T7).
+      this.coluna('Todas', 'Todas as skins desta base. Arraste para Vestidas para vestir', this.feitas),
+      this.coluna('Vestidas', 'A pilha, de cima para baixo. A de cima vence onde duas vestem o mesmo lugar', this.ativas),
     );
 
     // Rodada 12: a coluna da esquerda do "Edit Character Map" do Spriter — o
@@ -150,7 +164,7 @@ class SkinsPanel implements Panel {
     this.efeitosCaixa.hidden = true;
     corpo.append(colunas, this.efeitosCaixa);
 
-    host.append(barra, this.help, this.proximo, this.aviso, corpo);
+    host.append(barra, guarda, this.estado, this.help, this.proximo, this.aviso, corpo);
     // As duas listas vivem enquanto o painel viver, e por isso os ouvintes de
     // arrasto são postos UMA vez. Pô-los a cada redesenho empilharia um
     // ouvinte por redesenho — o mesmo `drop` correndo dez vezes seguidas.
@@ -183,6 +197,7 @@ class SkinsPanel implements Panel {
     this.help = null;
     this.aviso = null;
     this.proximo = null;
+    this.estado = null;
   }
 
   // -------------------------------------------------------------------------
@@ -476,6 +491,8 @@ class SkinsPanel implements Panel {
     // I7: a pele do lápis está vazia — a panela está na mão e não há arroz.
     // A frase diz o gesto que põe o primeiro desenho nela, e some quando ele
     // chega.
+    if (this.estado !== null) this.estado.textContent = skinStateLine(stack, lapis);
+
     const dica = emptySkinHint(todas);
     if (this.proximo !== null) {
       this.proximo.hidden = dica === null;

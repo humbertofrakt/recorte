@@ -170,7 +170,8 @@ describe('a tabela das ações', () => {
     // 304 (rodada 40, lote 4): +1, `deslocar-em-laco` (Animação → Chaves).
     // 305 (rodada 41, lote 4): +1, `criar-aresta` (Malha e regras → Malha).
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    expect(tabela.length).toBe(306);
+    // 307 (noite de 04/11/2026, obra/skins): +1, `guarda-roupa` (Skins → Guarda-roupa).
+    expect(tabela.length).toBe(307);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');
@@ -257,7 +258,8 @@ describe('as ações de arranque, sem painel montado', () => {
     // +3 (rodada 39b, lote 6): `anima-do-teste`, `skins-do-teste`, `teste-nas-iguais`. 129.
     // +1 (rodada 41, lote 4): `criar-aresta`. 130.
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    expect(arranque().length).toBe(131);
+    // +1 (noite de 04/11/2026, obra/skins): `guarda-roupa`. 132.
+    expect(arranque().length).toBe(132);
   });
 
   it('a função que ela devolve tira todas', () => {
