@@ -1974,3 +1974,35 @@ describe('Esc fecha o menu do losango (QA da noite)', () => {
     expect(fonte).toMatch(/addEventListener\('keydown', tecla, true\)/);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): arrastar a chave de 0,20 s
+// para cima da de 0,50 s apagava a de 0,50 s, e o rodapé dizia só "Mover
+// chaves." Substituir é o que o Spine faz; calar é a regra 21 ao contrário.
+import { keysCoveredByMove as keysCoveredByMoveQA, setKey as setKeyQA, boneTarget as boneTargetQA } from '../src/anim/keying.js';
+import { coveredKeysNotice as coveredKeysNoticeQA } from '../src/panels/dopesheet-model.js';
+describe('arrastar uma chave para cima de outra diz o que cobriu (QA da noite)', () => {
+  const alvo = boneTargetQA('coxa', 'rotation');
+  const arquivo = (): BoneFile => {
+    const file = { bone: { version: '1.0' }, bones: [{ name: 'root' }, { name: 'coxa', parent: 'root' }], animations: [{ name: 'a' }] } as unknown as BoneFile;
+    for (const [t, v] of [[0, 0], [0.2, 10], [0.5, 20]] as const) setKeyQA(file, 'a', t, alvo, v);
+    return file;
+  };
+  it('a chave que estava no destino é contada; as que andam juntas, não', () => {
+    const file = arquivo();
+    expect(keysCoveredByMoveQA(file, 'a', [{ target: alvo, time: 0.2 }], 0.3)).toEqual([{ target: alvo, time: 0.5 }]);
+    // As duas andam juntas: a de 0,5 sai do lugar, a de 0,2 entra — ninguém é coberto.
+    expect(keysCoveredByMoveQA(file, 'a', [{ target: alvo, time: 0.2 }, { target: alvo, time: 0.5 }], 0.3)).toEqual([]);
+    expect(keysCoveredByMoveQA(file, 'a', [{ target: alvo, time: 0.2 }], 0.1)).toEqual([]);
+  });
+  it('clonar: as de origem ficam, e a clonada de 0,2 cobre a de 0,5 que ficou', () => {
+    const file = arquivo();
+    expect(keysCoveredByMoveQA(file, 'a', [{ target: alvo, time: 0.2 }, { target: alvo, time: 0.5 }], 0.3, true))
+      .toEqual([{ target: alvo, time: 0.5 }]);
+  });
+  it('a frase diz quantas, onde, e o caminho de volta', () => {
+    expect(coveredKeysNoticeQA([{ target: alvo, time: 0.5 }], 'Mover chaves'))
+      .toBe('Mover chaves: a chave que já estava em 0,50 s (coxa) foi substituída. Ctrl+Z volta');
+    expect(coveredKeysNoticeQA([{ target: alvo, time: 0.5 }, { target: boneTargetQA('perna', 'x'), time: 1 }], 'Clonar chaves'))
+      .toBe('Clonar chaves: 2 chaves que já estavam no destino foram substituídas. Ctrl+Z volta');
+  });
+});

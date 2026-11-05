@@ -2275,3 +2275,40 @@ export function offsetInLoop(
   for (const ref of refs) removeKey(file, animation, ref.time, ref.target);
   return pasteKeysInLoop(file, animation, clip, clip.base + delta);
 }
+
+/**
+ * **As chaves que um arrasto vai cobrir** — QA da noite de 04/11/2026.
+ *
+ * Mover (ou clonar) uma chave para o tempo de outra da MESMA linha apaga a de
+ * lá (`retimeKeys`, o "clash"): é o que o Spine faz. Mas o rodapé dizia só
+ * "Mover chaves", e a chave sumia calada. Esta conta diz quem será coberto,
+ * ANTES de mover: as chaves que não andam junto e estão num tempo de destino.
+ * Evento fica de fora: dois eventos podem morar no mesmo tempo (9.7).
+ */
+export function keysCoveredByMove(
+  file: BoneFile, animation: string, refs: readonly KeyRef[], delta: number,
+  /** Clonar: as de origem ficam no lugar, e também podem ser cobertas. */
+  originsStay = false,
+): KeyRef[] {
+  const out: KeyRef[] = [];
+  const porLinha = new Map<string, KeyRef[]>();
+  for (const ref of refs) {
+    if (ref.target.type === 'event') continue;
+    const id = targetKey(ref.target);
+    const lista = porLinha.get(id);
+    if (lista === undefined) porLinha.set(id, [ref]); else lista.push(ref);
+  }
+  for (const lista of porLinha.values()) {
+    const target = lista[0]!.target;
+    const timeline = findTimeline(file, animation, target) as TimelineLike | null;
+    const keys = timeline?.keys ?? [];
+    const andam = new Set(originsStay ? [] : lista.map((ref) => roundTime(ref.time)));
+    const destinos = new Set(lista.map((ref) => roundTime(Math.max(0, roundTime(ref.time + delta)))));
+    for (const key of keys) {
+      const t = roundTime(key.time);
+      if (andam.has(t) || !destinos.has(t)) continue;
+      out.push({ target, time: t });
+    }
+  }
+  return out;
+}
