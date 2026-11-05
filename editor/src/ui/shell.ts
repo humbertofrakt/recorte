@@ -703,6 +703,9 @@ export class Shell {
       if (falaNoRodape !== null) {
         button.classList.add('menu-item-cinza');
         button.setAttribute('aria-disabled', 'true');
+        // Noite de 04/11 (`ui/porque-apagado.ts`): o porquê também no rodapé,
+        // ao passar o mouse — quem não espera a dica lê embaixo.
+        button.addEventListener('pointerenter', () => this.doc.notice(falaNoRodape));
       }
       const tecla = item.shortcut === undefined
         ? '' : ` (${liveShortcut(item.action, item.shortcut)})`;

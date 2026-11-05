@@ -555,6 +555,27 @@ ones are in a column. Click to open; click the one already in front to close.
 
 ---
 
+## A grey item: it says why
+
+A **grey** item is not broken. Something is missing first.
+
+1. Rest the mouse on the grey item.
+2. **The status bar says why, and what to do.**
+3. The item's tooltip says the same.
+
+![The Edit menu open with the hero, nothing selected: Colar espelhado (Paste mirrored) is grey, and the status bar says Copie antes (Copy first): select keys on the timeline and use Edit → Copy](../imagens/00-item-cinza.png)
+
+| Grey item | The status bar says |
+|:---|:---|
+| **"Editar → Colar" (Edit → Paste)** | copy first: select keys and use Edit → Copy |
+| **"Animação → Chavear" (Animation → Key)** | open an animation first: click one, in the Animations tab |
+| **"Base → Trazer para a frente" (Base → Bring forward)** | select a drawing first |
+| **"Editar → Desfazer" (Edit → Undo)** | there is no step to undo yet |
+
+Clicking the grey item does no harm: it only repeats the reason in the status bar.
+
+---
+
 ## Can't find a command? `Ctrl+Shift+P`
 
 Twelve menus and more than two hundred entries. The most common question is not
