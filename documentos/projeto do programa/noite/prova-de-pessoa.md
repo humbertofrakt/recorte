@@ -63,6 +63,7 @@ O primeiro conserto saiu **cortado**: o rodapé encolhe a frase até caber (`ui/
 | — | todo botão, campo e aba à vista | varredura da página: nenhum sem nome ou dica | nada a fazer |
 | 9 | o herói aberto, na cena | dois tracejados **quase da mesma cor** (o recorte `#ff00c8` e a máscara `#d6008c`), e nenhum diz o que é: eu mesmo confundi os dois nas fotos | **consertei**: cada um tem o nome escrito — *"recorte 143 × 265 px"* e *"máscara mask"* (`viewport-draw.ts`, 2 testes) |
 | 10 | `cena.test.ts`, *"escolher vem antes de criar"* | o teste dizia que o primeiro botão é o Selecionar, e passava só porque o Transformar não estava carregado (regra 28) | **consertei** o teste: Transformar, depois Selecionar |
+| 11 | apertar **7** (ou 8, 9, 0) com o foco na cena | os ossos somem (ou travam) **calados**: quem apertou sem querer não sabe a volta. Os botões do alto já falavam | **consertei**: a cena diz a mesma frase — *"Ossos escondidos. 7 traz de volta"* (2 testes) |
 | 8 | a grade do botão direito | *"Laranja: a de agora"* e *"fonte: pasta · todas · objeto"*: **objeto** não diz o que é | Imagens e pasta: **tabela** |
 
 ## Achado para quem cuida da suíte (regra 24)

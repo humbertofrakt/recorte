@@ -28,7 +28,8 @@ import { emptySelection, getTool, registerPanel, readEditorState, type ChangeKin
 import { CanvasRenderer, type AtlasPageData, type Bone, type Skeleton, type Slot } from '../../../runtime/src/index.js';
 import { Camera } from './camera.js';
 import { RULER_SIZE } from './rulers.js';
-import { changeViewSettings, currentLocks, editingSkinOf, onViewSettings, toggleViewKey, viewSettings } from './onion.js';
+import { VIEW_TOGGLE_KEYS, changeViewSettings, currentLocks, editingSkinOf, onViewSettings, toggleViewKey, viewSettings } from './onion.js';
+import { switchNotice } from '../panels/view-panel-actions.js';
 import { addGuide, guideFromRuler, guideLabel, rulerAt } from './guides-model.js';
 import { pickAll, pickAt, selectionFor, setAlphaSampler, withChosen } from './picking.js';
 import { aroundGridOptions } from '../panels/entities-actions.js';
@@ -1916,6 +1917,12 @@ export class ViewportPanel implements Panel {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     // 7 8 9 0: show bones, lock bones, show drawings, lock drawings.
     if (toggleViewKey(e.key, doc)) {
+      // Prova de pessoa (05/11/2026): o 7 escondia os ossos CALADO — quem
+      // apertava sem querer via o boneco perder os ossos e não sabia a volta.
+      // A mesma frase dos botões do alto (`switchNotice`).
+      const campo = VIEW_TOGGLE_KEYS[e.key];
+      const frase = campo === undefined ? null : switchNotice(campo, viewSettings()[campo]);
+      if (frase !== null) doc.notice(frase);
       e.preventDefault();
       e.stopPropagation();
       this.needsDraw = true;
