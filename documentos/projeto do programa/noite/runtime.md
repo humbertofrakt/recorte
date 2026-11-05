@@ -7,11 +7,11 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 
 | Medida | Antes | Agora |
 |:---|:---:|:---:|
-| Casos em `conformidade/casos/` | 120 | **135** |
+| Casos em `conformidade/casos/` | 120 | **136** |
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
-| TS × Python, campo a campo | 120 de 120 | **135 de 135** |
-| Pacote do Construct | 120 de 120 | **135 de 135** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.853**, o mesmo 1 vermelho |
+| TS × Python, campo a campo | 120 de 120 | **136 de 136** |
+| Pacote do Construct | 120 de 120 | **136 de 136** |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.854**, o mesmo 1 vermelho |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
@@ -63,6 +63,7 @@ conta **antes** de rodar runtime):
 | **X-310** fallbacks de driver e parâmetro | §2.5: alvo de tipo desconhecido cai **sozinho**; modo desconhecido vira `replace`; `source` desconhecido → `default`; propriedade de timeline desconhecida | verde | verde | sim (5 de 5) |
 | **X-311** `sequence.mode` desconhecido | §2.5: vira `hold` | verde | verde | sim |
 | **X-312** atlas com `rotation: 45` | §2.5: vira `0` (o esperado é o do B-102) | verde | verde | sim |
+| **X-313** modos de `path` desconhecidos | §2.5: `positionMode` → `percent`, `rotateMode` → `tangent`. Na 1ª versão o `fixed` **passava** (com `position 0` os dois coincidem); refeito com `position 0.1` | verde | verde | sim (3 de 3) |
 | **ZIP-502** `main` numa subpasta | §2.8: a base é a pasta do `main`; uma **isca** com o mesmo nome na raiz | verde | verde | sim (a isca no lugar dá `−15` em vez de `−40`) |
 | **P-032** `space`/`sortMode` desconhecidos | §7.4 da extensão: caem em `local` e `youngestInFront` (o aviso **não** é medido) | verde | verde | sim (2 de 2) |
 | **P-030** rampa com torneira | ver acima | verde (consertado) | verde | — |
