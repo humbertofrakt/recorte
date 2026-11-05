@@ -345,6 +345,40 @@ async function roteiro(browser) {
   await ctx.close();
 }
 
+/** e. A oficina de exemplo: as tomadas que ela já traz estão à vista. */
+async function oficina(browser) {
+  const { ctx, page } = await abrirNavegador(browser);
+  await passo('e1. Boas-vindas → Abrir a oficina: a motosserra na mão do herói, com ícone e cartão', async () => {
+    await page.locator('.boas-vindas-botao', { hasText: 'Abrir a oficina' }).click();
+    const ok = await esperarAte(page, (d) => (d.file.slots ?? []).length > 0, 10000);
+    if (!ok) return `a oficina não abriu · ${await rodape(page)}`;
+    await page.waitForTimeout(500);
+    const icone = await page.locator('.tomada-icone[title*="segura motosserra"]').count();
+    await page.locator('[role="tab"]', { hasText: /^\s*Tomadas/ }).first().click();
+    await page.waitForTimeout(300);
+    const texto = await page.locator('.entidades-rolo').first().innerText();
+    await foto(page, 'oficina-heroi');
+    if (icone !== 1) return `ícones com a motosserra: ${icone}`;
+    return (texto.includes('motosserra') && !/arraste para um slot/.test(texto)) || `a aba diz: ${texto.slice(0, 200)}`;
+  });
+  await passo('e2. Bases → mecha: o ícone da cabine com o herói, e a cadeia mecha › cabine › heroi › motosserra', async () => {
+    await page.locator('[role="tab"]', { hasText: /^\s*Animações/ }).first().click().catch(() => {});
+    const linha = page.locator(':visible', { hasText: /^\s*Base — montar · mecha/ }).last();
+    await linha.scrollIntoViewIfNeeded();
+    await linha.click();
+    await page.waitForTimeout(1200);
+    const icone = await page.locator('.tomada-icone[title^="Tomada cabine: segura heroi"]').count();
+    await page.locator('[role="tab"]', { hasText: /^\s*Tomadas/ }).first().click();
+    await page.waitForTimeout(300);
+    const texto = await page.locator('.entidades-rolo').first().innerText();
+    await foto(page, 'oficina-mecha');
+    const ordem = ['mecha', 'cabine', 'heroi', 'motosserra'].map((p) => texto.indexOf(p));
+    if (icone !== 1) return `sem o ícone da cabine com o herói (${icone})`;
+    return ordem.every((v, i) => v >= 0 && (i === 0 || v > ordem[i - 1])) || `a cadeia não está em ordem: ${texto.slice(0, 200)}`;
+  });
+  await ctx.close();
+}
+
 async function subirEditor() {
   if (process.env.URL_EDITOR) return null;
   const vite = spawn(process.execPath, [join(AQUI, 'vite-quieto.mjs'), '--port', String(PORTA)], { cwd: RAIZ, stdio: 'ignore' });
@@ -361,6 +395,7 @@ const browser = await chromium.launch();
 try {
   prepararPastas();
   await roteiro(browser);
+  await oficina(browser);
 } finally {
   await browser.close();
   vite?.kill();
