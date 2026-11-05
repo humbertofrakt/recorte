@@ -52,6 +52,7 @@ import { openFloatingMenu } from '../ui/floating-menu.js';
 import {
   alphaFromSlider, angleFromDial, dialPoint, formatQuick, quickFields, quickSubject,
   heldByRuleAfterWrite, readQuickNow, sliderFromAlpha, worldAngleOfField, writeQuickValue,
+  worldAngleBeside,
 } from './quick-model.js';
 import type { QuickField } from './quick-model.js';
 
@@ -529,7 +530,8 @@ class PropertiesPanel implements Panel {
           + 'Só para ler: o campo grava o giro local, em relação ao pai';
         // Rodada 43, lote 3 (doc 59): com a "base" ao lado (animação aberta), não
         // cabem os dois na coluna — o mundo vai para a dica do disco.
-        if (leitura.animated && Math.abs(leitura.frame - leitura.base) > 1e-9) {
+        // QA da noite (04/11): número longo no campo também manda o mundo para a dica.
+        if ((leitura.animated && Math.abs(leitura.frame - leitura.base) > 1e-9) || !worldAngleBeside(campo.value)) {
           dica.textContent = `${field.hint}. ${frase}`;
           disco.setAttribute('aria-label', dica.textContent);
         } else {

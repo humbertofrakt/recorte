@@ -3570,3 +3570,29 @@ describe('rodada 48, lote 3 — "imagem não encontrada" é UM tipo, com os nome
     expect(abrirComParagrafoR48b(1, false)).toBe(null);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): o campo do Ângulo tinha 50 px e
+// cortava o número. "-166,03" (o osso_9 do herói) aparecia como "-166,0": o
+// número lido era OUTRO. O campo cresce com o número; quando o número é
+// longo, o "mundo -76°" vai para a dica do disco, como já ia com a animação
+// aberta (rodada 43, lote 3).
+describe('o Ângulo mostra o número inteiro (QA da noite)', () => {
+  it('número curto: o mundo cabe ao lado', () => {
+    expect(QM43.worldAngleBeside('-180')).toBe(true);
+    expect(QM43.worldAngleBeside('45')).toBe(true);
+  });
+  it('número com casas: o mundo vai para a dica', () => {
+    expect(QM43.worldAngleBeside('80,08')).toBe(false);
+    expect(QM43.worldAngleBeside('-166,03')).toBe(false);
+  });
+  it('o campo do Ângulo cresce com o número, e a folha diz isso', () => {
+    const css = readFileSync(resolve(__dirname, '../src/panels/quick-sheet.css'), 'utf8');
+    const regra = css.match(/\.ficha-controle:has\(\.ficha-disco\) \.ficha-campo \{[^}]*\}/)?.[0] ?? '';
+    expect(regra).toMatch(/field-sizing: content/);
+    expect(regra).toMatch(/min-width: 50px/);
+    // Em Animando a "base -166,03" vem ao lado: quem encolhe é ela, não o número.
+    expect(regra).toMatch(/flex-shrink: 0/);
+    const base = css.match(/\.ficha-base \{[^}]*\}/)?.[0] ?? '';
+    expect(base).toMatch(/text-overflow: ellipsis/);
+  });
+});
