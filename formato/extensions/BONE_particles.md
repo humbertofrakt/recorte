@@ -1,6 +1,6 @@
 # `BONE_particles` — emissor de partículas sem estado
 
-**Versão da extensão:** 1.1 (05/10/2026: a forma `path`, §9.4.2) · **Estado:** candidata (não é núcleo) · **Licença:** CC-BY 4.0
+**Versão da extensão:** 1.2 (05/11/2026: `rate` animado por integral, §4.2) · 1.1 (05/10/2026: a forma `path`, §9.4.2) · **Estado:** candidata (não é núcleo) · **Licença:** CC-BY 4.0
 **Schema:** `formato/extensions/BONE_particles.schema.json`
 **Contra a spec:** `formato/ESPECIFICACAO 2026-09-17.md`, rascunho 0.2.
 **Escrita em** 18/09/2026.
@@ -237,7 +237,7 @@ mão**. Quem acrescentar o próximo campo animável já tem a resposta.
 hoje: nenhum deles as separa. Escrita em 18/09/2026, depois de a pergunta subir
 do confronto dos dois runtimes.*
 
-### 4.2 A conta geral (o ramo linear é 2ª fase)
+### 4.2 A conta geral (o ramo linear: 2ª fase, em serviço desde a 1.2)
 
 A conta abaixo está escrita **inteira** de propósito, e isso é decisão do
 Planejador de 18/09/2026: **spec que cala é spec que vai ser adivinhada.** Foi
@@ -249,7 +249,33 @@ o seu próprio depois, e para que a 2ª fase não mude o número de nada.
 | Curva da chave de `rate` | `E` no trecho | A inversa |
 |:---|:---|:---|
 | `stepped` | reta | `τ = d / r0` |
-| `linear` (**2ª fase**) | parábola | `τ = 2d / (r0 + sqrt(r0² + 2·s·d))` |
+| `linear` (**2ª fase**, versão 1.2) | parábola | `τ = 2d / (r0 + sqrt(r0² + 2·s·d))` |
+
+**Desde a versão 1.2 (05/11/2026) o ramo `linear` está em serviço** nos dois
+runtimes, e o caso P-002 o prova. `rate` é animável por uma timeline
+`BONE_particle` com `property: "rate"` (§9). A taxa efetiva passa a ser:
+
+```
+taxa_efetiva(t) = rate(t)   se emitting(t) for verdadeiro
+                  0         caso contrário
+rate(t)         = a timeline de rate lida em t (§9.10 da spec), ou o número do
+                  anexo se não há timeline. Com timeline, o número do anexo NÃO vale.
+```
+
+**Os trechos — normativo.** Os cortes são a origem `o`, toda chave de `emitting`
+depois de `o` e **toda chave de `rate` depois de `o`**. Dentro de um trecho a
+taxa é uma reta: `r0` é a taxa efetiva **no início** do trecho e `s` a inclinação
+da chave de `rate` que vale ali (`0` com `stepped`, `0` depois da última chave,
+`0` com `emitting` falso). A área do trecho de largura `Δ` é
+`r0·Δ + s·Δ²/2`, somada em float64 na ordem dos trechos.
+
+**O índice que cai na fronteira de uma rampa que começa em zero.** Com `r0 = 0`,
+`s > 0` e `d = 0`, a forma estável dá `0 / 0`. A partícula nasce **na fronteira**:
+`τ = 0`. É onde `E` a alcança (o P-002 tem uma: o índice 0 em `t = 0`). Com
+`r0 = 0` e `s = 0` o trecho não gera ninguém, como na 1ª fase.
+
+**A 1ª fase não muda um bit.** Com `s = 0` a forma estável é `2d / (2·r0)`, que
+é `d / r0` exatamente em IEEE 754 (dobrar é exato, e `sqrt(r0·r0) = r0`).
 
 Onde o trecho começa em `t0` com `E0 = E(t0)`, taxa `r0`, inclinação
 `s = (r1 − r0) / (t1 − t0)`, e `d = i − E0`.
@@ -277,7 +303,9 @@ partícula i do fluxo 0, com i >= 0:
     t_i    = aplicar explosiveness e randomness (§4.4)
 
 partícula i < 0 (pré-aquecimento, §6):
-    t_cont = o + i / r0        // r0 = a taxa da primeira chave (§9.10 da spec)
+    t_cont = o + i / r0        // r0 = a taxa da primeira chave (§9.10 da spec):
+                               // a de rate, se rate é animado; e 0 se emitting
+                               // começa falso
 
 viva em t  se  t_i <= t < t_i + life_i
 idade      a = t − t_i
@@ -672,7 +700,7 @@ segundos, px (§3.1).
 |:---:|:---|
 | **N** | Animável, lido **no nascimento** `t_i`. Fica congelado na partícula |
 | **T** | Animável, lido **em `t`**. Vale para todas as vivas de uma vez |
-| **I** | Animável por integral (só `rate`; **2ª fase**, §4.2) |
+| **I** | Animável por integral (só `rate`; **2ª fase**, em serviço desde a 1.2, §4.2) |
 | não | Fixo no anexo |
 
 Campo animável entra numa timeline prefixada:
@@ -692,7 +720,7 @@ prefixado.
 | Campo | Tipo e unidade | Animável | Padrão | Observação |
 |:---|:---|:---:|:---|:---|
 | `emitting` | boolean | **N** (`stepped`) | `true` | Desligado zera a taxa efetiva. As já nascidas continuam vivas |
-| `rate` | number, partículas/s, `>= 0` | I (**2ª fase**) | `10` | Na 1ª fase é fixo; quem anima é `emitting` |
+| `rate` | number, partículas/s, `>= 0` | I (**1.2**) | `10` | Animável por integral (§4.2). Chave `linear` ou `stepped`; Bézier vira `linear` com aviso. Com timeline, o número do anexo não vale |
 | `bursts` | lista de `{time, count, cycles, interval, probability}` | não | `[]` | §4.3 |
 | `explosiveness` | number 0..1 | não | `0` | §4.4. A janela é `duration` |
 | `duration` | number, s, `> 0` | não | `1` | **Só** para `explosiveness`. O laço usa a duração da animação (§6) |
@@ -1064,7 +1092,7 @@ Nenhum deles entra nesta versão.
 
 | 1ª fase (esta versão) | 2ª fase |
 |:---|:---|
-| Taxa liga/desliga (`emitting` animável, `rate` fixo) | `rate` animável por integral (o ramo `linear` da §4.2) |
+| Taxa liga/desliga (`emitting` animável, `rate` fixo) | `rate` animável por integral (o ramo `linear` da §4.2) — **em serviço desde a 1.2 (05/11/2026)** |
 | Uma semente por emissor; duplicar dá semente nova | "manter a semente" como gesto do editor |
 | Mistura só pelo slot | — |
 | Gravidade padrão zero | — |
@@ -1142,7 +1170,13 @@ Um caso nasce em `conformidade/casos-pendentes/` e só entra em
 implementação de referência que escreveu o caso, o runtime TypeScript e o
 runtime Python. Quem o move é o Planejador, nunca o executor.
 
-**Dezesseis entraram em `casos/` em 18/09/2026. O P-002 não.**
+**Dezesseis entraram em `casos/` em 18/09/2026. O P-002 não — até 05/11/2026.**
+
+> **05/11/2026: o P-002 entrou.** A 2ª fase de `rate` abriu (versão 1.2), o
+> `esperado.json` foi preenchido por uma conta à parte — 8, 21 e 33 vivas em
+> `t = 0.6`, `1` e `1.31` —, os dois runtimes passaram e o confronto bateu. Agora
+> um runtime sem a rampa dá zero partículas e **reprova**. A suíte passa a dizer
+> **`P: 29/29`**. A história abaixo fica como estava.
 
 > **Por que o P-002 fica de fora.** Ele é o único de **2ª fase**, e o
 > `esperado.json` dele traz uma lista **vazia** de propósito. Um runtime de 1ª
@@ -1164,7 +1198,7 @@ os dois runtimes bateram com eles. A suíte passa a dizer **`P: 19/19`**.
 | Caso | Prova |
 |:---|:---|
 | P-001 | Posição fechada, sem pose: os `u` de oito canais, `t_i`, vida, posição, ângulo e escala |
-| P-002 | Taxa em rampa (o ramo `linear` da §4.2; **2ª fase** — ver a ressalva acima) |
+| P-002 | Taxa em rampa (o ramo `linear` da §4.2; **2ª fase**, em `casos/` desde 05/11/2026) |
 | P-003 | Laço: `t` e `t + D` dão o mesmo quadro |
 | P-004 | Pré-aquecimento: índice `−3` existe e tem o `u` de `acaso(42, 0, −3, 0)` |
 | P-005 | Teto de vivas: `maxParticles 5` com 12 vivas, lista exata das 5 |

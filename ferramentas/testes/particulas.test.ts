@@ -668,16 +668,17 @@ const SO_NA_PASTA = ['P-029-forma-desconhecida-na-drawlist']
 
 const TODOS = [...OITO, ...OITO_NOVOS, ...DA_RODADA_15, ...DA_RODADA_16, ...DA_RODADA_34]   // vinte e oito
 
-/** O que a suíte oficial varre: os que PROVAM alguma coisa. */
-const PROVADOS = TODOS.filter(n => n !== 'P-002-taxa-em-rampa').sort()
-/** O que ela não varre. Hoje só o P-002, e o motivo está no leiame dele. */
-const MUDOS = ['P-002-taxa-em-rampa']
+/** O que a suíte oficial varre: os que PROVAM alguma coisa. Desde 05/11/2026, todos. */
+const PROVADOS = [...TODOS].sort()
+/** O que ela não varre. O P-002 morou aqui até a 2ª fase de `rate` abrir (05/11/2026). */
+const MUDOS: string[] = []
 
 describe('os dezessete casos P-001 a P-017', () => {
   it('os dezessete existem, e cada um na pasta CERTA', () => {
     // Este teste dizia "os oito" e listava só a primeira leva; depois passou a
     // exigir os dezessete em `casos/`. Reescrito outra vez, e não apagado,
-    // quando o P-002 voltou para `casos-pendentes/`.
+    // quando o P-002 voltou para `casos-pendentes/` — e de novo em 05/11/2026,
+    // quando ele entrou com a 2ª fase de `rate`.
     //
     // A pasta não é detalhe: `casos/` é o que a suíte oficial varre. O P-002
     // PASSA SEM EXERCITAR NADA (o anexo tem `rate: 0` e o esperado é lista
@@ -748,11 +749,11 @@ describe('os dezessete casos P-001 a P-017', () => {
     for (let i = 1; i < lista.length; i++) expect(lista[i - 1].birth).toBeGreaterThan(lista[i].birth)
   })
 
-  it('P-002 é de 2ª fase: a lista está vazia DE PROPÓSITO, e o leiame avisa', () => {
+  it('P-002 tem a lista CHEIA desde a 2ª fase: 8, 21 e 33 vivas, e o leiame conta de onde saiu', () => {
     const { esperado, leiame } = caso('P-002-taxa-em-rampa')
-    expect(particulas(esperado, 0)).toEqual([])
-    expect(leiame).toContain('2ª FASE')
-    expect(leiame).toContain('Não mova este caso')
+    expect([0, 1, 2].map(i => particulas(esperado, i).length)).toEqual([8, 21, 33])
+    expect(leiame).toContain('A 2ª fase abriu')
+    expect(leiame).toContain('raiz direta')
   })
 
   it.each(PROVADOS)('%s: o leiame diz quando entrou em `casos/`', (nome) => {
@@ -771,42 +772,33 @@ describe('os dezessete casos P-001 a P-017', () => {
     }
     // Os da rodada 15 entraram noutro dia (04/10/2026), pelas mesmas três
     // fontes; os da rodada 34, no fecho da v28.8.
-    const dia = DA_RODADA_15.includes(nome) ? '04/10/2026' : DA_RODADA_34.includes(nome) ? '05/10/2026' : '18/09/2026'
+    const dia = DA_RODADA_15.includes(nome) ? '04/10/2026' : DA_RODADA_34.includes(nome) ? '05/10/2026'
+      : nome === 'P-002-taxa-em-rampa' ? '05/11/2026' : '18/09/2026'
     expect(leiame).toContain(`Entrou em \`casos/\` em ${dia}`)
     expect(leiame).toContain('três** fontes independentes')
   })
 
-  it('P-002 diz que VOLTOU, e o que precisa acontecer para ele subir', () => {
-    // Um caso que já foi promovido uma vez por engano é candidato a ser
-    // promovido de novo pelo mesmo engano. A linha é o que impede.
+  it('P-002 conta que VOLTOU uma vez, e por que agora entrou', () => {
+    // Um caso que já foi promovido uma vez por engano: a história fica no
+    // leiame, e diz o que mudou para ele entrar de verdade.
     const { leiame } = caso('P-002-taxa-em-rampa')
-    expect(leiame).toContain('por que ele VOLTOU para cá')
-    expect(leiame).toContain('esteve em `casos/` por engano')
-    expect(leiame).toContain('Passar não é provar')
-    expect(leiame).toContain('## O que tem de acontecer para ele voltar')
-    expect(leiame).toContain('2ª fase')
-    // e ele NÃO diz que entrou: é o contrário dos dezesseis
-    expect(leiame).not.toContain('Entrou em `casos/` em 18/09/2026')
+    expect(leiame).toContain('**Devolvido** para `casos-pendentes/`')
+    expect(leiame).toContain('Entrou em `casos/` em 05/11/2026')
+    expect(leiame).toContain('um runtime sem a rampa reprova')
   })
 
-  it('P-002 PASSA SEM PROVAR NADA, e a spec diz isso em letras', () => {
-    // A terceira cara da regra 21: um verde que não foi medido. O anexo tem
-    // `rate: 0` e o esperado é lista vazia, então um runtime de 1ª fase — que
-    // não implementa a timeline de `rate` — produz zero partículas e passa.
-    //
-    // Enquanto a 2ª fase não abrir, `P: 17/17` quer dizer DEZESSEIS provas e um
-    // caso mudo. Este teste existe para o número não ser lido como dezessete.
+  it('P-002 PROVA a rampa: o anexo tem rate 0, a prova está na timeline, e a lista não é vazia', () => {
+    // Até 05/11/2026 ele passava sem provar nada: lista vazia, e um runtime de
+    // 1ª fase dava zero partículas e passava. Agora quem não lê a timeline de
+    // `rate` dá zero e REPROVA.
     const { entrada, esperado } = caso('P-002-taxa-em-rampa')
     expect(emissorDoCaso(entrada).rate).toBe(0)
-    expect(particulas(esperado, 0)).toEqual([])
-    // o que faz dele um caso de 2ª fase: a prova está numa timeline de `rate`
     expect(entrada.animations[0].timelines[0].property).toBe('rate')
+    for (let i = 0; i < esperado.samples.length; i++) expect(particulas(esperado, i).length).toBeGreaterThan(0)
 
     const spec = readFileSync(join(raiz, 'formato', 'extensions', 'BONE_particles.md'), 'utf8')
-    expect(spec).toContain('Ele passa sem exercitar nada')
-    expect(spec).toContain('Ele passa sem exercitar nada')
     expect(spec).toContain('devolvido no mesmo dia')
-    expect(spec).toContain('P: 16/16')
+    expect(spec).toContain('P: 29/29')
   })
 
   it('P-003: `t` e `t + D` dão o MESMO quadro, campo a campo', () => {

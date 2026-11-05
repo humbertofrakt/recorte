@@ -8,6 +8,7 @@ grouped the way the spec is: the chance (3.2, 3.3), when a particle is born
 
 from __future__ import annotations
 
+import math
 import unittest
 
 from base import build
@@ -369,22 +370,53 @@ class TestTimelineDoEmissor(unittest.TestCase):
         self.assertTrue(any("propriedade de emissor desconhecida" in m
                             for m in data.warnings.messages))
 
-    def test_rate_animado_avisa_que_e_de_segunda_fase(self):
-        # 4.1: in the first phase `rate` is a fixed number. Animating it needs
-        # the `linear` branch of 4.2, which is second phase — and the reader
-        # says so instead of drawing a rate that never changed.
+    def _rampa(self, chaves, rate=0):
         from recorte.loader import load_skeleton_document
         from base import document
-        data = load_skeleton_document(document(
+        return load_skeleton_document(document(
             bones=ROOT, slots=SLOTS, extensionsUsed=["BONE_particles"],
-            skins=[{"name": "default", "attachments": {"fx": {"jato": emitter(rate=0)}}}],
+            skins=[{"name": "default", "attachments": {"fx": {"jato": emitter(rate=rate)}}}],
             animations=[{"name": "engrossa", "duration": 1, "timelines": [{
                 "type": "BONE_particle", "target": "fx", "attachment": "jato",
-                "property": "rate",
-                "keys": [{"time": 0, "value": 0, "curve": "linear"},
-                         {"time": 1, "value": 40}]}]}]))
-        self.assertEqual(data.animations[0].timelines, [])
-        self.assertTrue(any("2a fase" in m for m in data.warnings.messages))
+                "property": "rate", "keys": chaves}]}]))
+
+    def _trechos(self, data):
+        from recorte.particles import Trechos, timelines_do_emissor
+        emissor = data.skins[0].attachments["fx"]["jato"]
+        tls = timelines_do_emissor(data.animations[0], "fx", "jato", "default")
+        return Trechos(emissor, tls, 10.0)
+
+    def test_rate_animado_e_lido_desde_a_segunda_fase(self):
+        # 4.2, the `linear` branch, in service since version 1.2: 0 -> 40 in
+        # [0, 1] gives E = 20 t^2, and particle 7 is born at sqrt(7/20).
+        data = self._rampa([{"time": 0, "value": 0, "curve": "linear"},
+                            {"time": 1, "value": 40}])
+        self.assertEqual(len(data.animations[0].timelines), 1)
+        trechos = self._trechos(data)
+        self.assertAlmostEqual(trechos.E(1.0), 20.0, places=12)
+        self.assertAlmostEqual(trechos.instante(7), math.sqrt(7 / 20), places=12)
+        self.assertEqual(trechos.instante(0), 0.0)
+        # after the last key, s = 0: the forbidden root would divide by zero
+        self.assertEqual(trechos.instante(20), 1.0)
+        self.assertAlmostEqual(trechos.instante(32), 1.3, places=12)
+
+    def test_rate_negativo_e_bezier_avisam(self):
+        data = self._rampa([{"time": 0, "value": -5, "curve": [0.25, 0, 0.75, 1]},
+                            {"time": 1, "value": 40}])
+        self.assertTrue(any("RANGE_PARTICLE_RATE:" in m for m in data.warnings.messages))
+        self.assertTrue(any("RANGE_PARTICLE_RATE_CURVE" in m for m in data.warnings.messages))
+        trechos = self._trechos(data)
+        self.assertAlmostEqual(trechos.instante(7), math.sqrt(7 / 20), places=12)
+
+    def test_rate_constante_em_chaves_da_os_mesmos_bits(self):
+        from recorte.particles import Trechos
+        fixo = self._rampa([], rate=20)
+        chaves = self._trechos(self._rampa([{"time": 0, "value": 20, "curve": "linear"},
+                                            {"time": 1, "value": 20}]))
+        emissor = fixo.skins[0].attachments["fx"]["jato"]
+        sem = Trechos(emissor, {}, 10.0)
+        for i in range(40):
+            self.assertEqual(chaves.instante(i), sem.instante(i))
 
 
 class TestAExtensaoDeclarada(unittest.TestCase):
@@ -1086,19 +1118,16 @@ class TestOsCasosDeParticula(unittest.TestCase):
                          f"espera {self.QUANTOS}")
         self.assertEqual(falharam, [], "casos que nao batem: " + ", ".join(falharam))
 
-    def test_o_P_002_e_de_segunda_fase_e_sai_vazio(self):
-        # The `esperado.json` of P-002 has an EMPTY list on purpose: the rate
-        # ramp is the `linear` branch of 4.2. In the first phase the rate
-        # timeline is refused with a warning and `rate` stays at the number in
-        # the attachment, which is 0 — so nobody is born, and that is the
-        # honest answer, not a coincidence.
-        from recorte.loader import load_skeleton_bytes
+    def test_o_P_002_tem_a_rampa_e_a_lista_cheia(self):
+        # Until 05/11/2026 the `esperado.json` of P-002 had an EMPTY list on
+        # purpose, and a first-phase reader passed it by drawing nobody. The
+        # second phase of `rate` opened (4.2, version 1.2): the list is full,
+        # 8, 21 and 33 alive, and a reader without the ramp now FAILS.
         for caso, esperado in self.casos():
             if not caso.name.startswith("P-002"):
                 continue
-            data = load_skeleton_bytes((caso / "entrada.bone").read_bytes(), lambda u: None)
-            self.assertEqual(esperado["samples"][0]["particles"]["fx/jato"], [])
-            self.assertTrue(any("2a fase" in m for m in data.warnings.messages))
+            tamanhos = [len(s["particles"]["fx/jato"]) for s in esperado["samples"]]
+            self.assertEqual(tamanhos, [8, 21, 33])
             return
         self.fail("o caso P-002 sumiu das duas pastas de casos")
 

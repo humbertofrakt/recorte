@@ -32,6 +32,7 @@ import { BoundingBoxAttachment } from '../../../runtime/src/attachments/bounding
 import { PointAttachment } from '../../../runtime/src/attachments/point.js';
 import { ParticleAttachment } from '../../../runtime/src/attachments/particle.js';
 import { EmissionCurve, type EmittingKeys } from '../../../runtime/src/particles/emission.js';
+import { rateKeysOf } from '../../../runtime/src/particles/frame.js';
 import { computeParticles, type ParticleSample } from '../../../runtime/src/particles/emitter.js';
 import { BonePoser } from '../../../runtime/src/particles/bone-poser.js';
 
@@ -569,7 +570,7 @@ function makeSample(
         const att = slot.attachment;
         if (!(att instanceof ParticleAttachment)) continue;
         const key = `${prefix}${slot.data.name}/${att.name}`;
-        const curve = new EmissionCurve(att, emittingKeys(bound, slot.data.name, att.name));
+        const curve = new EmissionCurve(att, emittingKeys(bound, slot.data.name, att.name), rateKeysOf(bound, slot.data.name, att.name));
         const pose = emitterPose(slot, att, prefix, poser);
         const frame = computeParticles(att, curve, { time: at, duration }, pose);
         out[key] = frame.particles.map(particleSample);
