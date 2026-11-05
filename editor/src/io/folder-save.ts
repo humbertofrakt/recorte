@@ -296,7 +296,17 @@ export interface FolderPack {
  * quando não há nada da pasta em uso. Chamar **antes** de `serialize`: o
  * `.bone` que sai tem que citar o atlas que sai junto.
  */
-export async function buildFolderPack(doc: EditorDoc, stem: string): Promise<FolderPack | null> {
+/** Devolve a vez à tela por um instante — QA de 04/11/2026 (D22). */
+function respirar(): Promise<void> {
+  return new Promise((done) => { setTimeout(done, 0); });
+}
+
+export async function buildFolderPack(
+  doc: EditorDoc, stem: string,
+  // QA 04/11/2026 (D22): o projeto do Spriter (91 imagens) levava 7,2 s aqui,
+  // num pedaço só, com a página parada e o rodapé mudo. Agora diz e respira.
+  onProgress?: (feito: number, total: number, fase: string) => void,
+): Promise<FolderPack | null> {
   const plan = atlasForSave(doc);
   if (plan.reuse) return null;
   const folder = projectFolder(doc);
@@ -304,7 +314,10 @@ export async function buildFolderPack(doc: EditorDoc, stem: string): Promise<Fol
   const own = ownAtlas.get(doc) ?? null;
   const names = folderAtlasNames(doc.file, stem, own, paths);
   const items: PackerItem[] = [];
+  let lidas = 0;
   for (const item of plan.items) {
+    onProgress?.(++lidas, plan.items.length, 'lendo as imagens do atlas');
+    if (onProgress !== undefined && lidas % 8 === 0) await respirar();
     const pixels = regionPixels(doc, item.page, item.crop);
     if (pixels === null) continue;
     const packerItem: PackerItem = { name: item.name, width: pixels.width, height: pixels.height, pixels: pixels.data };
@@ -317,7 +330,11 @@ export async function buildFolderPack(doc: EditorDoc, stem: string): Promise<Fol
   withAtlasName(doc.file, names.atlas, own);
   ownAtlas.set(doc, names.atlas);
   const pages: FolderPack['pages'] = [];
-  for (const page of packed.pages) pages.push({ name: page.image, bytes: await pngOf(page) });
+  for (const page of packed.pages) {
+    onProgress?.(pages.length + 1, packed.pages.length, 'gravando as páginas do atlas');
+    if (onProgress !== undefined) await respirar();
+    pages.push({ name: page.image, bytes: await pngOf(page) });
+  }
   return { atlasName: names.atlas, text: `${JSON.stringify(packed.atlas, null, 2)}\n`, pages, count: items.length };
 }
 

@@ -3264,3 +3264,23 @@ describe('QA 04/11/2026 — D14: o .bone sem atlas, aberto pela pasta, mostra as
     expect(corpo.slice(0, ate)).toContain('ensureProvisionalMany(doc, looseImagesInFolder(');
   });
 });
+
+describe('QA 04/11/2026 — D22: o Salvar do projeto grande diz que está salvando, e a tela respira', () => {
+  // A prova (Chromium sem janela): exemplo/game → bcp.scml → Ctrl+S. A página
+  // ficou 8 s parada, e o rodapé sem palavra nenhuma, até "Salvo em bcp.bone".
+  // Medido: o buildFolderPack (91 imagens lidas, empacotadas, 3 páginas PNG)
+  // levava 7,2 s num pedaço só.
+  it('o buildFolderPack aceita o andamento e pausa entre as imagens e as páginas', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/folder-save.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('export async function buildFolderPack('), fonte.indexOf('/** Desce da pasta do projeto'));
+    expect(corpo).toContain('onProgress?: (feito: number, total: number, fase: string) => void');
+    expect(corpo.match(/await respirar\(\);/g)?.length).toBe(2);
+  });
+
+  it('o Salvar passa o andamento até o rodapé', () => {
+    const io = readFileSync(resolve(__dirname, '../src/io/open-save.ts'), 'utf8');
+    expect(io.match(/buildFolderPack\(doc, stemOfName\(handle\.name\), options\.onProgress\)/g)?.length).toBe(1);
+    const casca = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(casca).toContain('onProgress: (feito, total, fase) => { shell.statusState.textContent = `Salvando: ${fase}, ${feito} de ${total}…`; },');
+  });
+});

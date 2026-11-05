@@ -606,6 +606,8 @@ export function checkBeforeSaving(
 export interface SaveOptions {
   /** `true` for "Salvar como": always asks where to put the file. */
   saveAs?: boolean;
+  /** O andamento do atlas da pasta, para o rodapé — QA de 04/11/2026 (D22). */
+  onProgress?: (feito: number, total: number, fase: string) => void;
   /**
    * Asked when the check found problems. Return `true` to save anyway.
    * The shell passes its own window, built from `problemsQuestion` (P43).
@@ -671,7 +673,7 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
       }
     }
     // Lote 62: o atlas nasce aqui, e o `.bone` que sai já o cita.
-    const pack = await buildFolderPack(doc, stemOfName(handle.name));
+    const pack = await buildFolderPack(doc, stemOfName(handle.name), options.onProgress);
     const text = doc.serialize();
     const writable = await handle.createWritable();
     await writable.write(text);

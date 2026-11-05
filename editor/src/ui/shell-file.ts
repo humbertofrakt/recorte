@@ -415,6 +415,8 @@ export async function save(shell: Shell, saveAs: boolean): Promise<void> {
   try {
     const name = await saveDocument(shell.doc, {
       saveAs,
+      // QA 04/11/2026 (D22): o projeto grande diz que está salvando.
+      onProgress: (feito, total, fase) => { shell.statusState.textContent = `Salvando: ${fase}, ${feito} de ${total}…`; },
       // Rodada 45, lote 1: a pergunta da casa, em português. Sem este gancho
       // o `saveDocument` caía no `confirm()` do navegador, em inglês (doc 57).
       confirmProblems: (problems) => askUser(perguntaSalvarComAvisos(shell.doc.file, problems)),
