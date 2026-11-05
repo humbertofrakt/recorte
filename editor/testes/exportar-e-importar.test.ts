@@ -2013,3 +2013,19 @@ describe('QA 04/11/2026 — D13: o nome sugerido das animações de uma base sem
     expect(suggestedAnimationName(file, { animations: ['a', 'b'] })).toBe('animacoes.bone');
   });
 });
+
+describe('QA 04/11/2026 — o rodapé do PSD diz o resultado com a janela aberta', () => {
+  // A prova (Chromium sem janela): Importar → PSD…; com a janela de avisos
+  // aberta, o rodapé dizia "Importar PSD." (o nome do passo), e o resumo
+  // ("19 camadas lidas, 19 slots criados…") só chegava depois de Fechar.
+  const fonte = (arquivo: string): string => readFileSync(resolve(__dirname, '../src/ui', arquivo), 'utf8');
+  it('pelo menu e pelo arrasto: primeiro o rodapé, depois a janela', () => {
+    for (const [arquivo, resumo] of [['shell-file.ts', 'result.summary'], ['shell-drop.ts', 'feito.summary']] as const) {
+      const f = fonte(arquivo);
+      const rodape = f.indexOf(`shell.statusState.textContent = ${resumo};`);
+      const janela = f.indexOf('if (aviso !== null) await tellUser(aviso);', f.indexOf('psdWarningsNote(', f.indexOf('import { importPsd') + 40));
+      expect(rodape, arquivo).toBeGreaterThan(0);
+      expect(rodape, arquivo).toBeLessThan(janela);
+    }
+  });
+});

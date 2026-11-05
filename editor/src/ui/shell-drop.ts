@@ -299,8 +299,9 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
         const feito = await importPsd(shell.doc, { file: alvo });
         if (feito !== null) {
           const aviso = psdWarningsNote(feito);
-          if (aviso !== null) await tellUser(aviso);
+          // QA 04/11/2026: o resumo no rodapé ANTES da janela.
           shell.statusState.textContent = feito.summary;
+          if (aviso !== null) await tellUser(aviso);
         }
         return;
       }

@@ -1053,8 +1053,9 @@ export async function importPsdFile(shell: Shell, bones = false): Promise<void> 
     if (result === null) return;
     // Lote A4: a janela dos avisos saiu do `io/`; a casca mostra, como antes.
     const aviso = psdWarningsNote(result);
-    if (aviso !== null) await tellUser(aviso);
+    // QA 04/11/2026: o resumo no rodapé ANTES da janela (dizia "Importar PSD.").
     shell.statusState.textContent = result.summary;
+    if (aviso !== null) await tellUser(aviso);
   } catch (error) {
     await shell.reportFailure('Não deu para importar o PSD', error);
   }
