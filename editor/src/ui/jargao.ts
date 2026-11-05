@@ -108,6 +108,12 @@ export const ESPERANDO: ReadonlyArray<{ texto: string; dono: string; porque: str
     porque: 'o slot que recebe uma entidade é a TOMADA (spec §1.6), e a peça é a "peça encaixada": '
       + 'as palavras e os nomes desses itens vêm da obra das tomadas, nesta mesma noite',
   })),
+  {
+    texto: 'A malha volta a seguir só o osso do slot',
+    dono: 'Malha e pivô (aba Malha e pesos)',
+    porque: 'a dica do menu e a do botão da aba são a MESMA frase, letra por letra (malha.test.ts): '
+      + 'troca nas duas de uma vez, por "o osso do desenho"',
+  },
 ]);
 
 /** `true` quando o texto é um dos que esperam outro dono. */

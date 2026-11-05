@@ -998,7 +998,7 @@ export function meshRulesMenu(): MenuItem[] {
         },
         {
           label: 'Tirar pesos', action: 'tirar-pesos', enabled: true,
-          hint: 'A malha volta a seguir só o osso do desenho',
+          hint: 'A malha volta a seguir só o osso do slot',
         },
       ],
     },
