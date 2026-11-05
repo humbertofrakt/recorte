@@ -254,3 +254,12 @@ export const LAYER_HINT =
 
 /** A linha dentro da camada 0, que nasce aberta: quem chega lê o que é camada. */
 export const LAYER_SAYS = 'Cada camada toca uma animação. A de cima cobre a de baixo nos ossos que marca.';
+
+/**
+ * A opção vazia do seletor de animação de uma camada — QA da noite de
+ * 04/11/2026. Na camada 0 era "— a animação aberta —", numa caixa de 110 px:
+ * aparecia "— a animaç". O título da camada já diz qual ela segue.
+ */
+export function layerNoneLabel(index: number): string {
+  return index === 0 ? '— a aberta —' : '— nenhuma —';
+}

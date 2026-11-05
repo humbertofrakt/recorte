@@ -495,3 +495,18 @@ describe('rodada 47, lote 6d: a Prévia fala a língua de quem chega', () => {
     expect(previa).toContain("el('p', 'previa-dica', LAYER_SAYS)");
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): na Prévia, o seletor de
+// animação da camada 0 dizia "— a animação aberta —" numa caixa de 110 px, e
+// aparecia "— a animaç". O título da camada já diz qual ela segue ("Camada 0
+// — a de baixo — segue andar"); a opção fica curta.
+import { layerNoneLabel as layerNoneLabelQA } from '../src/panels/preview-model.js';
+describe('a opção vazia da camada cabe na caixa (QA da noite)', () => {
+  it('camada 0: "— a aberta —"; as outras: "— nenhuma —"', () => {
+    expect(layerNoneLabelQA(0)).toBe('— a aberta —');
+    expect(layerNoneLabelQA(1)).toBe('— nenhuma —');
+  });
+  it('cabe nos 12 caracteres que a caixa de 110 px mostra', () => {
+    expect(layerNoneLabelQA(0).length).toBeLessThanOrEqual(12);
+  });
+});

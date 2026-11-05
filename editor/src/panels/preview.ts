@@ -44,6 +44,7 @@ import {
   AddBakedAnimation, BAKE_LOSSES, LAYER_COUNT, LAYER_HINT, LAYER_SAYS, bakeMix, bakedName, buildPreviewState,
   defaultLayers, effectiveLayers, findAnimationData, followNotice, followShort, hasAnyLayer, previewDuration,
   type LayerConfig,
+  layerNoneLabel,
 } from './preview-model.js';
 
 /** Keys per second the copy writes. */
@@ -501,7 +502,7 @@ class PreviewPanel implements Panel {
     const animation = el('select', 'prop-selecao') as HTMLSelectElement;
     animation.title = 'Animação: o que esta camada toca. Na camada 0, vazio segue a animação aberta';
     // G-Q4: na camada 0, o vazio é seguir a animação aberta.
-    const none = el('option', undefined, index === 0 ? '— a animação aberta —' : '— nenhuma —');
+    const none = el('option', undefined, layerNoneLabel(index));
     none.value = '';
     animation.append(none);
     for (const name of names) {
