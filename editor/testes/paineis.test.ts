@@ -1186,6 +1186,37 @@ describe('a prova da medição não mede painel vazio (A10)', () => {
 });
 
 // ---------------------------------------------------------------------------
+// A Malha em 1280×720: a régua da ferramenta — 04/11/2026
+// ---------------------------------------------------------------------------
+
+describe('a Malha em 1280×720 rola com régua própria, e a régua não isenta', () => {
+  const prova = readFileSync(resolve(__dirname, '../../ferramentas/provas/medir-paineis.mjs'), 'utf8');
+  const painel = readFileSync(resolve(__dirname, '../src/panels/mesh-panel.ts'), 'utf8');
+  const css = readFileSync(resolve(__dirname, '../src/panels/mesh-panel.css'), 'utf8');
+
+  it('o painel marca a si mesmo; a marca é dele, não da prova', () => {
+    expect(painel).toContain("body.dataset.rolagem = 'ferramenta';");
+  });
+
+  it('a marca TROCA a régua: a seção aberta inteira e uma linha depois, senão falha', () => {
+    expect(prova).toContain('const medirFerramenta = (caixa) =>');
+    expect(prova).toContain('a seção da ferramenta não cabe');
+    expect(prova).toContain('nenhuma seção aberta: a régua da ferramenta não tem o que mostrar');
+    // Só na tela pequena: na grande, a régua de sempre.
+    expect(prova).toContain("el.dataset?.rolagem === 'ferramenta' && window.innerHeight <= 800");
+  });
+
+  it('os botões da Forma vão dois por linha, com o nome inteiro (quebra entre palavras)', () => {
+    const bloco = css.slice(css.lastIndexOf('@media (max-height: 800px)'));
+    expect(bloco).toContain('grid-template-columns: 1fr 1fr');
+    expect(bloco).toContain('white-space: normal');
+    expect(bloco).toContain('overflow-wrap: normal');
+    // O nome nunca some: a exceção da aba ("ícone sozinho não se lê") continua.
+    expect(bloco).not.toMatch(/painel-botao-nome[^}]*display:\s*none/);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // A ficha do emissor de partículas — extensão `BONE_particles`, lote 1
 // ---------------------------------------------------------------------------
 
