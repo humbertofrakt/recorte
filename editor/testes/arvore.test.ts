@@ -3215,3 +3215,24 @@ describe('Espaço toca com o foco na Árvore (QA da noite)', () => {
     expect(gesto).toMatch(/runAction\('tocar'\)/);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): arrastar "coxa_e" para cima do
+// próprio neto "pe_e" troca os dois de lugar (pedido do Humberto, item 3.2),
+// e a troca escreve "pe_e e coxa_e trocaram de lugar…". Mas a Árvore escrevia
+// por cima "coxa_e virou filho de pe_e": ela perguntava se era troca DEPOIS
+// de trocar — e depois da troca o pe_e já não está debaixo da coxa_e.
+describe('a troca de lugar pela Árvore diz que trocou (QA da noite)', () => {
+  it('a pergunta "é troca?" vem antes do runReparent', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const solta = fonte.slice(fonte.indexOf('const action = hierarchyDropAction('), fonte.indexOf('corpoDe(doc).run(new MoveSlot(action.from, action.to));'));
+    const troca = solta.indexOf('const troca =');
+    expect(troca).toBeGreaterThan(0);
+    expect(troca).toBeLessThan(solta.indexOf('runReparent('));
+  });
+  it('e depois de escolher a linha, a frase da troca volta ao rodapé', () => {
+    expect(TR43.swapDropNotice('pe_e', 'coxa_e', ''))
+      .toBe('pe_e e coxa_e trocaram de lugar: coxa_e agora é filho de pe_e');
+    expect(TR43.swapDropNotice('pe_e', 'coxa_e', ' (chave de pai em 0,50 s)'))
+      .toBe('pe_e e coxa_e trocaram de lugar: coxa_e agora é filho de pe_e (chave de pai em 0,50 s)');
+  });
+});

@@ -15,6 +15,15 @@ Relatório em andamento. A versão final fica no fim da noite.
 | Leitura | o documento só é LIDO por fora, para conferir; quem muda é o gesto |
 | Fotos | `fotos-qa-animar/`, escala 1 |
 
+## A régua de fecho (medida às 01:46 UTC de 05/11, com a casa só minha)
+
+| Régua | Resultado |
+|:---|:---|
+| `npx vitest run` | **5.853** testes (eram 5.806): 5.821 passam, 31 pulados, **1 vermelho**: o do manual, conhecido (`ajuda.test.ts`) |
+| `npx tsc --noEmit -p editor/tsconfig.json` | limpo |
+| `node ferramentas/conformidade.mjs` | 120 de 120 |
+| `npm run medir` (com Chromium sem sandbox) | 90 de 90 de lado, 82 de 90 de altura — **igual ao ponto de partida** (medido nos dois) |
+
 ## O roteiro dos 30 minutos, à mão
 
 | Passo | 1920 | 1440 | 1280 |
@@ -62,6 +71,8 @@ Relatório em andamento. A versão final fica no fim da noite.
 | D16 | Com o foco numa linha da Árvore ou da lista de Animações, o Espaço não tocava (apertava a linha de novo) | Árvore, Animações | clicar num osso → Espaço | — | a tabela de teclas diz: Espaço nessas linhas é Tocar |
 | D17 | **Clicar "Duplicar" e depois Espaço duplicava de novo** (o foco ficava no botão) | Animações, Árvore, Ordem, Malha, Propriedades | Animações → Duplicar → Espaço | — | o clique do mouse num botão de barra não leva o foco; Tab continua |
 | D18 | Clicar "Suave" na aba Curvas e depois Espaço reaplicava a curva | Curvas (Linha do tempo) | Detalhes → Curvas → Suave → Espaço | — | a mesma regra do D17 |
+| D19 | Prévia: "— a animação aberta —" aparecia "— a animaç" | Animações (Prévia) | Animação → Abrir a Prévia | — | "a aberta" (o título da camada já diz qual) |
+| D20 | Arrastar o pai sobre o neto TROCA os dois (item 3.2), mas o rodapé dizia "coxa_e virou filho de pe_e" | Árvore | arrastar coxa_e para cima de pe_e | — | "pe_e e coxa_e trocaram de lugar: coxa_e agora é filho de pe_e" |
 
 ## Os defeitos — fora da minha parte (só descritos)
 

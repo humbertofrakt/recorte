@@ -933,3 +933,13 @@ export function treeReveal(
   const doClique = clicada !== null && agora === clicada;
   return { escolha: mudou && !doClique, foco: !doClique };
 }
+
+/**
+ * O rodapé da troca de lugar pela Árvore — QA da noite de 04/11/2026. A troca
+ * já fala (`runReparent`), mas a Árvore escolhe a linha DEPOIS de soltar, e
+ * escolher redesenha o rodapé: a frase sumia. A Árvore a repete depois de
+ * escolher, com as mesmas palavras.
+ */
+export function swapDropNotice(parent: string, child: string, extra: string): string {
+  return `${parent} e ${child} trocaram de lugar: ${child} agora é filho de ${parent}${extra}`;
+}

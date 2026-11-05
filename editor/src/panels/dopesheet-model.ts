@@ -928,3 +928,16 @@ export function keysAfterEndNotice(duration: string, after: number): string {
 export function closesPopup(key: string): boolean {
   return key === 'Escape';
 }
+
+/**
+ * O rodapé de um arrasto que cobriu chaves — QA da noite de 04/11/2026. A
+ * chave de lá sumia calada (regra 21); agora o rodapé diz, com o caminho de
+ * volta. Uma: o tempo e o dono. Mais de uma: quantas.
+ */
+export function coveredKeysNotice(covered: readonly KeyRef[], label: string): string {
+  if (covered.length === 1) {
+    const ref = covered[0]!;
+    return `${label}: a chave que já estava em ${formatSeconds(ref.time)} (${ref.target.target}) foi substituída. Ctrl+Z volta`;
+  }
+  return `${label}: ${covered.length} chaves que já estavam no destino foram substituídas. Ctrl+Z volta`;
+}
