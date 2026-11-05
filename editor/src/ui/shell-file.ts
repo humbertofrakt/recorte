@@ -14,7 +14,7 @@ import { createEmptyFile } from '../doc/new-file.js';
 import { describeDraftTime, draftsToOffer, readDraft, takeKeptDraft } from '../doc/rascunho.js';
 import {
   abrindoPelaPasta, cameFromOutside, deliverBody, deliveredLine, entitySaveLines, forgetHandle, forgetOutside,
-  hasOpenHandle, lastSaveNote, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
+  hasOpenHandle, lastSaveNote, lastSaveWarns, saveStatusLine, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
   saveDocument, uriForOpened, useOpenHandle,
 } from '../io/open-save.js';
 import { perguntaSalvarComAvisos } from './salvar-avisos.js';
@@ -412,10 +412,8 @@ export async function save(shell: Shell, saveAs: boolean): Promise<void> {
     if (name === null && problema !== null) shell.statusState.textContent = problema;
     if (name !== null) {
       // Lote 62: o que o Salvar fez com o atlas da pasta, ou por que baixou.
-      const nota = lastSaveNote();
-      const extra = nota !== null ? ` ${nota}.`
-        : atlasFileText(shell.doc) === null ? '' : ' Atlas e páginas gravados junto.';
-      shell.statusState.textContent = `Salvo em ${name}.${extra}`;
+      // QA 04/11/2026 (D3): o aviso de "baixado" vem primeiro, senão o rodapé o corta.
+      shell.statusState.textContent = saveStatusLine(name, lastSaveNote(), lastSaveWarns(), atlasFileText(shell.doc) !== null);
     }
   } catch (error) {
     shell.statusState.textContent = error instanceof Error ? error.message : String(error);

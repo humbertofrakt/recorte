@@ -609,6 +609,7 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
   // Lote 61: o pivô da pasta de uma imagem que já está na cena mora na região.
   pruneFolderPivots(doc);
   lastNote = null;
+  lastNoteWarns = false;
 
   const check = checkBeforeSaving(doc.serialize(), doc.atlases, doc.skeletons);
   if (!check.ok || check.problems.length > 0) {
@@ -743,6 +744,7 @@ async function saveProjectBeside(doc: Doc, handle: FileHandle | null): Promise<s
     return `${frase} ${gravados} ao lado`;
   }
   for (const file of out) downloadBlob(file.name, file.blob);
+  lastNoteWarns = true;
   return `${frase} ${baixados}: salve o .bone dentro da pasta do projeto para ${quantos === 0 ? 'ir junto' : 'irem juntos'}`;
 }
 
@@ -876,6 +878,32 @@ let lastNote: string | null = null;
 /** O que o último Salvar disse do atlas da pasta — lote 62. */
 export function lastSaveNote(): string | null {
   return lastNote;
+}
+
+/**
+ * `true` quando o último Salvar **não** pôs tudo ao lado do `.bone`: o atlas,
+ * as páginas ou os outros corpos foram baixados — QA de 04/11/2026.
+ */
+let lastNoteWarns = false;
+
+export function lastSaveWarns(): boolean {
+  return lastNoteWarns;
+}
+
+/**
+ * **A frase do rodapé depois do Salvar** — QA de 04/11/2026 (D3).
+ *
+ * O rodapé mostra a primeira frase que cabe (`versoesDaFrase`), e a frase era
+ * sempre *"Salvo em copia.bone. O .bone foi salvo fora da pasta mao: o atlas e
+ * as páginas foram baixados…"*: em 1920 px só o "Salvo em copia.bone." cabia,
+ * e quem salvou fora da pasta não ficava sabendo que o `.bone` saiu sem atlas
+ * ao lado (regra 21). Quando a nota é um aviso, ela vem **primeiro**; quando é
+ * só uma notícia ("Atlas da pasta gravado ao lado"), vem depois, como antes.
+ */
+export function saveStatusLine(name: string, note: string | null, warns: boolean, atlasTogether: boolean): string {
+  if (note !== null && warns) return `${note}. Salvo em ${name}.`;
+  if (note !== null) return `Salvo em ${name}. ${note}.`;
+  return atlasTogether ? `Salvo em ${name}. Atlas e páginas gravados junto.` : `Salvo em ${name}.`;
 }
 
 /**
@@ -1072,6 +1100,7 @@ async function gravarAtlasAoLado(doc: Doc, handle: FileHandle | null, pack: Fold
       }
       if (route.kind === 'baixar') {
         for (const file of out) downloadBlob(file.name, file.blob);
+        lastNoteWarns = true;
         return route.why;
       }
     }
@@ -1084,6 +1113,7 @@ async function gravarAtlasAoLado(doc: Doc, handle: FileHandle | null, pack: Fold
     return pack === null ? null : `Atlas gravado ao lado: ${pack.atlasName}`;
   }
   for (const file of out) downloadBlob(file.name, file.blob);
+  if (pack !== null) lastNoteWarns = true;
   return pack === null ? null : `Atlas e páginas baixados: ${pack.atlasName}`;
 }
 
