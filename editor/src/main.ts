@@ -71,6 +71,7 @@ import exampleAtlasUrl from '../../formato/exemplos/heroi.atlas.json?url';
 import examplePageUrl from '../../formato/exemplos/heroi.png?url';
 // The sword in the hero's hand is a whole skeleton of its own (spec 7.11).
 import exampleSwordUrl from '../../formato/exemplos/espada.bone?url';
+import { EXAMPLE_FIRST_STEP } from './viewport/welcome-model.js';
 
 const EXAMPLE_BONE = exampleBoneUrl;
 /** O nome do exemplo, o do arquivo: o endereço do empacotador vem carimbado. */
@@ -152,6 +153,10 @@ async function start(): Promise<void> {
       // Lote 68: o exemplo abre em Montagem. Abrir um arquivo seu continua
       // entrando na primeira animação (o pedido de 10/09, `openFirstAnimation`).
       switchAnimation(doc, null);
+      // Prova de pessoa (05/11/2026): o herói abre na base, com o ▶ cinza, e
+      // quem nunca abriu o programa clicava no ▶ e nada acontecia. O rodapé
+      // diz o primeiro passo.
+      doc.notice(EXAMPLE_FIRST_STEP);
     } catch (error) {
       console.warn('O exemplo não abriu:', error);
       doc.notice('O exemplo não veio junto com este programa');
