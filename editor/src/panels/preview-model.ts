@@ -261,5 +261,5 @@ export const LAYER_SAYS = 'Cada camada toca uma animação. A de cima cobre a de
  * aparecia "— a animaç". O título da camada já diz qual ela segue.
  */
 export function layerNoneLabel(index: number): string {
-  return index === 0 ? '— a aberta —' : '— nenhuma —';
+  return index === 0 ? 'a aberta' : 'nenhuma';
 }

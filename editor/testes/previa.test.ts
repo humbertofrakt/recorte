@@ -502,11 +502,11 @@ describe('rodada 47, lote 6d: a Prévia fala a língua de quem chega', () => {
 // — a de baixo — segue andar"); a opção fica curta.
 import { layerNoneLabel as layerNoneLabelQA } from '../src/panels/preview-model.js';
 describe('a opção vazia da camada cabe na caixa (QA da noite)', () => {
-  it('camada 0: "— a aberta —"; as outras: "— nenhuma —"', () => {
-    expect(layerNoneLabelQA(0)).toBe('— a aberta —');
-    expect(layerNoneLabelQA(1)).toBe('— nenhuma —');
+  it('camada 0: "a aberta"; as outras: "nenhuma" — sem travessão, que também cortava', () => {
+    expect(layerNoneLabelQA(0)).toBe('a aberta');
+    expect(layerNoneLabelQA(1)).toBe('nenhuma');
   });
-  it('cabe nos 12 caracteres que a caixa de 110 px mostra', () => {
-    expect(layerNoneLabelQA(0).length).toBeLessThanOrEqual(12);
+  it('cabe na caixa de 110 px: medido no navegador, "— a aberta —" ainda comia o travessão', () => {
+    expect(layerNoneLabelQA(0).length).toBeLessThanOrEqual(10);
   });
 });
