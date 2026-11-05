@@ -340,6 +340,10 @@ class DrawOrderPanel implements Panel {
     const focada = list.contains(document.activeElement)
       ? [...this.rows].find(([, node]) => node === document.activeElement)?.[0] ?? null
       : null;
+    // QA da noite (04/11/2026): a lista vazia no meio da montagem prendia a
+    // rolagem em 0, e a linha andava debaixo do dedo. Guardada aqui, devolvida
+    // depois de montar, antes do foco e da rolagem até a escolhida.
+    const rolagem = list.scrollTop;
     clear(list);
     this.rows = new Map();
     this.drawn = this.shapeNow(doc);
@@ -370,6 +374,7 @@ class DrawOrderPanel implements Panel {
     const fundo = el('div', 'ordem-ponta', 'fundo');
     fundo.title = 'O fundo: o de baixo fica atrás de todos';
     list.append(fundo);
+    list.scrollTop = rolagem;
     if (focada !== null) this.rows.get(focada)?.focus();
     this.scrollToPicked(false);
   }
@@ -551,6 +556,9 @@ class DrawOrderPanel implements Panel {
 
     node.addEventListener('click', (event) => {
       event.stopPropagation();
+      // QA da noite (04/11): quem clicou está apontando para a linha — ela
+      // já está à vista, e rolar até ela a tirava de debaixo do dedo.
+      this.shownPicked = row.name;
       doc.select(orderRowSelection(corpoDe(doc).file, row.name));
     });
     node.addEventListener('keydown', (event) => {
