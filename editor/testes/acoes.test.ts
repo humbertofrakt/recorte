@@ -173,8 +173,10 @@ describe('a tabela das ações', () => {
     // 308 (N-4b, 05/11/2026): +2, `recorte-na-cena` e `tirar-recorte` (Animação, da cena).
     // 309 (noite de 04/11/2026, obra/skins): +1, `guarda-roupa` (Skins → Guarda-roupa).
     // 311 (noite de 04/11/2026, obra/reaproveitar): +2, `usar-animacoes` e `seguir-esqueleto-padrao`.
-    // 314 (05/11/2026, obra/entidades): +3, as tomadas (encaixar-projeto, por-tomada, tirar-peca).
-    expect(tabela.length).toBe(314);
+    // 312 (noite de 04/11/2026, obra/manual): +1, `quero-fazer` (Ajuda → Quero fazer…).
+    // 315 (05/11/2026, obra/entidades): +3, as tomadas (encaixar-projeto, por-tomada, tirar-peca).
+    // 316 (05/11/2026, obra/reaproveitar): +1, `abrir-oficina` (Arquivo → Abrir a oficina (exemplo)).
+    expect(tabela.length).toBe(316);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');

@@ -177,6 +177,7 @@ export const TAREFAS: readonly TarefaDef[] = Object.freeze([
   { action: 'abrir-recente', grupo: 'Começar, abrir e salvar', tarefa: 'Voltar a um dos últimos arquivos abertos' },
   { action: 'reabrir', grupo: 'Começar, abrir e salvar', tarefa: 'Recuperar o que fechei sem salvar' },
   { action: 'abrir-exemplo', grupo: 'Começar, abrir e salvar', tarefa: 'Ver um boneco pronto, para entender o programa' },
+  { action: 'abrir-oficina', grupo: 'Começar, abrir e salvar', tarefa: 'Abrir a oficina: o exemplo com tudo junto' },
   { action: 'salvar', grupo: 'Começar, abrir e salvar', tarefa: 'Salvar o trabalho' },
   { action: 'salvar-como', grupo: 'Começar, abrir e salvar', tarefa: 'Salvar noutro lugar, ou com outro nome' },
   { action: 'salvar-binario', grupo: 'Começar, abrir e salvar', tarefa: 'Salvar num arquivo menor, que o jogo lê mais rápido' },
@@ -423,6 +424,7 @@ export const TAREFAS: readonly TarefaDef[] = Object.freeze([
   { action: 'nome-das-ferramentas', grupo: 'Arrumar a tela', tarefa: 'Escrever o nome ao lado do ícone de cada ferramenta' },
   // ---- Achar e ajuda ---------------------------------------------------
   { action: 'paleta', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Achar um comando digitando um pedaço do nome dele — quando não sei em que menu está' },
+  { action: 'quero-fazer', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Dizer o que quero fazer ("arma", "roupa", "gif") e ver os passos, com o lugar aceso no menu' },
   { action: 'atalhos', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Ver todas as teclas, e trocar uma por outra' },
   { action: 'problemas', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Ver o que o programa não entendeu no arquivo, e onde' },
   { action: 'manual', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Abrir o manual' },

@@ -255,6 +255,8 @@ export function fileMenu(_state: FileMenuState = { canRepack: false }): MenuItem
     // documento vazio oferece o mesmo botão, mas ela some assim que o trabalho
     // começa, e quem quer olhar o herói de novo não tem como pedir.
     { label: 'Abrir o herói (exemplo)', action: 'abrir-exemplo', enabled: true, hint: 'O personagem de exemplo, montado e animado, para olhar por dentro' },
+    // 05/11/2026: a oficina, o exemplo que mostra tudo junto.
+    { label: 'Abrir a oficina (exemplo)', action: 'abrir-oficina', enabled: true, hint: 'Tudo junto: a motosserra, o mecha com o herói dentro, três bonecos com as mesmas animações, duas roupas' },
     SEP,
     // **A pasta é a arte, e a arte tem o seu bloco** — P41 (29/09/2026). Lote
     // 59, plano pasta do projeto: começar como o Spriter, abrindo a pasta das
@@ -1880,6 +1882,12 @@ export function windowMenu(state: WindowMenuState): MenuItem[] {
 export function helpMenu(): MenuItem[] {
   return [
     { label: 'Manual', shortcut: 'F1', action: 'manual', enabled: true },
+    // Noite de 04/11 (`ui/quero-fazer.ts`): procurar pela COISA que se quer
+    // fazer, e não pelo nome do comando. Também no botão do rodapé.
+    {
+      label: 'Quero fazer…', action: 'quero-fazer', enabled: true,
+      hint: 'Diga o que quer fazer — "arma", "roupa", "gif" — e veja os passos, com o lugar aceso no menu',
+    },
     {
       label: 'Atalhos do teclado',
       shortcut: 'Shift+F1',

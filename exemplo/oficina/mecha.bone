@@ -1,0 +1,470 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte — fazer-oficina.mjs",
+    "id": "00000000-0000-4000-8000-0000000000c4",
+    "created": "2026-11-05T00:00:00Z",
+    "modified": "2026-11-05T00:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo \"oficina\" do Recorte — mecha"
+  },
+  "skeleton": {
+    "name": "mecha",
+    "x": -147,
+    "y": -10,
+    "width": 294,
+    "height": 494,
+    "fps": 30,
+    "referenceScale": 100
+  },
+  "assets": {
+    "atlases": [
+      "oficina.atlas.json"
+    ],
+    "imagesBase": "",
+    "skeletonsBase": "",
+    "animations": [
+      "humanoide-v1-animacoes.bone"
+    ]
+  },
+  "rig": {
+    "name": "humanoide-v1",
+    "bones": [
+      "raiz",
+      "quadril",
+      "tronco",
+      "pescoco",
+      "cabeca",
+      "braco_e",
+      "antebraco_e",
+      "mao_e",
+      "braco_d",
+      "antebraco_d",
+      "mao_d",
+      "coxa_e",
+      "canela_e",
+      "pe_e",
+      "coxa_d",
+      "canela_d",
+      "pe_d"
+    ]
+  },
+  "bones": [
+    {
+      "name": "raiz"
+    },
+    {
+      "name": "quadril",
+      "parent": "raiz",
+      "x": 0,
+      "y": 189,
+      "length": 21,
+      "folder": "corpo"
+    },
+    {
+      "name": "tronco",
+      "parent": "quadril",
+      "x": 0,
+      "y": 0,
+      "rotation": 90,
+      "length": 147,
+      "folder": "corpo"
+    },
+    {
+      "name": "pescoco",
+      "parent": "tronco",
+      "x": 147,
+      "y": 0,
+      "length": 25.2,
+      "folder": "corpo"
+    },
+    {
+      "name": "cabeca",
+      "parent": "pescoco",
+      "x": 25.2,
+      "y": 0,
+      "length": 84,
+      "folder": "corpo"
+    },
+    {
+      "name": "braco_e",
+      "parent": "tronco",
+      "x": 115.5,
+      "y": 21,
+      "rotation": -185,
+      "length": 84,
+      "folder": "braco_e"
+    },
+    {
+      "name": "antebraco_e",
+      "parent": "braco_e",
+      "x": 84,
+      "y": 0,
+      "rotation": 15,
+      "length": 73.5,
+      "folder": "braco_e"
+    },
+    {
+      "name": "mao_e",
+      "parent": "antebraco_e",
+      "x": 73.5,
+      "y": 0,
+      "length": 42,
+      "folder": "braco_e"
+    },
+    {
+      "name": "braco_d",
+      "parent": "tronco",
+      "x": 115.5,
+      "y": -21,
+      "rotation": -160,
+      "length": 84,
+      "folder": "braco_d"
+    },
+    {
+      "name": "antebraco_d",
+      "parent": "braco_d",
+      "x": 84,
+      "y": 0,
+      "rotation": 20,
+      "length": 73.5,
+      "folder": "braco_d"
+    },
+    {
+      "name": "mao_d",
+      "parent": "antebraco_d",
+      "x": 73.5,
+      "y": 0,
+      "length": 42,
+      "folder": "braco_d"
+    },
+    {
+      "name": "coxa_e",
+      "parent": "quadril",
+      "x": -8.4,
+      "y": -8.4,
+      "rotation": -95,
+      "length": 92.4,
+      "folder": "perna_e"
+    },
+    {
+      "name": "canela_e",
+      "parent": "coxa_e",
+      "x": 92.4,
+      "y": 0,
+      "rotation": -5,
+      "length": 84,
+      "folder": "perna_e"
+    },
+    {
+      "name": "pe_e",
+      "parent": "canela_e",
+      "x": 84,
+      "y": 0,
+      "rotation": 85,
+      "length": 50.4,
+      "folder": "perna_e"
+    },
+    {
+      "name": "coxa_d",
+      "parent": "quadril",
+      "x": 8.4,
+      "y": -8.4,
+      "rotation": -85,
+      "length": 92.4,
+      "folder": "perna_d"
+    },
+    {
+      "name": "canela_d",
+      "parent": "coxa_d",
+      "x": 92.4,
+      "y": 0,
+      "rotation": -5,
+      "length": 84,
+      "folder": "perna_d"
+    },
+    {
+      "name": "pe_d",
+      "parent": "canela_d",
+      "x": 84,
+      "y": 0,
+      "rotation": 95,
+      "length": 50.4,
+      "folder": "perna_d"
+    }
+  ],
+  "slots": [
+    {
+      "name": "braco_e",
+      "bone": "braco_e",
+      "attachment": "mecha/braco_e"
+    },
+    {
+      "name": "antebraco_e",
+      "bone": "antebraco_e",
+      "attachment": "mecha/antebraco_e"
+    },
+    {
+      "name": "mao_e",
+      "bone": "mao_e",
+      "attachment": "mecha/mao_e"
+    },
+    {
+      "name": "coxa_e",
+      "bone": "coxa_e",
+      "attachment": "mecha/coxa_e"
+    },
+    {
+      "name": "canela_e",
+      "bone": "canela_e",
+      "attachment": "mecha/canela_e"
+    },
+    {
+      "name": "pe_e",
+      "bone": "pe_e",
+      "attachment": "mecha/pe_e"
+    },
+    {
+      "name": "pescoco",
+      "bone": "pescoco",
+      "attachment": "mecha/pescoco"
+    },
+    {
+      "name": "tronco",
+      "bone": "tronco",
+      "attachment": "mecha/tronco"
+    },
+    {
+      "name": "cabine_fundo",
+      "bone": "tronco",
+      "attachment": "cabine"
+    },
+    {
+      "name": "cabine",
+      "bone": "tronco",
+      "attachment": "piloto"
+    },
+    {
+      "name": "cabine_vidro",
+      "bone": "tronco",
+      "attachment": "vidro"
+    },
+    {
+      "name": "cabeca",
+      "bone": "cabeca",
+      "attachment": "mecha/cabeca"
+    },
+    {
+      "name": "coxa_d",
+      "bone": "coxa_d",
+      "attachment": "mecha/coxa_d"
+    },
+    {
+      "name": "canela_d",
+      "bone": "canela_d",
+      "attachment": "mecha/canela_d"
+    },
+    {
+      "name": "pe_d",
+      "bone": "pe_d",
+      "attachment": "mecha/pe_d"
+    },
+    {
+      "name": "braco_d",
+      "bone": "braco_d",
+      "attachment": "mecha/braco_d"
+    },
+    {
+      "name": "antebraco_d",
+      "bone": "antebraco_d",
+      "attachment": "mecha/antebraco_d"
+    },
+    {
+      "name": "mao_d",
+      "bone": "mao_d",
+      "attachment": "mecha/mao_d"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "braco_e": {
+          "mecha/braco_e": {
+            "type": "region",
+            "x": 42,
+            "y": 0,
+            "width": 88,
+            "height": 34
+          }
+        },
+        "antebraco_e": {
+          "mecha/antebraco_e": {
+            "type": "region",
+            "x": 37,
+            "y": 0,
+            "width": 78,
+            "height": 29
+          }
+        },
+        "mao_e": {
+          "mecha/mao_e": {
+            "type": "region",
+            "x": 21,
+            "y": 0,
+            "width": 46,
+            "height": 26
+          }
+        },
+        "coxa_e": {
+          "mecha/coxa_e": {
+            "type": "region",
+            "x": 46,
+            "y": 0,
+            "width": 96,
+            "height": 38
+          }
+        },
+        "canela_e": {
+          "mecha/canela_e": {
+            "type": "region",
+            "x": 42,
+            "y": 0,
+            "width": 88,
+            "height": 34
+          }
+        },
+        "pe_e": {
+          "mecha/pe_e": {
+            "type": "region",
+            "x": 25,
+            "y": 0,
+            "width": 54,
+            "height": 26
+          }
+        },
+        "pescoco": {
+          "mecha/pescoco": {
+            "type": "region",
+            "x": 12.5,
+            "y": 0,
+            "width": 29,
+            "height": 29
+          }
+        },
+        "tronco": {
+          "mecha/tronco": {
+            "type": "region",
+            "x": 73.5,
+            "y": 0,
+            "width": 151,
+            "height": 82
+          }
+        },
+        "cabeca": {
+          "mecha/cabeca": {
+            "type": "region",
+            "x": 42,
+            "y": 0,
+            "width": 88,
+            "height": 79
+          }
+        },
+        "coxa_d": {
+          "mecha/coxa_d": {
+            "type": "region",
+            "x": 46,
+            "y": 0,
+            "width": 96,
+            "height": 38
+          }
+        },
+        "canela_d": {
+          "mecha/canela_d": {
+            "type": "region",
+            "x": 42,
+            "y": 0,
+            "width": 88,
+            "height": 34
+          }
+        },
+        "pe_d": {
+          "mecha/pe_d": {
+            "type": "region",
+            "x": 25,
+            "y": 0,
+            "width": 54,
+            "height": 26
+          }
+        },
+        "braco_d": {
+          "mecha/braco_d": {
+            "type": "region",
+            "x": 42,
+            "y": 0,
+            "width": 88,
+            "height": 34
+          }
+        },
+        "antebraco_d": {
+          "mecha/antebraco_d": {
+            "type": "region",
+            "x": 37,
+            "y": 0,
+            "width": 78,
+            "height": 29
+          }
+        },
+        "mao_d": {
+          "mecha/mao_d": {
+            "type": "region",
+            "x": 21,
+            "y": 0,
+            "width": 46,
+            "height": 26
+          }
+        },
+        "cabine_fundo": {
+          "cabine": {
+            "type": "region",
+            "path": "mecha/cabine",
+            "x": 91.14,
+            "y": 0,
+            "rotation": -90,
+            "width": 74,
+            "height": 80
+          }
+        },
+        "cabine": {
+          "piloto": {
+            "type": "skeleton",
+            "uri": "heroi.bone",
+            "x": 57.14,
+            "y": -4,
+            "rotation": -90,
+            "scaleX": 0.3,
+            "scaleY": 0.3,
+            "skins": [],
+            "animation": "idle",
+            "loop": true,
+            "timeScale": 1,
+            "inheritColor": true
+          }
+        },
+        "cabine_vidro": {
+          "vidro": {
+            "type": "region",
+            "path": "mecha/vidro",
+            "x": 91.14,
+            "y": 0,
+            "rotation": -90,
+            "width": 74,
+            "height": 80
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

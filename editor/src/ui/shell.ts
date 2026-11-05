@@ -499,8 +499,14 @@ export class Shell {
     // `title` — a frase cortada com "…" se lê inteira na dica.
     falarPorUmLugar(this.statusState);
     falarPorUmLugar(this.statusTool);
+    // Noite de 04/11: a porta do "Quero fazer…" à vista, sem abrir menu.
+    const queroFazer = el('button', {
+      class: 'status-quero-fazer', type: 'button', text: 'Quero fazer…',
+      title: 'Diga o que quer fazer e veja os passos (Ajuda → Quero fazer…)',
+    }) as HTMLButtonElement;
+    queroFazer.addEventListener('click', () => { runAction('quero-fazer'); });
     const statusBar = el('footer', { class: 'status-bar' }, [
-      this.statusState, this.statusMode, this.statusTool, this.warnButton,
+      this.statusState, this.statusMode, this.statusTool, queroFazer, this.warnButton,
     ]);
 
     const shell = el('div', { class: 'shell' }, [topBar, this.center, statusBar, this.warnList]);

@@ -195,7 +195,9 @@ class MeshTool implements Tool {
 
   /** Diz a recusa do anexo escolhido, uma vez só por anexo. */
   private sayRefusal(doc: EditorDoc): void {
-    const phrase = shapeRefusal(doc);
+    // Prova de pessoa (05/11/2026): sem nada escolhido, o clique era mudo.
+    const nada = doc.selection.slots.length === 0 && doc.selection.attachments.length === 0;
+    const phrase = shapeRefusal(doc) ?? (nada ? NO_DRAWING_FOR_MESH : null);
     if (phrase === null || phrase === this.said) return;
     this.said = phrase;
     doc.notice(phrase);
@@ -403,3 +405,7 @@ export function drawMesh(
 
 export const meshTool: Tool = new MeshTool();
 registerTool(meshTool);
+
+/** O clique da Malha sem desenho escolhido — prova de pessoa, 05/11/2026. */
+export const NO_DRAWING_FOR_MESH =
+  'Malha sem desenho escolhido: clique nele com Selecionar (Q), ou na Árvore, e volte (M)';

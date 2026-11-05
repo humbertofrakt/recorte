@@ -53,6 +53,13 @@ export const WELCOME_BUTTONS: readonly WelcomeButton[] = Object.freeze([
     label: 'Abrir o herói',
     hint: 'o personagem de exemplo, montado e animado, para olhar por dentro',
   },
+  // 05/11/2026: as três ideias do Humberto juntas, num projeto de verdade.
+  {
+    action: 'abrir-oficina',
+    icon: 'bone',
+    label: 'Abrir a oficina',
+    hint: 'tudo junto: a motosserra, o mecha com o herói dentro, três bonecos com as mesmas animações, duas roupas',
+  },
   {
     action: 'comecar-vazio',
     icon: 'new',

@@ -83,7 +83,7 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
       // ids fixos; um arranjo guardado por quem usa ganha o id do nome dele,
       // e a casca o registra quando ele nasce.
       'arranjo-pivo', 'arranjo-visualizacao', 'guardar-arranjo', 'apagar-arranjo',
-      'manual', 'atalhos', 'problemas', 'paleta', 'sobre',
+      'manual', 'atalhos', 'problemas', 'paleta', 'sobre', 'quero-fazer',
     ],
   },
   // O menu Janela: um item por painel, todos da casca.
@@ -92,7 +92,7 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
   // Só abre (o `painel-previa` acima é o interruptor do menu Janela).
   { owner: 'casca', where: 'casca', ids: ['mostrar-painel-previa'] },
   // O `main.ts` registra: é ele que sabe onde o exemplo mora.
-  { owner: 'documento', where: 'casca', ids: ['abrir-exemplo'] },
+  { owner: 'documento', where: 'casca', ids: ['abrir-exemplo', 'abrir-oficina'] },
   // Itens que só abrem um submenu. Não são ações.
   {
     owner: 'casca', where: 'submenu', ids: [

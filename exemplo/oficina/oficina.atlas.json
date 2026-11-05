@@ -1,0 +1,559 @@
+{
+  "atlas": {
+    "version": "1.0",
+    "generator": "Recorte — fazer-oficina.mjs"
+  },
+  "scale": 1,
+  "pages": [
+    {
+      "name": "oficina",
+      "image": "oficina.png",
+      "width": 512,
+      "height": 512,
+      "format": "rgba8",
+      "minFilter": "linear",
+      "magFilter": "linear",
+      "wrapU": "clamp",
+      "wrapV": "clamp",
+      "premultiplied": false
+    }
+  ],
+  "regions": [
+    {
+      "name": "motosserra/motor",
+      "page": 0,
+      "x": 2,
+      "y": 2,
+      "width": 36,
+      "height": 26
+    },
+    {
+      "name": "motosserra/lamina",
+      "page": 0,
+      "x": 40,
+      "y": 2,
+      "width": 64,
+      "height": 14
+    },
+    {
+      "name": "motosserra/roda",
+      "page": 0,
+      "x": 106,
+      "y": 2,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "motosserra/dente",
+      "page": 0,
+      "x": 124,
+      "y": 2,
+      "width": 7,
+      "height": 5
+    },
+    {
+      "name": "motosserra/cabo",
+      "page": 0,
+      "x": 133,
+      "y": 2,
+      "width": 22,
+      "height": 8
+    },
+    {
+      "name": "cavaleiro/braco_e",
+      "page": 0,
+      "x": 157,
+      "y": 2,
+      "width": 52,
+      "height": 14
+    },
+    {
+      "name": "cavaleiro/antebraco_e",
+      "page": 0,
+      "x": 211,
+      "y": 2,
+      "width": 46,
+      "height": 12
+    },
+    {
+      "name": "cavaleiro/mao_e",
+      "page": 0,
+      "x": 259,
+      "y": 2,
+      "width": 28,
+      "height": 11
+    },
+    {
+      "name": "cavaleiro/coxa_e",
+      "page": 0,
+      "x": 289,
+      "y": 2,
+      "width": 57,
+      "height": 16
+    },
+    {
+      "name": "cavaleiro/canela_e",
+      "page": 0,
+      "x": 348,
+      "y": 2,
+      "width": 52,
+      "height": 14
+    },
+    {
+      "name": "cavaleiro/pe_e",
+      "page": 0,
+      "x": 402,
+      "y": 2,
+      "width": 33,
+      "height": 11
+    },
+    {
+      "name": "cavaleiro/pescoco",
+      "page": 0,
+      "x": 437,
+      "y": 2,
+      "width": 18,
+      "height": 12
+    },
+    {
+      "name": "cavaleiro/tronco",
+      "page": 0,
+      "x": 2,
+      "y": 30,
+      "width": 88,
+      "height": 34
+    },
+    {
+      "name": "cavaleiro/cabeca",
+      "page": 0,
+      "x": 92,
+      "y": 30,
+      "width": 52,
+      "height": 45
+    },
+    {
+      "name": "cavaleiro/coxa_d",
+      "page": 0,
+      "x": 146,
+      "y": 30,
+      "width": 57,
+      "height": 16
+    },
+    {
+      "name": "cavaleiro/canela_d",
+      "page": 0,
+      "x": 205,
+      "y": 30,
+      "width": 52,
+      "height": 14
+    },
+    {
+      "name": "cavaleiro/pe_d",
+      "page": 0,
+      "x": 259,
+      "y": 30,
+      "width": 33,
+      "height": 11
+    },
+    {
+      "name": "cavaleiro/braco_d",
+      "page": 0,
+      "x": 294,
+      "y": 30,
+      "width": 52,
+      "height": 14
+    },
+    {
+      "name": "cavaleiro/antebraco_d",
+      "page": 0,
+      "x": 348,
+      "y": 30,
+      "width": 46,
+      "height": 12
+    },
+    {
+      "name": "cavaleiro/mao_d",
+      "page": 0,
+      "x": 396,
+      "y": 30,
+      "width": 28,
+      "height": 11
+    },
+    {
+      "name": "goblin/braco_e",
+      "page": 0,
+      "x": 426,
+      "y": 30,
+      "width": 33,
+      "height": 20
+    },
+    {
+      "name": "goblin/antebraco_e",
+      "page": 0,
+      "x": 461,
+      "y": 30,
+      "width": 29,
+      "height": 17
+    },
+    {
+      "name": "goblin/mao_e",
+      "page": 0,
+      "x": 492,
+      "y": 30,
+      "width": 18,
+      "height": 16
+    },
+    {
+      "name": "goblin/coxa_e",
+      "page": 0,
+      "x": 2,
+      "y": 77,
+      "width": 36,
+      "height": 23
+    },
+    {
+      "name": "goblin/canela_e",
+      "page": 0,
+      "x": 40,
+      "y": 77,
+      "width": 33,
+      "height": 20
+    },
+    {
+      "name": "goblin/pe_e",
+      "page": 0,
+      "x": 75,
+      "y": 77,
+      "width": 21,
+      "height": 16
+    },
+    {
+      "name": "goblin/pescoco",
+      "page": 0,
+      "x": 98,
+      "y": 77,
+      "width": 13,
+      "height": 17
+    },
+    {
+      "name": "goblin/tronco",
+      "page": 0,
+      "x": 113,
+      "y": 77,
+      "width": 54,
+      "height": 49
+    },
+    {
+      "name": "goblin/cabeca",
+      "page": 0,
+      "x": 169,
+      "y": 77,
+      "width": 33,
+      "height": 27
+    },
+    {
+      "name": "goblin/coxa_d",
+      "page": 0,
+      "x": 204,
+      "y": 77,
+      "width": 36,
+      "height": 23
+    },
+    {
+      "name": "goblin/canela_d",
+      "page": 0,
+      "x": 242,
+      "y": 77,
+      "width": 33,
+      "height": 20
+    },
+    {
+      "name": "goblin/pe_d",
+      "page": 0,
+      "x": 277,
+      "y": 77,
+      "width": 21,
+      "height": 16
+    },
+    {
+      "name": "goblin/braco_d",
+      "page": 0,
+      "x": 300,
+      "y": 77,
+      "width": 33,
+      "height": 20
+    },
+    {
+      "name": "goblin/antebraco_d",
+      "page": 0,
+      "x": 335,
+      "y": 77,
+      "width": 29,
+      "height": 17
+    },
+    {
+      "name": "goblin/mao_d",
+      "page": 0,
+      "x": 366,
+      "y": 77,
+      "width": 18,
+      "height": 16
+    },
+    {
+      "name": "robo/braco_e",
+      "page": 0,
+      "x": 386,
+      "y": 77,
+      "width": 44,
+      "height": 17
+    },
+    {
+      "name": "robo/antebraco_e",
+      "page": 0,
+      "x": 432,
+      "y": 77,
+      "width": 39,
+      "height": 14
+    },
+    {
+      "name": "robo/mao_e",
+      "page": 0,
+      "x": 473,
+      "y": 77,
+      "width": 24,
+      "height": 13
+    },
+    {
+      "name": "robo/coxa_e",
+      "page": 0,
+      "x": 2,
+      "y": 128,
+      "width": 48,
+      "height": 19
+    },
+    {
+      "name": "robo/canela_e",
+      "page": 0,
+      "x": 52,
+      "y": 128,
+      "width": 44,
+      "height": 17
+    },
+    {
+      "name": "robo/pe_e",
+      "page": 0,
+      "x": 98,
+      "y": 128,
+      "width": 28,
+      "height": 13
+    },
+    {
+      "name": "robo/pescoco",
+      "page": 0,
+      "x": 128,
+      "y": 128,
+      "width": 16,
+      "height": 14
+    },
+    {
+      "name": "robo/tronco",
+      "page": 0,
+      "x": 146,
+      "y": 128,
+      "width": 74,
+      "height": 41
+    },
+    {
+      "name": "robo/cabeca",
+      "page": 0,
+      "x": 222,
+      "y": 128,
+      "width": 44,
+      "height": 37
+    },
+    {
+      "name": "robo/coxa_d",
+      "page": 0,
+      "x": 268,
+      "y": 128,
+      "width": 48,
+      "height": 19
+    },
+    {
+      "name": "robo/canela_d",
+      "page": 0,
+      "x": 318,
+      "y": 128,
+      "width": 44,
+      "height": 17
+    },
+    {
+      "name": "robo/pe_d",
+      "page": 0,
+      "x": 364,
+      "y": 128,
+      "width": 28,
+      "height": 13
+    },
+    {
+      "name": "robo/braco_d",
+      "page": 0,
+      "x": 394,
+      "y": 128,
+      "width": 44,
+      "height": 17
+    },
+    {
+      "name": "robo/antebraco_d",
+      "page": 0,
+      "x": 440,
+      "y": 128,
+      "width": 39,
+      "height": 14
+    },
+    {
+      "name": "robo/mao_d",
+      "page": 0,
+      "x": 481,
+      "y": 128,
+      "width": 24,
+      "height": 13
+    },
+    {
+      "name": "mecha/braco_e",
+      "page": 0,
+      "x": 2,
+      "y": 171,
+      "width": 88,
+      "height": 34
+    },
+    {
+      "name": "mecha/antebraco_e",
+      "page": 0,
+      "x": 92,
+      "y": 171,
+      "width": 78,
+      "height": 29
+    },
+    {
+      "name": "mecha/mao_e",
+      "page": 0,
+      "x": 172,
+      "y": 171,
+      "width": 46,
+      "height": 26
+    },
+    {
+      "name": "mecha/coxa_e",
+      "page": 0,
+      "x": 220,
+      "y": 171,
+      "width": 96,
+      "height": 38
+    },
+    {
+      "name": "mecha/canela_e",
+      "page": 0,
+      "x": 318,
+      "y": 171,
+      "width": 88,
+      "height": 34
+    },
+    {
+      "name": "mecha/pe_e",
+      "page": 0,
+      "x": 408,
+      "y": 171,
+      "width": 54,
+      "height": 26
+    },
+    {
+      "name": "mecha/pescoco",
+      "page": 0,
+      "x": 464,
+      "y": 171,
+      "width": 29,
+      "height": 29
+    },
+    {
+      "name": "mecha/tronco",
+      "page": 0,
+      "x": 2,
+      "y": 211,
+      "width": 151,
+      "height": 82
+    },
+    {
+      "name": "mecha/cabeca",
+      "page": 0,
+      "x": 155,
+      "y": 211,
+      "width": 88,
+      "height": 79
+    },
+    {
+      "name": "mecha/coxa_d",
+      "page": 0,
+      "x": 245,
+      "y": 211,
+      "width": 96,
+      "height": 38
+    },
+    {
+      "name": "mecha/canela_d",
+      "page": 0,
+      "x": 343,
+      "y": 211,
+      "width": 88,
+      "height": 34
+    },
+    {
+      "name": "mecha/pe_d",
+      "page": 0,
+      "x": 433,
+      "y": 211,
+      "width": 54,
+      "height": 26
+    },
+    {
+      "name": "mecha/braco_d",
+      "page": 0,
+      "x": 2,
+      "y": 295,
+      "width": 88,
+      "height": 34
+    },
+    {
+      "name": "mecha/antebraco_d",
+      "page": 0,
+      "x": 92,
+      "y": 295,
+      "width": 78,
+      "height": 29
+    },
+    {
+      "name": "mecha/mao_d",
+      "page": 0,
+      "x": 172,
+      "y": 295,
+      "width": 46,
+      "height": 26
+    },
+    {
+      "name": "mecha/cabine",
+      "page": 0,
+      "x": 220,
+      "y": 295,
+      "width": 74,
+      "height": 80
+    },
+    {
+      "name": "mecha/vidro",
+      "page": 0,
+      "x": 296,
+      "y": 295,
+      "width": 74,
+      "height": 80
+    }
+  ]
+}

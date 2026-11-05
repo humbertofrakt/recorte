@@ -72,6 +72,8 @@ import examplePageUrl from '../../formato/exemplos/heroi.png?url';
 // The sword in the hero's hand is a whole skeleton of its own (spec 7.11).
 import exampleSwordUrl from '../../formato/exemplos/espada.bone?url';
 import { EXAMPLE_FIRST_STEP } from './viewport/welcome-model.js';
+// A oficina: o exemplo que mostra tudo junto (05/11/2026).
+import { OFICINA_PRIMEIRO_PASSO, oficinaFolder } from './io/oficina.js';
 
 const EXAMPLE_BONE = exampleBoneUrl;
 /** O nome do exemplo, o do arquivo: o endereço do empacotador vem carimbado. */
@@ -163,6 +165,20 @@ async function start(): Promise<void> {
     }
   };
   registerAction('abrir-exemplo', { run: () => { void abrirExemplo(); } });
+
+  // A oficina (05/11/2026): o exemplo que mostra tudo junto, como pasta de
+  // projeto — pela mesma porta da pasta solta na janela.
+  const abrirOficina = async (): Promise<void> => {
+    const pasta = oficinaFolder();
+    if (pasta === null) { doc.notice('A oficina não veio junto com este programa'); return; }
+    await shell.openDroppedFolder(pasta);
+    if (projeto.corpos.size > 1) {
+      runAction('ajustar');
+      // Depois dos recados da abertura (as bases se remontam): o primeiro passo fica.
+      setTimeout(() => { shell.statusState.textContent = OFICINA_PRIMEIRO_PASSO; }, 600);
+    }
+  };
+  registerAction('abrir-oficina', { run: () => { void abrirOficina(); } });
 
   // Lote 68 (roteiro dos 30 minutos, passo 1): o programa abre VAZIO, em
   // Montagem, com o Transformar na mão, como o Spriter abre um projeto novo.

@@ -2408,3 +2408,47 @@ describe('rodada 47, lote 4: o rodapé do gesto diz que a regra manda (nota a do
     expect(rulesHolding(file, 'arm', 'scale')).toEqual(['tr']);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Prova de pessoa (05/11/2026): o retângulo de seleção diz o que pegou
+// ---------------------------------------------------------------------------
+
+describe('prova de pessoa: o retângulo de seleção fala', () => {
+  it('diz quantos ficaram escolhidos, e o que fazer com eles; vazio diz como', async () => {
+    const { boxSelectSays, selectionSize } = await import('../src/viewport/tools/select.js');
+    expect(boxSelectSays(3, 14)).toBe('14 itens escolhidos pelo retângulo: Delete apaga, Esc tira a escolha');
+    expect(boxSelectSays(1, 1)).toContain('1 item escolhido');
+    expect(boxSelectSays(0, 0)).toBe('Retângulo vazio: arraste por cima das peças');
+    // O desenho escolhido como slot e como imagem conta uma vez só.
+    expect(selectionSize({
+      bones: ['a', 'b'], slots: ['s'], attachments: [{ slot: 's', attachment: 'i' }, { slot: 't', attachment: 'j' }],
+      constraints: ['r'], vertices: [],
+    })).toBe(5);
+  });
+
+  it('o Selecionar chama a frase no fim do retângulo (antes: calado)', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/viewport/tools/select.ts'), 'utf8');
+    expect(fonte).toContain('doc.notice(boxSelectSays(hits.length, selectionSize(doc.selection)));');
+  });
+});
+
+describe('prova de pessoa: Malha e Pesos sem nada escolhido falam, e o essencial vem antes dos dois-pontos', () => {
+  it('o rodapé apertado mostra só o que vem antes dos dois-pontos: ali tem de estar o que falta', async () => {
+    const { NO_DRAWING_FOR_MESH } = await import('../src/viewport/tools/mesh-tool.js');
+    const { NO_MESH_FOR_WEIGHTS } = await import('../src/viewport/tools/weights-tool.js');
+    const { boxSelectSays } = await import('../src/viewport/tools/select.js');
+    const { versoesDaFrase } = await import('../src/ui/shell-status.js');
+    const menor = (f: string): string => versoesDaFrase(f).at(-1)!;
+    expect(menor(NO_DRAWING_FOR_MESH)).toBe('Malha sem desenho escolhido');
+    expect(menor(NO_MESH_FOR_WEIGHTS)).toBe('Pesos sem malha escolhida');
+    expect(menor(boxSelectSays(2, 14))).toBe('14 itens escolhidos pelo retângulo');
+    expect(menor(boxSelectSays(0, 0))).toBe('Retângulo vazio');
+  });
+
+  it('as duas ferramentas dizem a frase no clique sem escolha (antes: caladas)', () => {
+    const malha = readFileSync(resolve(__dirname, '../src/viewport/tools/mesh-tool.ts'), 'utf8');
+    const pesos = readFileSync(resolve(__dirname, '../src/viewport/tools/weights-tool.ts'), 'utf8');
+    expect(malha).toContain('(nada ? NO_DRAWING_FOR_MESH : null)');
+    expect(pesos).toContain('doc.notice(NO_MESH_FOR_WEIGHTS);');
+  });
+});

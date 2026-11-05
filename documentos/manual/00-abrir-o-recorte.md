@@ -77,6 +77,7 @@ cena, quatro botões grandes:
 | **Abrir pasta** | as imagens da pasta vão para a aba **Imagens**; você arrasta para montar |
 | **Importar PSD** | cada camada vira um desenho, no lugar exato em que estava |
 | **Abrir o herói** | o personagem de exemplo, montado e animado |
+| **Abrir a oficina** | tudo junto: a motosserra, o mecha com o herói dentro, três bonecos com as mesmas animações, duas roupas |
 | **Começar vazio** | some com os botões; a arte entra depois |
 
 Os botões somem sozinhos no primeiro osso ou na primeira imagem.
@@ -299,6 +300,7 @@ navegador. Se o navegador barrar a aba, o editor avisa.
 | **Abrir recente…** | — | os cinco últimos, numa janela com busca |
 | **Reabrir o fechado** | — | traz de volta o trabalho que a aba tinha ao fechar |
 | **Abrir o herói (exemplo)** | — | o personagem de exemplo. Com mudança não salva, pergunta antes |
+| **Abrir a oficina (exemplo)** | — | a pasta `exemplo/oficina`, com cinco bases: herói com motosserra, mecha com o herói na cabine, cavaleiro, goblin e robô com as mesmas animações |
 | **Abrir pasta do projeto…** | — | as imagens vão para a aba Imagens, por subpasta. Nada entra na cena sozinho |
 | **Importar ▸ De outro programa…** | — | pede a pasta do projeto do Spriter, do Spine ou do DragonBones |
 | **Importar ▸ PSD…** | — | cada camada vira um desenho, no lugar |
@@ -565,6 +567,25 @@ está na coluna. Clicar abre; clicar no que já está à frente fecha.
 | **Problemas do arquivo…** | — | o que o programa não entendeu no arquivo, e onde |
 | **Paleta de comandos** | `Ctrl+Shift+P` | digite um pedaço do nome e ache o comando |
 | **Sobre o Recorte** | — | a versão, a licença e o endereço do formato |
+
+---
+
+## Não sabe como fazer? **Quero fazer…**
+
+Você sabe o que quer, mas não sabe o nome do comando. Comece aqui.
+
+1. Clique em **Quero fazer…**, no rodapé, à direita. Ou **Ajuda → Quero fazer…**.
+2. Digite a coisa: `arma`, `roupa`, `gif`, `psd`. Sem acento serve.
+3. Clique na tarefa. Os passos aparecem embaixo.
+4. Clique em **Mostrar onde**. O menu abre, e o item fica **aceso em laranja**.
+5. Clique você no item aceso.
+
+![A janela Quero fazer… com a palavra arma: a tarefa Pôr uma arma na mão, os quatro passos com o caminho de cada menu, e os botões Mostrar onde e Fechar](imagens/00-quero-fazer-arma.png)
+
+![Depois de Mostrar onde: o menu Entidades aberto, Trazer entidade de fora… aceso em laranja, e o rodapé dizendo o caminho](imagens/00-quero-fazer-onde.png)
+
+O caminho escrito em cada passo vem dos menus do programa. Se um item mudar
+de nome, o passo muda junto.
 
 ---
 

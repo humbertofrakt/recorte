@@ -1969,3 +1969,37 @@ describe('prova de pessoa: o recorte e a máscara dizem o que são', () => {
     expect(clippingLabel('mask')).toBe('máscara mask');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Prova de pessoa (05/11/2026): 7 8 9 0 na cena dizem o que fizeram
+// ---------------------------------------------------------------------------
+
+import { switchNotice as switchNoticeCena } from '../src/panels/view-panel-actions.js';
+import { VIEW_TOGGLE_KEYS as TECLAS_DE_VER } from '../src/viewport/onion.js';
+
+describe('prova de pessoa: as teclas de ver e travar falam, na cena', () => {
+  it('cada uma das quatro tem frase, e a frase diz a tecla da volta', () => {
+    for (const [tecla, campo] of Object.entries(TECLAS_DE_VER)) {
+      for (const ligado of [true, false]) {
+        const frase = switchNoticeCena(campo, ligado);
+        expect(frase, `${tecla} ${ligado}`).not.toBeNull();
+        expect(frase!).toContain(tecla);
+      }
+    }
+  });
+
+  it('a cena diz a frase quando a tecla vira o interruptor (antes: calada)', () => {
+    const cena = readFileSyncCena(resolveCena(import.meta.dirname, '../src/viewport/viewport.ts'), 'utf8');
+    const ramo = cena.slice(cena.indexOf('if (toggleViewKey(e.key, doc)) {'), cena.indexOf('if (toggleViewKey(e.key, doc)) {') + 600);
+    expect(ramo).toContain('switchNotice(campo, viewSettings()[campo])');
+    expect(ramo).toContain('doc.notice(frase)');
+  });
+});
+
+describe('prova de pessoa: a frase do recorte guarda o tamanho no rodapé apertado', () => {
+  it('o tamanho vem antes dos dois-pontos', async () => {
+    const { cropSays: dizRecorte } = await import('../src/viewport/crop-model.js');
+    const frase = `Recorte ${dizRecorte({ x: -72, y: -30, width: 167, height: 283 })}. Ctrl+Z desfaz`;
+    expect(versoesDaFraseCena(frase).at(-1)).toBe('Recorte 167 × 283 px');
+  });
+});
