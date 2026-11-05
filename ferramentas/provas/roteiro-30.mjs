@@ -57,7 +57,12 @@ import { fileURLToPath } from 'node:url';
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, '..', '..');
-const CHROME = process.env.CHROME ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+// No Linux (as sessões na nuvem), o Chromium do Playwright, sem sandbox:
+// roda como root. No Windows, o Chrome do Humberto, como sempre.
+const CHROME = process.env.CHROME ?? (process.platform === 'linux'
+  ? '/opt/pw-browsers/chromium'
+  : 'C:/Program Files/Google/Chrome/Application/chrome.exe');
+const SEM_SANDBOX = process.platform === 'linux' ? ['--no-sandbox'] : [];
 const PORTA_EDITOR = 5191;
 const PORTA_CHROME = 9335;
 const URL_EDITOR = `http://localhost:${PORTA_EDITOR}/`;
@@ -326,6 +331,7 @@ async function subirEditor() {
 async function subirChrome(perfil) {
   const chrome = spawn(CHROME, [
     '--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1',
+    ...SEM_SANDBOX,
     '--window-size=1440,900', `--remote-debugging-port=${PORTA_CHROME}`, `--user-data-dir=${perfil}`,
     '--no-first-run', '--no-default-browser-check', 'about:blank',
   ], { stdio: 'ignore' });
