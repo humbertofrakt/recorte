@@ -73,7 +73,8 @@ function lerArgumentos(argv) {
       case 'sem-apelidos': op.apelidos = false; break;
       case 'grade': op.metodo = 'grid'; break;
       case 'ajuda': case 'help': op.ajuda = true; break;
-      default: throw new Error(`opção desconhecida: --${chave}`);
+      // QA 04/11/2026: a pergunta errada sai com 2 (o 1 é do erro do trabalho).
+      default: throw Object.assign(new Error(`opção desconhecida: --${chave}`), { codigo: 2 });
     }
   }
   op.entrada = posicionais[0];
@@ -155,7 +156,7 @@ async function principal() {
   const op = lerArgumentos(process.argv.slice(2));
   if (op.ajuda || op.entrada === undefined || op.saida === undefined) {
     process.stdout.write(`${USO}\n`);
-    process.exit(op.ajuda ? 0 : 1);
+    process.exit(op.ajuda ? 0 : 2);
   }
 
   const entrada = resolve(process.cwd(), op.entrada);
@@ -264,5 +265,5 @@ async function principal() {
 
 principal().catch((erro) => {
   process.stderr.write(`erro: ${erro.message}\n`);
-  process.exit(1);
+  process.exit(erro.codigo ?? 1);
 });

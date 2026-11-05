@@ -84,3 +84,36 @@ describe('converter: a ajuda, a falta e a opção errada', () => {
     }
   });
 });
+
+describe('QA 04/11/2026 — a pergunta errada sai com 2 em todas', () => {
+  // A prova: `empacotar`, `exportar`, `exportar-imagem`, `fatiar` e
+  // `render-png` saíam com 1 numa opção que não existe (o 1 é do erro do
+  // trabalho: arquivo que não abre, animação que não há); `importar`,
+  // `importar-psd` e o `npm run` de quem chama esperam 2. E `empacotar` sem
+  // caminho saía com 1, os outros com 2.
+  const HEROI = join(EXEMPLOS, 'heroi.bone');
+  const casos: Array<[string, string[]]> = [
+    ['ferramentas/empacotar.mjs', [EXEMPLOS, 'x', '--bobagem']],
+    ['ferramentas/exportar.mjs', [HEROI, 'x.glb', '--bobagem']],
+    ['ferramentas/exportar-imagem.mjs', [HEROI, 'walk', 'x', '--bobagem']],
+    ['ferramentas/fatiar.mjs', [HEROI, 'x', '--bobagem']],
+    ['ferramentas/render-png.mjs', ['walk', '0', 'x.png', '--bobagem']],
+  ];
+  for (const [script, args] of casos) {
+    it(`${script.split('/').pop()}: opção errada → 2, e diz qual`, () => {
+      const r = rodar(script, args);
+      expect(r.codigo).toBe(2);
+      expect(r.erro).toMatch(/opção desconhecida: --bobagem/);
+    });
+  }
+
+  it('empacotar sem caminho: o uso, e 2', () => {
+    expect(rodar('ferramentas/empacotar.mjs', []).codigo).toBe(2);
+  });
+
+  it('o erro do trabalho continua 1: fatiar com animação que não há, e diz quais há', () => {
+    const r = rodar('ferramentas/fatiar.mjs', [join(EXEMPLOS, 'mecha-animacoes.bone'), join(tmpdir(), 'fatia-x'), '--animacoes', 'andar']);
+    expect(r.codigo).toBe(1);
+    expect(r.erro).toMatch(/não achei a animação "andar" no arquivo; há: walk, attack, falar/);
+  });
+});

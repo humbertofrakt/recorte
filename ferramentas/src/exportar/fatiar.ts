@@ -450,7 +450,7 @@ export function sliceBoneFile(file: BoneFile, options: SliceOptions = {}): Slice
     for (const name of animationNames) liveAnimations.add(name);
   } else {
     for (const name of options.animations) {
-      if (!animationNames.has(name)) throw new Error(`não achei a animação "${name}" no arquivo`);
+      if (!animationNames.has(name)) throw new Error(`não achei a animação "${name}" no arquivo; há: ${[...animationNames].join(', ') || 'nenhuma'}`);
       liveAnimations.add(name);
     }
     // 6.6: a `driver` in continuous mode PLAYS an animation. Cutting it would

@@ -51,7 +51,8 @@ function lerArgumentos(argv) {
       case 'sem-ossos': op.ossos = false; break;
       case 'esqueleto': op.ossos = true; break;
       case 'ajuda': case 'help': op.ajuda = true; break;
-      default: throw new Error(`opção desconhecida: --${chave}`);
+      // QA 04/11/2026: a pergunta errada sai com 2 (o 1 é do erro do trabalho).
+      default: throw Object.assign(new Error(`opção desconhecida: --${chave}`), { codigo: 2 });
     }
   }
   // Quatro posicionais = o esqueleto veio na frente. Três = o esqueleto é o
@@ -718,5 +719,5 @@ async function principal() {
 
 if (import.meta.url === new URL('file:///' + process.argv[1].replace(/\\/g, '/')).href
     || process.argv[1].endsWith('render-png.mjs')) {
-  principal().catch((e) => { process.stderr.write(`erro: ${e.message}\n`); process.exit(1); });
+  principal().catch((e) => { process.stderr.write(`erro: ${e.message}\n`); process.exit(e.codigo ?? 1); });
 }
