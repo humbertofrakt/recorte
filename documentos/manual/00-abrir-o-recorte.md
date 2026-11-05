@@ -568,6 +568,27 @@ está na coluna. Clicar abre; clicar no que já está à frente fecha.
 
 ---
 
+## Item cinza: ele diz por quê
+
+Um item **cinza** não está quebrado. Falta alguma coisa antes.
+
+1. Pare o mouse em cima do item cinza.
+2. **O rodapé diz por quê, e o que fazer.**
+3. A dica do item diz o mesmo.
+
+![O menu Editar aberto com o herói, nada escolhido: Colar espelhado está cinza, e o rodapé diz Copie antes: escolha chaves na linha do tempo e use Editar → Copiar](imagens/00-item-cinza.png)
+
+| Item cinza | O rodapé diz |
+|:---|:---|
+| **Editar → Colar** | copie antes: escolha chaves e use Editar → Copiar |
+| **Animação → Chavear** | abra uma animação primeiro: clique numa, na aba Animações |
+| **Base → Trazer para a frente** | escolha um desenho primeiro |
+| **Editar → Desfazer** | não há passo para desfazer ainda |
+
+Clicar no item cinza não faz nada de errado: ele só repete o motivo no rodapé.
+
+---
+
 ## Não acha um comando? `Ctrl+Shift+P`
 
 São doze menus e mais de duzentas entradas. A pergunta mais comum não é
