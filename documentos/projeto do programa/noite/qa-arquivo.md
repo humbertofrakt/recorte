@@ -36,6 +36,8 @@ Executor: `EXECUTANDO · QA arquivo`. Quem coordena: o DIRETOR.
 | D17 | Entregar uma base depois de importar do Spine: sai só o `.bone`, citando `heroi-spine.atlas.json` que não existe em lugar nenhum; a janela dizia "o atlas que ele já citava vale" | `io/open-save.ts`, `ui/shell-file.ts` | Importar Spine → Exportar → Entregar uma base… | sim |
 | D18 | Reabrir o fechado: o guardado abre "Sem mudanças por salvar." (a forma do D4, na outra porta) | `ui/shell-file.ts` | Arquivo → Reabrir o fechado | sim |
 | D19 | Rascunho recuperado (sem imagens) → Salvar → Escolher a pasta → "Faltam 2 imagens", que **estão** na pasta recém-escolhida. E o rodapé do Recuperar não dizia como trazer as imagens | `ui/shell-file.ts`, `main.ts` | mexer, recarregar, Recuperar, Salvar | sim |
+| D20 | Exportar GIF do projeto do Spriter (30 quadros de 2837×1197): a página fica **64 s sem responder**, o Andamento parado. Agora responde em até 1,9 s, o Andamento anda, e o arquivo sai com os mesmos bytes | `ferramentas/src/exportar/quadros.ts`, `io/export-image.ts` | `exemplo/game` → bcp → Exportar → GIF | sim |
+| D21 | A janela "Imagem exportada" mostra avisos do desenhador em inglês (`attachment "…" has no atlas region; not drawn`) | `io/export-image.ts` | a mesma exportação | sim |
 | — | Linha de comando: opção errada saía com 1 em `empacotar`, `exportar`, `exportar-imagem`, `fatiar`, `render-png` (os outros com 2); `fatiar --animacoes X` não dizia quais há | `ferramentas/*.mjs` | `npm run fatiar -- a.bone x --bobagem` | sim |
 | — | Importar PSD: com a janela de avisos aberta, o rodapé dizia "Importar PSD." | `ui/shell-file.ts`, `ui/shell-drop.ts` | Importar → PSD… | sim |
 
