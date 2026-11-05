@@ -22,7 +22,8 @@ export function abrirQueroFazer(avisar: (texto: string) => void, host: HTMLEleme
     placeholder: 'O que você quer fazer? Exemplo: arma, roupa, gif',
     'aria-label': 'O que você quer fazer?',
   }) as HTMLInputElement;
-  const lista = el('ul', { class: 'dialog-pick-lista', role: 'listbox' });
+  // 05/11/2026 (medição das janelas): a lista muda com o que se digita na busca.
+  const lista = el('ul', { class: 'dialog-pick-lista', role: 'listbox', 'data-rolagem': 'lista' });
   const detalhe = el('div', { class: 'quero-fazer-detalhe' });
   const caixa = el('div', {
     class: 'dialog-box dialog-pick quero-fazer', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Quero fazer…',

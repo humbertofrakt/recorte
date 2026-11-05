@@ -175,6 +175,23 @@ const SO = (() => {
  */
 const DETALHES = process.argv.includes('--detalhes');
 
+/**
+ * '--oficina': as abas medidas com a OFICINA aberta (o exemplo de 5 bases, a
+ * pasta de projeto de verdade) em vez do herói solto, e mais as JANELAS novas
+ * da noite: Guarda-roupa, Animações de outro boneco… e Quero fazer… — 05/11,
+ * pedido do Diretor. Rodada à parte, com nome; não é o número de fecho. As
+ * passadas da regra e do emissor ficam de fora (a oficina não tem a regra
+ * 'look_driver'; o emissor já é medido na rodada de sempre).
+ */
+const OFICINA = process.argv.includes('--oficina');
+
+/** As janelas medidas no '--oficina': o nome no relatório e a ação que abre. */
+const JANELAS = [
+  ['Guarda-roupa', 'guarda-roupa'],
+  ['Animações de outro boneco…', 'usar-animacoes'],
+  ['Quero fazer…', 'quero-fazer'],
+];
+
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // ---------------------------------------------------------------------------
@@ -470,6 +487,42 @@ window.__m = (() => {
     }
     return { cabe: Math.round(painel.clientHeight), conteudo: Math.round(painel.scrollHeight), linhas };
   };
+  /** A janela aberta por cima de tudo, ou null. */
+  m.janelaAberta = () => {
+    const todas = [...document.querySelectorAll('[role="dialog"][aria-modal="true"], .guarda-roupa')]
+      .filter((e) => e.getClientRects().length > 0 && !e.closest('.panel-column'));
+    return todas.length === 0 ? null : todas[todas.length - 1];
+  };
+  /** A régua da janela: ver 'JANELAS' na rodada. */
+  m.medirJanela = () => {
+    const j = m.janelaAberta();
+    if (j === null) return { erro: 'a janela não abriu' };
+    const r = j.getBoundingClientRect();
+    const fora = [];
+    const alto = [];
+    if (r.left < -1 || r.top < -1 || r.right > innerWidth + 1 || r.bottom > innerHeight + 1) {
+      alto.push('a janela passa da tela: ' + Math.round(r.left) + ',' + Math.round(r.top) + ' a ' + Math.round(r.right) + ',' + Math.round(r.bottom) + ' numa tela de ' + innerWidth + '×' + innerHeight);
+    }
+    if (j.scrollWidth > j.clientWidth + 1) fora.push('a janela rola de lado: ' + j.scrollWidth + ' > ' + j.clientWidth);
+    const rolaPorDesenho = (el) => el.dataset?.rolagem === 'lista' || el.classList.contains('dialog-rolagem');
+    if (!rolaPorDesenho(j) && j.scrollHeight > j.clientHeight + 1) {
+      alto.push('a janela inteira rola: sobram ' + (j.scrollHeight - j.clientHeight) + ' px');
+    }
+    for (const el of j.querySelectorAll('*')) {
+      if (el.getClientRects().length === 0) continue;
+      const cs = getComputedStyle(el);
+      if (cs.visibility === 'hidden') continue;
+      if ((cs.overflowX === 'auto' || cs.overflowX === 'scroll') && el.scrollWidth > el.clientWidth + 1) {
+        fora.push('rola de lado: ' + descrever(el) + ' (' + el.scrollWidth + ' > ' + el.clientWidth + ')');
+      }
+      if (!rolaPorDesenho(el) && (cs.overflowY === 'auto' || cs.overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 1) {
+        alto.push('rola para baixo: ' + descrever(el) + ' (sobram ' + (el.scrollHeight - el.clientHeight) + ' px)');
+      }
+      const e = el.getBoundingClientRect();
+      if (e.width > 0 && e.right > r.right + 1) fora.push('passa da janela ' + Math.round(e.right - r.right) + ' px: ' + descrever(el));
+    }
+    return { largura: Math.round(r.width), altura: Math.round(r.height), fora, alto };
+  };
   return m;
 })();
 true`;
@@ -600,11 +653,12 @@ async function abrirEditor(largura, altura) {
   // limpa. Uma linha barata que fecha o buraco pelos dois lados.
   await avaCru('localStorage.removeItem("RECORTE_divisao_das_colunas"); true');
   // O herói, e a malha dele escolhida: é o estado da foto do Humberto.
-  await avaCru(`__m.acoes.runAction('abrir-exemplo')`);
-  for (let i = 0; i < 40; i++) {
+  await avaCru(`__m.acoes.runAction(${JSON.stringify(OFICINA ? 'abrir-oficina' : 'abrir-exemplo')})`);
+  for (let i = 0; i < (OFICINA ? 120 : 40); i++) {
     if (await avaCru('(__m.vp.doc.file.slots ?? []).length > 0')) break;
     await esperar(150);
   }
+  if (OFICINA) await esperar(1200);
   await avaCru(SELECIONAR);
   // A10: o painel tem de estar CHEIO quando for medido. Além da malha
   // escolhida (o `SELECIONAR`), abre-se uma animação — sem ela, Animações
@@ -655,6 +709,8 @@ const PREENCHER = `(async () => {
   // abriria um projeto novo e levaria o herói junto, e aí Árvore, Ordem e
   // Animações é que ficariam vazias. Uma prova não pode esvaziar um painel
   // para encher outro.
+  // Na oficina a pasta já é a dela: trocar levaria a oficina embora.
+  if (${OFICINA ? 'true' : 'false'}) return true;
   await __m.montarPasta();
   const trocar = document.querySelector('.imagens-trocar-pasta');
   if (trocar) trocar.click();
@@ -945,6 +1001,51 @@ try {
       } catch { /* a página caiu: a próxima volta reabre o editor */ }
     }
 
+    // As JANELAS novas (só no '--oficina'). A régua de uma janela: inteira
+    // dentro da tela, nada rolando de lado nem passando da borda dela, e o
+    // que rola para baixo é lista ('data-rolagem="lista"') ou o meio da
+    // janela feito para rolar ('.dialog-rolagem') — nunca a janela inteira.
+    if (OFICINA && SO === null) {
+      for (const [nomeJanela, acao] of JANELAS) {
+        let rj = null;
+        try {
+          await ava(`__m.acoes.runAction(${JSON.stringify(acao)})`);
+          await esperar(900);
+          rj = await ava('__m.medirJanela()');
+        } catch (erro) {
+          rj = { erro: String(erro) };
+        }
+        medicoes += 1;
+        if (rj === null || rj.erro) {
+          ruins += 1; altas += 1;
+          console.log(`  FALTOU  janela ${nomeJanela}: ${rj?.erro ?? 'não abriu'}`);
+        } else {
+          const numero = ` — ${rj.largura}×${rj.altura} px`;
+          if (rj.fora.length === 0 && rj.alto.length === 0) console.log(`  cabe    janela ${nomeJanela}${numero}`);
+          if (rj.fora.length > 0) {
+            ruins += 1;
+            console.log(`  PASSA   janela ${nomeJanela}: ${rj.fora.length} coisa(s) de lado${numero}`);
+            for (const linha of rj.fora.slice(0, 6)) console.log(`            ${linha}`);
+          }
+          if (rj.alto.length > 0) {
+            altas += 1;
+            console.log(`  ROLA    janela ${nomeJanela}: ${rj.alto.length} coisa(s) de altura${numero}`);
+            for (const linha of rj.alto.slice(0, 6)) console.log(`            ${linha}`);
+          }
+          if (FOTOS !== null) {
+            const foto = await cmd('Page.captureScreenshot', { format: 'png' });
+            writeFileSync(join(FOTOS, `${largura}x${altura}-janela-${acao}.png`), Buffer.from(foto.result.data, 'base64'));
+          }
+        }
+        // Fecha: Esc, e se a janela ficar, o editor é reaberto.
+        await cmd('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        await cmd('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+        await esperar(300);
+        if (await ava('__m.janelaAberta() !== null')) await abrirEditor(largura, altura);
+      }
+    }
+
+    if (OFICINA) continue;
     if (SO !== null && SO !== 'Propriedades (regra Comando)') continue;
     // Propriedades UMA SEGUNDA VEZ, com a regra `look_driver` e nenhum desenho:
     // é o caso alto do painel, e a seleção de cima não o alcança. Ver
@@ -999,7 +1100,7 @@ try {
   // A 3ª passada: a ficha do emissor, ABA POR ABA, com o número que cada aba
   // pede contra o que o painel tem — rodada 16. Sem abas (a ficha velha), mede
   // a ficha inteira uma vez: é assim que se vê o número grande antes do novo.
-  for (const [largura, altura] of (SO !== null ? [] : TAMANHOS_EMISSOR)) for (const modo of MODOS_DO_EMISSOR) {
+  for (const [largura, altura] of (SO !== null || OFICINA ? [] : TAMANHOS_EMISSOR)) for (const modo of MODOS_DO_EMISSOR) {
     await abrirEditor(largura, altura);
     console.log(`\n${largura}x${altura} — a ficha do emissor, ${modo}`);
     let abas = null;
@@ -1083,6 +1184,7 @@ try {
     }
   }
 
+  if (OFICINA) console.log('\nCOM A OFICINA ABERTA E AS JANELAS NOVAS (--oficina): rodada à parte, não é o número de fecho.');
   if (DETALHES) console.log('\nCOM OS DETALHES DA LINHA DO TEMPO ABERTOS (--detalhes): rodada à parte, não é o número de fecho.');
   console.log(`\n${medicoes - ruins} de ${medicoes} medições sem nada passando da coluna.`);
   if (vazios.length > 0) {

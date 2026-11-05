@@ -1221,6 +1221,23 @@ describe('a Malha em 1280×720 rola com régua própria, e a régua não isenta'
     expect(prova).toContain('rodada à parte, não é o número de fecho');
   });
 
+  it("'--oficina' mede a oficina aberta e as três janelas novas, à parte, e conta cada uma", () => {
+    expect(prova).toContain("const OFICINA = process.argv.includes('--oficina');");
+    for (const acao of ['guarda-roupa', 'usar-animacoes', 'quero-fazer']) expect(prova).toContain(`'${acao}'`);
+    expect(prova).toContain('m.medirJanela = () =>');
+    expect(prova).toContain('a janela inteira rola: sobram');
+  });
+
+  it('05/11: as listas das janelas novas levam a marca de lista, e a tabela dos ossos encolhe', () => {
+    const ler = (f: string) => readFileSync(resolve(__dirname, '../src/' + f), 'utf8');
+    expect(ler('panels/animations.ts')).toContain("corpos.dataset.rolagem = 'lista';");
+    expect(ler('panels/skins-wardrobe.ts')).toContain("this.grade.dataset['rolagem'] = 'lista';");
+    expect(ler('ui/quero-fazer.ts')).toContain("'data-rolagem': 'lista'");
+    const reuso = ler('panels/reuse-window.ts');
+    expect(reuso).toContain("tabela.style.flex = '1 1 auto';");
+    expect(reuso).toContain("tabela.dataset['rolagem'] = 'lista';");
+  });
+
   it('os botões da Forma vão dois por linha, com o nome inteiro (quebra entre palavras)', () => {
     const bloco = css.slice(css.indexOf('a Malha em 1280×720'));
     expect(bloco).toContain('grid-template-columns: 1fr 1fr');

@@ -1488,3 +1488,19 @@ body {
   margin-top: 4px;
   margin-bottom: 4px;
 }
+
+/*
+ * 05/11/2026 — a janela "Animações de outro boneco…" rolava inteira (369 px
+ * em 1280×720), com a tabela dos ossos rolando DENTRO dela: duas rodas no
+ * mesmo lugar. A tabela agora encolhe e é ela quem rola; para caber, o vão
+ * entre as peças da janela cai de 12 para 6 px. Nenhuma peça a menos.
+ */
+.dialog-box.reaproveitar {
+  gap: 6px;
+}
+/* E as margens próprias dos títulos e frases (146 px somadas): o vão da
+   janela já separa as peças. */
+.dialog-box.reaproveitar > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}

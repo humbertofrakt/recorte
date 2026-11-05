@@ -235,4 +235,44 @@ Um teste velho foi **reescrito**, não afrouxado: `paineis-do-photoshop.test.ts`
 ele procura o chão desligado de propósito, e a prova disso é a medição
 `--detalhes` (79 → 92).
 
+## 05/11, 08:30 — a oficina e as janelas novas
+
+**Atrasado.** O Diretor pediu até 05:30. A medida e os consertos ficaram
+prontos antes, mas o commit não subiu: esta sessão parou no meio. Subiu às
+08:30, depois de juntar o ramo da noite (`51426ae`) e remedir tudo.
+
+Nova opção: `npm run medir -- --oficina`. Abre a **oficina** (5 bases) no lugar
+do herói, mede as 14 abas (Tomadas incluída) em 1440 e 1280, e mede as três
+**janelas** novas. Rodada à parte, com nome.
+
+A régua da janela: inteira dentro da tela; nada rola de lado; o que rola para
+baixo é **lista** (marcada) — nunca a janela inteira.
+
+| O que rolava | Quanto | O que fiz |
+|:---|:---|:---|
+| Animações: a lista das Bases | 23 px, nas duas telas | Ganhou a marca de lista: cresce com o projeto (5 bases na oficina) |
+| Janela Guarda-roupa: a grade | 934 / 1.093 px | Marca de lista: cresce com os desenhos e as skins |
+| Janela Quero fazer…: a lista | 541 / 581 px | Marca de lista: muda com o que se digita na busca |
+| Janela Animações de outro boneco… | **a janela inteira rolava** 203 / 369 px, com a tabela rolando dentro: duas rodas no mesmo lugar | A tabela dos ossos encolhe (de 300 até 120 px) e é ela quem rola; o vão entre as peças caiu de 12 para 6 px, e as margens dos títulos saíram. Tudo à vista em 1280: título, De onde vêm, Quais, a tabela (cabeçalho e 2 linhas e meia), Como entram, o aviso, os dois botões |
+
+Nenhuma peça, botão ou palavra saiu.
+
+**Toquei em arquivo de outros chats**, uma linha de arranjo em cada:
+`animations.ts`, `skins-wardrobe.ts`, `quero-fazer.ts` (a marca de lista) e
+`reuse-window.ts` (o tamanho da caixa da tabela). O CSS da janela está no meu
+`shell.css`.
+
+**Os números (08:29 UTC, casa vazia):**
+
+| Régua | Resultado |
+|:---|:---|
+| `npm run medir` | 92 de 92 |
+| `npm run medir -- --detalhes` | 92 de 92 |
+| `npm run medir -- --oficina` | era 28 de 36 · agora **36 de 36** |
+| `npx vitest run` | 6.115 passam, 0 vermelho |
+| `tsc` | limpo |
+| Conformidade | 138 de 138 |
+| Roteiro | 14 de 14 |
+
 FIM
+

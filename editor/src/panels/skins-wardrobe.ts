@@ -122,6 +122,8 @@ class Wardrobe {
 
     this.topo = el('div', 'guarda-roupa-grade guarda-roupa-topo');
     this.grade = el('div', 'guarda-roupa-grade guarda-roupa-corpo');
+    // 05/11/2026 (medição das janelas): a grade cresce com os desenhos e as skins.
+    this.grade.dataset['rolagem'] = 'lista';
     this.escolha = el('div', 'guarda-roupa-escolha');
     this.escolha.hidden = true;
     // O manequim dos jogos de roupa: o boneco grande ao lado da grade. A

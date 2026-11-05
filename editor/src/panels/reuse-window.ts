@@ -98,9 +98,13 @@ export function reuseWindow(options: ReuseWindowOptions): Promise<ReuseChoice | 
   const quais = el('div', 'reaproveitar-quais');
   const tituloTabela = el('h3', 'reaproveitar-subtitulo');
   const tabela = el('div', 'dialog-table-box');
-  // Dentro de uma janela que rola, a caixa da tabela não pode encolher a zero.
-  tabela.style.flex = '0 0 auto';
+  // 05/11/2026 (medição das janelas): a TABELA é quem rola — uma linha por
+  // osso, cresce com o boneco —, e a janela não. Ela cresce até 300 px e
+  // encolhe até 120 (o cabeçalho e duas linhas); só abaixo disso a janela rola.
+  tabela.style.flex = '1 1 auto';
+  tabela.style.minHeight = '120px';
   tabela.style.maxHeight = '300px';
+  tabela.dataset['rolagem'] = 'lista';
   const como = el('div', 'reaproveitar-como');
   const aviso = el('p', 'dialog-lead reaproveitar-aviso');
 
