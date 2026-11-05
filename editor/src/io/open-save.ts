@@ -11,6 +11,7 @@
  *   - `<input type="file">` and a download link everywhere else.
  */
 
+import { saveSharedBeside } from './shared-save.js';
 import { notePickerProblem, noteSaveRefused } from './picker-problem.js';
 import {
   loadAtlas, loadSkeletonData, loadSkeletonFileAsync, nestedAttachments, parseBoneText,
@@ -723,6 +724,8 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
     lastNote = await saveAtlasBeside(doc, handle, pack);
     // Degrau 4b: os outros corpos e o `manifest.json`, ao lado do `.bone`.
     lastNote = joinNotes(lastNote, await saveProjectBeside(doc, handle));
+    // Reaproveitar (04/11/2026): o arquivo das animações que uma base compartilha.
+    lastNote = joinNotes(lastNote, await saveSharedBeside(doc));
     markProjectSaved(doc, handle.name);
     // Salvo também é recente: é o arquivo em que se estava trabalhando.
     void rememberRecent(handle.name, [handle]);
@@ -734,6 +737,8 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
   downloadText(suggested, text);
   lastNote = await saveAtlasBeside(doc, null, pack);
   lastNote = joinNotes(lastNote, await saveProjectBeside(doc, null));
+  // Reaproveitar (04/11/2026): o arquivo das animações que uma base compartilha.
+  lastNote = joinNotes(lastNote, await saveSharedBeside(doc));
   markProjectSaved(doc, suggested);
   void rememberRecent(suggested);
   return suggested;

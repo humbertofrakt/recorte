@@ -38,6 +38,7 @@ import { registerAction } from './actions.js';
 import { WINDOW_PANELS } from './menus.js';
 import type { Shell } from './shell.js';
 import { DOCK_PANELS } from './shell.js';
+import { abrirQueroFazer } from './quero-fazer.js';
 
 // -------------------------------------------------------------------------
 // As ações que o shell mesmo faz
@@ -112,6 +113,7 @@ export function registerShellActions(shell: Shell): void {
   add('repetir-exportacao', () => shell.repeatExport());
   add('configuracoes', () => shell.projectSettings());
   add('paleta', () => shell.commandPalette());
+  add('quero-fazer', () => abrirQueroFazer((texto) => shell.doc.notice(texto)));
 
   add('manual', () => shell.showManual());
   add('atalhos', () => shell.showShortcuts());

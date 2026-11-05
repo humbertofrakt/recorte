@@ -7,7 +7,9 @@
 // Só clica no que está visível: texto de botão, item de menu, dica. A única
 // coisa de fora é o DISCO (disco.cjs): a janela do sistema de "escolher pasta"
 // e "escolher arquivo". Nada de função interna, nada de mexer no documento.
-// Este é o script de ANTES; a prova de depois é prova.cjs.
+// Este é o script de ANTES (a tela de 04/11/2026, com o botão "Biblioteca de
+// animações" e a seção "De fora"); a tela mudou, e ele fica como registro.
+// A prova de depois é prova.cjs.
 const path = require('path');
 const os = require('os');
 const { chromium } = require('playwright');

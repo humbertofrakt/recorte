@@ -51,7 +51,9 @@ describe('menu entries', () => {
     // "problemas" entrou no degrau 11, lote 6: a Janela de Problemas tem a
     // porta do rodapé (o botão de avisos) e esta, que se acha mesmo quando
     // não há aviso nenhum aceso.
-    expect(actions).toEqual(['manual', 'atalhos', 'problemas', 'paleta', 'sobre']);
+    // "quero-fazer" entrou na noite de 04/11: logo depois do Manual, porque é
+    // a pergunta de quem não sabe o nome do que procura.
+    expect(actions).toEqual(['manual', 'quero-fazer', 'atalhos', 'problemas', 'paleta', 'sobre']);
   });
 });
 

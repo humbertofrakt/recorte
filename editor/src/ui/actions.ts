@@ -15,6 +15,8 @@
  * Não há navegador aqui. É um `Map` e três funções, e um teste lê tudo.
  */
 
+import { porqueApagado } from './porque-apagado.js';
+
 /** O que uma ação sabe fazer, e o que ela sabe dizer sobre si mesma. */
 export interface ActionDef {
   /** Roda a ação. É a mesma função que o botão chama. */
@@ -86,7 +88,8 @@ export function actionState(id: string): ActionState {
   const action = actions.get(id);
   if (action === undefined) return { exists: false, enabled: false, checked: undefined };
   const enabled = action.enabled?.() ?? true;
-  const why = enabled ? null : action.why?.() ?? null;
+  // Noite de 04/11: sem `why` no registro, o motivo fixo de `porque-apagado`.
+  const why = enabled ? null : action.why?.() ?? porqueApagado(id);
   return {
     exists: true,
     enabled,

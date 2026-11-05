@@ -78,6 +78,31 @@ dizendo o que fazer primeiro**, menos um:
 |:---|:---|:---|
 | **Editar → Colar espelhado** | o que ele faz | **por que** está cinza (falta copiar uma pose antes) |
 
+## Tarefa nova do Diretor: todo item cinza diz por quê
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| Módulo novo `editor/src/ui/porque-apagado.ts`: o motivo fixo, por ação, com o que fazer | — | — |
+| `ui/actions.ts`: uma linha. Sem `why` no registro, vale o motivo da tabela. O motivo de agora (`why`) continua vencendo | teste: `actionState` devolve a tabela; o `why` do registro vence | — |
+| `ui/shell.ts`: item cinza põe o motivo no rodapé ao passar o mouse | navegador, abaixo | — |
+| Teste novo `editor/testes/porque-apagado.test.ts`: varre o código, toda ação com `enabled` tem `why` ou linha na tabela | sem a linha do Colar espelhado, o teste fica vermelho (visto). Antes eram **81 ações mudas** | ações registradas por ajudante (`porta(doc, id)`) não são varridas: as de hoje têm `why` ou nunca apagam |
+| No navegador, herói aberto, nada escolhido, mouse em cima de 12 itens cinza | os 12 mostram o motivo **na dica e no rodapé**: Colar espelhado, Colar, Desfazer, Refazer, Os filhos, Copiar posição no osso, Trazer para a frente, Chavear, Tirar o recorte, Chave seguinte do escolhido, Recorte na cena, Esconder esta imagem | — |
+| Manual: seção "Item cinza: ele diz por quê" no capítulo 0, com foto, nas duas línguas | teste das imagens, verde | — |
+
+## Tarefa nova do Diretor: Ajuda → Quero fazer…
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| `ui/quero-fazer-model.ts` (novo, puro): 17 tarefas em palavras da pessoa, 3 a 6 passos cada. O passo cita a ação pelo id; o caminho do menu é montado dos menus na hora | teste: um rótulo renomeado no menu muda o passo sozinho; ação sem porta é **dita**, não inventada | tarefas de tomadas, skins e reaproveitar: revisar quando esses ramos entrarem |
+| `ui/quero-fazer.ts` (novo): a janela, com busca, passos e **Mostrar onde** (abre o menu e acende o item em laranja; não executa) | navegador, só clicando, abaixo | — |
+| Porta à vista: botão **Quero fazer…** no rodapé, e **Ajuda → Quero fazer…** | navegador | — |
+| Arquivos de passagem, só acréscimo: `menus.ts` (1 item), `actions-table.ts` (1 id), `shell-actions.ts` (1 linha), `shell.ts` (o botão), `shell-status.css` (estilo), `provas/tarefas.ts` (1 linha da folha) | suíte | — |
+| Testes: `quero-fazer.test.ts` (toda ação citada existe na tabela e tem porta; a busca acha "arma", "veiculo", "roupa", "animacao de outro", "gif", "psd"); dois números presos atualizados (`acoes.test.ts` 309 → 310; a lista do menu Ajuda) | suíte verde | — |
+| No navegador: herói aberto → botão do rodapé → digitei "arma" → "Pôr uma arma na mão" com 4 passos → **Mostrar onde** → menu Entidades aberto, **Trazer entidade de fora…** aceso, rodapé com o caminho. Também abriu por Ajuda → Quero fazer… Console sem erro | fotos no capítulo 0 | — |
+| Manual, capítulo 0: seção "Não sabe como fazer? Quero fazer…", nas duas línguas | teste das imagens | — |
+
+Não rodei `npm run medir`: o rodapé ganhou um botão; a medição de painéis não olha o rodapé, mas quem fecha pode conferir.
+
 ## Decisões que tomei sozinho
 
 | Decisão | Por quê |

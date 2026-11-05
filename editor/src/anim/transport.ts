@@ -182,7 +182,12 @@ function safeSpeed(speed: number): number {
 /** A duração e o laço da animação aberta, ou `null` quando não há uma. */
 export function playbackOf(doc: EditorDoc): { duration: number; loop: boolean } | null {
   const animation = findAnimation(doc.file, doc.animation);
-  if (animation === null) return null;
+  if (animation === null) {
+    // Reaproveitar (04/11/2026): a compartilhada (§2.8) não está no arquivo, e
+    // sim no que o runtime montou. Sem isto ela abria e não tocava.
+    const shared = doc.animation === null ? null : doc.data?.findAnimation(doc.animation) ?? null;
+    return shared === null ? null : { duration: shared.duration, loop: shared.loop };
+  }
   return { duration: animationDuration(animation), loop: animation.loop === true };
 }
 

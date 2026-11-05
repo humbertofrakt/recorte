@@ -83,7 +83,7 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
       // ids fixos; um arranjo guardado por quem usa ganha o id do nome dele,
       // e a casca o registra quando ele nasce.
       'arranjo-pivo', 'arranjo-visualizacao', 'guardar-arranjo', 'apagar-arranjo',
-      'manual', 'atalhos', 'problemas', 'paleta', 'sobre',
+      'manual', 'atalhos', 'problemas', 'paleta', 'sobre', 'quero-fazer',
     ],
   },
   // O menu Janela: um item por painel, todos da casca.
@@ -185,6 +185,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
     owner: 'animacoes', where: 'arranque', ids: [
       'abrir-a-base', 'nova-animacao', 'exportar-animacao', 'importar-animacao',
       'biblioteca-animacoes',
+      // Reaproveitar (04/11/2026): muitos bonecos, as mesmas animações.
+      'usar-animacoes', 'seguir-esqueleto-padrao',
     ],
   },
   // Colar corpo aqui pergunta qual corpo numa janela: é da casca (degrau 4b).

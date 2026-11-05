@@ -1453,7 +1453,9 @@ it('a frase do rodapé nomeia as quatro e diz o que falta', () => {
 
 it('o botão da biblioteca nasce em ícone, com o nome na dica (regra 12)', () => {
   const fonte = readFileSync(resolve(__dirname, '../src/panels/animations.ts'), 'utf8');
-  expect(fonte).toContain("iconButton('pasta', 'Biblioteca de animações'");
+  // Reaproveitar (04/11/2026): o ícone abre "Usar animações de outro boneco",
+  // que tem as quatro de fábrica como primeira fonte (o Esqueleto padrão).
+  expect(fonte).toContain("iconButton('pasta', 'Usar animações de outro boneco'");
   expect(fonte).toContain('biblioteca.title = BIBLIOTECA_DICA');
 });
 

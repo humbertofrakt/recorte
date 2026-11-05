@@ -525,8 +525,14 @@ export class Shell {
     // `title` — a frase cortada com "…" se lê inteira na dica.
     falarPorUmLugar(this.statusState);
     falarPorUmLugar(this.statusTool);
+    // Noite de 04/11: a porta do "Quero fazer…" à vista, sem abrir menu.
+    const queroFazer = el('button', {
+      class: 'status-quero-fazer', type: 'button', text: 'Quero fazer…',
+      title: 'Diga o que quer fazer e veja os passos (Ajuda → Quero fazer…)',
+    }) as HTMLButtonElement;
+    queroFazer.addEventListener('click', () => { runAction('quero-fazer'); });
     const statusBar = el('footer', { class: 'status-bar' }, [
-      this.statusState, this.statusMode, this.statusTool, this.warnButton,
+      this.statusState, this.statusMode, this.statusTool, queroFazer, this.warnButton,
     ]);
 
     const shell = el('div', { class: 'shell' }, [topBar, this.center, statusBar, this.warnList]);
@@ -729,6 +735,9 @@ export class Shell {
       if (falaNoRodape !== null) {
         button.classList.add('menu-item-cinza');
         button.setAttribute('aria-disabled', 'true');
+        // Noite de 04/11 (`ui/porque-apagado.ts`): o porquê também no rodapé,
+        // ao passar o mouse — quem não espera a dica lê embaixo.
+        button.addEventListener('pointerenter', () => this.doc.notice(falaNoRodape));
       }
       const tecla = item.shortcut === undefined
         ? '' : ` (${liveShortcut(item.action, item.shortcut)})`;

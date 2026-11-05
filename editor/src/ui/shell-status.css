@@ -15,3 +15,50 @@
   font-weight: 700;
   color: var(--accent);
 }
+
+/* Noite de 04/11: o botão "Quero fazer…" do rodapé, e a janela dele
+   (`ui/quero-fazer.ts`). O botão vai para a direita, antes dos avisos. */
+.status-quero-fazer {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-left: auto;
+  padding: 4px 10px;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  font: inherit;
+  cursor: pointer;
+}
+
+.status-quero-fazer + .status-warn {
+  margin-left: 8px;
+}
+
+.quero-fazer {
+  /* A janela cabe na tela inteira: os passos e o "Mostrar onde" nunca
+     caem para fora dela. */
+  max-height: 94vh;
+  overflow-y: auto;
+}
+
+.quero-fazer .dialog-pick-lista {
+  /* Altura fixa, como a da paleta, mas menor: embaixo vêm os passos. */
+  min-height: 22vh;
+  max-height: 22vh;
+}
+
+.quero-fazer-detalhe {
+  margin-top: 10px;
+}
+
+.quero-fazer-titulo {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.quero-fazer-passos {
+  margin: 0 0 8px;
+  padding-left: 1.4em;
+  line-height: 1.6;
+}

@@ -718,6 +718,14 @@ export function skeletonMenu(state: SkeletonMenuState & { animating?: boolean })
       enabled: true,
       hint: 'Um .bone de fora entra na lista Bases, e a base dele abre. Era Abrir outra base…',
     },
+    // Reaproveitar (04/11/2026): os ossos deste boneco ganham os nomes do
+    // padrão, e as animações do padrão tocam aqui sem combinar nada.
+    {
+      label: 'Seguir o Esqueleto padrão…',
+      action: 'seguir-esqueleto-padrao',
+      enabled: true,
+      hint: 'Os ossos ganham os nomes do Esqueleto padrão (quadril, tronco, braco_d…); a janela mostra a tabela antes',
+    },
     SEP,
     {
       label: 'Novo',
@@ -1355,6 +1363,14 @@ export function animationMenu(state: AnimationMenuState): MenuItem[] {
     // vai animar, e é o passo que a dica do rodapé aponta (P19). A panela não
     // vai para dentro do armário. O resto da lista mora em Animações ▸.
     { label: 'Nova animação', action: 'nova-animacao', enabled: true },
+    // Reaproveitar (04/11/2026): à vista, ao lado da Nova — é o outro jeito de
+    // ter animação, e quem procura "como o goblin anda igual" acha aqui.
+    {
+      label: 'Animações de outro boneco…',
+      action: 'usar-animacoes',
+      enabled: true,
+      hint: 'O Esqueleto padrão, outra base do projeto, ou um arquivo: ligadas (mudam junto) ou cópia',
+    },
     {
       label: 'Animações',
       action: 'animacoes',
@@ -1848,6 +1864,12 @@ export function windowMenu(state: WindowMenuState): MenuItem[] {
 export function helpMenu(): MenuItem[] {
   return [
     { label: 'Manual', shortcut: 'F1', action: 'manual', enabled: true },
+    // Noite de 04/11 (`ui/quero-fazer.ts`): procurar pela COISA que se quer
+    // fazer, e não pelo nome do comando. Também no botão do rodapé.
+    {
+      label: 'Quero fazer…', action: 'quero-fazer', enabled: true,
+      hint: 'Diga o que quer fazer — "arma", "roupa", "gif" — e veja os passos, com o lugar aceso no menu',
+    },
     {
       label: 'Atalhos do teclado',
       shortcut: 'Shift+F1',
