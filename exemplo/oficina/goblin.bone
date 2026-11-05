@@ -1,0 +1,417 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte — fazer-oficina.mjs",
+    "id": "00000000-0000-4000-8000-0000000000c2",
+    "created": "2026-11-05T00:00:00Z",
+    "modified": "2026-11-05T00:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo \"oficina\" do Recorte — goblin"
+  },
+  "skeleton": {
+    "name": "goblin",
+    "x": -50,
+    "y": -10,
+    "width": 101,
+    "height": 169,
+    "fps": 30,
+    "referenceScale": 100
+  },
+  "assets": {
+    "atlases": [
+      "oficina.atlas.json"
+    ],
+    "imagesBase": "",
+    "skeletonsBase": "",
+    "animations": [
+      "humanoide-v1-animacoes.bone"
+    ]
+  },
+  "rig": {
+    "name": "humanoide-v1",
+    "bones": [
+      "raiz",
+      "quadril",
+      "tronco",
+      "pescoco",
+      "cabeca",
+      "braco_e",
+      "antebraco_e",
+      "mao_e",
+      "braco_d",
+      "antebraco_d",
+      "mao_d",
+      "coxa_e",
+      "canela_e",
+      "pe_e",
+      "coxa_d",
+      "canela_d",
+      "pe_d"
+    ]
+  },
+  "bones": [
+    {
+      "name": "raiz"
+    },
+    {
+      "name": "quadril",
+      "parent": "raiz",
+      "x": 0,
+      "y": 65,
+      "length": 7.2,
+      "folder": "corpo"
+    },
+    {
+      "name": "tronco",
+      "parent": "quadril",
+      "x": 0,
+      "y": 0,
+      "rotation": 90,
+      "length": 50.4,
+      "folder": "corpo"
+    },
+    {
+      "name": "pescoco",
+      "parent": "tronco",
+      "x": 50.4,
+      "y": 0,
+      "length": 8.64,
+      "folder": "corpo"
+    },
+    {
+      "name": "cabeca",
+      "parent": "pescoco",
+      "x": 8.64,
+      "y": 0,
+      "length": 28.8,
+      "folder": "corpo"
+    },
+    {
+      "name": "braco_e",
+      "parent": "tronco",
+      "x": 39.6,
+      "y": 7.2,
+      "rotation": -185,
+      "length": 28.8,
+      "folder": "braco_e"
+    },
+    {
+      "name": "antebraco_e",
+      "parent": "braco_e",
+      "x": 28.8,
+      "y": 0,
+      "rotation": 15,
+      "length": 25.2,
+      "folder": "braco_e"
+    },
+    {
+      "name": "mao_e",
+      "parent": "antebraco_e",
+      "x": 25.2,
+      "y": 0,
+      "length": 14.4,
+      "folder": "braco_e"
+    },
+    {
+      "name": "braco_d",
+      "parent": "tronco",
+      "x": 39.6,
+      "y": -7.2,
+      "rotation": -160,
+      "length": 28.8,
+      "folder": "braco_d"
+    },
+    {
+      "name": "antebraco_d",
+      "parent": "braco_d",
+      "x": 28.8,
+      "y": 0,
+      "rotation": 20,
+      "length": 25.2,
+      "folder": "braco_d"
+    },
+    {
+      "name": "mao_d",
+      "parent": "antebraco_d",
+      "x": 25.2,
+      "y": 0,
+      "length": 14.4,
+      "folder": "braco_d"
+    },
+    {
+      "name": "coxa_e",
+      "parent": "quadril",
+      "x": -2.88,
+      "y": -2.88,
+      "rotation": -95,
+      "length": 31.68,
+      "folder": "perna_e"
+    },
+    {
+      "name": "canela_e",
+      "parent": "coxa_e",
+      "x": 31.68,
+      "y": 0,
+      "rotation": -5,
+      "length": 28.8,
+      "folder": "perna_e"
+    },
+    {
+      "name": "pe_e",
+      "parent": "canela_e",
+      "x": 28.8,
+      "y": 0,
+      "rotation": 85,
+      "length": 17.28,
+      "folder": "perna_e"
+    },
+    {
+      "name": "coxa_d",
+      "parent": "quadril",
+      "x": 2.88,
+      "y": -2.88,
+      "rotation": -85,
+      "length": 31.68,
+      "folder": "perna_d"
+    },
+    {
+      "name": "canela_d",
+      "parent": "coxa_d",
+      "x": 31.68,
+      "y": 0,
+      "rotation": -5,
+      "length": 28.8,
+      "folder": "perna_d"
+    },
+    {
+      "name": "pe_d",
+      "parent": "canela_d",
+      "x": 28.8,
+      "y": 0,
+      "rotation": 95,
+      "length": 17.28,
+      "folder": "perna_d"
+    }
+  ],
+  "slots": [
+    {
+      "name": "braco_e",
+      "bone": "braco_e",
+      "attachment": "goblin/braco_e"
+    },
+    {
+      "name": "antebraco_e",
+      "bone": "antebraco_e",
+      "attachment": "goblin/antebraco_e"
+    },
+    {
+      "name": "mao_e",
+      "bone": "mao_e",
+      "attachment": "goblin/mao_e"
+    },
+    {
+      "name": "coxa_e",
+      "bone": "coxa_e",
+      "attachment": "goblin/coxa_e"
+    },
+    {
+      "name": "canela_e",
+      "bone": "canela_e",
+      "attachment": "goblin/canela_e"
+    },
+    {
+      "name": "pe_e",
+      "bone": "pe_e",
+      "attachment": "goblin/pe_e"
+    },
+    {
+      "name": "pescoco",
+      "bone": "pescoco",
+      "attachment": "goblin/pescoco"
+    },
+    {
+      "name": "tronco",
+      "bone": "tronco",
+      "attachment": "goblin/tronco"
+    },
+    {
+      "name": "cabeca",
+      "bone": "cabeca",
+      "attachment": "goblin/cabeca"
+    },
+    {
+      "name": "coxa_d",
+      "bone": "coxa_d",
+      "attachment": "goblin/coxa_d"
+    },
+    {
+      "name": "canela_d",
+      "bone": "canela_d",
+      "attachment": "goblin/canela_d"
+    },
+    {
+      "name": "pe_d",
+      "bone": "pe_d",
+      "attachment": "goblin/pe_d"
+    },
+    {
+      "name": "braco_d",
+      "bone": "braco_d",
+      "attachment": "goblin/braco_d"
+    },
+    {
+      "name": "antebraco_d",
+      "bone": "antebraco_d",
+      "attachment": "goblin/antebraco_d"
+    },
+    {
+      "name": "mao_d",
+      "bone": "mao_d",
+      "attachment": "goblin/mao_d"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "braco_e": {
+          "goblin/braco_e": {
+            "type": "region",
+            "x": 14.5,
+            "y": 0,
+            "width": 33,
+            "height": 20
+          }
+        },
+        "antebraco_e": {
+          "goblin/antebraco_e": {
+            "type": "region",
+            "x": 12.5,
+            "y": 0,
+            "width": 29,
+            "height": 17
+          }
+        },
+        "mao_e": {
+          "goblin/mao_e": {
+            "type": "region",
+            "x": 7,
+            "y": 0,
+            "width": 18,
+            "height": 16
+          }
+        },
+        "coxa_e": {
+          "goblin/coxa_e": {
+            "type": "region",
+            "x": 16,
+            "y": 0,
+            "width": 36,
+            "height": 23
+          }
+        },
+        "canela_e": {
+          "goblin/canela_e": {
+            "type": "region",
+            "x": 14.5,
+            "y": 0,
+            "width": 33,
+            "height": 20
+          }
+        },
+        "pe_e": {
+          "goblin/pe_e": {
+            "type": "region",
+            "x": 8.5,
+            "y": 0,
+            "width": 21,
+            "height": 16
+          }
+        },
+        "pescoco": {
+          "goblin/pescoco": {
+            "type": "region",
+            "x": 4.5,
+            "y": 0,
+            "width": 13,
+            "height": 17
+          }
+        },
+        "tronco": {
+          "goblin/tronco": {
+            "type": "region",
+            "x": 25,
+            "y": 0,
+            "width": 54,
+            "height": 49
+          }
+        },
+        "cabeca": {
+          "goblin/cabeca": {
+            "type": "region",
+            "x": 14.5,
+            "y": 0,
+            "width": 33,
+            "height": 27
+          }
+        },
+        "coxa_d": {
+          "goblin/coxa_d": {
+            "type": "region",
+            "x": 16,
+            "y": 0,
+            "width": 36,
+            "height": 23
+          }
+        },
+        "canela_d": {
+          "goblin/canela_d": {
+            "type": "region",
+            "x": 14.5,
+            "y": 0,
+            "width": 33,
+            "height": 20
+          }
+        },
+        "pe_d": {
+          "goblin/pe_d": {
+            "type": "region",
+            "x": 8.5,
+            "y": 0,
+            "width": 21,
+            "height": 16
+          }
+        },
+        "braco_d": {
+          "goblin/braco_d": {
+            "type": "region",
+            "x": 14.5,
+            "y": 0,
+            "width": 33,
+            "height": 20
+          }
+        },
+        "antebraco_d": {
+          "goblin/antebraco_d": {
+            "type": "region",
+            "x": 12.5,
+            "y": 0,
+            "width": 29,
+            "height": 17
+          }
+        },
+        "mao_d": {
+          "goblin/mao_d": {
+            "type": "region",
+            "x": 7,
+            "y": 0,
+            "width": 18,
+            "height": 16
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

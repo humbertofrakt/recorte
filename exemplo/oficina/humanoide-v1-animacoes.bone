@@ -1,0 +1,1205 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte",
+    "license": "CC0-1.0",
+    "copyright": "Animacoes de fabrica do formato bone - contra o rig humanoide-v1 (4.8, 14.4)"
+  },
+  "skeleton": {
+    "name": "humanoide-v1-animacoes"
+  },
+  "rig": {
+    "name": "humanoide-v1",
+    "bones": [
+      "quadril",
+      "tronco",
+      "pescoco",
+      "cabeca",
+      "braco_e",
+      "braco_d",
+      "antebraco_e",
+      "antebraco_d",
+      "coxa_e",
+      "coxa_d",
+      "canela_e",
+      "canela_d",
+      "pe_e",
+      "pe_d"
+    ],
+    "reference": {
+      "bone": "tronco",
+      "length": 70
+    }
+  },
+  "bones": [
+    {
+      "name": "raiz"
+    }
+  ],
+  "animations": [
+    {
+      "name": "parado",
+      "duration": 2,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "quadril",
+          "property": "y",
+          "keys": [
+            {
+              "time": 0,
+              "value": 90
+            },
+            {
+              "time": 1,
+              "value": 91.5
+            },
+            {
+              "time": 2,
+              "value": 90
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "tronco",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 90
+            },
+            {
+              "time": 1,
+              "value": 91
+            },
+            {
+              "time": 2,
+              "value": 90
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pescoco",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1,
+              "value": -1
+            },
+            {
+              "time": 2,
+              "value": 0
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "cabeca",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1,
+              "value": 1.5
+            },
+            {
+              "time": 2,
+              "value": 0
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -185
+            },
+            {
+              "time": 1,
+              "value": -182
+            },
+            {
+              "time": 2,
+              "value": -185
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -160
+            },
+            {
+              "time": 1,
+              "value": -163
+            },
+            {
+              "time": 2,
+              "value": -160
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "antebraco_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 15
+            },
+            {
+              "time": 1,
+              "value": 18
+            },
+            {
+              "time": 2,
+              "value": 15
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "antebraco_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 20
+            },
+            {
+              "time": 1,
+              "value": 23
+            },
+            {
+              "time": 2,
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "andar",
+      "duration": 1,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "quadril",
+          "property": "y",
+          "keys": [
+            {
+              "time": 0,
+              "value": 89
+            },
+            {
+              "time": 0.25,
+              "value": 91.5
+            },
+            {
+              "time": 0.5,
+              "value": 89
+            },
+            {
+              "time": 0.75,
+              "value": 91.5
+            },
+            {
+              "time": 1,
+              "value": 89
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "coxa_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -75
+            },
+            {
+              "time": 0.25,
+              "value": -95
+            },
+            {
+              "time": 0.5,
+              "value": -115
+            },
+            {
+              "time": 0.75,
+              "value": -95
+            },
+            {
+              "time": 1,
+              "value": -75
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "coxa_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -105
+            },
+            {
+              "time": 0.25,
+              "value": -85
+            },
+            {
+              "time": 0.5,
+              "value": -65
+            },
+            {
+              "time": 0.75,
+              "value": -85
+            },
+            {
+              "time": 1,
+              "value": -105
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "canela_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -5
+            },
+            {
+              "time": 0.25,
+              "value": -30
+            },
+            {
+              "time": 0.5,
+              "value": -8
+            },
+            {
+              "time": 0.75,
+              "value": -12
+            },
+            {
+              "time": 1,
+              "value": -5
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "canela_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -8
+            },
+            {
+              "time": 0.25,
+              "value": -12
+            },
+            {
+              "time": 0.5,
+              "value": -5
+            },
+            {
+              "time": 0.75,
+              "value": -30
+            },
+            {
+              "time": 1,
+              "value": -8
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pe_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 85
+            },
+            {
+              "time": 0.25,
+              "value": 92
+            },
+            {
+              "time": 0.5,
+              "value": 96
+            },
+            {
+              "time": 0.75,
+              "value": 88
+            },
+            {
+              "time": 1,
+              "value": 85
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pe_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 96
+            },
+            {
+              "time": 0.25,
+              "value": 88
+            },
+            {
+              "time": 0.5,
+              "value": 95
+            },
+            {
+              "time": 0.75,
+              "value": 102
+            },
+            {
+              "time": 1,
+              "value": 96
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -200
+            },
+            {
+              "time": 0.5,
+              "value": -170
+            },
+            {
+              "time": 1,
+              "value": -200
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -145
+            },
+            {
+              "time": 0.5,
+              "value": -175
+            },
+            {
+              "time": 1,
+              "value": -145
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "antebraco_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 20
+            },
+            {
+              "time": 0.5,
+              "value": 10
+            },
+            {
+              "time": 1,
+              "value": 20
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "antebraco_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 15
+            },
+            {
+              "time": 0.5,
+              "value": 25
+            },
+            {
+              "time": 1,
+              "value": 15
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "tronco",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 88
+            },
+            {
+              "time": 0.5,
+              "value": 88
+            },
+            {
+              "time": 1,
+              "value": 88
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "correr",
+      "duration": 0.6,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "quadril",
+          "property": "y",
+          "keys": [
+            {
+              "time": 0,
+              "value": 88
+            },
+            {
+              "time": 0.15,
+              "value": 96
+            },
+            {
+              "time": 0.3,
+              "value": 88
+            },
+            {
+              "time": 0.45,
+              "value": 96
+            },
+            {
+              "time": 0.6,
+              "value": 88
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "tronco",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 80
+            },
+            {
+              "time": 0.3,
+              "value": 78
+            },
+            {
+              "time": 0.6,
+              "value": 80
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "coxa_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -60
+            },
+            {
+              "time": 0.15,
+              "value": -95
+            },
+            {
+              "time": 0.3,
+              "value": -130
+            },
+            {
+              "time": 0.45,
+              "value": -95
+            },
+            {
+              "time": 0.6,
+              "value": -60
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "coxa_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -120
+            },
+            {
+              "time": 0.15,
+              "value": -85
+            },
+            {
+              "time": 0.3,
+              "value": -50
+            },
+            {
+              "time": 0.45,
+              "value": -85
+            },
+            {
+              "time": 0.6,
+              "value": -120
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "canela_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -15
+            },
+            {
+              "time": 0.15,
+              "value": -75
+            },
+            {
+              "time": 0.3,
+              "value": -20
+            },
+            {
+              "time": 0.45,
+              "value": -55
+            },
+            {
+              "time": 0.6,
+              "value": -15
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "canela_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -55
+            },
+            {
+              "time": 0.15,
+              "value": -20
+            },
+            {
+              "time": 0.3,
+              "value": -15
+            },
+            {
+              "time": 0.45,
+              "value": -75
+            },
+            {
+              "time": 0.6,
+              "value": -55
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pe_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 80
+            },
+            {
+              "time": 0.3,
+              "value": 105
+            },
+            {
+              "time": 0.6,
+              "value": 80
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pe_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 105
+            },
+            {
+              "time": 0.3,
+              "value": 80
+            },
+            {
+              "time": 0.6,
+              "value": 105
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -215
+            },
+            {
+              "time": 0.3,
+              "value": -155
+            },
+            {
+              "time": 0.6,
+              "value": -215
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -130
+            },
+            {
+              "time": 0.3,
+              "value": -190
+            },
+            {
+              "time": 0.6,
+              "value": -130
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "antebraco_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 55
+            },
+            {
+              "time": 0.3,
+              "value": 40
+            },
+            {
+              "time": 0.6,
+              "value": 55
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "antebraco_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 50
+            },
+            {
+              "time": 0.3,
+              "value": 65
+            },
+            {
+              "time": 0.6,
+              "value": 50
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pescoco",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 6
+            },
+            {
+              "time": 0.6,
+              "value": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pular",
+      "duration": 0.9,
+      "loop": false,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "quadril",
+          "property": "y",
+          "keys": [
+            {
+              "time": 0,
+              "value": 90
+            },
+            {
+              "time": 0.15,
+              "value": 74
+            },
+            {
+              "time": 0.3,
+              "value": 104
+            },
+            {
+              "time": 0.5,
+              "value": 112
+            },
+            {
+              "time": 0.7,
+              "value": 96
+            },
+            {
+              "time": 0.8,
+              "value": 80
+            },
+            {
+              "time": 0.9,
+              "value": 90
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "tronco",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 90
+            },
+            {
+              "time": 0.15,
+              "value": 78
+            },
+            {
+              "time": 0.3,
+              "value": 96
+            },
+            {
+              "time": 0.5,
+              "value": 92
+            },
+            {
+              "time": 0.8,
+              "value": 80
+            },
+            {
+              "time": 0.9,
+              "value": 90
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "coxa_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -95
+            },
+            {
+              "time": 0.15,
+              "value": -140
+            },
+            {
+              "time": 0.3,
+              "value": -80
+            },
+            {
+              "time": 0.5,
+              "value": -120
+            },
+            {
+              "time": 0.7,
+              "value": -95
+            },
+            {
+              "time": 0.8,
+              "value": -135
+            },
+            {
+              "time": 0.9,
+              "value": -95
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "coxa_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -85
+            },
+            {
+              "time": 0.15,
+              "value": -130
+            },
+            {
+              "time": 0.3,
+              "value": -70
+            },
+            {
+              "time": 0.5,
+              "value": -110
+            },
+            {
+              "time": 0.7,
+              "value": -85
+            },
+            {
+              "time": 0.8,
+              "value": -125
+            },
+            {
+              "time": 0.9,
+              "value": -85
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "canela_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -5
+            },
+            {
+              "time": 0.15,
+              "value": -75
+            },
+            {
+              "time": 0.3,
+              "value": -5
+            },
+            {
+              "time": 0.5,
+              "value": -60
+            },
+            {
+              "time": 0.7,
+              "value": -10
+            },
+            {
+              "time": 0.8,
+              "value": -70
+            },
+            {
+              "time": 0.9,
+              "value": -5
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "canela_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -5
+            },
+            {
+              "time": 0.15,
+              "value": -75
+            },
+            {
+              "time": 0.3,
+              "value": -5
+            },
+            {
+              "time": 0.5,
+              "value": -60
+            },
+            {
+              "time": 0.7,
+              "value": -10
+            },
+            {
+              "time": 0.8,
+              "value": -70
+            },
+            {
+              "time": 0.9,
+              "value": -5
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pe_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 85
+            },
+            {
+              "time": 0.15,
+              "value": 70
+            },
+            {
+              "time": 0.3,
+              "value": 110
+            },
+            {
+              "time": 0.5,
+              "value": 100
+            },
+            {
+              "time": 0.8,
+              "value": 72
+            },
+            {
+              "time": 0.9,
+              "value": 85
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "pe_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 95
+            },
+            {
+              "time": 0.15,
+              "value": 80
+            },
+            {
+              "time": 0.3,
+              "value": 120
+            },
+            {
+              "time": 0.5,
+              "value": 110
+            },
+            {
+              "time": 0.8,
+              "value": 82
+            },
+            {
+              "time": 0.9,
+              "value": 95
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -185
+            },
+            {
+              "time": 0.15,
+              "value": -150
+            },
+            {
+              "time": 0.3,
+              "value": -235
+            },
+            {
+              "time": 0.5,
+              "value": -225
+            },
+            {
+              "time": 0.8,
+              "value": -155
+            },
+            {
+              "time": 0.9,
+              "value": -185
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "braco_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": -160
+            },
+            {
+              "time": 0.15,
+              "value": -125
+            },
+            {
+              "time": 0.3,
+              "value": -210
+            },
+            {
+              "time": 0.5,
+              "value": -200
+            },
+            {
+              "time": 0.8,
+              "value": -130
+            },
+            {
+              "time": 0.9,
+              "value": -160
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "antebraco_e",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 15
+            },
+            {
+              "time": 0.15,
+              "value": 45
+            },
+            {
+              "time": 0.3,
+              "value": 5
+            },
+            {
+              "time": 0.5,
+              "value": 20
+            },
+            {
+              "time": 0.9,
+              "value": 15
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "antebraco_d",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 20
+            },
+            {
+              "time": 0.15,
+              "value": 50
+            },
+            {
+              "time": 0.3,
+              "value": 10
+            },
+            {
+              "time": 0.5,
+              "value": 25
+            },
+            {
+              "time": 0.9,
+              "value": 20
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "cabeca",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 0.15,
+              "value": -6
+            },
+            {
+              "time": 0.3,
+              "value": 5
+            },
+            {
+              "time": 0.9,
+              "value": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "extras": {
+    "descricao": "As quatro animacoes de fabrica do Recorte, gravadas contra a convencao de nomes formato/rigs/humanoide-v1.bone. Entram em qualquer corpo por assets.animations (2.8): o editor as traz por Animacao -> Biblioteca de animacoes... Os valores sao locais e absolutos (9.4: value e escrito POR CIMA do setup), e por isso incluem as rotacoes de setup da convencao. O rig.reference aponta para o tronco de 70: num corpo de tronco 140 as translacoes entram dobradas, e as rotacoes nao mudam.",
+    "o_que_cada_uma_e": {
+      "parado": "duas respiracoes em 2 s, repetindo. O quadro em que o personagem espera",
+      "andar": "o ciclo de quatro poses em 1 s, repetindo: contato, passagem, contato, passagem",
+      "correr": "o mesmo ciclo em 0,6 s, com amplitude maior e o tronco inclinado, repetindo",
+      "pular": "0,9 s e NAO repete: agachar, empurrar, subir, cair e pousar"
+    }
+  }
+}

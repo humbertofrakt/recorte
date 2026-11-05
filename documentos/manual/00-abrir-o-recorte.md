@@ -77,6 +77,7 @@ cena, quatro botões grandes:
 | **Abrir pasta** | as imagens da pasta vão para a aba **Imagens**; você arrasta para montar |
 | **Importar PSD** | cada camada vira um desenho, no lugar exato em que estava |
 | **Abrir o herói** | o personagem de exemplo, montado e animado |
+| **Abrir a oficina** | tudo junto: a motosserra, o mecha com o herói dentro, três bonecos com as mesmas animações, duas roupas |
 | **Começar vazio** | some com os botões; a arte entra depois |
 
 Os botões somem sozinhos no primeiro osso ou na primeira imagem.
@@ -299,6 +300,7 @@ navegador. Se o navegador barrar a aba, o editor avisa.
 | **Abrir recente…** | — | os cinco últimos, numa janela com busca |
 | **Reabrir o fechado** | — | traz de volta o trabalho que a aba tinha ao fechar |
 | **Abrir o herói (exemplo)** | — | o personagem de exemplo. Com mudança não salva, pergunta antes |
+| **Abrir a oficina (exemplo)** | — | a pasta `exemplo/oficina`, com cinco bases: herói com motosserra, mecha com o herói na cabine, cavaleiro, goblin e robô com as mesmas animações |
 | **Abrir pasta do projeto…** | — | as imagens vão para a aba Imagens, por subpasta. Nada entra na cena sozinho |
 | **Importar ▸ De outro programa…** | — | pede a pasta do projeto do Spriter, do Spine ou do DragonBones |
 | **Importar ▸ PSD…** | — | cada camada vira um desenho, no lugar |

@@ -1,0 +1,38 @@
+{
+  "bonez": {
+    "version": "1.0"
+  },
+  "main": "heroi.bone",
+  "skeletons": [
+    "heroi.bone",
+    "mecha.bone",
+    "cavaleiro.bone",
+    "goblin.bone",
+    "robo.bone",
+    "motosserra.bone",
+    "humanoide-v1-animacoes.bone"
+  ],
+  "atlases": [
+    "heroi.atlas.json",
+    "oficina.atlas.json"
+  ],
+  "images": [
+    "heroi.png",
+    "oficina.png"
+  ],
+  "extras": {
+    "RECORTE_projeto": {
+      "corpos": [
+        "heroi.bone",
+        "mecha.bone",
+        "cavaleiro.bone",
+        "goblin.bone",
+        "robo.bone"
+      ],
+      "entidades": [
+        "motosserra.bone"
+      ],
+      "emFoco": "heroi.bone"
+    }
+  }
+}

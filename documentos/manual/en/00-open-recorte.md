@@ -82,6 +82,7 @@ hand. In the middle of the stage, four big buttons:
 | **"Abrir pasta" (Open folder)** | the folder's images go to the **"Imagens" (Images)** tab; you drag them in to build |
 | **"Importar PSD" (Import PSD)** | each layer becomes a drawing, exactly where it was |
 | **"Abrir o herói" (Open the hero)** | the example character, built and animated |
+| **"Abrir a oficina" (Open the workshop)** | everything together: the chainsaw, the mecha with the hero inside, three characters sharing the same animations, two outfits |
 | **"Começar vazio" (Start empty)** | hides the buttons; the art comes in later |
 
 The buttons disappear by themselves at the first bone or the first image.
@@ -289,6 +290,7 @@ This manual opens from **"Ajuda → Manual" (Help → Manual)**, or `F1`.
 | **"Abrir recente…" (Open recent…)** | — | the last five, in a window with search |
 | **"Reabrir o fechado" (Reopen closed)** | — | brings back the work the tab had when it closed |
 | **"Abrir o herói (exemplo)" (Open the hero (example))** | — | the example character. With an unsaved change, it asks first |
+| **"Abrir a oficina (exemplo)" (Open the workshop (example))** | — | the `exemplo/oficina` folder, with five bases: hero with a chainsaw, mecha with the hero in the cockpit, knight, goblin and robot sharing the same animations |
 | **"Abrir pasta do projeto…" (Open project folder…)** | — | the images go to the Images tab, by subfolder. Nothing enters the stage by itself |
 | **"Importar ▸ De outro programa…" (Import ▸ From another program…)** | — | asks for the Spriter, Spine or DragonBones project folder |
 | **"Importar ▸ PSD…" (Import ▸ PSD…)** | — | each layer becomes a drawing, in place |
