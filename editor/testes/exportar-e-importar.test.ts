@@ -2053,3 +2053,50 @@ describe('QA 04/11/2026 — D21: os avisos do desenhador chegam em português na
     expect(fonte).toContain('onWarning: (cru) => { const message = rendererWarningPt(cru);');
   });
 });
+
+describe('QA 04/11/2026 — D23: importar sem as imagens põe o conselho na frente do rodapé', () => {
+  // A prova (Chromium sem janela): soltar SÓ o bcp.scml na cena. 184 avisos, e
+  // o rodapé dizia só "Importado do Spriter: bcp.bone." — a frase "0 de 92
+  // imagens… Solte a PASTA do projeto inteira" vinha depois, e o rodapé corta
+  // na primeira frase que cabe. A mesma forma do D3.
+  it('faltando imagem, a frase das imagens vem primeiro', async () => {
+    const { importedStatusLine } = await import('../src/io/import-foreign.js');
+    const { versoesDaFrase } = await import('../src/ui/shell-status.js');
+    const nota = '0 de 92 imagens do boneco estão na cena. Faltam 92: "a". Procurei entre os arquivos que vieram junto. Solte a PASTA do projeto inteira, e não só os arquivos de dentro.';
+    const linha = importedStatusLine('Spriter', 'bcp.bone', { shown: 0, missing: Array(92).fill('a'), notice: nota });
+    expect(linha.startsWith('0 de 92 imagens do boneco estão na cena.')).toBe(true);
+    expect(versoesDaFrase(linha).every((v) => v.includes('92'))).toBe(true);
+    expect(linha).toContain('Importado do Spriter: bcp.bone.');
+  });
+
+  it('com todas as imagens, como antes: o nome primeiro', async () => {
+    const { importedStatusLine } = await import('../src/io/import-foreign.js');
+    expect(importedStatusLine('Spriter', 'bcp.bone', { shown: 91, missing: [], notice: 'As 91 imagens que o boneco usa vieram junto e estão na cena e na aba Imagens.' }))
+      .toBe('Importado do Spriter: bcp.bone. As 91 imagens que o boneco usa vieram junto e estão na cena e na aba Imagens.');
+    expect(importedStatusLine('Spine', 'h.bone', { shown: 0, missing: [], notice: null })).toBe('Importado do Spine: h.bone.');
+  });
+
+  it('o menu e o arrasto usam a frase nova', () => {
+    for (const arquivo of ['shell-file.ts', 'shell-drop.ts']) {
+      const f = readFileSync(resolve(__dirname, '../src/ui', arquivo), 'utf8');
+      expect(f, arquivo).toContain('importedStatusLine(');
+    }
+  });
+});
+
+describe('QA 04/11/2026 — D23b: o .scml sozinho, sem imagem nenhuma, diz quantas faltam', () => {
+  // Sem imagem nenhuma junto, o adoptForeignImages saía calado (notice null):
+  // a pessoa via só "184 avisos". Agora diz "0 de 92… Solte a PASTA".
+  it('nenhuma imagem solta, e o boneco usa imagens fora de atlas: a frase das que faltam', async () => {
+    const { adoptForeignImages } = await import('../src/io/import-foreign.js');
+    const file = {
+      bones: [{ name: 'root' }], slots: [{ name: 'a', bone: 'root', attachment: 'a' }, { name: 'b', bone: 'root', attachment: 'b' }],
+      skins: [{ name: 'default', attachments: { a: { a: { type: 'region' } }, b: { b: { type: 'region' } } } }],
+    } as unknown as BoneFile;
+    const doc = new Doc(file);
+    const r = await adoptForeignImages(doc as never, { format: 'spriter', looseImages: [], folderName: '' } as never);
+    expect(r.missing).toEqual(['a', 'b']);
+    expect(r.notice).toMatch(/^0 de 2 imagens do boneco estão na cena\./);
+    expect(r.notice).toMatch(/Solte a PASTA do projeto inteira/);
+  });
+});

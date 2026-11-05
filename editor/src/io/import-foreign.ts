@@ -11,7 +11,7 @@
  * Portuguese, never into a silent half-import.
  */
 
-import { loadAtlas } from '../../../runtime/src/index.js';
+import { findAtlasRegion, loadAtlas } from '../../../runtime/src/index.js';
 import type { AtlasData, BoneFile } from '../../../runtime/src/index.js';
 import { importSpine } from '../../../ferramentas/src/importar/spine.js';
 import { dragonBonesParts, importDragonBones } from '../../../ferramentas/src/importar/dragonbones.js';
@@ -586,7 +586,16 @@ export interface AdoptedImages {
 export async function adoptForeignImages(
   doc: EditorDoc, imported: ForeignProject, onProgress?: (done: number, total: number) => void,
 ): Promise<AdoptedImages> {
-  if (imported.looseImages.length === 0) return { shown: 0, missing: [], notice: null };
+  if (imported.looseImages.length === 0) {
+    // QA 04/11/2026 (D23): o .scml sozinho, sem imagem nenhuma, saía calado —
+    // só "184 avisos". As que o boneco usa e nenhum atlas tem: a frase diz.
+    const faltam = [...imagesInUse(doc.file)].filter((name) => findAtlasRegion(doc.atlases, name) === null);
+    if (faltam.length === 0) return { shown: 0, missing: [], notice: null };
+    return {
+      shown: 0, missing: faltam,
+      notice: looseImagesNotice(FORMAT_LABELS[imported.format], 0, faltam, imported.folderName ?? '', imported.folderHandle !== undefined),
+    };
+  }
   // Rodada 45, lote 3: com a pasta escolhida, o projeto mora nela (S5).
   setProjectFolder(doc, {
     name: imported.folderName, handle: imported.folderHandle ?? null,
@@ -598,6 +607,17 @@ export async function adoptForeignImages(
     missing,
     notice: looseImagesNotice(FORMAT_LABELS[imported.format], made.length, missing, imported.folderName, imported.folderHandle !== undefined),
   };
+}
+
+/**
+ * **A frase do rodapé depois de importar** — QA de 04/11/2026 (D23). O rodapé
+ * mostra a primeira frase que cabe; quando falta imagem, a frase das imagens
+ * (com o conselho de soltar a PASTA) vem primeiro, e o nome do arquivo depois.
+ */
+export function importedStatusLine(program: string, path: string, adopted: AdoptedImages, extra = ''): string {
+  const nome = `Importado do ${program}: ${path}.${extra === '' ? '' : ` ${extra}`}`;
+  if (adopted.notice === null) return nome;
+  return adopted.missing.length > 0 ? `${adopted.notice} ${nome}` : `${nome} ${adopted.notice}`;
 }
 
 /**

@@ -34,7 +34,7 @@ import type { GestoSemPasta } from '../io/pedir-pasta.js';
 import type { ProjectFolder } from '../io/project-folder.js';
 import { openProjectFiles, openProjectInto, projectOpenedNotice, readManifestInFolder } from '../io/project-open.js';
 import { Projeto } from '../doc/projeto.js';
-import { FORMAT_LABELS, adoptForeignImages, agruparAvisos, importFromOtherProgram } from '../io/import-foreign.js';
+import { FORMAT_LABELS, adoptForeignImages, agruparAvisos, importFromOtherProgram, importedStatusLine } from '../io/import-foreign.js';
 import { importPsd, psdWarningsNote } from '../io/import-psd.js';
 import { saveAsBinary, saveAsPackage, savingLine, stem as fileStem } from '../io/save-binary.js';
 import { gltfLine, saveAsGltf } from '../io/export-gltf.js';
@@ -1020,8 +1020,8 @@ export async function importForeign(shell: Shell): Promise<void> {
         `Importado do ${program}: ${imported.path}. Lendo as imagens… ${feitas} de ${total}`;
     });
     if (ligadas.notice !== null) shell.showPanel('imagens');
-    shell.statusState.textContent = `Importado do ${program}: ${imported.path}. `
-      + `${imported.warnings.length} avisos.${ligadas.notice === null ? '' : ` ${ligadas.notice}`}`;
+    // QA 04/11/2026 (D23): faltando imagem, o conselho vem primeiro.
+    shell.statusState.textContent = importedStatusLine(program, imported.path, ligadas, `${imported.warnings.length} avisos.`);
 
     // A `.bone` holds one skeleton. When the source file had several, say so
     // in the same window, with the names, instead of leaving them silent.
