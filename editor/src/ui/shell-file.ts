@@ -505,9 +505,9 @@ async function askEntityFolder(bone: string, missing: readonly string[]): Promis
   const escolha = await askChoice({
     title: `${bone}: falta ${missing.join(', ')}`,
     lead: `As imagens de ${bone} moram em ${missing.join(', ')}, ao lado dele. Escolha a pasta onde ${bone} está, `
-      + 'e o atlas e as imagens vêm juntos.',
+      + 'e a folha de imagens (atlas) e as imagens vêm juntas.',
     options: [
-      { id: 'pasta', label: `Escolher a pasta de ${bone}…`, hint: 'O .bone, o atlas e as imagens entram juntos' },
+      { id: 'pasta', label: `Escolher a pasta de ${bone}…`, hint: 'O .bone, a folha de imagens (atlas) e as imagens entram juntos' },
       { id: 'sem', label: 'Trazer sem as imagens', hint: 'A peça entra sem desenho, e o rodapé avisa' },
     ],
     cancelId: 'sem',
@@ -562,7 +562,7 @@ export async function deliverOneBody(shell: Shell): Promise<void> {
     await tellUser({
       title: 'Base entregue',
       lead: result.atlas === null
-        ? `Saiu ${result.name}, sozinho. Não havia imagem da pasta para fatiar: o atlas que ele já citava vale.`
+        ? `Saiu ${result.name}, sozinho. Não havia imagem da pasta para fatiar: vale a folha de imagens (atlas) que ele já citava.`
         : `Saíram ${result.name} e ${result.atlas}, com ${result.images} ${result.images === 1 ? 'imagem' : 'imagens'} — só as que ESTA base usa.`,
       // Rodada 45, lote 4: sem atlas novo, a frase de cima já diz o aviso de baixo.
       lines: result.atlas === null ? result.warnings.filter((aviso) => !aviso.startsWith('As imagens desta base não vieram da pasta')) : result.warnings,

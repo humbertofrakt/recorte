@@ -229,7 +229,7 @@ class PointTool implements Tool {
     if (target.kind === 'slot') {
       const inSlot = new AddAttachmentToSlot(
         target.slot, editableSkin(corpoDe(doc).file, visibleSkinsOf(doc)), `${target.slot}_ponto`,
-        pointAttachment(local.x, local.y, rotation), 'Novo ponto no slot',
+        pointAttachment(local.x, local.y, rotation), 'Novo ponto no desenho',
       );
       corpoDe(doc).run(inSlot);
       // O slot continua escolhido: o próximo Alt + arrasto entra no mesmo slot.

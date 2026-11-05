@@ -956,7 +956,7 @@ export function lastSaveWarns(): boolean {
 export function saveStatusLine(name: string, note: string | null, warns: boolean, atlasTogether: boolean): string {
   if (note !== null && warns) return `${note}. Salvo em ${name}.`;
   if (note !== null) return `Salvo em ${name}. ${note}.`;
-  return atlasTogether ? `Salvo em ${name}. Atlas e páginas gravados junto.` : `Salvo em ${name}.`;
+  return atlasTogether ? `Salvo em ${name}. A folha de imagens (atlas e páginas) foi gravada junto.` : `Salvo em ${name}.`;
 }
 
 /**

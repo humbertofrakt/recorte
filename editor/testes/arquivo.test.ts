@@ -2113,7 +2113,7 @@ describe('rodada 45, lote 4: abrir, soltar e voltar falam claro', () => {
       pointer: null, target: null, fix: null,
     });
     const resumo = resumoDasImagens(['hair', 'body', 'face', 'hair'].map(row));
-    expect(resumo).toContain('3 imagens não estão em atlas nenhum');
+    expect(resumo).toContain('3 imagens não estão em folha de imagens nenhuma (atlas)');
     expect(resumo).toContain('hair, body, face.');
     expect(resumoDasImagens([row('hair')])).toBeNull();
   });
@@ -2266,7 +2266,7 @@ describe('rodada 45, lote 6: os quatro da prova final (doc 78)', () => {
   it('(c) as linhas curtas "imagem não encontrada" também entram no resumo', async () => {
     const { resumoDasImagens } = await import('../src/ui/problems-dialog.js');
     const curta = (n: string): { text: string; pointer: null; target: null; fix: null } => ({ text: `imagem não encontrada: ${n}`, pointer: null, target: null, fix: null });
-    expect(resumoDasImagens(['hair', 'body', 'hair'].map(curta))).toContain('2 imagens não estão em atlas nenhum');
+    expect(resumoDasImagens(['hair', 'body', 'hair'].map(curta))).toContain('2 imagens não estão em folha de imagens nenhuma (atlas)');
     const fonte = readFileSync(resolve(__dirname, '../src/ui/problems-dialog.ts'), 'utf8');
     expect(fonte).toContain('/^imagem não encontrada: /.test(row.text)');
   });
@@ -2372,7 +2372,7 @@ describe('QA 04/11/2026 — D3: o aviso do Salvar não some no rodapé', () => {
     expect(saveStatusLine('mao.bone', 'Atlas da pasta gravado ao lado: mao.atlas.json, com 2 imagens em uso', false, true))
       .toBe('Salvo em mao.bone. Atlas da pasta gravado ao lado: mao.atlas.json, com 2 imagens em uso.');
     expect(saveStatusLine('a.bone', null, false, false)).toBe('Salvo em a.bone.');
-    expect(saveStatusLine('a.bone', null, false, true)).toBe('Salvo em a.bone. Atlas e páginas gravados junto.');
+    expect(saveStatusLine('a.bone', null, false, true)).toBe('Salvo em a.bone. A folha de imagens (atlas e páginas) foi gravada junto.');
   });
 
   it('o Salvar da casca usa a frase nova, e o io marca os três caminhos que baixam', () => {
