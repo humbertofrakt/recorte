@@ -1,0 +1,52 @@
+{
+  "probe": {
+    "animation": "mexer",
+    "times": [
+      0.25,
+      0.75
+    ],
+    "measure": [
+      "vertices",
+      "drawOrder"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "vertices": {
+        "malha/malha": [
+          5.0,
+          0,
+          100,
+          0,
+          0,
+          102.5
+        ]
+      },
+      "drawOrder": [
+        "malha",
+        "s1",
+        "s2"
+      ]
+    },
+    {
+      "time": 0.75,
+      "vertices": {
+        "malha/malha": [
+          10.0,
+          0,
+          100,
+          0,
+          0,
+          107.5
+        ]
+      },
+      "drawOrder": [
+        "s1",
+        "s2",
+        "malha"
+      ]
+    }
+  ]
+}

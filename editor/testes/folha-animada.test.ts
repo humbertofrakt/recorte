@@ -365,7 +365,7 @@ describe('o que acontecia com as etiquetas antes do lote 2', () => {
    * o `repeat` caíam no chão. Sem a direção, uma etiqueta `pingpong` só podia
    * virar uma ida — um vai-e-volta errado que ninguém veria no teste.
    */
-  it.skipIf(!existsSync(new URL('../../backup', import.meta.url)))('o leitor antigo jogava fora a direção: `pingpong` e `forward` saíam iguais', async () => {
+  it.skipIf(!existsSync(new URL('../../backup/aseprite-sheet_2026-09-28_antes-do-lote-2-das-etiquetas.js', import.meta.url)))('o leitor antigo jogava fora a direção: `pingpong` e `forward` saíam iguais', async () => {
     // O caminho numa variável: backup/ fica fora do GitHub, e o tsc não deve procurá-lo.
     const copia: string = '../../backup/aseprite-sheet_2026-09-28_antes-do-lote-2-das-etiquetas.js';
     const antigo = await import(/* @vite-ignore */ copia) as { asepriteSheet: (t: string, p: string) => { tags: unknown } | null };

@@ -88,7 +88,7 @@ The backbone is **bodies · animations · entities**, the program's new model
 | 8 | [Export and use in a game](08-export-and-use-in-a-game.md) | The three packagings, opening and saving, the Export menu, the validator, and the character in the game: Construct 3, Godot, or code. *Checked on 07/10.* |
 | 9 | [Coming from Spriter, Spine and DragonBones](09-coming-from-spriter-spine-and-dragonbones.md) | Every Spriter thing and where it is here, with its key. Bringing the project in by its folder. Also Spine and DragonBones. *Checked on 07/10.* |
 | 10 | [Particles and library](10-particles-and-library.md) | Fire, smoke, spark and dust in one click; the sheet in ten tabs, the shape, the colour, the bursts, the weight. And ready-made idle, walk, run and jump. *Written on 07/10.* |
-| 11 | One's sword, another's puppet (`11-a-espada-de-um-o-boneco-de-outro.md`) | *Written by another session. Joins here when it arrives.* |
+| 11 | [One's sword, another's puppet](../11-a-espada-de-um-o-boneco-de-outro.md) | One person draws the sword, another animates the hero, and the file joins the two. Step by step. *In Portuguese only, written on 05/11.* |
 
 Every chapter opens with **"What you will be able to do by the end"**, in three
 lines, and closes with a **seal** table — the honest list of what exists, what

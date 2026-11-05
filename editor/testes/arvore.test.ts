@@ -2178,7 +2178,7 @@ function ouvindo(doc: Doc): string[] {
     expect(plano).toEqual({ kind: 'icone', icon: 'particle', tipo: 'emissor de partículas' });
   });
 
-  it.skipIf(!existsSync(resolve(__dirname, '../../backup')))('o defeito EXISTIA: sem a linha do POR_TIPO, o tipo caía no buraco do fim', () => {
+  it.skipIf(!existsSync(resolve(__dirname, '../../backup/thumbnail-kind_2026-09-22_antes-do-lote-1-das-particulas.ts')))('o defeito EXISTIA: sem a linha do POR_TIPO, o tipo caía no buraco do fim', () => {
     // Esta é a prova de que o teste de cima pega alguma coisa. O `POR_TIPO` do
     // `thumbnail-kind.ts` é o que tapa o buraco; a cópia de antes do lote está
     // no `backup/`, e ela NÃO cita o emissor — era o buraco.

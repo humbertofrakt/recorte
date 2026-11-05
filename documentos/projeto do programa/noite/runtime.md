@@ -7,15 +7,15 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 
 | Medida | Antes | Agora |
 |:---|:---:|:---:|
-| Casos em `conformidade/casos/` | 120 | **132** |
+| Casos em `conformidade/casos/` | 120 | **138** |
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
-| TS × Python, campo a campo | 120 de 120 | **132 de 132** |
-| Pacote do Construct | 120 de 120 | **132 de 132** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.850**, o mesmo 1 vermelho |
+| TS × Python, campo a campo | 120 de 120 | **138 de 138** |
+| Pacote do Construct | 120 de 120 | **138 de 138** |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.856**, o mesmo 1 vermelho |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
-Medido à 01h UTC de 05/11, com a casa só minha.
+Medido às 00h50 UTC de 05/11 (o relógio da máquina), com a casa só minha.
 
 ## 1. O P-002 (taxa em rampa) entrou em `casos/`
 
@@ -59,7 +59,13 @@ conta **antes** de rodar runtime):
 | **C-330** parâmetro e driver | clamp; envolver (`360 → 0`); `add` soma o **desvio** do setup | verde | verde | sim (3 de 3) |
 | **C-331** driver contínuo e `source` | Smart Bone com clamp; `timeTo` padrão = duração; alvo `slot/color` | verde | verde | sim (3 de 3) |
 | **C-332** driver em parâmetro, variável e constraint | `int` escrito por driver trunca; o `mix` de uma constraint posterior | verde | verde | sim (4 de 4) |
+| **C-333** driver em morph, deform e ordem | o peso do morph é limitado; `drawOrder` em degrau | verde | verde | sim (3 de 3) |
 | **X-309** BOM na leitura | §2.1: o leitor DEVE aceitar BOM | **vermelho (o executor) → consertado** | verde | — |
+| **X-310** fallbacks de driver e parâmetro | §2.5: alvo de tipo desconhecido cai **sozinho**; modo desconhecido vira `replace`; `source` desconhecido → `default`; propriedade de timeline desconhecida | verde | verde | sim (5 de 5) |
+| **X-311** `sequence.mode` desconhecido | §2.5: vira `hold` | verde | verde | sim |
+| **X-312** atlas com `rotation: 45` | §2.5: vira `0` (o esperado é o do B-102) | verde | verde | sim |
+| **X-313** modos de `path` desconhecidos | §2.5: `positionMode` → `percent`, `rotateMode` → `tangent`. Na 1ª versão o `fixed` **passava** (com `position 0` os dois coincidem); refeito com `position 0.1` | verde | verde | sim (3 de 3) |
+| **X-314** `spacingMode` desconhecido | §2.5: cai em `length` (`fixed`, `percent` e `proportional` reprovam) | verde | verde | sim (3 de 3) |
 | **ZIP-502** `main` numa subpasta | §2.8: a base é a pasta do `main`; uma **isca** com o mesmo nome na raiz | verde | verde | sim (a isca no lugar dá `−15` em vez de `−40`) |
 | **P-032** `space`/`sortMode` desconhecidos | §7.4 da extensão: caem em `local` e `youngestInFront` (o aviso **não** é medido) | verde | verde | sim (2 de 2) |
 | **P-030** rampa com torneira | ver acima | verde (consertado) | verde | — |
@@ -70,7 +76,7 @@ conta **antes** de rodar runtime):
 | Onde | A linha |
 |:---|:---|
 | `BONE_particles` §4.2 | os trechos da taxa animada; o índice na fronteira de rampa que começa em zero (`0/0` → nasce na fronteira); a 1ª fase não muda um bit |
-| `BONE_particles` §9, §12, §14 | `rate` é **I** desde a 1.2; P: 31/31 |
+| `BONE_particles` §9, §12, §14 | `rate` é **I** desde a 1.2; P: 32/32 |
 | `BONE_particles` §14.1 | a chave do dump é o emissor **que o slot mostra** (P-031 tem um que não mostra) |
 | Spec §8.2, tabela `DriverTarget` | `add` = soma o **desvio** em relação ao setup, como o pseudocódigo (a tabela dizia "soma o valor") |
 | Spec §8.5 | a regra das tags ganha da borda da §9.10; a ordem da união |
@@ -79,7 +85,15 @@ conta **antes** de rodar runtime):
 | ZIP-501 `leiame` | dizia `application/bone-package`; o pacote e a spec dizem `application/vnd.bone+zip`. Corrigido o texto |
 
 **O que ainda não tem caso** (está na §12.4): `blend` (o dump não tem canal
-para ele), e os alvos de `driver` do tipo `deform`, `morph`, `nested` e `drawOrder`.
+para ele), e o alvo de `driver` do tipo `nested`.
+
+**Achado sobre a régua (regra 28):** o comparador só olha as chaves que o
+esperado cita (a §12.4 manda assim). Então **"o leitor ignorou"** só se prova
+por um efeito positivo: uma `boundingbox` de forma desconhecida, ou uma
+variável de tipo desconhecido, que o leitor **não** ignorasse apareceria como
+chave a mais, e passaria. Proposta, para decidir: `null` no esperado querendo
+dizer "esta chave **não** pode existir". Não fiz, porque muda o contrato da
+suíte para todo leitor.
 
 **Pergunta para o Humberto (não decidi):** a §2.1 chama de **L0** um número que
 não cabe em float64 (`1e400`) e chaves duplicadas no mesmo objeto. A §12.2 diz
@@ -105,7 +119,7 @@ no rascunho da sessão.
 
 | Parte | O que precisa |
 |:---|:---|
-| `leitor-godot/` | Conferir o **X-309** (BOM): o `adaptador.mjs` dele entrega o caminho ao Godot, e não sei se o carregador `.gd` tira o BOM. **Vai reprovar P-002, P-030 e B-120** até copiar dois consertos do Python: (1) `particulas.gd`, os trechos com rampa — o `Trechos` de `runtime-python/recorte/particles.py`; (2) `carregador.gd` linha ~1226, aceitar a timeline de `rate` em vez de avisar "2a fase"; (3) as tags antes da 1ª chave, como em `runtime-python/recorte/animation.py` (`kind == "tag"`). Conferir também se a identidade de timeline leva `attachment` (P-031) |
+| `leitor-godot/` | Conferir o **X-309** (BOM): o `adaptador.mjs` dele entrega o caminho ao Godot, e não sei se o carregador `.gd` tira o BOM. **Vai reprovar P-002, P-030 e B-120** até copiar três consertos do Python: (1) `particulas.gd`, os trechos com rampa — o `Trechos` de `runtime-python/recorte/particles.py`; (2) `carregador.gd` linha ~1226, aceitar a timeline de `rate` em vez de avisar "2a fase"; (3) as tags antes da 1ª chave, como em `runtime-python/recorte/animation.py` (`kind == "tag"`). Conferir também se a identidade de timeline leva `attachment` (P-031), e rodar os **18 casos novos** (`A-032`, `B-120`, `B-121`, `C-330` a `C-333`, `P-030` a `P-032`, `X-309` a `X-314`, `ZIP-502`): eu não tenho Godot nesta máquina |
 | editor | O editor ganha `rate` animado de graça pelo runtime. Se o painel recusa animar `rate`, isso agora é escolha, não limite |
 | `programa/` | não remontei; o Diretor monta no fecho |
 
@@ -113,8 +127,19 @@ no rascunho da sessão.
 
 | Decisão | Por quê |
 |:---|:---|
-| Abrir a 2ª fase de `rate` | A tarefa mandava fechar o P-002, e a conta já estava inteira na spec. **Não é campo novo**: a timeline `BONE_particle` com `property: "rate"` já estava escrita (§9, marca I). Se o Humberto não quiser, reverter é um commit |
+| Abrir a 2ª fase de `rate` | A tarefa mandava fechar o P-002, e a conta já estava inteira na spec. **Não é campo novo**: a timeline `BONE_particle` com `property: "rate"` já estava escrita (§9, marca I). Se o Humberto não quiser, reverter é desfazer a mudança em `runtime/src/particles/emission.ts`, `runtime-python/recorte/particles.py` e nos dois loaders, e devolver o P-002 e o P-030 para `casos-pendentes/` |
 | Versão da extensão 1.2 | O comportamento do leitor muda (aceita uma timeline que antes recusava) |
 | `add` do driver = soma do desvio | O pseudocódigo da §8.2 é a parte mais exata, e os dois runtimes já faziam assim |
+
+## 7. Tarefa nova do Diretor: os avisos em português
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| `translateWarning` (editor/src/panels/warning-model.ts) cobre as **204** frases de aviso do leitor: 179 do `loader.ts`, 7 de curva, os problemas de endereço do `uri.ts` | teste novo `editor/testes/avisos-em-portugues.test.ts`, com a lista tirada **viva** do código | — |
+| A frase se parte em **causa** e **consequência**: *"não existe osso com o nome "braco": essas chaves ficam sem efeito (TARGET_MISSING)"* | o teste confere: nenhuma volta em inglês, nenhuma palavra inglesa solta, nenhum jargão fora de parênteses (`ui/jargao.ts`) | — |
+| As 8 frases antigas ficam **letra por letra** | os testes de `acabamento` e `menus` passam | uma delas diz "atlas" fora de parênteses; está presa por `acabamento.test.ts`, e ficou anotada no teste como dívida |
+| Regra 26 | com a `translateWarning` antiga, **198 de 204** voltavam em inglês | — |
+
+Os avisos de `actor.ts`, `nested.ts`, `file.ts` e do binário já nasciam em português.
 
 FIM

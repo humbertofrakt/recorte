@@ -361,6 +361,16 @@ passo('00-menu-', async () => {
   await fecharMenus();
 });
 
+passo('00-item-cinza.png', async () => {
+  // Um item cinza diz por quê: na dica, e no rodapé ao passar o mouse.
+  await heroi();
+  await menu('Editar');
+  await pagina.locator('.menu-item:visible').filter({ has: pagina.locator('.menu-name', { hasText: /^Colar espelhado$/ }) }).first().hover();
+  await esperar(300);
+  await foto('00-item-cinza.png');
+  await fecharMenus();
+});
+
 passo('00-rodape-animacao.png', async () => {
   await heroi();
   await animacao('walk');

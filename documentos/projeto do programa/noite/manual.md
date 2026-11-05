@@ -57,6 +57,38 @@ voltar. O laço no código continua: é de outra parte.
 | Escolher o canal de fundo (`baseAnimation`) | o editor lê do arquivo, mas não há botão. Está no "O que ainda não funciona" do capítulo 5 |
 | Clonar uma base com as animações | não há porta. Está no capítulo 2 |
 
+## O percurso clicando (01h10 UTC)
+
+Um script abriu o herói no navegador e, para cada caminho de menu que o manual
+cita, **clicou** no menu e nos submenus, como uma pessoa.
+
+| Medida | Número |
+|:---|---:|
+| Caminhos diferentes citados pelo manual | 152 |
+| Achados clicando, e acesos | 119 |
+| Achados, mas cinza naquele momento | 33 |
+| **Não achados clicando** | **0** |
+
+Os 33 cinzas pedem uma escolha antes (uma entidade, uma malha, um emissor). O
+script apertava `Esc` entre um caminho e outro, e o `Esc` também desmarca:
+então parte dos cinzas é do script, e não do programa. **Todo cinza tem dica
+dizendo o que fazer primeiro**, menos um:
+
+| Item | O que a dica diz | O que falta dizer |
+|:---|:---|:---|
+| **Editar → Colar espelhado** | o que ele faz | **por que** está cinza (falta copiar uma pose antes) |
+
+## Tarefa nova do Diretor: todo item cinza diz por quê
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| Módulo novo `editor/src/ui/porque-apagado.ts`: o motivo fixo, por ação, com o que fazer | — | — |
+| `ui/actions.ts`: uma linha. Sem `why` no registro, vale o motivo da tabela. O motivo de agora (`why`) continua vencendo | teste: `actionState` devolve a tabela; o `why` do registro vence | — |
+| `ui/shell.ts`: item cinza põe o motivo no rodapé ao passar o mouse | navegador, abaixo | — |
+| Teste novo `editor/testes/porque-apagado.test.ts`: varre o código, toda ação com `enabled` tem `why` ou linha na tabela | sem a linha do Colar espelhado, o teste fica vermelho (visto). Antes eram **81 ações mudas** | ações registradas por ajudante (`porta(doc, id)`) não são varridas: as de hoje têm `why` ou nunca apagam |
+| No navegador, herói aberto, nada escolhido, mouse em cima de 12 itens cinza | os 12 mostram o motivo **na dica e no rodapé**: Colar espelhado, Colar, Desfazer, Refazer, Os filhos, Copiar posição no osso, Trazer para a frente, Chavear, Tirar o recorte, Chave seguinte do escolhido, Recorte na cena, Esconder esta imagem | — |
+| Manual: seção "Item cinza: ele diz por quê" no capítulo 0, com foto, nas duas línguas | teste das imagens, verde | — |
+
 ## Decisões que tomei sozinho
 
 | Decisão | Por quê |
