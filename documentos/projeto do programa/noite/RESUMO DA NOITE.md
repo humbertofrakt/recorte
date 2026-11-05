@@ -41,7 +41,7 @@ Nada para instalar. Na tela de boas-vindas, clique em **Abrir a oficina**.
 
 | Medida | Antes (07/10) | Agora |
 |:---|---:|---:|
-| Testes | 5.806 (1 vermelho) | **6.124 (0 vermelho)** |
+| Testes | 5.806 (1 vermelho) | **6.128 (0 vermelho)** |
 | Conformidade | 120 de 120 | **138 de 138** |
 | Painéis na altura | 83 de 90 | **92 de 92** |
 | Roteiro dos 30 minutos | 14 de 14 | **14 de 14** |
@@ -66,6 +66,7 @@ Nada para instalar. Na tela de boas-vindas, clique em **Abrir a oficina**.
 | O quê | De quem |
 |:---|:---|
 | Depois do Guarda-roupa, a aba Skins fica na frente e a lista Bases some | casca/Skins |
-| 71 textos da aba Tomadas ainda com "slot" na dica | Tomadas |
 | O "objeto" na grade de imagens do botão direito | Imagens |
 | Rodar o Godot (138 casos) | a sua mão |
+| Em 1280, com os Detalhes abertos, a Árvore some (F9); a dica do rodapé cobre a frase inteira (F6, `ui/shell.ts:489`) | casca |
+| Editar → Colar posição no osso, Editar → Renomear, Base → Copiar a ordem: não dizem nada | Árvore/Ordem |
