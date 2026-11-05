@@ -2100,3 +2100,48 @@ describe('QA 04/11/2026 — D23b: o .scml sozinho, sem imagem nenhuma, diz quant
     expect(r.notice).toMatch(/Solte a PASTA do projeto inteira/);
   });
 });
+
+describe('QA 04/11/2026 — D24: importar com atlas, pela pasta: a conta certa e a pasta do projeto', () => {
+  // A prova (Chromium sem janela): Importar → De outro programa… → a pasta do
+  // DragonBones (heroi_ske.json, heroi_tex.json, heroi_tex.png). O rodapé disse
+  // "0 de 1 imagens do boneco estão na cena" — corpo e mao ESTAVAM na cena,
+  // pelo atlas; só "malha" faltava. E o Ctrl+S seguinte perguntou "O projeto
+  // ainda não tem pasta": a pasta escolhida no importar não virou a do projeto
+  // (com o Spriter, vira).
+  const arquivo = {
+    bones: [{ name: 'root' }],
+    slots: [{ name: 'a', bone: 'root', attachment: 'corpo' }, { name: 'b', bone: 'root', attachment: 'mao' }, { name: 'c', bone: 'root', attachment: 'malha' }],
+    skins: [{ name: 'default', attachments: { a: { corpo: { type: 'region' } }, b: { mao: { type: 'region' } }, c: { malha: { type: 'region' } } } }],
+  } as unknown as BoneFile;
+  const atlas = () => loadAtlas({
+    atlas: { version: '1.0' }, pages: [{ name: 'p', image: 'p.png', width: 64, height: 64 }],
+    regions: [{ name: 'corpo', page: 0, x: 0, y: 0, width: 8, height: 8 }, { name: 'mao', page: 0, x: 8, y: 0, width: 8, height: 8 }],
+  });
+
+  it('as do atlas contam como na cena: 2 de 3, falta malha', async () => {
+    const { adoptForeignImages } = await import('../src/io/import-foreign.js');
+    const doc = new Doc(arquivo, { atlases: [atlas()] });
+    const r = await adoptForeignImages(doc as never, { format: 'dragonbones', looseImages: [], folderName: 'db', folderHandle: {} } as never);
+    expect(r.shown).toBe(2);
+    expect(r.missing).toEqual(['malha']);
+    expect(r.notice).toMatch(/^2 de 3 imagens do boneco estão na cena\./);
+  });
+
+  it('a pasta escolhida vira a do projeto, mesmo sem imagem solta', async () => {
+    const { adoptForeignImages } = await import('../src/io/import-foreign.js');
+    const { projectFolder } = await import('../src/io/project-folder.js');
+    const doc = new Doc(arquivo, { atlases: [atlas()] });
+    await adoptForeignImages(doc as never, { format: 'dragonbones', looseImages: [], folderName: 'db', folderHandle: {} } as never);
+    expect(projectFolder(doc as never)?.name).toBe('db');
+  });
+
+  it('sem pasta (arquivos soltos) e sem nada faltando: calado, e nenhuma pasta inventada', async () => {
+    const { adoptForeignImages } = await import('../src/io/import-foreign.js');
+    const { projectFolder } = await import('../src/io/project-folder.js');
+    const so = { ...arquivo, slots: arquivo.slots!.slice(0, 2), skins: [{ name: 'default', attachments: { a: { corpo: { type: 'region' } }, b: { mao: { type: 'region' } } } }] } as unknown as BoneFile;
+    const doc = new Doc(so, { atlases: [atlas()] });
+    const r = await adoptForeignImages(doc as never, { format: 'spine', looseImages: [], folderName: '' } as never);
+    expect(r.notice).toBeNull();
+    expect(projectFolder(doc as never)).toBeNull();
+  });
+});

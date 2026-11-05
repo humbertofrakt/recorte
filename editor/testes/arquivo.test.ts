@@ -2496,3 +2496,16 @@ describe('QA 04/11/2026 — Ctrl+O diz o que abriu, como o arrasto', () => {
     expect(fonte).toContain('else shell.statusState.textContent = abertoNotice(opened.path ?? \'\', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);');
   });
 });
+
+describe('QA 04/11/2026 — D24b: o atlas importado vai para a pasta do projeto, e não para os Downloads', () => {
+  // A prova (Chromium sem janela): DragonBones importado pela pasta → Ctrl+S.
+  // heroi_ske.atlas.json foi gravado NA pasta (o "levar") e TAMBÉM baixado:
+  // sem imagem da pasta para empacotar (pack null), o gravarAtlasAoLado pulava
+  // a rota da pasta e caía no download.
+  it('com a pasta e o .bone dentro dela, o atlas mudado é gravado na pasta mesmo sem pack', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/open-save.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('async function gravarAtlasAoLado('), fonte.indexOf('async function directoryOf('));
+    expect(corpo).toContain("if (route.kind === 'pasta' && folder.handle !== null && out.length > 0) {");
+    expect(corpo.indexOf('if (pack === null) {')).toBeLessThan(corpo.indexOf("if (route.kind === 'pasta' && folder.handle !== null && out.length > 0) {"));
+  });
+});

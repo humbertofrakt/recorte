@@ -1146,8 +1146,18 @@ async function gravarAtlasAoLado(doc: Doc, handle: FileHandle | null, pack: Fold
     }
     // O `.bone` na raiz da pasta: reabrir a pasta reabre ele.
     if (inside !== null && inside.length === 1) rememberFolderBone(folder.name, inside[0]!);
-    if (pack !== null) {
-      const route = folderSaveRoute(folder, inside);
+    const route = folderSaveRoute(folder, inside);
+    if (pack === null) {
+      // QA 04/11/2026 (D24b): sem imagem da pasta para empacotar (o Spine e o
+      // DragonBones trazem o atlas deles), o atlas mudado ia para os Downloads
+      // — e o "levar" já o tinha posto na pasta. Com o .bone dentro dela, vai
+      // para a pasta, ao lado.
+      if (route.kind === 'pasta' && folder.handle !== null && out.length > 0) {
+        const dir = await descend(folder.handle, route.path);
+        for (const file of out) await writeInto(dir as unknown as DirectoryHandle, file.name, file.blob);
+        return null;
+      }
+    } else {
       if (route.kind === 'pasta' && folder.handle !== null) {
         const dir = await descend(folder.handle, route.path);
         for (const file of out) await writeInto(dir as unknown as DirectoryHandle, file.name, file.blob);
