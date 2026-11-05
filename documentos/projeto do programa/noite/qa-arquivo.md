@@ -65,11 +65,12 @@ Cada conserto: um commit, com teste no arquivo da parte, visto **vermelho antes*
 | Spriter `bcp.scml` | pergunta qual projeto (scml × scon), avisa o peso (801 MB), 2 avisos, 91 imagens — como o doc 89 diz |
 | Skin: exportar e importar | a armadura apagada volta **idêntica** |
 | Trocar imagem nas skins | troca, e `Ctrl+Z` desfaz |
+| A aba Partículas | Novo ▾ → "Novo: fogo" nasce no osso do meio (torso), a aba lista, Ctrl+Z desfaz |
 | Partículas | Fumaça, Fogo, Faísca nascem; tocando, emitem (foto 01); a chave "Emitindo" nasce na linha do tempo; Salvar + `validar` OK |
 | Cor ao nascer × Cor na vida | a faixa fina de baixo fica vermelha ao trocar «de» (foto 02) |
 | Biblioteca | exportar as 3 animações → importar noutra base (PSD com ossos): a janela lista os 14 nomes que não batem; a biblioteca de fábrica abre |
 | Soltar pasta na cena | `mao` abre como projeto ("pelo arrasto: 13 imagens"); `game` reabre o `.bone` dela (e, depois do D14, desenha) |
-| Spine pela tela | a pasta com `.json` + `.atlas` + `.png`: entra inteiro, "Nada se perdeu" |
+| Spine pela tela | a pasta com `.json` + `.atlas` + `.png`: entra inteiro, "Nada se perdeu"; depois do D24, o Ctrl+S grava na pasta, valida e desenha 18 desenhos |
 | DragonBones pela tela | a pasta com `_ske.json` + `_tex.json` + `_tex.png` (montada da amostra dos testes): entra; Salvar grava na pasta; valida e desenha |
 | Folha do Aseprite | `fogo.png` + `fogo.json` soltos na cena: 4 quadros, a etiqueta vira a animação "queimar"; os quadros trocam a cada 100 ms no `render-png` |
 | Soltar arquivos na cena | `.psd`, `.bonez`, `.boneb`, `.scml` — cada um pela sua porta, perguntando antes de trocar o que está aberto |
@@ -141,11 +142,11 @@ Do doc `89`, nada disto se prova num Chrome sem janela:
 
 ## Fotos
 
-## A régua, na última medida (05/11, 01h28 pelo relógio da máquina, casa parada)
+## A régua, na última medida (05/11, 01h48 pelo relógio da máquina, casa parada)
 
 | Medida | Resultado |
 |:---|:---|
-| `npx vitest run` | 5.828 verdes (eram 5.774 na partida), 1 vermelho: o conhecido do manual (`ajuda.test.ts`) |
+| `npx vitest run` | 5.839 verdes (eram 5.774 na partida), 1 vermelho: o conhecido do manual (`ajuda.test.ts`) |
 | `npx tsc --noEmit -p editor/tsconfig.json` | limpo |
 | `node ferramentas/conformidade.mjs` | 120 de 120 |
 
