@@ -1854,3 +1854,14 @@ describe('rodada 47, lote 5b: a linha da animação tem dica', () => {
     expect(fonteR47L5b('panels/animations.ts')).toContain('Clique abre a animação na linha do tempo');
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): o título "Animações" da tira
+// media 68,16 px numa caixa de 68 e aparecia "Animaçõ…" nas três telas — os
+// seis botões e a folga de 8 px à direita não deixavam o meio pixel.
+describe('o título "Animações" cabe na tira (QA da noite)', () => {
+  it('a folga da direita da tira é de 4 px; a da esquerda continua 12', () => {
+    const css = readFileSync(resolve(__dirname, '../src/panels/animations.css'), 'utf8');
+    const regra = css.match(/\n\.anim-secao \{[^}]*\}/)?.[0] ?? '';
+    expect(regra).toMatch(/padding: 2px 4px 2px 12px;/);
+  });
+});
