@@ -7,11 +7,11 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 
 | Medida | Antes | Agora |
 |:---|:---:|:---:|
-| Casos em `conformidade/casos/` | 120 | **136** |
+| Casos em `conformidade/casos/` | 120 | **137** |
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
-| TS × Python, campo a campo | 120 de 120 | **136 de 136** |
-| Pacote do Construct | 120 de 120 | **136 de 136** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.854**, o mesmo 1 vermelho |
+| TS × Python, campo a campo | 120 de 120 | **137 de 137** |
+| Pacote do Construct | 120 de 120 | **137 de 137** |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.855**, o mesmo 1 vermelho |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
@@ -59,6 +59,7 @@ conta **antes** de rodar runtime):
 | **C-330** parâmetro e driver | clamp; envolver (`360 → 0`); `add` soma o **desvio** do setup | verde | verde | sim (3 de 3) |
 | **C-331** driver contínuo e `source` | Smart Bone com clamp; `timeTo` padrão = duração; alvo `slot/color` | verde | verde | sim (3 de 3) |
 | **C-332** driver em parâmetro, variável e constraint | `int` escrito por driver trunca; o `mix` de uma constraint posterior | verde | verde | sim (4 de 4) |
+| **C-333** driver em morph, deform e ordem | o peso do morph é limitado; `drawOrder` em degrau | verde | verde | sim (3 de 3) |
 | **X-309** BOM na leitura | §2.1: o leitor DEVE aceitar BOM | **vermelho (o executor) → consertado** | verde | — |
 | **X-310** fallbacks de driver e parâmetro | §2.5: alvo de tipo desconhecido cai **sozinho**; modo desconhecido vira `replace`; `source` desconhecido → `default`; propriedade de timeline desconhecida | verde | verde | sim (5 de 5) |
 | **X-311** `sequence.mode` desconhecido | §2.5: vira `hold` | verde | verde | sim |
@@ -83,7 +84,7 @@ conta **antes** de rodar runtime):
 | ZIP-501 `leiame` | dizia `application/bone-package`; o pacote e a spec dizem `application/vnd.bone+zip`. Corrigido o texto |
 
 **O que ainda não tem caso** (está na §12.4): `blend` (o dump não tem canal
-para ele), e os alvos de `driver` do tipo `deform`, `morph`, `nested` e `drawOrder`.
+para ele), o alvo de `driver` do tipo `nested`, e o fallback de `spacingMode`.
 
 **Achado sobre a régua (regra 28):** o comparador só olha as chaves que o
 esperado cita (a §12.4 manda assim). Então **"o leitor ignorou"** só se prova
