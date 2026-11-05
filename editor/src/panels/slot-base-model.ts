@@ -128,7 +128,7 @@ function defAt(file: SkinsFile, t: PickerTarget): Def | null {
  * DO BONECO, e levá-la para dentro de outra base é outra conta, não esta.
  */
 export function whyCannotMark(doc: EditorDoc): string | null {
-  if (projetoDe(doc) === null) return 'Marcar como slot precisa de um projeto aberto';
+  if (projetoDe(doc) === null) return 'Fazer da imagem uma base precisa de um projeto aberto';
   const shown = shownOfSelection(doc);
   if (shown === null) return 'Escolha uma imagem na cena primeiro (clique nela)';
   const file = corpoDe(doc).file as SkinsFile;
@@ -136,12 +136,12 @@ export function whyCannotMark(doc: EditorDoc): string | null {
   if (target === null) {
     const grid = gridTarget(file, doc.visibleSkins, shown.slot, shown.attachment);
     const def = grid === null ? null : defAt(file, grid);
-    if (slotMarkOf(def) !== null) return `${shown.slot} já é um slot marcado`;
-    return `${shown.slot} não mostra uma imagem: só imagem vira slot`;
+    if (slotMarkOf(def) !== null) return `${shown.slot} já é uma imagem-base`;
+    return `${shown.slot} não mostra uma imagem: só imagem vira base`;
   }
   const def = defAt(file, target);
   const tipo = (def?.['type'] as string | undefined) ?? 'region';
-  if (tipo !== 'region') return `${shown.slot} é uma ${tipo === 'mesh' ? 'malha' : tipo}: por enquanto só a imagem simples vira slot`;
+  if (tipo !== 'region') return `${shown.slot} é uma ${tipo === 'mesh' ? 'malha' : tipo}: por enquanto só a imagem simples vira base`;
   return null;
 }
 
@@ -165,8 +165,8 @@ export function unmarkTarget(doc: EditorDoc): (PickerTarget & { mark: SlotMark }
 /** Por que "Desmarcar o slot" não age agora, ou `null`. */
 export function whyCannotUnmark(doc: EditorDoc): string | null {
   const shown = shownOfSelection(doc);
-  if (shown === null) return 'Escolha o slot marcado primeiro (clique nele na cena, ou na Árvore)';
-  return unmarkTarget(doc) === null ? `${shown.slot} não é um slot marcado` : null;
+  if (shown === null) return 'Escolha a imagem-base primeiro (clique nela na cena, ou na Árvore)';
+  return unmarkTarget(doc) === null ? `${shown.slot} não é uma imagem-base` : null;
 }
 
 /** O nome sugerido: o da imagem, sem a pasta. */
@@ -184,7 +184,7 @@ export function whyBadName(nome: string, slots: readonly string[], ownSlot: stri
   const limpo = nome.trim();
   if (limpo === '') return 'O nome não pode ficar vazio';
   if (/[\\/:*?"<>|]/.test(limpo)) return 'O nome vira nome de arquivo: sem \\ / : * ? " < > |';
-  if (limpo !== ownSlot && slots.includes(limpo)) return `Já existe um slot ${limpo} no boneco`;
+  if (limpo !== ownSlot && slots.includes(limpo)) return `Já existe um desenho chamado ${limpo} no boneco`;
   if (uris.includes(slotBaseUri(limpo))) return `Já existe ${slotBaseUri(limpo)} no projeto`;
   return null;
 }
@@ -213,7 +213,7 @@ export function takenBaseUris(
  * o `revert` devolve o arquivo letra por letra e tira a base do projeto.
  */
 export class MarkAsSlot implements Command {
-  readonly label = 'Marcar como slot';
+  readonly label = 'Fazer da imagem uma base';
   readonly kind: ChangeKind = 'structure';
   /** A base nova; nasce no primeiro `apply` e é a mesma no refazer. */
   child: Doc | null = null;

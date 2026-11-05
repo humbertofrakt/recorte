@@ -62,4 +62,14 @@ Para o Humberto, pelo Diretor.
 
 `npx vitest run` (com o `obra/noite-2026-11-04` juntado, 01:30 UTC): **6.010 passam, nenhum vermelho**. `tsc` limpo. Conformidade 138 de 138. `npm run espada` 18/18. `npm run tomadas` 11/11.
 
+## Os 71 textos da aba (dicionário §5) — 05/11/2026, 08:32 UTC (depois do prazo de 05:45: o Diretor decide se junta)
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| Os 71 textos de painel trocados **à mão**, um por um: o lugar no osso é **tomada** ("a tomada", feminino); a imagem que vira base é **imagem-base**; prateleira → lista **Peças**; Montagem → **Encaixes** | os testes que citavam as frases velhas, atualizados um a um (20, em 3 arquivos) | três textos guardam "slot" **entre parênteses**, depois da palavra da pessoa, como o dicionário permite |
+| Um teste prende as palavras: nenhum texto de tela das tomadas diz "slot" fora dos parênteses | vermelho com o código de antes, verde com o de agora | — |
+| Gênero acertado onde a linha é de tomada ou imagem-base: "Ela não mostra nada", "a imagem dela" | o mesmo teste da aba | — |
+
+Régua às 08:32: vitest 6.101 passam, 0 vermelho · tsc limpo · conformidade 138/138 · tomadas 13/13 · espada 18/18.
+
 FIM

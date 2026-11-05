@@ -219,7 +219,7 @@ export function setAround(doc: EditorDoc, marker: string | null, alvo?: EntitySl
   const child = skeletonsDe(doc).get(entity.uri) ?? null;
   if (marker !== null && aroundCount(child, marker) === null) {
     doc.notice(child === null ? AROUND_WHY.fechada(entity.uri)
-      : `${entityShortName(entity.uri)} não tem o slot "${marker}": nada foi marcado`);
+      : `${entityShortName(entity.uri)} não tem a imagem "${marker}": nada foi marcado`);
     return false;
   }
   if (marker === null && aroundOf(doc.file, entity) === null) { doc.notice(AROUND_WHY.semMarca); return false; }
@@ -352,7 +352,7 @@ export async function markAsSlot(doc: EditorDoc): Promise<void> {
   const projeto = projetoDe(doc);
   const corpo = corpoDe(doc);
   if (why !== null || alvo === null || projeto === null) {
-    doc.notice(why ?? 'Marcar como slot precisa de um projeto aberto');
+    doc.notice(why ?? 'Fazer da imagem uma base precisa de um projeto aberto');
     return;
   }
   const def = (corpo.file.skins ?? []).find((s) => s.name === alvo.skin)?.attachments?.[alvo.slot]?.[alvo.attachment];
@@ -361,11 +361,11 @@ export async function markAsSlot(doc: EditorDoc): Promise<void> {
   // Rodada 17: o que está guardado só para o refazer não prende o nome.
   const uris = takenBaseUris(projeto.corpos.keys(), projeto.entidades, projeto.guardados.keys(), skeletonsDe(corpo).keys());
   const answer = await askForm({
-    title: 'Marcar como slot',
+    title: 'Fazer da imagem uma base',
     lead: `A imagem "${alvo.attachment}" vira uma base do projeto, com nome e animações próprias. `
       + 'No boneco nada muda no desenho: o mesmo lugar, a mesma ordem, as mesmas chaves.',
-    fields: [{ id: 'nome', label: 'Nome da base', hint: 'O slot passa a se chamar assim, e o arquivo é <nome>.bone', value: sugerido }],
-    yesLabel: 'Marcar como slot',
+    fields: [{ id: 'nome', label: 'Nome da base', hint: 'A imagem passa a se chamar assim, e o arquivo é <nome>.bone', value: sugerido }],
+    yesLabel: 'Fazer a base',
     noLabel: 'Desistir',
     preview: (v) => whyBadName(v['nome'] ?? '', slots, alvo.slot, uris) ?? `Nasce ${(v['nome'] ?? '').trim()}.bone, na lista de bases`,
   });
@@ -373,12 +373,12 @@ export async function markAsSlot(doc: EditorDoc): Promise<void> {
   const nome = (answer['nome'] ?? '').trim();
   const ruim = whyBadName(nome, slots, alvo.slot, uris);
   if (ruim !== null) {
-    doc.notice(`Marcar como slot: ${ruim}. Nada mudou`);
+    doc.notice(`Fazer da imagem uma base: ${ruim}. Nada mudou`);
     return;
   }
   const imagens = corpo instanceof Doc ? corpo.pageImages : new Map<string, CanvasImageSource>();
   corpo.run(new MarkAsSlot(alvo, nome, corpo.atlases, imagens));
-  doc.notice(`"${alvo.attachment}" virou a base ${nome}: o slot se chama ${nome}, e ela está na lista de bases. `
+  doc.notice(`"${alvo.attachment}" virou a base ${nome}: a imagem se chama ${nome}, e ela está na lista de bases. `
     + `Nada mudou no desenho${wentToBase(doc)}`);
 }
 
@@ -386,11 +386,11 @@ export async function markAsSlot(doc: EditorDoc): Promise<void> {
 export function unmarkSlot(doc: EditorDoc): void {
   const alvo = unmarkTarget(doc);
   if (alvo === null) {
-    doc.notice(whyCannotUnmark(doc) ?? 'Escolha o slot marcado primeiro');
+    doc.notice(whyCannotUnmark(doc) ?? 'Escolha a imagem-base primeiro');
     return;
   }
   corpoDe(doc).run(new UnmarkSlot(alvo));
-  doc.notice(`${alvo.slot} voltou a ser a imagem de antes, no slot ${alvo.mark.slotDeAntes}. `
+  doc.notice(`${alvo.slot} voltou a ser a imagem de antes, no lugar ${alvo.mark.slotDeAntes}. `
     + `A base ${alvo.mark.nome} saiu do projeto${wentToBase(doc)}`);
 }
 
@@ -465,7 +465,7 @@ export function registerEntityActions(doc: EditorDoc): Array<() => void> {
     registerAction('por-no-projeto', {
       run: () => { void chooseIntoProject(doc); },
       enabled: () => testLinks(doc).length > 0,
-      why: () => 'Não há ligação de teste: arraste uma entidade da prateleira até a linha de um slot, na aba Entidades',
+      why: () => 'Não há ligação de teste: arraste uma peça da lista Peças até a linha de uma tomada, na aba Tomadas',
     }),
     registerAction('tirar-de-volta', {
       run: () => { takeOffUp(doc); },
@@ -493,9 +493,9 @@ export function registerEntityActions(doc: EditorDoc): Array<() => void> {
 
 /** Por que as portas do cartão de teste estão cinzas — lote 6. */
 export const TEST_WHY = Object.freeze({
-  nenhum: 'Não há peça de teste: arraste uma entidade da prateleira até a linha de um slot, na aba Entidades',
+  nenhum: 'Não há peça de teste: arraste uma peça da lista Peças até a linha de uma tomada, na aba Tomadas',
   skins: 'Nenhuma peça de teste tem skin além da default',
-  iguais: 'Nenhuma peça de teste está num slot com iguais (a mesma imagem em outros slots, como as rodas)',
+  iguais: 'Nenhuma peça de teste está numa tomada com iguais (a mesma imagem em outras tomadas, como as rodas)',
 });
 
 /** Qual cartão de teste: um só vai direto; mais, pergunta. */
@@ -575,7 +575,7 @@ export function putInTestHere(doc: EditorDoc): void {
     doc.notice(porque ?? 'Escolha uma imagem na cena primeiro');
     return;
   }
-  withEntity(doc, 'Pôr em teste neste slot', (row) => {
+  withEntity(doc, 'Pôr em teste nesta tomada', (row) => {
     const recusa = whyCannotTest(doc, aqui.host, aqui.slot, row.uri);
     if (recusa !== null) {
       doc.notice(recusa);
@@ -583,7 +583,7 @@ export function putInTestHere(doc: EditorDoc): void {
     }
     const gesto = dropOnSlot(doc, aqui.host, aqui.slot, row.uri);
     if (gesto === null) {
-      doc.notice(`${row.name} já está em teste no slot ${aqui.slot}`);
+      doc.notice(`${row.name} já está em teste na tomada ${aqui.slot}`);
       return;
     }
     doc.run(gesto.command);

@@ -36,7 +36,7 @@ export function aroundWarnings(file: BoneFile, skeletons: ReadonlyMap<string, Sk
         if (child === undefined) continue;
         if (child.slots.some((s) => s.name === def.around)) continue;
         out.push(
-          `Este boneco: a entidade ${nomeCurto(def.uri)} não tem mais o slot "${def.around}" que marcava o meio `
+          `Este boneco: a entidade ${nomeCurto(def.uri)} não tem mais a imagem "${def.around}" que marcava o meio `
           + `(slot "${slot}", anexo "${name}"). Ela está sendo desenhada em bloco. `
           + 'Escolha o meio de novo em Entidades → Este boneco…, ou tire a marca',
         );

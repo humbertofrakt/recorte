@@ -981,10 +981,10 @@ describe('rodada 9 — marcar a imagem como slot', () => {
     const { doc } = heroiR9();
     expect(whyCannotMark(doc)).toMatch(/Escolha uma imagem/);
     doc.select({ ...vaziaR9(), slots: ['weapon'], attachments: [{ slot: 'weapon', attachment: 'sword' }] });
-    expect(whyCannotMark(doc)).toMatch(/só imagem vira slot/);
+    expect(whyCannotMark(doc)).toMatch(/só imagem vira base/);
     doc.select({ ...vaziaR9(), slots: ['head'], attachments: [{ slot: 'head', attachment: 'face' }] });
     expect(whyCannotMark(doc)).toMatch(/malha: por enquanto só a imagem simples/);
-    expect(whyBadName('arm', ['arm', 'head'], 'head', [])).toMatch(/Já existe um slot arm/);
+    expect(whyBadName('arm', ['arm', 'head'], 'head', [])).toMatch(/Já existe um desenho chamado arm/);
     expect(whyBadName('head', ['arm', 'head'], 'head', [])).toBeNull();
     expect(whyBadName('espada', [], 'head', ['espada.bone'])).toMatch(/espada.bone/);
     expect(whyBadName('a/b', [], 'head', [])).toMatch(/nome de arquivo/);

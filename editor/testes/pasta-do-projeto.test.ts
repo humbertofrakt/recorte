@@ -1820,7 +1820,7 @@ describe('a aba Entidades como árvore de cartões (rodada 39, lote 1)', () => {
     const faisca = poder.linhas[0]!.cartoes[0]!;
     expect(faisca).toMatchObject({ nome: 'faisca', papel: 'projeto', anima: 'brilhar' });
     expect(cardAnima(faisca)).toBe('anima: brilhar');
-    expect(cardHint(faisca, 'poder', 'meio')).toContain('no slot meio de poder');
+    expect(cardHint(faisca, 'poder', 'meio')).toContain('na tomada meio de poder');
   });
 
   it('as outras imagens viram uma linha só, que diz como uma delas recebe', () => {
@@ -1855,7 +1855,7 @@ describe('a aba Entidades como árvore de cartões (rodada 39, lote 1)', () => {
     const heroi = arquivo('heroi', ['aura'], { aura: { type: 'skeleton', uri: 'poder.bone', around: 'meio' } });
     const card = cardTree(new DocR39(heroi, { path: 'heroi.bone' })).topo.linhas[0]!.cartoes[0]!;
     expect(card.emVolta).toBe('meio');
-    expect(cardHint(card, 'heroi', 'aura')).toContain('o meio é o slot meio');
+    expect(cardHint(card, 'heroi', 'aura')).toContain('o meio é a imagem meio');
   });
 
   it('a volta sem fim não trava a árvore: o cartão que já está acima para ali', () => {
@@ -1888,7 +1888,7 @@ describe('a aba Entidades como árvore de cartões (rodada 39, lote 1)', () => {
     expect(e).toMatchObject({ slot: 'mao_e', marcado: true, cartoes: [], semArquivo: false });
     // Lote 2: a linha do AQUI aceita o soltar, e diz isso.
     expect(emptyLineText(e!)).toBe('só a imagem · solte aqui');
-    expect(lineHint(e!)).toContain('slot marcado');
+    expect(lineHint(e!)).toContain('imagem-base');
     // A base do slot que o editor não carregou: a linha diz, não inventa.
     expect(pe).toMatchObject({ slot: 'pe', marcado: true, cartoes: [], semArquivo: true });
     expect(emptyLineText(pe!)).toBe('falta o arquivo');
@@ -1973,7 +1973,7 @@ describe('ligar para baixo, em teste (rodada 39, lote 2)', () => {
     const antes = letras(doc);
     const gesto = dropOnSlot(doc, 'heroi.bone', 'hair', 'espada.bone')!;
     // Rodada 39b, lote 6: a espada já está no weapon — a frase diz que agora são duas, separadas.
-    expect(gesto.frase).toBe('Espada no slot hair: teste. Agora há 2 cópias de espada, separadas. A animação não muda.');
+    expect(gesto.frase).toBe('Espada na tomada hair: teste. Agora há 2 cópias de espada, separadas. A animação não muda.');
     doc.run(gesto.command);
     expect(montagemDeR39(doc).ligacoes).toEqual([{ host: 'heroi.bone', slot: 'hair', uri: 'espada.bone' }]);
     expect(lerMontagemR39(p.manifesto).ligacoes).toHaveLength(1);
@@ -2000,15 +2000,15 @@ describe('ligar para baixo, em teste (rodada 39, lote 2)', () => {
     expect(dropOnSlot(doc, 'heroi.bone', 'hair', 'espada.bone')).toBeNull();
     const troca = dropOnSlot(doc, 'heroi.bone', 'hair', 'capa.bone')!;
     expect(troca.command.label).toBe('Trocar a peça de teste');
-    expect(troca.frase).toContain('Capa no lugar de espada, no slot hair: teste');
+    expect(troca.frase).toContain('Capa no lugar de espada, na tomada hair: teste');
     doc.run(troca.command);
     expect(montagemDeR39(doc).ligacoes.map((l) => l.uri)).toEqual(['capa.bone']);
     const muda = moveTest(doc, 'heroi.bone', 'hair', 'head')!;
-    expect(muda.frase).toBe('Capa passou do slot hair para o head: teste.');
+    expect(muda.frase).toBe('Capa passou da tomada hair para a head: teste.');
     doc.run(muda.command);
     expect(montagemDeR39(doc).ligacoes).toEqual([{ host: 'heroi.bone', slot: 'head', uri: 'capa.bone' }]);
     const sai = unplug(doc, 'heroi.bone', 'head')!;
-    expect(sai.frase).toBe('Capa saiu do slot head (era teste).');
+    expect(sai.frase).toBe('Capa saiu da tomada head (era teste).');
     doc.run(sai.command);
     expect(montagemDeR39(doc).ligacoes).toEqual([]);
     expect(unplug(doc, 'heroi.bone', 'head')).toBeNull();
@@ -2018,7 +2018,7 @@ describe('ligar para baixo, em teste (rodada 39, lote 2)', () => {
     const solto = new DocR39(JSON.parse(texto('heroi.bone')) as BoneFileR39, { path: 'heroi.bone' });
     expect(whyCannotTest(solto, 'heroi.bone', 'hair', 'espada.bone')).toContain('projeto aberto');
     const { doc } = projeto();
-    expect(whyCannotTest(doc, 'heroi.bone', 'nao-existe', 'espada.bone')).toContain('não tem o slot');
+    expect(whyCannotTest(doc, 'heroi.bone', 'nao-existe', 'espada.bone')).toContain('não tem a tomada');
     expect(whyCannotTest(doc, 'heroi.bone', 'hair', 'heroi.bone')).toContain('volta sem fim');
     // A espada que leva o herói: pôr a espada no herói daria uma volta.
     const leva = carregarR39(JSON.parse(JSON.stringify({
@@ -2132,7 +2132,7 @@ describe('ligar para baixo, em teste (rodada 39, lote 2)', () => {
     expect(whyNoUnplugHere(doc)).toContain('Escolha na cena');
     doc.select({ ...emptySelectionR39(), slots: ['hair'] });
     expect(whyNoTestHere(doc)).toBeNull();
-    expect(whyNoUnplugHere(doc)).toBe('O slot hair não tem peça de teste');
+    expect(whyNoUnplugHere(doc)).toBe('A tomada hair não tem peça de teste');
     doc.run(dropOnSlot(doc, 'heroi.bone', 'hair', 'espada.bone')!.command);
     expect(whyNoUnplugHere(doc)).toBeNull();
   });
@@ -2337,7 +2337,7 @@ describe('as notas da conferência da v30.1 (rodada 39, lote 4)', () => {
   });
 
   it('(a) a linha que não recebe diz por quê: a de dentro de outro cartão', () => {
-    expect(innerLineRefusal('espada')).toContain('só nos slots do projeto aberto');
+    expect(innerLineRefusal('espada')).toContain('só nas tomadas do projeto aberto');
     expect(innerLineRefusal('espada')).toContain('anime espada por dentro');
     const fonte = lerR39(resolverR39(__dirname, '../src/panels/palette-entities.ts'), 'utf8');
     // Toda linha responde ao arrasto; a recusa vai ao rodapé.
@@ -2399,7 +2399,7 @@ describe('ligar para cima: o boneco dentro do mecha, o mecha na nave (rodada 39,
     const original = doc.notice.bind(doc);
     doc.notice = (t: string) => { ditos.push(t); original(t); };
     expect(await putProjectInside(doc, 'mecha.bone', escolhe('piloto'))).toBe(true);
-    expect(ditos.at(-1)).toBe('Heroi entrou em mecha, no slot piloto: teste. Heroi não leva mecha.');
+    expect(ditos.at(-1)).toBe('Heroi entrou em mecha, na tomada piloto: teste. Heroi não leva mecha.');
     expect(chainUp(doc)).toEqual([{ base: 'heroi.bone', uri: 'mecha.bone', slot: 'piloto' }]);
     const { topo } = cardTree(doc);
     expect(topo).toMatchObject({ uri: 'mecha.bone', papel: 'teste', acima: { base: 'heroi.bone', slot: 'piloto' } });
@@ -2540,10 +2540,10 @@ describe('Pôr no projeto: o teste vira arquivo, só no arquivo aberto (rodada 3
     doc.run(dropOnSlot(doc, 'heroi.bone', 'hair', 'espada.bone')!.command);
     const letras = JSON.stringify(doc.file);
     const [link] = testLinks(doc);
-    expect(testLinkLabel(link!)).toBe('espada no slot hair');
+    expect(testLinkLabel(link!)).toBe('espada na tomada hair');
     expect(whyNotIntoProject(doc, link!)).toBeNull();
     const gesto = putIntoProject(doc, link!)!;
-    expect(gesto.frase).toContain('Espada gravada no slot hair: agora é do projeto');
+    expect(gesto.frase).toContain('Espada gravada na tomada hair: agora é do projeto');
     expect(gesto.frase).toContain('Ctrl+Z volta a teste');
     doc.run(gesto.command);
     expect(anexos(doc)['hair']!['hair']).toMatchObject({ type: 'skeleton', uri: 'espada.bone' });
@@ -2626,16 +2626,16 @@ describe('as notas da conferência da v30.6 (rodada 39b, doc 34)', () => {
   it('(b) a entidade solta no slot onde ela JÁ está é recusada, com o porquê: no arquivo e em teste', () => {
     const doc = projeto();
     // A espada está gravada no weapon do herói.
-    expect(whyCannotTest(doc, 'heroi.bone', 'weapon', 'espada.bone')).toBe('Espada já está no slot weapon, gravada no arquivo: arraste outra entidade');
+    expect(whyCannotTest(doc, 'heroi.bone', 'weapon', 'espada.bone')).toBe('Espada já está na tomada weapon, gravada no arquivo: arraste outra peça');
     doc.run(dropOnSlot(doc, 'heroi.bone', 'hair', 'espada.bone')!.command);
-    expect(whyCannotTest(doc, 'heroi.bone', 'hair', 'espada.bone')).toBe('Espada já está no slot hair, em teste: arraste outra entidade');
+    expect(whyCannotTest(doc, 'heroi.bone', 'hair', 'espada.bone')).toBe('Espada já está na tomada hair, em teste: arraste outra peça');
   });
 
   it('(b) o cartão de teste solto no próprio slot é recusado, e a linha sabe de onde ele saiu', () => {
     const doc = projeto();
     doc.run(dropOnSlot(doc, 'heroi.bone', 'hair', 'capacete.bone')!.command);
     expect(whyCannotDrop(doc, 'heroi.bone', 'hair', 'capacete.bone', 'hair'))
-      .toBe('A peça de teste já está no slot hair: arraste-a até a linha de outro slot, ou para a prateleira');
+      .toBe('A peça de teste já está na tomada hair: arraste-a até a linha de outra tomada, ou para a lista Peças');
     expect(whyCannotDrop(doc, 'heroi.bone', 'head', 'capacete.bone', 'hair')).toBeNull();
     const fonte = lerR39(resolverR39(__dirname, '../src/panels/palette-entities.ts'), 'utf8');
     // O arrasto guarda de onde o cartão de teste saiu, e a recusa usa isso já no dragover.
@@ -2647,7 +2647,7 @@ describe('as notas da conferência da v30.6 (rodada 39b, doc 34)', () => {
     const doc = projeto();
     expect(whyCannotTest(doc, 'heroi.bone', 'weapon', 'mecha.bone')).toBeNull();
     expect(dropOnSlot(doc, 'heroi.bone', 'weapon', 'mecha.bone')!.frase)
-      .toBe('Mecha no slot weapon, por cima de espada (que continua no arquivo): teste. A animação não muda.');
+      .toBe('Mecha na tomada weapon, por cima de espada (que continua no arquivo): teste. A animação não muda.');
   });
 });
 
@@ -2777,7 +2777,7 @@ describe('no cartão: o que a peça toca, as skins, a mesma duas vezes, as iguai
     // A espada já está gravada no weapon.
     expect(cardTitle(naLinha(doc, 'weapon')!)).toBe('espada');
     const segunda = dropOnSlot(doc, 'heroi.bone', 'hair', 'espada.bone')!;
-    expect(segunda.frase).toBe('Espada no slot hair: teste. Agora há 2 cópias de espada, separadas. A animação não muda.');
+    expect(segunda.frase).toBe('Espada na tomada hair: teste. Agora há 2 cópias de espada, separadas. A animação não muda.');
     doc.run(segunda.command);
     doc.run(dropOnSlot(doc, 'heroi.bone', 'head', 'espada.bone')!.command);
     expect(cardTitle(naLinha(doc, 'hair')!)).toBe('espada 1 de 3');
@@ -2948,7 +2948,7 @@ describe('os casos difíceis: o arquivo que falta, sem lugar, a trilha, a Prévi
     expect(cardMissing(cardTree(doc).topo)).toBeNull();
     expect(montagemDeR39(doc).ligacoes).toHaveLength(1);
     expect(montagemWarnings(doc)).toEqual([
-      'Montagem de teste: falta o arquivo motosserra.bone (a peça de teste do slot hair). A ligação fica, e nada é desenhado no lugar',
+      'Encaixe de teste: falta o arquivo motosserra.bone (a peça de teste da tomada hair). A ligação fica, e nada é desenhado no lugar',
     ]);
     // A casca junta estes avisos aos do documento.
     const casca = lerR39(resolverR39(__dirname, '../src/ui/shell.ts'), 'utf8');
@@ -2965,7 +2965,7 @@ describe('os casos difíceis: o arquivo que falta, sem lugar, a trilha, a Prévi
     expect(linhas[0]!.cartoes[0]!.uri).toBe('espada.bone');
     expect(lineHint(linhas[0]!)).toContain('não existe mais em heroi');
     expect(montagemWarnings(doc)).toContain(
-      'Montagem de teste: o slot hair não existe mais em heroi. A peça espada ficou sem lugar: arraste-a para outro slot, ou Desligar',
+      'Encaixe de teste: a tomada hair não existe mais em heroi. A peça espada ficou sem lugar: arraste-a para outra tomada, ou Desligar',
     );
     // Desligar continua valendo.
     expect(unplug(doc, 'heroi.bone', 'hair')).not.toBeNull();
@@ -3093,14 +3093,14 @@ describe('as sobras da aba das entidades (rodada 42, lote 2)', () => {
 
   it('a pergunta do slot diz quem entra em quê: o herói entra no slot do mecha', () => {
     const doc = projeto();
-    expect(upSlotHint(doc, 'mecha.bone', 'body')).toBe('Heroi entra no slot body de mecha, no lugar da imagem que está lá');
+    expect(upSlotHint(doc, 'mecha.bone', 'body')).toBe('Heroi entra na tomada body de mecha, no lugar da imagem que está lá');
   });
 
   it('no segundo nível, quem entra é o de fora: o mecha entra no slot da nave, não o herói', async () => {
     const doc = projeto();
     (doc as unknown as { project: ProjetoR39 }).project.adicionarEntidade('nave.bone', new DocR39(fora('nave', ['casco', 'cabine']), { path: 'nave.bone' }));
     await putProjectInside(doc, 'mecha.bone', async () => 'piloto');
-    expect(upSlotHint(doc, 'nave.bone', 'cabine')).toBe('Mecha entra no slot cabine de nave, no lugar da imagem que está lá');
+    expect(upSlotHint(doc, 'nave.bone', 'cabine')).toBe('Mecha entra na tomada cabine de nave, no lugar da imagem que está lá');
   });
 
   it('a aba redesenha ao cruzar a altura da tela baixa, e a Prateleira fica presa ao pé da aba', () => {
@@ -3539,5 +3539,37 @@ describe('QA 04/11/2026 — D22: o Salvar do projeto grande diz que está salvan
     expect(io.match(/buildFolderPack\(doc, stemOfName\(handle\.name\), options\.onProgress\)/g)?.length).toBe(1);
     const casca = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
     expect(casca).toContain('onProgress: (feito, total, fase) => { shell.statusState.textContent = `Salvando ${feito} de ${total}: ${fase}…`; },');
+  });
+});
+
+describe('as palavras da aba Tomadas: nenhum texto de tela diz "slot" fora dos parênteses (05/11/2026)', () => {
+  // O dicionário da tela (§5): o lugar no osso é a TOMADA; a imagem que vira
+  // base é a IMAGEM-BASE. O nome técnico só entre parênteses, depois da
+  // palavra da pessoa. Este teste prende as 71 trocas: um texto novo com
+  // "slot" à vista volta a ficar vermelho aqui, com o arquivo e a frase.
+  const ARQUIVOS = [
+    'panels/entities-actions.ts', 'panels/entities-cards-model.ts', 'panels/palette-entities.ts',
+    'panels/palette-entities-model.ts', 'panels/slot-base-model.ts', 'doc/around-warnings.ts',
+    'panels/tomadas.ts', 'panels/tomadas-model.ts',
+  ];
+  it('cada texto entre aspas, sem o que está entre parênteses, não tem a palavra slot', () => {
+    const ruins: string[] = [];
+    for (const arquivo of ARQUIVOS) {
+      const fonte = readFileSync(resolve(__dirname, '../src', arquivo), 'utf8')
+        .split('\n').filter((l) => !/^\s*(\/\/|\*|\/\*)/.test(l)).join('\n');
+      for (const m of fonte.matchAll(/'([^'\n]*)'|`([^`]*)`/g)) {
+        const texto = (m[1] ?? m[2] ?? '').replace(/\$\{[^}]*\}/g, 'X');
+        if (!/\s/.test(texto)) continue; // nome de campo, classe, chave: não é frase
+        const fora = texto.replace(/\([^)]*\)/g, '');
+        if (/\bslots?\b/.test(fora)) ruins.push(`${arquivo}: ${texto.slice(0, 90)}`);
+      }
+    }
+    expect(ruins).toEqual([]);
+  });
+
+  it('a prova de que o teste pega: uma frase velha seria acusada', () => {
+    const velha = 'A peça de teste já está no slot X: arraste-a até a linha de outro slot';
+    expect(/\bslots?\b/.test(velha.replace(/\([^)]*\)/g, ''))).toBe(true);
+    expect(/\bslots?\b/.test('Uma tomada vazia (um slot sem imagem)'.replace(/\([^)]*\)/g, ''))).toBe(false);
   });
 });
