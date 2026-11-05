@@ -21,7 +21,7 @@ import { evalFieldInput } from '../panels/properties-model.js';
 import { setViewCenterSource, setViewPanSink } from './view-center.js';
 import './viewport.css';
 import { clickKeepsBone } from '../doc/own-bone.js';
-import { garantirAninhado } from '../doc/projeto.js';
+import { garantirAninhado, projetoDe } from '../doc/projeto.js';
 
 import { bindModeSceneClick } from '../panels/mesh-panel-model.js';
 import { emptySelection, getTool, registerPanel, readEditorState, type ChangeKind, type DocChange, type EditorDoc, type Panel, type ToolEvent, corpoDe, skeletonsDe } from '../contract.js';
@@ -413,6 +413,15 @@ export class ViewportPanel implements Panel {
       // N-4b: o recorte é de cada animação. Abrir a base, ou outro arquivo,
       // desliga o modo — os puxadores não ficam valendo para coisa nenhuma.
       if (cropEditing() && (change.kind === 'file' || doc.animation === null)) setCropEditing(false);
+      // Prova de pessoa (05/11/2026): trocar de BASE (Bases → mecha) mantinha
+      // o zoom e o lugar da base de antes, e o mecha caía meio fora da cena,
+      // com o ícone da cabine quase na régua. Base nova, vista ajustada.
+      const foco = projetoDe(doc)?.emFocoUri ?? null;
+      if (foco !== this.focoVisto) {
+        const antes = this.focoVisto;
+        this.focoVisto = foco;
+        if (antes !== null && foco !== null) this.fitToScreen();
+      }
       this.cropBox?.sync(doc);
     });
     this.unsubscribeView = onViewSettings(() => { this.syncLockButtons(); this.needsDraw = true; });
@@ -1446,6 +1455,8 @@ export class ViewportPanel implements Panel {
   private cropDrag: { animation: string; start: CropBox | null; zone: CropZone | 'tracar'; ax: number; ay: number; moved: boolean } | null = null;
   /** O que o arrasto do recorte diz agora, escrito em cima do retângulo. */
   cropDragSays: string | null = null;
+  /** A base em foco que a vista viu por último — o Ajustar da troca de base. */
+  private focoVisto: string | null = null;
   /** N-4b: a caixa dos números do recorte, no canto da cena. */
   private cropBox: CropNumbersBox | null = null;
   /** 05/11/2026: os ícones das tomadas, por cima do desenho. */
