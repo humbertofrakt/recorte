@@ -98,6 +98,7 @@ var RecorteRuntime = (() => {
     ParticleAttachment: () => ParticleAttachment,
     ParticleCache: () => ParticleCache,
     ParticleEmittingTimelineData: () => ParticleEmittingTimelineData,
+    ParticleRateTimelineData: () => ParticleRateTimelineData,
     PathAttachment: () => PathAttachment,
     PathConstraint: () => PathConstraint,
     PathConstraintData: () => PathConstraintData,
@@ -1994,6 +1995,21 @@ var RecorteRuntime = (() => {
       __publicField(this, "kind", "particle.emitting");
       __publicField(this, "type", "BONE_particle");
       __publicField(this, "property", "emitting");
+    }
+    get times() {
+      return this.keys.times;
+    }
+  };
+  var ParticleRateTimelineData = class extends TimelineBase {
+    constructor(slot, skin, attachmentName, keys) {
+      super();
+      this.slot = slot;
+      this.skin = skin;
+      this.attachmentName = attachmentName;
+      this.keys = keys;
+      __publicField(this, "kind", "particle.rate");
+      __publicField(this, "type", "BONE_particle");
+      __publicField(this, "property", "rate");
     }
     get times() {
       return this.keys.times;
@@ -4207,8 +4223,9 @@ var RecorteRuntime = (() => {
   function timelineIdentity(t) {
     const s = (k) => typeof t[k] === "string" ? t[k] : "";
     const type = s("type");
-    const hasAttachment = type === "deform" || type === "sequence" || type === "weights";
-    const hasProperty = type === "bone" || type === "slot" || type === "constraint" || type === "nested";
+    const particle = type === "BONE_particle";
+    const hasAttachment = type === "deform" || type === "sequence" || type === "weights" || particle;
+    const hasProperty = type === "bone" || type === "slot" || type === "constraint" || type === "nested" || particle;
     const skin = hasAttachment ? s("skin") || "default" : "";
     const attachment = hasAttachment ? s("attachment") : "";
     const property = hasProperty ? s("property") : "";
@@ -4790,10 +4807,26 @@ var RecorteRuntime = (() => {
           return new ParticleEmittingTimelineData(found.slot, found.skin, found.attachment.name, keys);
         }
         if (pn === "rate") {
-          ctx.warn(ptr(p, "property"), 'an animated "rate" is 2nd phase of BONE_particles (extension 4.2); timeline ignored, the fixed rate of the attachment is used');
-          return null;
+          const raw = readKeys(b, t, p, timeKey, false);
+          if (raw === null) return null;
+          const keys = numericKeys(b, raw, 1);
+          if (keys === null) return null;
+          const values = new Float64Array(keys.values);
+          const curves = keys.curves.slice();
+          for (let i = 0; i < values.length; i++) {
+            const kp = ptr(ptr(ptr(p, "keys"), i), "value");
+            if (values[i] < 0) {
+              ctx.issue(kp, `RANGE_PARTICLE_RATE: rate ${values[i]} is negative; using 0`);
+              values[i] = 0;
+            }
+            if (curves[i].kind === "bezier") {
+              ctx.warn(ptr(ptr(ptr(p, "keys"), i), "curve"), 'RANGE_PARTICLE_RATE_CURVE: a B\xE9zier on rate has no closed integral; using "linear"');
+              curves[i] = LINEAR_CURVE;
+            }
+          }
+          return new ParticleRateTimelineData(found.slot, found.skin, found.attachment.name, { times: keys.times, values, components: 1, curves });
         }
-        ctx.warn(ptr(p, "property"), `"${pn}" is not animable in the 1st phase of BONE_particles; timeline ignored`);
+        ctx.warn(ptr(p, "property"), `"${pn}" is not animable in BONE_particles; timeline ignored`);
         return null;
       }
       default:
@@ -6536,7 +6569,7 @@ var RecorteRuntime = (() => {
     return count;
   }
   function isPoseTimeline(tl) {
-    return tl.kind !== "event" && tl.kind !== "constraint.reset" && tl.kind !== "body" && tl.kind !== "particle.emitting";
+    return tl.kind !== "event" && tl.kind !== "constraint.reset" && tl.kind !== "body" && tl.kind !== "particle.emitting" && tl.kind !== "particle.rate";
   }
 
   // runtime/src/color.ts
@@ -10772,18 +10805,20 @@ var RecorteRuntime = (() => {
   var COUNT_EPSILON = 1e-9;
   var CANDIDATE_CAP = 2e5;
   var EmissionCurve = class {
-    constructor(attachment, emitting) {
+    constructor(attachment, emitting, rate = null) {
       /** `E(origin) = 0`. */
       __publicField(this, "origin");
       /** Effective rate for `t < origin`, from the first key. */
       __publicField(this, "rateBefore");
       /** Segment starts, ascending; `boundaries[0] === origin`. */
       __publicField(this, "boundaries");
-      /** Constant effective rate inside `[boundaries[k], boundaries[k+1])`. */
+      /** Effective rate at the START of `[boundaries[k], boundaries[k+1])`. */
       __publicField(this, "rates");
+      /** Slope of the effective rate inside the segment; `0` in the 1st phase. */
+      __publicField(this, "slopes");
       /** `E(boundaries[k])`, summed once here and never per frame. */
       __publicField(this, "totals");
-      const rate = attachment.rate > 0 ? attachment.rate : 0;
+      const fixed = attachment.rate > 0 ? attachment.rate : 0;
       this.origin = attachment.startDelay;
       const on = (t) => {
         if (emitting === null || emitting.times.length === 0) return attachment.emitting;
@@ -10798,7 +10833,32 @@ var RecorteRuntime = (() => {
         }
         return emitting.values[lo];
       };
-      this.rateBefore = on(-Infinity) ? rate : 0;
+      const rateKey = (t) => {
+        const times = rate.times;
+        if (t < times[0]) return -1;
+        let lo = 0;
+        let hi = times.length - 1;
+        while (lo < hi) {
+          const mid = lo + hi + 1 >> 1;
+          if (times[mid] <= t) lo = mid;
+          else hi = mid - 1;
+        }
+        return lo;
+      };
+      const animated = rate !== null && rate.times.length > 0;
+      const rateAt = (t) => {
+        if (!animated) return [fixed, 0];
+        const k = rateKey(t);
+        const values = rate.values;
+        if (k < 0) return [values[0], 0];
+        const last = rate.times.length - 1;
+        if (k >= last || rate.curves[k].kind === "stepped") return [values[k], 0];
+        const t0 = rate.times[k];
+        const t1 = rate.times[k + 1];
+        const slope = (values[k + 1] - values[k]) / (t1 - t0);
+        return [values[k] + slope * (t - t0), slope];
+      };
+      this.rateBefore = on(-Infinity) ? animated ? rate.values[0] : fixed : 0;
       const marks = [this.origin];
       if (emitting !== null) {
         for (let i = 0; i < emitting.times.length; i++) {
@@ -10806,29 +10866,47 @@ var RecorteRuntime = (() => {
           if (t > this.origin) marks.push(t);
         }
       }
+      if (animated) {
+        for (let i = 0; i < rate.times.length; i++) {
+          const t = rate.times[i];
+          if (t > this.origin) marks.push(t);
+        }
+      }
       marks.sort((a, b) => a - b);
       const boundaries = [];
       for (const t of marks) if (boundaries.length === 0 || t > boundaries[boundaries.length - 1]) boundaries.push(t);
       const rates = new Float64Array(boundaries.length);
+      const slopes = new Float64Array(boundaries.length);
       const totals = new Float64Array(boundaries.length);
       for (let k = 0; k < boundaries.length; k++) {
-        rates[k] = on(boundaries[k]) ? rate : 0;
-        if (k > 0) totals[k] = totals[k - 1] + rates[k - 1] * (boundaries[k] - boundaries[k - 1]);
+        if (on(boundaries[k])) {
+          const [r, s] = rateAt(boundaries[k]);
+          rates[k] = r > 0 ? r : 0;
+          slopes[k] = s;
+        }
+        if (k > 0) {
+          const dt = boundaries[k] - boundaries[k - 1];
+          totals[k] = totals[k - 1] + rates[k - 1] * dt + slopes[k - 1] * dt * dt / 2;
+        }
       }
       this.boundaries = new Float64Array(boundaries);
       this.rates = rates;
+      this.slopes = slopes;
       this.totals = totals;
     }
-    /** The effective rate in force at `t` (extension 4.1). */
+    /** The effective rate in force at `t` (extension 4.1 and 4.2). */
     rateAt(t) {
       if (t < this.boundaries[0]) return this.rateBefore;
-      return this.rates[this.segmentAt(t)];
+      const k = this.segmentAt(t);
+      const r = this.rates[k] + this.slopes[k] * (t - this.boundaries[k]);
+      return r > 0 ? r : 0;
     }
     /** `E(t)`: how many births up to `t`, counted from the origin. Negative before it. */
     countAt(t) {
       if (t < this.boundaries[0]) return -this.rateBefore * (this.boundaries[0] - t);
       const k = this.segmentAt(t);
-      return this.totals[k] + this.rates[k] * (t - this.boundaries[k]);
+      const dt = t - this.boundaries[k];
+      return this.totals[k] + this.rates[k] * dt + this.slopes[k] * dt * dt / 2;
     }
     /**
      * `τ(i)`: the time at which `E` reaches `i`, or `null` when the rate never
@@ -10846,8 +10924,13 @@ var RecorteRuntime = (() => {
         if (this.totals[mid] <= index) lo = mid;
         else hi = mid - 1;
       }
-      if (this.rates[lo] <= 0) return null;
-      return this.boundaries[lo] + (index - this.totals[lo]) / this.rates[lo];
+      const r0 = this.rates[lo];
+      const s = this.slopes[lo];
+      const d = index - this.totals[lo];
+      if (r0 <= 0 && s <= 0) return null;
+      if (d === 0) return this.boundaries[lo];
+      const disc = r0 * r0 + 2 * s * d;
+      return this.boundaries[lo] + 2 * d / (r0 + Math.sqrt(disc > 0 ? disc : 0));
     }
     segmentAt(t) {
       let lo = 0;
@@ -11548,7 +11631,7 @@ var RecorteRuntime = (() => {
       }
       let c = byAnimation.get(animation);
       if (c === void 0) {
-        c = new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name));
+        c = new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name), rateKeysOf(animation, slot.data.name, attachment.name));
         byAnimation.set(animation, c);
       }
       return c;
@@ -11583,11 +11666,20 @@ var RecorteRuntime = (() => {
     }
     return null;
   }
+  function rateKeysOf(animation, slotName, attachmentName) {
+    if (animation === null) return null;
+    for (const tl of animation.timelines) {
+      if (tl.kind !== "particle.rate") continue;
+      if (tl.slot.name !== slotName || tl.attachmentName !== attachmentName) continue;
+      return tl.keys;
+    }
+    return null;
+  }
   function particleFrame(skeleton, slot, attachment, cache = null) {
     const animation = skeleton.playingAnimation === null ? null : skeleton.data.findAnimation(skeleton.playingAnimation);
     const duration = animation === null ? 0 : animation.duration;
     const time = animation === null ? skeleton.time : skeleton.playingTime;
-    const curve = cache === null ? new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name)) : cache.curveFor(skeleton, slot, attachment, animation);
+    const curve = cache === null ? new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name), rateKeysOf(animation, slot.data.name, attachment.name)) : cache.curveFor(skeleton, slot, attachment, animation);
     const needsPast = attachment.space === "world" || attachment.shape === "mesh" || attachment.shape === "path";
     if (!needsPast) {
       return computeParticles(attachment, curve, { time, duration }, {

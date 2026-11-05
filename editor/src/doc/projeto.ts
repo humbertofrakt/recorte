@@ -27,7 +27,7 @@
  * Módulo do degrau 1: importa só o contrato e a base. Sem DOM.
  */
 
-import type { SkeletonData } from '../../../runtime/src/index.js';
+import type { AtlasPageData, SkeletonData } from '../../../runtime/src/index.js';
 import type { DocChange, EditorDoc } from '../contract.js';
 import { corpoDe } from '../contract.js';
 import { Doc } from './document.js';
@@ -428,6 +428,19 @@ export class Projeto implements BodyProvider {
   uriOf(self: Doc): string | null {
     for (const [uri, doc] of this.corpos) if (doc === self) return uri;
     for (const [uri, doc] of this.guardados) if (doc === self) return uri;
+    return null;
+  }
+
+  /**
+   * A página de uma entidade (ou de outro corpo) para quem a desenha — 05/11.
+   * Só a página que pertence a um atlas daquele documento: a identidade manda.
+   */
+  pageImage(self: Doc, page: AtlasPageData): CanvasImageSource | null {
+    for (const doc of [...this.corpos.values(), ...this.guardados.values()]) {
+      if (doc === self || !doc.atlases.some((atlas) => atlas.pages.includes(page))) continue;
+      const image = doc.ownImageFor(page);
+      if (image !== null) return image;
+    }
     return null;
   }
 

@@ -2803,17 +2803,52 @@ describe('no cartão: o que a peça toca, as skins, a mesma duas vezes, as iguai
     const doc = projeto();
     const espada = naLinha(doc, 'weapon')!;
     expect(espada.alvo).toEqual({ kind: 'projeto', slot: 'weapon', uri: 'espada.bone' });
-    expect(whyNoCardAnima(doc, espada)).toBe('Abra uma animação: no projeto, o que a peça toca vira chave na faixa dela, da agulha em diante');
+    // 05/11/2026: com a base aberta o menu abre — "a de quem recebe" vale em
+    // todas as animações. As outras escolhas é que pedem uma animação aberta.
+    const ditos: string[] = [];
+    doc.on((c) => { if (c.label !== undefined) ditos.push(c.label); });
+    expect(whyNoCardAnima(doc, espada)).toBeNull();
+    expect(animaChoices(doc, espada).map((c) => c.label)).toEqual(['a de quem recebe']);
+    expect(setCardAnima(doc, espada, 'brilho')).toBe(false);
+    expect(ditos.at(-1)).toBe('Abra uma animação: no projeto, o que a peça toca vira chave na faixa dela, da agulha em diante');
     doc.animation = 'idle';
     doc.time = 0;
     expect(whyNoCardAnima(doc, espada)).toBeNull();
-    expect(animaChoices(doc, espada).map((c) => c.label)).toEqual(['livre — o jogo escolhe', 'idle', 'brilho', 'attack']);
+    expect(animaChoices(doc, espada).map((c) => c.label)).toEqual(['livre — o jogo escolhe', 'a de quem recebe', 'idle', 'brilho', 'attack']);
     expect(setCardAnima(doc, espada, 'brilho')).toBe(true);
     type Linha = { type: string; target: string; property: string; keys: Array<{ value: unknown }> };
     const linhas = (doc.file.animations!.find((a) => a.name === 'idle') as unknown as { timelines: Linha[] }).timelines;
     const faixa = linhas.find((t) => t.type === 'nested' && t.target === 'weapon' && t.property === 'animation')!;
     expect(faixa.keys.map((k) => k.value)).toEqual(['brilho']);
     expect(setCardAnima(doc, espada, null)).toBe(true);
+  });
+
+  it('a espada responde à animação do herói (inheritAnimation): pelo cartão do projeto, na base, um passo', () => {
+    // O defeito (05/11/2026, a espada de um, o boneco de outro): a peça que
+    // entrou no projeto — arrastada para a cena — não tinha como "responder à
+    // animação". O "a de quem recebe" só existia no cartão de TESTE; no de
+    // projeto, só a faixa, chave por chave, e nada com a base aberta.
+    const doc = projeto();
+    const espada = naLinha(doc, 'weapon')!;
+    const def = (): Def => (doc.file.skins![0]!.attachments as Record<string, Record<string, Def>>)['weapon']!['sword']!;
+    const ditos: string[] = [];
+    doc.on((c) => { if (c.label !== undefined) ditos.push(c.label); });
+    expect(def().inheritAnimation).toBeUndefined();
+    expect(setCardAnima(doc, espada, '')).toBe(true);
+    expect(def().inheritAnimation).toBe(true);
+    // A animação dela fica: é o que ela toca quando o herói toca uma que ela não tem.
+    expect(def().animation).toBe('idle');
+    expect(naLinha(doc, 'weapon')!.anima).toBe('');
+    expect(animaChoices(doc, naLinha(doc, 'weapon')!).find((c) => c.atual)!.label).toBe('a de quem recebe');
+    expect(ditos.some((d) => d.includes('responde à animação de quem a recebe'))).toBe(true);
+    doc.undo();
+    expect(def().inheritAnimation).toBeUndefined();
+    doc.redo();
+    expect(def().inheritAnimation).toBe(true);
+    // De novo, desliga: ela volta a tocar só a dela.
+    expect(setCardAnima(doc, naLinha(doc, 'weapon')!, '')).toBe(true);
+    expect(def().inheritAnimation).toBeUndefined();
+    expect(def().animation).toBe('idle');
   });
 });
 
@@ -3214,5 +3249,112 @@ describe('trocar a pasta de origem: a dica não promete desfazer (rodada 44, lot
     expect(SWAP_FOLDER_HINT).toContain('a pasta não: para voltar, aponte a pasta de antes');
     const fonte = lerR39(resolverR39(__dirname, '../src/panels/palette.ts'), 'utf8');
     expect(fonte).toContain('. Para voltar, Trocar pasta de origem com a pasta de antes');
+  });
+});
+
+
+// ---------------------------------------------------------------------------
+// A espada de um, o boneco de outro — 05/11/2026
+// ---------------------------------------------------------------------------
+
+import { Projeto as ProjetoEB } from '../src/doc/projeto.js';
+import { garantirAninhado as garantirAninhadoEB } from '../src/doc/projeto.js';
+import { createEmptyFile as vazioEB } from '../src/doc/new-file.js';
+import { atlasesNotPicked, entityAtlasesForFolder } from '../src/io/open-save.js';
+import { ownPagesOnDisk } from '../src/io/folder-save.js';
+
+/** A espada da pessoa A: um `.bone` com o atlas DELA, e não o do herói. */
+function espadaDaPessoaA(): { doc: Doc; pagina: object; imagem: object } {
+  const atlas = loadAtlas({
+    atlas: { version: '1.0' },
+    pages: [{ name: 'espada-atlas', image: 'espada-atlas.png', width: 8, height: 8 }],
+    regions: [{ name: 'lamina', page: 0, x: 0, y: 0, width: 8, height: 2 }],
+  });
+  const file = {
+    bone: { version: '1.0' }, skeleton: { name: 'espada' }, assets: { atlases: ['espada.atlas.json'] },
+    bones: [{ name: 'root' }], slots: [{ name: 'lamina', bone: 'root', attachment: 'lamina' }],
+    skins: [{ name: 'default', attachments: { lamina: { lamina: { type: 'region', width: 8, height: 2 } } } }],
+    animations: [],
+  } as unknown as BoneFile;
+  const imagem = { width: 8, height: 8, marca: 'a página da espada' };
+  const doc = new Doc(file, {
+    path: 'espada.bone', atlases: [atlas], images: new Map([['espada-atlas.png', imagem as unknown as CanvasImageSource]]),
+  });
+  return { doc, pagina: atlas.pages[0]!, imagem };
+}
+
+describe('a espada de um, o boneco de outro (05/11/2026)', () => {
+  it('a espada trazida de fora desenha no herói: a página dela vem do documento DELA', () => {
+    // O defeito: a espada da pessoa A tem atlas próprio. O herói só conhecia as
+    // páginas dele, e a espada pendurada na mão não aparecia — nem na cena,
+    // nem na miniatura da prateleira. A espada de exemplo usa o atlas do
+    // herói, e por isso ninguém tinha visto.
+    const heroi = new Doc(vazioEB(), { path: 'heroi.bone' });
+    const projeto = new ProjetoEB(heroi);
+    const { doc: espada, pagina, imagem } = espadaDaPessoaA();
+    projeto.adicionarEntidade('espada.bone', espada);
+    garantirAninhadoEB(heroi, 'espada.bone');
+    expect(heroi.imageFor(pagina as never)).toBe(imagem);
+  });
+
+  it('a página de outro atlas de MESMO nome não é emprestada: vale a identidade da página', () => {
+    const heroi = new Doc(vazioEB(), { path: 'heroi.bone' });
+    const projeto = new ProjetoEB(heroi);
+    const { doc: espada } = espadaDaPessoaA();
+    projeto.adicionarEntidade('espada.bone', espada);
+    const estranha = loadAtlas({
+      atlas: { version: '1.0' }, pages: [{ name: 'espada-atlas', image: 'espada-atlas.png', width: 8, height: 8 }], regions: [],
+    }).pages[0]!;
+    expect(heroi.imageFor(estranha)).toBeNull();
+  });
+
+  it('quem escolhe só o espada.bone fica sabendo do atlas que ficou de fora — e o programa pede a pasta dela', () => {
+    // O defeito: Trazer entidade de fora… com só o espada.bone (o gesto
+    // natural) trazia a espada sem imagem, e o aviso só dizia que as imagens
+    // tinham sido procuradas nos atlas do herói. Agora o programa sabe o que
+    // falta, e a casca pede a pasta da espada para trazer junto.
+    const file = { assets: { atlases: ['espada.atlas.json'] } } as unknown as BoneFile;
+    expect(atlasesNotPicked(file, ['espada.bone'])).toEqual(['espada.atlas.json']);
+    expect(atlasesNotPicked(file, ['espada.bone', 'espada.atlas.json', 'espada-atlas.png'])).toEqual([]);
+    expect(atlasesNotPicked({ assets: { atlases: ['imgs/espada.atlas.json'] } } as unknown as BoneFile, ['espada.atlas.json'])).toEqual([]);
+    expect(atlasesNotPicked({} as BoneFile, ['espada.bone'])).toEqual([]);
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(fonte).toContain('openEntityFromOutside(');
+  });
+
+  it('salvar de novo, noutro dia, grava a página por cima da dela — não nasce espada-atlas2.png', async () => {
+    // O defeito: reaberta a pasta, a página do Salvar de ontem (espada-atlas.png)
+    // era tomada por uma imagem da pasta, e o Salvar de hoje fugia dela para
+    // espada-atlas2.png. Cada salvar deixava um arquivo a mais, e quem
+    // entregava os três arquivos da espada entregava a página velha.
+    const texto = JSON.stringify({ atlas: { version: '1.0' }, pages: [{ name: 'espada-atlas', image: 'espada-atlas.png', width: 8, height: 8 }], regions: [] });
+    const atlasNoDisco: FolderFileHandle = { kind: 'file', name: 'espada.atlas.json', getFile: async () => new File([texto], 'espada.atlas.json') };
+    const vazioEm = (name: string): FolderFileHandle => ({ kind: 'file', name, getFile: async () => new File([], name) });
+    const raiz: FolderDirectoryHandle = {
+      kind: 'directory', name: 'espada',
+      values: async function* values() { yield* [atlasNoDisco, vazioEm('espada-atlas.png'), vazioEm('lamina.png')]; },
+    };
+    expect(await ownPagesOnDisk(raiz, 'espada.atlas.json')).toEqual(['espada-atlas.png']);
+    expect(await ownPagesOnDisk(raiz, 'outro.atlas.json')).toEqual([]);
+    const paths = new Set(['espada-atlas.png', 'lamina.png']);
+    for (const p of await ownPagesOnDisk(raiz, 'espada.atlas.json')) paths.delete(p);
+    expect(folderAtlasNames({} as BoneFile, 'espada', null, paths).page).toBe('espada-atlas');
+    const fonte = readFileSync(resolve(__dirname, '../src/io/folder-save.ts'), 'utf8');
+    expect(fonte).toContain('await ownPagesOnDisk(folder.handle,');
+  });
+
+  it('o Salvar leva para a pasta o atlas e a página da espada, não só o espada.bone', () => {
+    // O defeito: o herói salvo levava espada.bone para a pasta, e o
+    // espada.atlas.json e a espada-atlas.png ficavam para trás. Reaberto, ou
+    // lido por um jogo, a espada vinha sem imagem nenhuma.
+    const { doc: espada } = espadaDaPessoaA();
+    const levar = entityAtlasesForFolder(espada, ['heroi.bone', 'heroi.atlas.json', 'heroi.png']);
+    expect(levar.atlases.map((a) => a.name)).toEqual(['espada.atlas.json']);
+    expect(JSON.parse(levar.atlases[0]!.text).pages[0].image).toBe('espada-atlas.png');
+    expect(levar.pages.map((p) => p.name)).toEqual(['espada-atlas.png']);
+    // Já está na pasta: não leva de novo.
+    const nada = entityAtlasesForFolder(espada, ['espada.atlas.json', 'espada-atlas.png']);
+    expect(nada.atlases).toEqual([]);
+    expect(nada.pages).toEqual([]);
   });
 });

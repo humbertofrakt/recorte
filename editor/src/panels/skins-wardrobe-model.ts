@@ -173,7 +173,7 @@ export function previewStack(name: string): string[] {
 /** O título da escolha de imagem — diz a peça E a skin (o defeito T3 do diagnóstico). */
 export function chooserTitle(piece: WardrobePiece, skin: string): string {
   return skin === BASE
-    ? `Trocar ${piece.slot} na base (vale para toda skin que não troca esta peça)`
+    ? `Trocar ${piece.slot} na base (vale para toda skin que não troca este desenho)`
     : `Trocar ${piece.slot} na skin "${skin}"`;
 }
 
@@ -187,12 +187,12 @@ export const WARDROBE_NOTICES = {
     : `Skin "${name}" tirada. As outras continuam`,
   external: (name: string): string =>
     `A skin "${name}" vem de outro arquivo: aqui só se olha e se veste. Para mudar, abra o arquivo dela`,
-  noPieces: 'Nenhuma peça com imagem neste boneco: arraste uma imagem para a cena primeiro',
+  noPieces: 'Nenhum desenho com imagem neste boneco: arraste uma imagem para a cena primeiro',
 } as const;
 
 /** A frase de ajuda do topo da janela. */
 export const WARDROBE_HELP =
-  'Cada coluna é uma skin (uma roupa). Clique numa casa para trocar a imagem daquela peça naquela skin. '
+  'Cada coluna é uma skin (uma roupa). Clique numa casa para trocar a imagem daquele desenho naquela skin. '
   + 'Mouse em cima da coluna: prova na cena, sem mudar nada.';
 
 /**

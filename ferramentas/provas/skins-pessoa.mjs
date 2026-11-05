@@ -104,7 +104,7 @@ const T = { timeout: 5000 };
 
 async function abrirGuardaRoupa(page) {
   await page.getByText('Skins', { exact: true }).first().click(T);
-  await page.getByText('Guarda-roupa: peça × skin…').first().click(T);
+  await page.getByText('Guarda-roupa: desenho × skin…').first().click(T);
   await page.getByRole('dialog', { name: 'Guarda-roupa' }).waitFor(T);
 }
 

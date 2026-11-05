@@ -1186,6 +1186,37 @@ describe('a prova da medição não mede painel vazio (A10)', () => {
 });
 
 // ---------------------------------------------------------------------------
+// A Malha em 1280×720: a régua da ferramenta — 04/11/2026
+// ---------------------------------------------------------------------------
+
+describe('a Malha em 1280×720 rola com régua própria, e a régua não isenta', () => {
+  const prova = readFileSync(resolve(__dirname, '../../ferramentas/provas/medir-paineis.mjs'), 'utf8');
+  const painel = readFileSync(resolve(__dirname, '../src/panels/mesh-panel.ts'), 'utf8');
+  const css = readFileSync(resolve(__dirname, '../src/panels/mesh-panel.css'), 'utf8');
+
+  it('o painel marca a si mesmo; a marca é dele, não da prova', () => {
+    expect(painel).toContain("body.dataset.rolagem = 'ferramenta';");
+  });
+
+  it('a marca TROCA a régua: a seção aberta inteira e uma linha depois, senão falha', () => {
+    expect(prova).toContain('const medirFerramenta = (caixa) =>');
+    expect(prova).toContain('a seção da ferramenta não cabe');
+    expect(prova).toContain('nenhuma seção aberta: a régua da ferramenta não tem o que mostrar');
+    // Só na tela pequena: na grande, a régua de sempre.
+    expect(prova).toContain("el.dataset?.rolagem === 'ferramenta' && window.innerHeight <= 800");
+  });
+
+  it('os botões da Forma vão dois por linha, com o nome inteiro (quebra entre palavras)', () => {
+    const bloco = css.slice(css.lastIndexOf('@media (max-height: 800px)'));
+    expect(bloco).toContain('grid-template-columns: 1fr 1fr');
+    expect(bloco).toContain('white-space: normal');
+    expect(bloco).toContain('overflow-wrap: normal');
+    // O nome nunca some: a exceção da aba ("ícone sozinho não se lê") continua.
+    expect(bloco).not.toMatch(/painel-botao-nome[^}]*display:\s*none/);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // A ficha do emissor de partículas — extensão `BONE_particles`, lote 1
 // ---------------------------------------------------------------------------
 
@@ -3568,5 +3599,88 @@ describe('rodada 48, lote 3 — "imagem não encontrada" é UM tipo, com os nome
     expect(abrirComParagrafoR48b(3, true)).toBe('tipos');
     expect(abrirComParagrafoR48b(3, false)).toBe('tipos');
     expect(abrirComParagrafoR48b(1, false)).toBe(null);
+  });
+});
+
+// QA da noite de 04/11/2026 (obra/qa-animar): o campo do Ângulo tinha 50 px e
+// cortava o número. "-166,03" (o osso_9 do herói) aparecia como "-166,0": o
+// número lido era OUTRO. O campo cresce com o número; quando o número é
+// longo, o "mundo -76°" vai para a dica do disco, como já ia com a animação
+// aberta (rodada 43, lote 3).
+describe('o Ângulo mostra o número inteiro (QA da noite)', () => {
+  it('número curto: o mundo cabe ao lado', () => {
+    expect(QM43.worldAngleBeside('-180')).toBe(true);
+    expect(QM43.worldAngleBeside('45')).toBe(true);
+  });
+  it('número com casas: o mundo vai para a dica', () => {
+    expect(QM43.worldAngleBeside('80,08')).toBe(false);
+    expect(QM43.worldAngleBeside('-166,03')).toBe(false);
+  });
+  it('o campo do Ângulo cresce com o número, e a folha diz isso', () => {
+    const css = readFileSync(resolve(__dirname, '../src/panels/quick-sheet.css'), 'utf8');
+    const regra = css.match(/\.ficha-controle:has\(\.ficha-disco\) \.ficha-campo \{[^}]*\}/)?.[0] ?? '';
+    expect(regra).toMatch(/field-sizing: content/);
+    expect(regra).toMatch(/min-width: 50px/);
+    // Em Animando a "base -166,03" vem ao lado: quem encolhe é ela, não o número.
+    expect(regra).toMatch(/flex-shrink: 0/);
+    const base = css.match(/\.ficha-base \{[^}]*\}/)?.[0] ?? '';
+    expect(base).toMatch(/text-overflow: ellipsis/);
+  });
+});
+
+// QA da noite de 04/11/2026 (obra/qa-animar): no campo X, digitar 77 e
+// apertar Esc deixava "77" escrito; a seta ↑ seguinte gravava 78 — um número
+// que ninguém confirmou. E o foco ficava no campo: o Ctrl+Z ia para o texto,
+// não para o documento. Como no Photoshop: Esc devolve o número e sai.
+import { fieldKeyAction as fieldKeyActionQA } from '../src/panels/properties-model.js';
+describe('Esc num campo de número cancela (QA da noite)', () => {
+  it('Esc cancela; as setas andam; o resto é do campo', () => {
+    expect(fieldKeyActionQA('Escape')).toBe('cancelar');
+    expect(fieldKeyActionQA('ArrowUp')).toBe('passo');
+    expect(fieldKeyActionQA('ArrowDown')).toBe('passo');
+    expect(fieldKeyActionQA('a')).toBeNull();
+    expect(fieldKeyActionQA('Enter')).toBeNull();
+  });
+  it('o painel trata o Esc no mesmo lugar das setas: devolve o número e sai', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/properties.ts'), 'utf8');
+    const arrows = fonte.slice(fonte.indexOf('private attachArrows('), fonte.indexOf('private refocus('));
+    expect(arrows).toMatch(/fieldKeyAction\(event\.key\) === 'cancelar'/);
+    expect(arrows).toMatch(/input\.value = show\(read\(\)\)/);
+    expect(arrows).toMatch(/input\.blur\(\)/);
+  });
+});
+
+describe('QA 04/11/2026 — D9: mudar uma ponta da Cor ao nascer grava o PAR', () => {
+  // A prova (Chromium sem janela): Partículas → Fogo, aba Cor, «de» vermelho.
+  // O arquivo saiu com `startColor: [[1,0,0,1]]` — UMA cor — e o schema da
+  // extensão pede duas: `npm run validar` deu ERRO no .bone salvo. A ficha
+  // continuava mostrando «a» branco, que é o que o leitor usa na falta dela.
+  const arquivo = (startColor?: number[][]): BoneFile => ({
+    bone: { version: '1.0' }, skeleton: { name: 't' }, bones: [{ name: 'root' }],
+    slots: [{ name: 'p', bone: 'root', attachment: 'p' }],
+    skins: [{ name: 'default', attachments: { p: { p: { type: 'BONE_particle', rate: 10, ...(startColor ? { startColor } : {}) } } } }],
+    extensionsUsed: ['BONE_particles'],
+  } as unknown as BoneFile);
+  const campo = (file: BoneFile, key: string): FieldDef =>
+    attachmentFields(file, 'p', 'p').flatMap((g) => g.fields).find((f) => f.key === key)!;
+  const par = (doc: Doc): unknown => (doc.file.skins![0]!.attachments!['p']!['p'] as { startColor?: unknown }).startColor;
+
+  it('sem par no arquivo, «de» grava as duas pontas: a outra fica branca, como a ficha mostrava', async () => {
+    const { writeFieldValue } = await import('../src/panels/properties-model.js');
+    const doc = new Doc(arquivo());
+    writeFieldValue(doc as unknown as EditorDoc, campo(doc.file, 'startColor0'), [1, 0, 0, 1]);
+    expect(par(doc)).toEqual([[1, 0, 0, 1], [1, 1, 1, 1]]);
+    doc.undo();
+    expect(par(doc)).toBeUndefined();
+  });
+
+  it('«a» sem par também, e com o par já lá muda só a sua ponta', async () => {
+    const { writeFieldValue } = await import('../src/panels/properties-model.js');
+    const doc = new Doc(arquivo());
+    writeFieldValue(doc as unknown as EditorDoc, campo(doc.file, 'startColor1'), [0, 0, 1, 1]);
+    expect(par(doc)).toEqual([[1, 1, 1, 1], [0, 0, 1, 1]]);
+    const com = new Doc(arquivo([[0.5, 0.5, 0.5, 1], [0.2, 0.2, 0.2, 1]]));
+    writeFieldValue(com as unknown as EditorDoc, campo(com.file, 'startColor0'), [1, 0, 0, 1]);
+    expect(par(com)).toEqual([[1, 0, 0, 1], [0.2, 0.2, 0.2, 1]]);
   });
 });

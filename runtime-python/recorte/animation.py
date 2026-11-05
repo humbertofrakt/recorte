@@ -447,6 +447,11 @@ def _write(skeleton: Skeleton, timeline: Timeline, value: Any, t: float,
         return
     if kind == "tag":
         tags = list(animation.tags)
+        # 8.5: before the first key ONLY `animation.tags`. The specific rule of
+        # 8.5 wins over the generic edge of 9.10 ("before the first key, the
+        # first key"), which `value` above was evaluated with. Case B-120.
+        if timeline.keys and t < timeline.keys[0].time:
+            value = None
         if isinstance(value, list):
             for tag in value:
                 if tag not in tags:

@@ -1854,3 +1854,36 @@ describe('rodada 47, lote 5b: a linha da animação tem dica', () => {
     expect(fonteR47L5b('panels/animations.ts')).toContain('Clique abre a animação na linha do tempo');
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): o título "Animações" da tira
+// media 68,16 px numa caixa de 68 e aparecia "Animaçõ…" nas três telas — os
+// seis botões e a folga de 8 px à direita não deixavam o meio pixel.
+describe('o título "Animações" cabe na tira (QA da noite)', () => {
+  it('a folga da direita da tira é de 4 px; a da esquerda continua 12', () => {
+    const css = readFileSync(resolve(__dirname, '../src/panels/animations.css'), 'utf8');
+    const regra = css.match(/\n\.anim-secao \{[^}]*\}/)?.[0] ?? '';
+    expect(regra).toMatch(/padding: 2px 4px 2px 12px;/);
+  });
+});
+
+// QA da noite de 04/11/2026 (obra/qa-animar): duas frases do rodapé da aba
+// Animações não diziam o que aconteceu.
+// 1. Escrever "andar" numa segunda animação dava "Renomeou a animação
+//    "animação" para "andar2"" — o 2 sem razão. A Árvore já diz "Já existe".
+// 2. Apagar dizia só "Abriu a animação "andar2"": nenhuma palavra sobre a que
+//    sumiu, nem que o Ctrl+Z volta.
+import { renamedNotice as renamedNoticeQA, deletedNotice as deletedNoticeQA } from '../src/panels/animations-model.js';
+describe('o rodapé da aba Animações diz o que aconteceu (QA da noite)', () => {
+  it('nome repetido: diz que já existe, e o nome que ficou', () => {
+    expect(renamedNoticeQA('animação', 'andar2', 'andar'))
+      .toBe('Já existe "andar": a animação "animação" ficou "andar2"');
+  });
+  it('nome livre: a frase de sempre', () => {
+    expect(renamedNoticeQA('andar', 'caminhar', 'caminhar')).toBe('Renomeou a animação "andar" para "caminhar"');
+    expect(renamedNoticeQA('andar', 'caminhar')).toBe('Renomeou a animação "andar" para "caminhar"');
+  });
+  it('apagar diz o que sumiu, o que ficou aberto e o caminho de volta', () => {
+    expect(deletedNoticeQA('caminhar', 'andar2')).toBe('Apagou a animação "caminhar" (Ctrl+Z volta). Aberta agora: "andar2"');
+    expect(deletedNoticeQA('andar', null)).toBe('Apagou a animação "andar" (Ctrl+Z volta). Aberta agora: a base');
+  });
+});

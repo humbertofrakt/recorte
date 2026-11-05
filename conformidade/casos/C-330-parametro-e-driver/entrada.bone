@@ -1,0 +1,147 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "botoes"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "braco",
+      "parent": "root",
+      "length": 10
+    },
+    {
+      "name": "perna",
+      "parent": "root",
+      "length": 10,
+      "rotation": 10
+    }
+  ],
+  "parameters": [
+    {
+      "name": "abre",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "name": "teto",
+      "min": 0,
+      "max": 1,
+      "default": 0.5
+    },
+    {
+      "name": "volta",
+      "min": 0,
+      "max": 360,
+      "repeat": true
+    },
+    {
+      "name": "quieto",
+      "min": -1,
+      "max": 1,
+      "default": 0.25
+    }
+  ],
+  "constraints": [
+    {
+      "type": "driver",
+      "name": "dirige",
+      "parameter": "abre",
+      "targets": [
+        {
+          "type": "bone",
+          "target": "braco",
+          "property": "rotation",
+          "keys": [
+            {
+              "input": 0,
+              "value": 0
+            },
+            {
+              "input": 1,
+              "value": 90
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "perna",
+          "property": "rotation",
+          "mode": "add",
+          "keys": [
+            {
+              "input": 0,
+              "value": 10
+            },
+            {
+              "input": 1,
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "mexer",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "parameter",
+          "target": "abre",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "value": 1
+            }
+          ]
+        },
+        {
+          "type": "parameter",
+          "target": "teto",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "value": 2
+            }
+          ]
+        },
+        {
+          "type": "parameter",
+          "target": "volta",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 350,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "value": 390
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

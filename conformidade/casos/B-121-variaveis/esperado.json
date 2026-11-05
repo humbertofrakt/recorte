@@ -1,0 +1,49 @@
+{
+  "probe": {
+    "animation": "contar",
+    "times": [
+      0.25,
+      0.79,
+      1
+    ],
+    "measure": [
+      "variables"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "variables": {
+        "forca": 0.25,
+        "golpes": 2,
+        "divida": -2,
+        "fala": "ai",
+        "vivo": true,
+        "parada": 7
+      }
+    },
+    {
+      "time": 0.79,
+      "variables": {
+        "forca": 0.79,
+        "golpes": 7,
+        "divida": -7,
+        "fala": "ai",
+        "vivo": false,
+        "parada": 7
+      }
+    },
+    {
+      "time": 1,
+      "variables": {
+        "forca": 1,
+        "golpes": 10,
+        "divida": -10,
+        "fala": "tchau",
+        "vivo": false,
+        "parada": 7
+      }
+    }
+  ]
+}

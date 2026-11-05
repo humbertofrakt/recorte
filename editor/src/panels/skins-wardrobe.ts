@@ -67,7 +67,7 @@ export function openWardrobe(doc: EditorDoc): boolean {
     return true;
   }
   open = new Wardrobe(doc);
-  doc.notice('Guarda-roupa aberto: clique numa casa para trocar a peça naquela skin');
+  doc.notice('Guarda-roupa aberto: clique numa casa para trocar o desenho naquela skin');
   return true;
 }
 
@@ -101,7 +101,7 @@ class Wardrobe {
 
     const cabeca = el('div', 'guarda-roupa-cabeca');
     const titulo = el('h2', 'guarda-roupa-titulo', 'Guarda-roupa');
-    titulo.title = 'Peça × skin: cada coluna é uma roupa';
+    titulo.title = 'Desenho × skin: cada coluna é uma roupa';
     const fechar = this.botao('Fechar', 'Fecha o Guarda-roupa (Esc). O que mudou fica', () => this.close());
     fechar.classList.add('guarda-roupa-fechar');
     cabeca.append(titulo, fechar);
@@ -109,7 +109,7 @@ class Wardrobe {
     const ajuda = el('p', 'guarda-roupa-ajuda', WARDROBE_HELP);
     const barra = el('div', 'guarda-roupa-barra');
     barra.append(
-      this.botao('+ Nova skin', 'Uma skin nova, vazia: vira uma coluna, e você troca as peças nela', () => {
+      this.botao('+ Nova skin', 'Uma skin nova, vazia: vira uma coluna, e você troca os desenhos nela', () => {
         void this.newSkin();
       }),
       this.botao('Trazer skin de fora…', 'Escolha o .bone da skin e, junto, as imagens dela', () => {
@@ -224,7 +224,7 @@ class Wardrobe {
     grade.style.gridTemplateColumns = `minmax(90px, auto) repeat(${colunas.length}, minmax(110px, 1fr))`;
 
     // A linha de cima: um canto vazio, e a cabeça de cada coluna.
-    grade.append(el('div', 'guarda-roupa-canto', 'peça'));
+    grade.append(el('div', 'guarda-roupa-canto', 'desenho'));
     for (const coluna of colunas) grade.append(this.columnHead(coluna));
 
     if (pecas.length === 0) {
@@ -234,7 +234,7 @@ class Wardrobe {
     }
     for (const piece of pecas) {
       const nome = el('div', 'guarda-roupa-peca', piece.slot);
-      nome.title = `A peça ${piece.slot} (o desenho ${piece.placeholder})`;
+      nome.title = `O desenho ${piece.slot} (a imagem de partida dele: ${piece.placeholder})`;
       grade.append(nome);
       for (const coluna of colunas) {
         grade.append(this.cellButton(piece, coluna, wardrobeCell(doc.file, coluna.name, piece, fora)));
@@ -447,7 +447,7 @@ class Wardrobe {
     this.stopPreview();
     const pedido = askForm({
       title: `Nova skin a partir de "${from === 'default' ? 'base' : from}"`,
-      lead: 'Ela começa igual. Depois troque só as peças que mudam.',
+      lead: 'Ela começa igual. Depois troque só os desenhos que mudam.',
       fields: [{ id: 'nome', label: 'Nome', value: `${from === 'default' ? 'roupa' : from}2` }],
       yesLabel: 'Criar a cópia',
       noLabel: 'Cancelar',

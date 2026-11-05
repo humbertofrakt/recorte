@@ -881,3 +881,30 @@ describe('rodada 47, lote 6c: as Curvas falam sem jargão', () => {
     expect(grafico).toContain("channel.visible ? 'à vista' : 'escondida'");
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): no andar com curvas, "Selecionar
+// todas as chaves" escolheu 6 e o "Suave" respondeu "4 chave(s) agora em
+// Suave" — o "(s)" de formulário, e as 2 que não mudaram sem explicação.
+import { curveAppliedNotice as curveAppliedNoticeQA, keysAfterEndNotice as keysAfterEndNoticeQA } from '../src/panels/dopesheet-model.js';
+describe('o rodapé da curva conta direito (QA da noite)', () => {
+  it('plural e singular de verdade', () => {
+    expect(curveAppliedNoticeQA(1, 1, 'Suave')).toBe('1 chave agora em Suave');
+    expect(curveAppliedNoticeQA(4, 4, 'Linear')).toBe('4 chaves agora em Linear');
+    expect(curveAppliedNoticeQA(3, 3, 'Parada')).toBe('3 chaves agora paradas');
+    expect(curveAppliedNoticeQA(1, 1, 'Parada')).toBe('1 chave agora parada');
+  });
+  it('diz por que algumas das escolhidas não mudaram', () => {
+    expect(curveAppliedNoticeQA(4, 6, 'Suave'))
+      .toBe('4 chaves agora em Suave. As outras 2 são a última da linha: não têm para onde curvar');
+    expect(curveAppliedNoticeQA(2, 3, 'Suave'))
+      .toBe('2 chaves agora em Suave. A outra é a última da linha: não tem para onde curvar');
+  });
+  it('nenhuma mudou: a frase de antes', () => {
+    expect(curveAppliedNoticeQA(0, 2, 'Suave')).toBe('Nenhuma chave mudou: a última de cada linha não tem para onde curvar');
+  });
+  it('a duração encurtada conta as chaves que sobram', () => {
+    expect(keysAfterEndNoticeQA('0,50 s', 0)).toBe('Duração: 0,50 s');
+    expect(keysAfterEndNoticeQA('0,50 s', 1)).toBe('Duração: 0,50 s. 1 chave ficou depois do fim');
+    expect(keysAfterEndNoticeQA('0,50 s', 3)).toBe('Duração: 0,50 s. 3 chaves ficaram depois do fim');
+  });
+});

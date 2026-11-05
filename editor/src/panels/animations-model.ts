@@ -662,8 +662,20 @@ export function renameAnswer(from: string, typed: string, save: boolean): Rename
  * *"Abriu a animação"* a cada troca do nome aberto, e quem renomeou não abriu
  * nada. O painel escreve esta frase **depois**, por cima.
  */
-export function renamedNotice(from: string, to: string): string {
+export function renamedNotice(from: string, to: string, wanted: string = to): string {
+  // QA da noite (04/11/2026): o nome digitado já existia e ganhou um número;
+  // a frase dizia só "para andar2", sem a razão. A Árvore já diz "Já existe".
+  if (wanted !== to) return `Já existe "${wanted}": a animação "${from}" ficou "${to}"`;
   return `Renomeou a animação "${from}" para "${to}"`;
+}
+
+/**
+ * O rodapé do apagar — QA da noite de 04/11/2026. Dizia só "Abriu a animação
+ * andar2" (a frase do abrir, que vem depois): a que sumiu não aparecia em
+ * lugar nenhum, nem o caminho de volta.
+ */
+export function deletedNotice(name: string, opened: string | null): string {
+  return `Apagou a animação "${name}" (Ctrl+Z volta). Aberta agora: ${opened === null ? 'a base' : `"${opened}"`}`;
 }
 
 /** Um item do menu do botão direito numa animação — Q3. */

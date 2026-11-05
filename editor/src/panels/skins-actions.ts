@@ -257,12 +257,12 @@ export function emptySkinHint(
   if (lapis === undefined || lapis.name === 'default' || lapis.slots > 0) return null;
   // Noite de 04/11 (diagnóstico T1): "arrastar para a cena" CRIA peça nova;
   // quem fez uma roupa quer TROCAR as que existem. A frase aponta a grade.
-  return `A skin "${lapis.name}" está vazia. Abra o Guarda-roupa e clique numa peça na coluna dela para trocar a imagem`;
+  return `A skin "${lapis.name}" está vazia. Abra o Guarda-roupa e clique num desenho na coluna dela para trocar a imagem`;
 }
 
 /** A frase de "Nova pele": o que aconteceu, e o passo seguinte. */
 export function newSkinNotice(name: string): string {
-  return `Skin "${name}" criada, com o lápis nela. Agora troque as peças: Skins → Guarda-roupa, clique na casa da peça`;
+  return `Skin "${name}" criada, com o lápis nela. Agora troque os desenhos: Skins → Guarda-roupa, clique na casa do desenho`;
 }
 
 /** A pele em que as três ações agem: a do lápis, ou a de cima da pilha. */

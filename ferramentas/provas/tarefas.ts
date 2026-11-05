@@ -377,6 +377,9 @@ export const TAREFAS: readonly TarefaDef[] = Object.freeze([
   { action: 'importar-psd', grupo: 'Importar e exportar', tarefa: 'Trazer um desenho do Photoshop: cada camada vira uma peça, no lugar' },
   { action: 'importar-psd-ossos', grupo: 'Importar e exportar', tarefa: 'Trazer do Photoshop já com os ossos, desenhados numa camada chamada ossos' },
   { action: 'exportar-imagem', grupo: 'Importar e exportar', tarefa: 'Fazer um GIF, um vídeo, uma folha de sprites ou PNG em sequência' },
+  // N-4b (05/11/2026): o recorte da exportação, arrastado na cena.
+  { action: 'recorte-na-cena', grupo: 'Importar e exportar', tarefa: 'Escolher na cena a área que sai na imagem exportada, puxando os cantos' },
+  { action: 'tirar-recorte', grupo: 'Importar e exportar', tarefa: 'Voltar a exportar cortando pela borda do desenho' },
   { action: 'exportar-pele', grupo: 'Importar e exportar', tarefa: 'Salvar um arquivo menor, só com as roupas e as animações que eu marcar' },
   { action: 'exportar-gltf', grupo: 'Importar e exportar', tarefa: 'Levar o boneco para um programa 3D ou para uma engine' },
   { action: 'repetir-exportacao', grupo: 'Importar e exportar', tarefa: 'Exportar de novo, com as mesmas opções da última vez' },

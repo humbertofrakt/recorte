@@ -1905,3 +1905,58 @@ describe('rodada 50, lote 4: a janela do exportar não pula quando muda de altur
     expect(css).toMatch(/\.dialog-veil\.dialog-veil-topo\s*\{[^}]*align-items:\s*flex-start/);
   });
 });
+
+describe('QA 04/11/2026 — D6: a janela do PNG em .zip conta o que saiu', () => {
+  // A prova (Chromium sem janela): Exportar → "GIF, PNG, folha, vídeo…" →
+  // Sequência de PNG. Saiu UM heroi.zip; o rodapé dizia "1 .zip com 60 PNG",
+  // e a janela, "60 arquivo(s) gravado(s)" e "Arquivos: heroi_0000.png, …"
+  // — 60 nomes de arquivos que não estão no disco.
+  const opcoes: ImageExportOptions = {
+    animation: 'idle', format: 'png', fps: 30, scale: 1, background: null, autoCrop: true,
+    columns: null, loop: 0, maxColors: 256, bones: false,
+  };
+  const sessenta = (): ImageExportResult => ({
+    files: Array.from({ length: 60 }, (_, i) => ({ name: `heroi_${String(i).padStart(4, '0')}.png`, blob: new Blob(['x']) })),
+    frameCount: 60, width: 114, height: 242, index: null, warnings: [],
+    animations: ['idle'], bases: ['heroi'], sizes: [{ animation: 'idle', width: 114, height: 242 }],
+  });
+
+  it('a frase de cima: 1 arquivo, o .zip, com os 60 PNG dentro', async () => {
+    const { imageExportLead } = await import('../src/io/export-image.js');
+    expect(imageExportLead(sessenta(), opcoes, 'heroi')).toBe('1 arquivo gravado: heroi.zip, com 60 PNG dentro.');
+    expect(imageExportLead(sessenta(), { ...opcoes, zip: false }, 'heroi')).toBe('60 arquivos gravados.');
+    const um = { ...sessenta(), files: sessenta().files.slice(0, 1) };
+    expect(imageExportLead(um, { ...opcoes, format: 'gif' }, 'heroi')).toBe('1 arquivo gravado.');
+  });
+
+  it('a linha Arquivos diz o .zip e o primeiro e o último de dentro', () => {
+    const linhas = imageExportReport(sessenta(), opcoes, 'heroi');
+    expect(linhas).toContain('Arquivos: heroi.zip, com heroi/heroi_0000.png … heroi/heroi_0059.png dentro');
+    expect(linhas.some((l) => l.includes('heroi_0030.png'))).toBe(false);
+  });
+
+  it('a casca usa a frase nova', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(fonte).toContain('lead: imageExportLead(run.result, run.options, run.base),');
+  });
+});
+
+describe('QA 04/11/2026 — D7: o projeto importado de outro programa nasce "não salvo"', () => {
+  // A prova (Chromium sem janela): Importar → De outro programa… → exemplo/game
+  // → bcp.scml. O documento abria com path "bcp.bone" e dirty=false: o rodapé
+  // diria "Sem mudanças por salvar." de um arquivo que não existe no disco, e
+  // fechar a aba não perguntava nada. O PSD importado já nascia sujo.
+  const fonte = (arquivo: string): string => readFileSync(resolve(__dirname, '../src/ui', arquivo), 'utf8');
+
+  it('pelo menu: o setFile do importado leva unsaved', () => {
+    const f = fonte('shell-file.ts');
+    const corpo = f.slice(f.indexOf('export async function importForeign('), f.indexOf('const program = FORMAT_LABELS[imported.format]'));
+    expect(corpo).toMatch(/shell\.doc\.setFile\(imported\.file, \{[^}]*unsaved: true/);
+  });
+
+  it('pelo arrasto da pasta: o mesmo', () => {
+    const f = fonte('shell-drop.ts');
+    const corpo = f.slice(f.indexOf("case 'outro': {"), f.indexOf('const programa = FORMAT_LABELS[importado.format]'));
+    expect(corpo).toMatch(/shell\.doc\.setFile\(importado\.file, \{[^}]*unsaved: true/);
+  });
+});

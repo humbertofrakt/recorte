@@ -101,7 +101,8 @@ function carregarComCorpos(caso: Caso): { data: SkeletonData; bodies: ReturnType
   // Atlas solto ao lado só existe no `.bone` de texto: o `.boneb` não é JSON e
   // o `.bonez` traz os atlas dentro do pacote.
   if (entrada.endsWith('.bone')) {
-    const doc = JSON.parse(readFileSync(entrada, 'utf8')) as { assets?: { atlases?: string[] } };
+    // §2.1: aceita BOM, como o leitor (caso X-309).
+    const doc = parseBoneText(readFileSync(entrada, 'utf8')) as { assets?: { atlases?: string[] } };
     for (const uri of doc.assets?.atlases ?? []) {
       const p = join(caso.dir, uri);
       if (existsSync(p)) atlases.push(loadAtlas(parseBoneText(readFileSync(p, 'utf8'))));
@@ -590,7 +591,7 @@ const caminho = ['entrada.bone', 'entrada.boneb', 'entrada.bonez']
   .find((c) => existsSync(c));
 const atlases = [];
 if (caminho.endsWith('.bone')) {
-  const doc = JSON.parse(readFileSync(caminho, 'utf8'));
+  const doc = parseBoneText(readFileSync(caminho, 'utf8'));
   for (const uri of doc.assets?.atlases ?? []) {
     const p = join(pasta, uri);
     if (existsSync(p)) atlases.push(loadAtlas(parseBoneText(readFileSync(p, 'utf8'))));

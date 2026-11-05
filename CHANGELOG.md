@@ -21,6 +21,17 @@ hoje tornaria não conformes os arquivos já gravados. Ver `ESTADO.md`,
 > `versao.py` e o `backup/INDICE.md` guardam a ordem real por data e hora.
 > Quem procurar uma versao especifica use a busca, nao a posicao.
 
+### Sem número ainda — a espada de um, o boneco de outro (ramo `obra/entidades`) — 05/11/2026
+
+A ideia do Humberto, provada pelo programa: a pessoa A desenha e anima a espada, a pessoa B a põe na mão do herói e anima o golpe. A prova é `node ferramentas/provas/espada-e-boneco.mjs` (Playwright, mouse e teclado), 18 de 18. O número da versão sai do `versao.py` no fecho, na máquina que tem o `backup/` (o clone do GitHub não tem).
+
+- **A espada trazida de fora aparece na mão.** Uma entidade com atlas PRÓPRIO não se desenhava no herói, nem na miniatura da prateleira: as páginas moravam no documento dela. Agora o documento pergunta ao projeto pela página, pela identidade, nunca pelo nome (`doc/document.ts`, `doc/projeto.ts`). A espada de exemplo usa o atlas do herói, e por isso ninguém tinha visto.
+- **Trazer entidade de fora… pede a pasta dela** quando só o `.bone` foi escolhido e o atlas ficou de fora: *"espada.bone: falta espada.atlas.json"*, com os dois caminhos escritos nos botões (`io/open-save.ts`, `ui/shell-file.ts`). Antes entrava sem desenho, e o aviso não dizia o que fazer.
+- **O Salvar leva o atlas e a imagem da entidade** para a pasta do projeto, junto do `espada.bone`. Antes ia só o `.bone`: reaberto, ou lido pelo jogo, a espada vinha sem imagem.
+- **"a de quem recebe" no cartão de projeto** (`inheritAnimation`, 7.11): a peça que já está no projeto responde à animação de quem a recebe — o herói toca `attack`, a espada toca o `attack` dela. Vale em todas as animações, com a base aberta; clicar de novo desliga; um passo de desfazer. Antes só o cartão de TESTE tinha a escolha.
+- **Salvar de novo, noutro dia, grava a página por cima da dela.** Reaberta a pasta, a página de ontem (`espada-atlas.png`) era tomada por arte, e nascia `espada-atlas2.png` a cada salvar (`io/folder-save.ts`, `ownPagesOnDisk`).
+- Manual: capítulo novo, **11. A espada de um, o boneco de outro**, com dez fotos.
+
 ### v36.5 — a aba que o Humberto circulou; a Árvore do quadro com a chave slot/bone; as sobras dos docs 100 e 101 (rodada 50, lote 4) — 07/10/2026
 
 Rodada 50, lote 4 (doc `98`, itens E e D; docs `100` e `101`).

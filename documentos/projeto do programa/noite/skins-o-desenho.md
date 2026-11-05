@@ -55,7 +55,7 @@ Fotos: `fotos-skins/antes-1-aba-skins.png`, `antes-2-trocar-pela-ficha.png`,
 |:---|:---|
 | **Skin** | O Humberto usa "skin". O menu já se chama **Skins**. Fica. A dica explica: *"skin é uma roupa: as peças trocam de imagem"*. |
 | **Guarda-roupa** | A janela nova da grade. Nome de casa, não de programa. |
-| **Peça** | O slot. Quem veste não pensa em "slot". |
+| **Desenho** | O slot. É a palavra do dicionário da casa (`ui/jargao.ts`, chegou nesta noite). Eu tinha posto "peça"; troquei: "peça" na casa é a peça encaixada (entidade). Uma coisa, um nome. |
 | **Vestida** | Era "Ativa". A skin que está na tela. |
 | **Todas** | Era "Feitas". |
 | **Vestir só esta** | Tira as outras e veste esta. Um clique. |
@@ -73,7 +73,7 @@ O lápis continua na aba. No Guarda-roupa ele não aparece:
 
 | # | Objetivo | Cliques |
 |:-:|:---|:---|
-| a | Roupa nova, 3 peças | Skins → **Guarda-roupa…** · **+ Nova skin** (nome) · clique na casa *peça × skin* · clique na imagem nova. ×3 |
+| a | Roupa nova, 3 peças | Skins → **Guarda-roupa…** · **+ Nova skin** (nome) · clique na casa *desenho × skin* · clique na imagem nova. ×3 |
 | b | Ver lado a lado e alternar | No Guarda-roupa, cada coluna tem **o boneco inteiro** vestido com ela. Passar o mouse **prova** na cena. **Vestir só esta** alterna |
 | c | Combinar | **Por cima** na coluna da capa |
 | d | Mandar para outro boneco | **Levar…** na coluna (grava o `.bone` da skin). No outro boneco: **Trazer skin de fora…** |
@@ -88,7 +88,7 @@ O lápis continua na aba. No Guarda-roupa ele não aparece:
 ```
 ┌ Guarda-roupa ── peça × skin ──────────────────────────────── [Fechar] ┐
 │ Cada coluna é uma skin. Clique numa casa para trocar a imagem         │
-│ daquela peça naquela skin. Mouse em cima da coluna: prova na cena.    │
+│ daquele desenho naquela skin. Mouse em cima da coluna: prova na cena.    │
 │ [+ Nova skin]  [Trazer skin de fora…]                                 │
 ├─────────┬────────────┬────────────┬────────────┬──────────────────────┤
 │         │  default   │  armadura  │  ferro     │                      │
@@ -115,7 +115,7 @@ Clique numa casa abre a escolha, embaixo da grade:
 
 ```
  [+][⧉][📁][⬆][⬇][⭱][🗑]
- [ Guarda-roupa: peça × skin… ]     ← botão com texto
+ [ Guarda-roupa: desenho × skin… ]     ← botão com texto
  Vestida: ferro · Editando: ferro   ← uma linha que diz o estado
  TODAS               VESTIDAS
 ```

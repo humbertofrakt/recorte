@@ -1,0 +1,51 @@
+{
+  "probe": {
+    "animation": "girar",
+    "times": [
+      0.25,
+      0.79
+    ],
+    "measure": [
+      "bones",
+      "parameters",
+      "variables"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "parameters": {
+        "a": 0.25,
+        "b": 2.5
+      },
+      "variables": {
+        "n": 2,
+        "f": 0.25
+      },
+      "bones": {
+        "seguidor": {
+          "worldX": 25.0,
+          "worldY": 0
+        }
+      }
+    },
+    {
+      "time": 0.79,
+      "parameters": {
+        "a": 0.79,
+        "b": 7.9
+      },
+      "variables": {
+        "n": 7,
+        "f": 0.79
+      },
+      "bones": {
+        "seguidor": {
+          "worldX": 79.0,
+          "worldY": 0
+        }
+      }
+    }
+  ]
+}

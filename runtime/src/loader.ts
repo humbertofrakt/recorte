@@ -27,6 +27,7 @@ import {
   BoneNumberTimelineData, BoneInheritTimelineData, SlotAttachmentTimelineData, SlotColorTimelineData,
   SlotDarkColorTimelineData, SlotVisibleTimelineData, DrawOrderTimelineData, DeformTimelineData,
   ParticleEmittingTimelineData,
+  ParticleRateTimelineData,
   SequenceTimelineData, EventTimelineData, ConstraintNumberTimelineData, ConstraintBooleanTimelineData,
   ConstraintResetTimelineData, ParameterTimelineData, MorphTimelineData, VariableNumberTimelineData,
   VariableSteppedTimelineData, TagTimelineData, NestedAnimationTimelineData, NestedNumberTimelineData,
@@ -1916,8 +1917,12 @@ function loadAnimations(b: Build, defs: unknown[]): void {
 function timelineIdentity(t: Record<string, unknown>): string {
   const s = (k: string): string => (typeof t[k] === 'string' ? (t[k] as string) : '');
   const type = s('type');
-  const hasAttachment = type === 'deform' || type === 'sequence' || type === 'weights';
-  const hasProperty = type === 'bone' || type === 'slot' || type === 'constraint' || type === 'nested';
+  // Spec 9.1: the identity is the whole `(type, target, property, skin,
+  // attachment)`. A `BONE_particle` timeline (extension 9) carries all five:
+  // `emitting` and `rate` of one emitter are two timelines, not a repeat.
+  const particle = type === 'BONE_particle';
+  const hasAttachment = type === 'deform' || type === 'sequence' || type === 'weights' || particle;
+  const hasProperty = type === 'bone' || type === 'slot' || type === 'constraint' || type === 'nested' || particle;
   const skin = hasAttachment ? (s('skin') || 'default') : '';
   const attachment = hasAttachment ? s('attachment') : '';
   const property = hasProperty ? s('property') : '';
@@ -2374,8 +2379,8 @@ function loadTimeline(b: Build, t: Record<string, unknown> & TimelineDef, p: str
     case PARTICLE_ATTACHMENT_TYPE: {
       // Extension `BONE_particles`, 9: an animable field of the emitter rides a
       // PREFIXED timeline, so a reader without the extension ignores it by the
-      // `timeline.type` rule of spec 2.5. In the 1st phase the only one is
-      // `emitting`; `rate` is fixed on the attachment (extension 4.1).
+      // `timeline.type` rule of spec 2.5. Two are animable: `emitting` (4.1,
+      // stepped) and `rate` (4.2, by integral: the `linear` branch).
       const tn = needTarget(); const pn = needProperty();
       if (tn === null || pn === null) return null;
       const found = resolveTimelineAttachment(b, t, p, tn);
@@ -2390,14 +2395,29 @@ function loadTimeline(b: Build, t: Record<string, unknown> & TimelineDef, p: str
         return new ParticleEmittingTimelineData(found.slot, found.skin, found.attachment.name, keys);
       }
       if (pn === 'rate') {
-        // Extension 4.2 and 12: an animated `rate` is the `linear` branch of
-        // the integral, and that is 2nd PHASE. The conta is written whole in
-        // the spec so the second reader does not invent its own; no code here
-        // implements it, and case P-002 is its case, empty on purpose.
-        ctx.warn(ptr(p, 'property'), 'an animated "rate" is 2nd phase of BONE_particles (extension 4.2); timeline ignored, the fixed rate of the attachment is used');
-        return null;
+        // Extension 4.2, the `linear` branch (2nd phase): `rate` animated by
+        // integral. Two swaps happen HERE, at the key, before anyone
+        // integrates: a negative value becomes 0 (L1 RANGE_PARTICLE_RATE) and a
+        // Bézier becomes `linear` (L2 RANGE_PARTICLE_RATE_CURVE) — the integral
+        // is only closed for `linear` and `stepped`. Both say so.
+        const raw = readKeys(b, t, p, timeKey, false); if (raw === null) return null;
+        const keys = numericKeys(b, raw, 1); if (keys === null) return null;
+        const values = new Float64Array(keys.values);
+        const curves = keys.curves.slice();
+        for (let i = 0; i < values.length; i++) {
+          const kp = ptr(ptr(ptr(p, 'keys'), i), 'value');
+          if (values[i] < 0) {
+            ctx.issue(kp, `RANGE_PARTICLE_RATE: rate ${values[i]} is negative; using 0`);
+            values[i] = 0;
+          }
+          if (curves[i].kind === 'bezier') {
+            ctx.warn(ptr(ptr(ptr(p, 'keys'), i), 'curve'), 'RANGE_PARTICLE_RATE_CURVE: a Bézier on rate has no closed integral; using "linear"');
+            curves[i] = LINEAR_CURVE;
+          }
+        }
+        return new ParticleRateTimelineData(found.slot, found.skin, found.attachment.name, { times: keys.times, values, components: 1, curves });
       }
-      ctx.warn(ptr(p, 'property'), `"${pn}" is not animable in the 1st phase of BONE_particles; timeline ignored`);
+      ctx.warn(ptr(p, 'property'), `"${pn}" is not animable in BONE_particles; timeline ignored`);
       return null;
     }
     default:

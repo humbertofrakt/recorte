@@ -1,18 +1,18 @@
 # Skins — como fazer
 
-Skin = uma roupa. As peças trocam de imagem.
-Tudo começa em: **Skins → Guarda-roupa: peça × skin…**
+Skin = uma roupa. Os desenhos trocam de imagem.
+Tudo começa em: **Skins → Guarda-roupa: desenho × skin…**
 (ou o botão **Guarda-roupa** na aba Skins).
 
 ## Fazer uma roupa nova
 
 | # | Ação |
 |:-:|:---|
-| 1 | Skins → **Guarda-roupa: peça × skin…** |
+| 1 | Skins → **Guarda-roupa: desenho × skin…** |
 | 2 | **+ Nova skin**. Digite o nome. **Criar a skin** |
-| 3 | Na coluna nova, clique na casa da peça (ex.: `body`) |
+| 3 | Na coluna nova, clique na casa do desenho (ex.: `body`) |
 | 4 | Embaixo aparece *"Trocar body na skin …"*. Clique na imagem nova |
-| 5 | Repita para cada peça |
+| 5 | Repita para cada desenho |
 
 ## Copiar uma roupa e mudar só um pouco
 
@@ -20,7 +20,7 @@ Tudo começa em: **Skins → Guarda-roupa: peça × skin…**
 |:-:|:---|
 | 1 | No topo da coluna: **+ Cópia** |
 | 2 | Digite o nome. **Criar a cópia** |
-| 3 | Troque só as peças que mudam |
+| 3 | Troque só os desenhos que mudam |
 
 ## Ver as roupas lado a lado
 
@@ -43,15 +43,15 @@ Tudo começa em: **Skins → Guarda-roupa: peça × skin…**
 |:-:|:---|
 | 1 | **Vestir só esta** na armadura |
 | 2 | Marque **por cima** na capa |
-| 3 | A de cima vence onde as duas trocam a mesma peça |
+| 3 | A de cima vence onde as duas trocam o mesmo desenho |
 
-## Uma peça igual à base, ou escondida
+## Um desenho igual à base, ou escondido
 
 | # | Ação |
 |:-:|:---|
-| 1 | Clique na casa da peça |
-| 2 | **Igual à base**: esta roupa não mexe nesta peça |
-| 3 | **Esconder**: a peça some com esta roupa |
+| 1 | Clique na casa do desenho |
+| 2 | **Igual à base**: esta roupa não mexe neste desenho |
+| 3 | **Esconder**: o desenho some com esta roupa |
 
 ## Mandar a roupa para outro boneco
 
@@ -81,7 +81,7 @@ Tudo começa em: **Skins → Guarda-roupa: peça × skin…**
 | Na tela | Quer dizer |
 |:---|:---|
 | **base** | a skin `default`: o que vale onde a roupa não troca |
-| **= base** | esta roupa não mexe nesta peça |
+| **= base** | esta roupa não mexe neste desenho |
 | **vestida** | está na tela |
 | **guardada** | não está na tela |
-| **Lápis** (na aba) | onde nasce o que você cria (peça nova, osso). O Guarda-roupa não precisa dele |
+| **Lápis** (na aba) | onde nasce o que você cria (desenho novo, osso). O Guarda-roupa não precisa dele |

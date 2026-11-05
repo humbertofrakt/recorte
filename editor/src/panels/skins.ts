@@ -147,9 +147,9 @@ class SkinsPanel implements Panel {
 
     // Noite de 04/11/2026: a porta do Guarda-roupa, com texto — um ícone a
     // mais na barra não seria achado (diagnóstico T2).
-    const guarda = el('button', 'peles-guarda-roupa', 'Guarda-roupa: peça × skin…') as HTMLButtonElement;
+    const guarda = el('button', 'peles-guarda-roupa', 'Guarda-roupa: desenho × skin…') as HTMLButtonElement;
     guarda.type = 'button';
-    guarda.title = 'Abre a grade: cada coluna é uma skin, cada linha uma peça. Clique numa casa para trocar a imagem';
+    guarda.title = 'Abre a grade: cada coluna é uma skin, cada linha um desenho. Clique numa casa para trocar a imagem';
     guarda.addEventListener('click', () => openWardrobe(doc));
     this.estado = el('p', 'peles-estado');
 

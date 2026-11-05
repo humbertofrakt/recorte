@@ -65,6 +65,11 @@ export interface DocOptions {
    * todos os corpos: um `Ctrl+Z` desfaz o último passo, em qualquer corpo.
    */
   undo?: UndoStack;
+  /**
+   * `true` = o que entra NÃO está no disco: o rascunho recuperado — QA de
+   * 04/11/2026 (D4). Nasce sujo, e nem desfazer o limpa: só o Salvar.
+   */
+  unsaved?: boolean;
 }
 
 /**
@@ -94,6 +99,14 @@ export interface BodyProvider {
    * volta a anotar só o objeto, como no 4b.
    */
   uriOf?(self: Doc): string | null;
+  /**
+   * **A página de outro documento do projeto** — 05/11/2026, a espada de um,
+   * o boneco de outro. Uma entidade com atlas próprio (a espada da pessoa A)
+   * pendurada neste corpo traz as páginas DELA, e este documento não as tem.
+   * Procura pela IDENTIDADE da página, nunca pelo nome: dois atlas podem ter
+   * páginas de mesmo nome. Opcional; `null` = ninguém tem.
+   */
+  pageImage?(self: Doc, page: AtlasPageData): CanvasImageSource | null;
 }
 
 export class Doc implements EditorDoc {
@@ -224,8 +237,9 @@ export class Doc implements EditorDoc {
     // keeping the old ones would put the last file's sword in this one's hand.
     this.nestedSkeletons = options.skeletons ?? new Map();
     this.undoStack.clear();
-    this.dirtyFlag = false;
-    this.savedCursor = this.undoStack.cursor();
+    this.dirtyFlag = options.unsaved === true;
+    // -2: nenhum ponto da pilha é o salvo (o mesmo truque do passo novo além do salvo).
+    this.savedCursor = options.unsaved === true ? -2 : this.undoStack.cursor();
     this.currentSelection = emptySelection();
     this.currentTime = 0;
     this.currentAnimation = null;
@@ -374,6 +388,11 @@ export class Doc implements EditorDoc {
   }
 
   imageFor(page: AtlasPageData): CanvasImageSource | null {
+    return this.ownImageFor(page) ?? this.project?.pageImage?.(this, page) ?? null;
+  }
+
+  /** A página pelas imagens DESTE documento só — sem perguntar ao projeto. */
+  ownImageFor(page: AtlasPageData): CanvasImageSource | null {
     return this.images.get(page.image) ?? this.images.get(page.name) ?? null;
   }
 

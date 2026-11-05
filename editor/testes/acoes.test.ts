@@ -170,8 +170,9 @@ describe('a tabela das ações', () => {
     // 304 (rodada 40, lote 4): +1, `deslocar-em-laco` (Animação → Chaves).
     // 305 (rodada 41, lote 4): +1, `criar-aresta` (Malha e regras → Malha).
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    // 307 (noite de 04/11/2026, obra/skins): +1, `guarda-roupa` (Skins → Guarda-roupa).
-    expect(tabela.length).toBe(307);
+    // 308 (N-4b, 05/11/2026): +2, `recorte-na-cena` e `tirar-recorte` (Animação, da cena).
+    // 309 (noite de 04/11/2026, obra/skins): +1, `guarda-roupa` (Skins → Guarda-roupa).
+    expect(tabela.length).toBe(309);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');

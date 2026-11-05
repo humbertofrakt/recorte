@@ -1,0 +1,125 @@
+{
+  "probe": {
+    "animation": "tingir",
+    "times": [
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "measure": [
+      "slots"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "slots": {
+        "liga": {
+          "darkColor": [
+            0.25,
+            0.125,
+            0
+          ]
+        },
+        "corta": {
+          "darkColor": [
+            1,
+            1,
+            1
+          ]
+        },
+        "parado": {
+          "darkColor": [
+            0.1,
+            0.3,
+            0.5
+          ]
+        },
+        "nada": {
+          "darkColor": null
+        }
+      }
+    },
+    {
+      "time": 0.5,
+      "slots": {
+        "liga": {
+          "darkColor": [
+            0.5,
+            0.25,
+            0
+          ]
+        },
+        "corta": {
+          "darkColor": null
+        },
+        "parado": {
+          "darkColor": [
+            0.1,
+            0.3,
+            0.5
+          ]
+        },
+        "nada": {
+          "darkColor": null
+        }
+      }
+    },
+    {
+      "time": 0.75,
+      "slots": {
+        "liga": {
+          "darkColor": [
+            0.75,
+            0.375,
+            0
+          ]
+        },
+        "corta": {
+          "darkColor": null
+        },
+        "parado": {
+          "darkColor": [
+            0.1,
+            0.3,
+            0.5
+          ]
+        },
+        "nada": {
+          "darkColor": null
+        }
+      }
+    },
+    {
+      "time": 1,
+      "slots": {
+        "liga": {
+          "darkColor": [
+            1,
+            0.5,
+            0
+          ]
+        },
+        "corta": {
+          "darkColor": [
+            0,
+            0,
+            0
+          ]
+        },
+        "parado": {
+          "darkColor": [
+            0.1,
+            0.3,
+            0.5
+          ]
+        },
+        "nada": {
+          "darkColor": null
+        }
+      }
+    }
+  ]
+}
