@@ -383,7 +383,11 @@ describe('a barra da cena', () => {
 
   it('a ordem é a do trabalho: escolher vem antes de criar', () => {
     const ids = toolbarItems().map((item) => item.id);
-    expect(ids[0]).toBe('select');
+    // Desde 13/09/2026 (item 2.2) o primeiro botão é o Transformar. Este teste
+    // dizia 'select' e passava só porque o Transformar não estava carregado
+    // neste arquivo (regra 28: verde por outro motivo). Com a cena inteira
+    // carregada, a verdade: Transformar, depois Selecionar.
+    expect(ids.slice(0, 2)).toEqual(['transform', 'select']);
     expect(ids.indexOf('select')).toBeLessThan(ids.indexOf('create-bone'));
   });
 
@@ -1898,5 +1902,70 @@ describe('prova de pessoa: o herói abre na base, e o rodapé diz onde clicar', 
     const frase = main.indexOf('doc.notice(EXAMPLE_FIRST_STEP);');
     expect(base).toBeGreaterThan(0);
     expect(frase).toBeGreaterThan(base);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Prova de pessoa (05/11/2026): arrastar na cena numa animação diz a chave que nasceu
+// ---------------------------------------------------------------------------
+
+import { GestureNotice, gestureSays, isKeyNotice } from '../src/viewport/gesture-notice.js';
+
+describe('prova de pessoa: o arrasto que grava chave diz a chave', () => {
+  it('a linha do tempo diz a chave no meio do gesto, e o recado do fim a guarda', () => {
+    const g = new GestureNotice();
+    g.press();
+    g.hear({ kind: 'structure', label: 'Mover osso' });
+    g.hear({ kind: 'selection', label: '2 chaves em 0,50 s: Posição X de torso, Posição Y de torso' });
+    g.hear({ kind: 'transform', label: 'Mover X 8,3 px · Y 0 px' });
+    const chave = g.keyNotice();
+    const said = g.release();
+    // Antes: o rodapé ficava com "Mover X 8,3 px · Y 0 px" e a chave sumia.
+    expect(said).toBe('Mover X 8,3 px · Y 0 px');
+    expect(gestureSays(said!, chave, g.lastCommand()))
+      .toBe('2 chaves em 0,50 s: Posição X de torso, Posição Y de torso. Mover X 8,3 px · Y 0 px');
+  });
+
+  it('a chave vai na frente: é o que sobra quando o rodapé encolhe a frase', () => {
+    const frase = gestureSays('Mover X 1 px · Y 0 px', 'Chave em 0,00 s: Rotação de torso', null);
+    expect(versoesDaFraseCena(frase).at(-1)).toBe('Chave em 0,00 s');
+    expect(versoesDaFraseCena(frase)[1]).toBe('Chave em 0,00 s: Rotação de torso.');
+  });
+
+  it('sem chave, o recado de sempre; a chave como última fala usa o nome do comando', () => {
+    expect(gestureSays('Mover X 1 px · Y 0 px', null)).toBe('Mover X 1 px · Y 0 px');
+    expect(gestureSays('Chave em 0,00 s: Rotação de torso', 'Chave em 0,00 s: Rotação de torso', 'Girar 15°'))
+      .toBe('Chave em 0,00 s: Rotação de torso. Girar 15°');
+    expect(gestureSays('Chave em 0,00 s: X', 'Chave em 0,00 s: X', null)).toBe('Chave em 0,00 s: X');
+    expect(isKeyNotice('3 chaves em 1,00 s')).toBe(true);
+    expect(isKeyNotice('Chaveou tudo')).toBe(false);
+  });
+
+  it('fora do gesto, nada se guarda', () => {
+    const g = new GestureNotice();
+    g.hear({ kind: 'selection', label: 'Chave em 0,00 s: X' });
+    expect(g.keyNotice()).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Prova de pessoa (05/11/2026): recorte e máscara, dois tracejados quase da mesma cor, com nome
+// ---------------------------------------------------------------------------
+
+import { clippingLabel, cropLabel } from '../src/viewport/viewport-draw.js';
+import { LIGHT as temaClaroCena } from '../src/ui/theme.js';
+
+describe('prova de pessoa: o recorte e a máscara dizem o que são', () => {
+  it('as duas cores são quase a mesma — por isso o nome escrito (prova do defeito)', () => {
+    const rgb = (h: string): number[] => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+    const [a, b] = [rgb('#ff00c8'), rgb(temaClaroCena.sceneClipping)];
+    const distancia = Math.hypot(a[0]! - b[0]!, a[1]! - b[1]!, a[2]! - b[2]!);
+    expect(distancia).toBeLessThan(80);
+  });
+
+  it('o recorte diz "recorte" e o tamanho; a máscara diz "máscara" e o nome', () => {
+    expect(cropLabel({ width: 143, height: 265 })).toBe('recorte 143 × 265 px');
+    expect(cropLabel({ width: 1, height: 1 }, '167 × 283 px')).toBe('recorte 167 × 283 px');
+    expect(clippingLabel('mask')).toBe('máscara mask');
   });
 });
