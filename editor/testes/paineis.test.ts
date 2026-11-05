@@ -1282,7 +1282,7 @@ const chaves = (grupos: FieldGroup[], titulo: string): string[] =>
     expect(path.label).toBe('Imagem da partícula');
   });
 
-  it.skipIf(!existsSync(resolve(__dirname, '../../backup')))('o defeito EXISTIA: sem o ramo, a ficha era "Nome" e "Imagem"', () => {
+  it.skipIf(!existsSync(resolve(__dirname, '../../backup/properties-model_2026-09-22_antes-do-lote-1-das-particulas.ts')))('o defeito EXISTIA: sem o ramo, a ficha era "Nome" e "Imagem"', () => {
     // A prova de que o teste de cima pega alguma coisa. Um tipo que
     // `attachmentFields` não conhece cai no `identity` do fim — e é ali que o
     // emissor caía. A cópia de antes do lote está no `backup/` e não cita o
