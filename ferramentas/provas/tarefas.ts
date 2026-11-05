@@ -424,6 +424,7 @@ export const TAREFAS: readonly TarefaDef[] = Object.freeze([
   { action: 'nome-das-ferramentas', grupo: 'Arrumar a tela', tarefa: 'Escrever o nome ao lado do ícone de cada ferramenta' },
   // ---- Achar e ajuda ---------------------------------------------------
   { action: 'paleta', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Achar um comando digitando um pedaço do nome dele — quando não sei em que menu está' },
+  { action: 'quero-fazer', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Dizer o que quero fazer ("arma", "roupa", "gif") e ver os passos, com o lugar aceso no menu' },
   { action: 'atalhos', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Ver todas as teclas, e trocar uma por outra' },
   { action: 'problemas', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Ver o que o programa não entendeu no arquivo, e onde' },
   { action: 'manual', grupo: 'Achar as coisas e pedir ajuda', tarefa: 'Abrir o manual' },

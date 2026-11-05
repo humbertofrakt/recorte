@@ -244,30 +244,43 @@ export function drawCropBox(
   if (!editing) ctx.setLineDash([6 / scale, 4 / scale]);
   ctx.strokeRect(crop.x, crop.y, crop.width, crop.height);
   ctx.restore();
-  if (!editing) return;
   const half = CROP_HANDLE_PIXELS / scale / 2;
   ctx.save();
-  for (const h of cropHandles(crop)) {
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(h.x - half, h.y - half, half * 2, half * 2);
-    ctx.strokeStyle = CROP_COLOR;
-    ctx.lineWidth = 1.5 / scale;
-    ctx.strokeRect(h.x - half, h.y - half, half * 2, half * 2);
+  if (editing) {
+    for (const h of cropHandles(crop)) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(h.x - half, h.y - half, half * 2, half * 2);
+      ctx.strokeStyle = CROP_COLOR;
+      ctx.lineWidth = 1.5 / scale;
+      ctx.strokeRect(h.x - half, h.y - half, half * 2, half * 2);
+    }
   }
-  // O tamanho, em cima do canto de cima à esquerda: durante o arrasto, o que
-  // a mão está fazendo; parado, o que está gravado.
-  const text = says ?? `${cropNumber(crop.width)} × ${cropNumber(crop.height)} px`;
+  // O nome e o tamanho, em cima do canto de cima à esquerda — SEMPRE, e não
+  // só com o modo ligado (prova de pessoa, 05/11/2026): a máscara do herói é
+  // outro tracejado quase da mesma cor, e sem nome os dois se confundiam.
+  const text = cropLabel(crop, says);
   const size = 12 / scale;
   ctx.font = `${size}px system-ui, sans-serif`;
   ctx.textBaseline = 'bottom';
-  ctx.translate(crop.x, crop.y + crop.height + half + 3 / scale);
+  ctx.translate(crop.x, crop.y + crop.height + (editing ? half : 0) + 3 / scale);
   ctx.scale(1, -1);
   ctx.lineWidth = 3 / scale;
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.75)';
+  // O contorno da cor do fundo dos nomes (`drawLabel`): o preto borrava as letras pequenas.
+  ctx.strokeStyle = COLOR().boneFill;
   ctx.strokeText(text, 0, 0);
   ctx.fillStyle = CROP_COLOR;
   ctx.fillText(text, 0, 0);
   ctx.restore();
+}
+
+/** O nome escrito junto do retângulo do recorte: o que é, e o tamanho (ou o que o arrasto diz). */
+export function cropLabel(crop: { width: number; height: number }, says: string | null = null): string {
+  return `recorte ${says ?? `${cropNumber(crop.width)} × ${cropNumber(crop.height)} px`}`;
+}
+
+/** O nome escrito junto da máscara: o tracejado dela é quase da cor do recorte. */
+export function clippingLabel(name: string): string {
+  return `máscara ${name}`;
 }
 
 /**
@@ -903,6 +916,14 @@ export function drawClippings(panel: ViewportPanel, ctx: CanvasRenderingContext2
     if (count < 3) continue;
     const vertices = shape.computeWorldVertices(slot) as Float64Array;
     strokePolygon(ctx, vertices, count, COLOR().clipping, width);
+    // Prova de pessoa (05/11/2026): o nome, no vértice mais alto. Sem ele, o
+    // tracejado da máscara se confundia com o do recorte da exportação.
+    let topo = 0;
+    for (let i = 1; i < count; i++) if (vertices[i * 2 + 1]! > vertices[topo * 2 + 1]!) topo = i;
+    ctx.save();
+    ctx.setLineDash([]);
+    drawLabel(panel, ctx, clippingLabel(attachment.name), vertices[topo * 2]!, vertices[topo * 2 + 1]!, scale, COLOR().clipping);
+    ctx.restore();
   }
   ctx.restore();
 }

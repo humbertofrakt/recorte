@@ -21,14 +21,24 @@ jobs:
   montar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
+      # Alguns testes conferem o runtime Python (`python`): o mesmo 3.13 da casa.
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
       - run: npm ci
+      # A suíte inteira ANTES de montar: se ela cair, o job para aqui e a
+      # página publicada continua a de antes — nunca uma página com defeito.
+      - name: Rodar a suíte
+        run: npx vitest run
       - name: Montar o editor
         run: npx vite build editor --outDir "$PWD/_site/editor" --emptyOutDir
+      - name: Gerar o runtime do visualizador e do validador
+        run: npx tsc -p ferramentas/visualizador/tsconfig.json
       - name: Juntar o site, o validador, o visualizador e os documentos
         run: |
           mkdir -p _site/ferramentas _site/documentos _site/conformidade
@@ -39,8 +49,13 @@ jobs:
           cp conformidade/*.md _site/conformidade/
           cp LICENSE ESTADO.md README.md _site/
           cp pagina/index.html _site/index.html
+          # Sem extensão, o Pages manda baixar; com .txt, abre e se lê.
+          cp LICENSE _site/LICENSE.txt
+          cp formato/LICENSE _site/formato/LICENSE.txt
           touch _site/.nojekyll
-      - uses: actions/upload-pages-artifact@v3
+      - name: Transformar os .md em páginas que se leem
+        run: node ferramentas/pagina-md.mjs _site
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
@@ -52,4 +67,4 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

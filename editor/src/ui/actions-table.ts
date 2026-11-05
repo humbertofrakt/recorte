@@ -83,7 +83,7 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
       // ids fixos; um arranjo guardado por quem usa ganha o id do nome dele,
       // e a casca o registra quando ele nasce.
       'arranjo-pivo', 'arranjo-visualizacao', 'guardar-arranjo', 'apagar-arranjo',
-      'manual', 'atalhos', 'problemas', 'paleta', 'sobre',
+      'manual', 'atalhos', 'problemas', 'paleta', 'sobre', 'quero-fazer',
     ],
   },
   // O menu Janela: um item por painel, todos da casca.

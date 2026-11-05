@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Recorte — formato aberto para animação 2D por ossos</title>
-<meta name="description" content="Recorte é um formato de arquivo aberto para animação 2D por ossos. Especificação pública, validador, runtime e editor.">
+<title>Recorte — animação 2D por ossos, no navegador</title>
+<meta name="description" content="Recorte: programa de animação 2D por ossos que roda no navegador, e o formato aberto .bone.">
 <link rel="icon" href="./favicon.ico" sizes="32x32">
 <link rel="stylesheet" href="./site.css">
 </head>
@@ -14,32 +14,49 @@
   <div class="faixa">
     <p class="marca">Recorte</p>
     <nav>
-      <a href="./validador/index.html">Validador</a>
-      <a href="../ferramentas/visualizador/index.html">Visualizador</a>
-      <a href="../formato/ESPECIFICACAO 2026-09-06.md">Especificação</a>
-      <a href="../documentos/manual/">Manual</a>
-      <a href="../documentos/manual/en/README.md">Manual in English</a>
+      <a href="../editor/index.html">Abrir o editor</a>
+      <a href="./validador/index.html">Conferir um arquivo</a>
+      <a href="../ferramentas/visualizador/index.html">Ver um boneco mexer</a>
+      <a href="../documentos/manual/index.html">Manual</a>
+      <a href="../formato/especificacao.html">Especificação</a>
     </nav>
   </div>
 
   <div class="dentro">
-  <h1>Animação 2D por ossos, num formato que qualquer um pode ler.</h1>
+  <h1>Animação 2D por ossos, de graça, no navegador.</h1>
 
   <p class="chamada">
-    O Recorte é um <b>formato de arquivo aberto</b> para personagens 2D animados
-    por ossos. A especificação é pública. O validador é público. A suíte de
-    conformidade é pública. Qualquer programa pode gravar e ler <b>.bone</b>,
-    sem pedir licença a ninguém.
+    O <b>Recorte</b> é um programa para animar personagens 2D: você põe ossos
+    num desenho, mexe nos ossos e grava a animação. Ele roda no navegador,
+    sem instalar nada. O arquivo que ele grava, o <b>.bone</b>, é aberto:
+    qualquer jogo ou programa pode ler, sem pedir licença a ninguém.
   </p>
 
   <p class="acoes">
-    <a class="botao" href="./validador/index.html">Conferir um arquivo</a>
-    <a class="botao vazio" href="../ferramentas/visualizador/index.html">Ver um personagem mexer</a>
+    <a class="botao" href="../editor/index.html" style="font-size:22px;padding:16px 28px">Abrir o editor</a>
+    <a class="botao vazio" href="../ferramentas/visualizador/index.html">Ver um boneco mexer</a>
+    <a class="botao vazio" href="./validador/index.html">Conferir um arquivo .bone</a>
   </p>
   </div>
 </header>
 
 <main>
+
+  <section class="cartao">
+    <h2>Por onde começar</h2>
+    <table>
+      <thead>
+        <tr><th scope="col">Quero…</th><th scope="col">Vá para</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">animar um boneco</th><td><a href="../editor/index.html">o editor</a>, e o <a href="../documentos/manual/index.html">manual</a> do lado</td></tr>
+        <tr><th scope="row">ver como fica</th><td><a href="../ferramentas/visualizador/index.html">o visualizador</a>: o herói de exemplo, andando</td></tr>
+        <tr><th scope="row">saber se um arquivo está certo</th><td><a href="./validador/index.html">o conferidor</a>: arraste o arquivo, ele diz o que está errado e onde</td></tr>
+        <tr><th scope="row">usar no meu jogo</th><td>o capítulo <a href="../documentos/manual/08-exportar-e-usar-no-jogo.html">Exportar e usar no jogo</a> (Godot e Construct)</td></tr>
+        <tr><th scope="row">escrever o meu próprio leitor</th><td>a <a href="../formato/especificacao.html">especificação</a> e os <a href="../conformidade/como-provar-conformidade.html">casos de prova</a></td></tr>
+      </tbody>
+    </table>
+  </section>
 
   <section class="cartao">
     <h2>Por que isto existe</h2>
@@ -112,7 +129,7 @@
         </tr>
         <tr>
           <th scope="row"><code>.bonez</code></th>
-          <td>Pacote ZIP: esqueleto, atlas e imagens juntos.</td>
+          <td>Pacote ZIP: o boneco, a folha de imagens e as imagens juntos.</td>
           <td>Para entregar tudo num arquivo só.</td>
         </tr>
       </tbody>
@@ -125,60 +142,51 @@
       <thead>
         <tr>
           <th scope="col">Peça</th>
-          <th scope="col">Estado</th>
+          <th scope="col">O que é</th>
           <th scope="col">Onde</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <th scope="row">Especificação</th>
-          <td>Rascunho aberto, com JSON Schema.</td>
-          <td><a href="../formato/ESPECIFICACAO 2026-09-06.md">ESPECIFICACAO.md</a></td>
-        </tr>
-        <tr>
-          <th scope="row">Validador</th>
-          <td>Na web e na linha de comando.</td>
-          <td><a href="./validador/index.html">Abrir o validador</a></td>
-        </tr>
-        <tr>
-          <th scope="row">Visualizador</th>
-          <td>Desenha um <code>.bone</code> animado no navegador.</td>
-          <td><a href="../ferramentas/visualizador/index.html">Abrir o visualizador</a></td>
-        </tr>
-        <tr>
-          <th scope="row">Runtime</th>
-          <td>Biblioteca de referência em TypeScript.</td>
-          <td><code>runtime/</code></td>
-        </tr>
-        <tr>
           <th scope="row">Editor</th>
-          <td>Programa de animação, roda no navegador.</td>
-          <td><code>editor/</code></td>
-        </tr>
-        <tr>
-          <th scope="row">Conformidade</th>
-          <td>Casos que qualquer runtime de terceiro pode rodar.</td>
-          <td>
-            <a href="../conformidade/como-provar-conformidade.md">Como provar conformidade</a>
-            ·
-            <a href="../conformidade/how-to-prove-conformance.md">How to prove conformance</a>
-          </td>
+          <td>O programa de animação. Roda no navegador.</td>
+          <td><a href="../editor/index.html">Abrir o editor</a></td>
         </tr>
         <tr>
           <th scope="row">Manual</th>
-          <td>Oito capítulos em português, com imagens.</td>
-          <td><a href="../documentos/manual/">documentos/manual/</a></td>
+          <td>Capítulos curtos em português, com imagens.</td>
+          <td><a href="../documentos/manual/index.html">Ler o manual</a> · <a href="../documentos/manual/en/index.html">in English</a></td>
         </tr>
         <tr>
-          <th scope="row">Manual in English</th>
-          <td>Os mesmos oito capítulos em inglês, com as mesmas imagens.</td>
-          <td><a href="../documentos/manual/en/README.md">documentos/manual/en/</a></td>
+          <th scope="row">Conferidor</th>
+          <td>Diz se um arquivo <code>.bone</code> está certo, e onde não está.</td>
+          <td><a href="./validador/index.html">Abrir o conferidor</a></td>
+        </tr>
+        <tr>
+          <th scope="row">Visualizador</th>
+          <td>Mostra um <code>.bone</code> animado no navegador.</td>
+          <td><a href="../ferramentas/visualizador/index.html">Abrir o visualizador</a></td>
+        </tr>
+        <tr>
+          <th scope="row">Especificação</th>
+          <td>O texto que diz como o arquivo é. Aberto, com esquema JSON.</td>
+          <td><a href="../formato/especificacao.html">Ler a especificação</a> · <a href="../formato/bone.schema.json">bone.schema.json</a></td>
+        </tr>
+        <tr>
+          <th scope="row">Casos de prova</th>
+          <td>Arquivos com a resposta certa, para qualquer leitor provar que lê direito.</td>
+          <td><a href="../conformidade/como-provar-conformidade.html">Como provar</a> · <a href="../conformidade/how-to-prove-conformance.html">in English</a></td>
+        </tr>
+        <tr>
+          <th scope="row">Leitores para jogos</th>
+          <td>Godot e Construct 3 já leem o <code>.bone</code>.</td>
+          <td><a href="../documentos/manual/08-exportar-e-usar-no-jogo.html">Como usar</a></td>
         </tr>
       </tbody>
     </table>
     <p class="paragrafo">
       O que ainda falta está escrito, sem maquiagem, em
-      <a href="../ESTADO.md">ESTADO.md</a>.
+      <a href="../ESTADO.html">o estado do projeto</a>.
     </p>
   </section>
 
@@ -195,12 +203,12 @@
       <tbody>
         <tr>
           <th scope="row">Código</th>
-          <td><a href="../LICENSE">Apache 2.0</a></td>
+          <td><a href="../LICENSE.txt">Apache 2.0</a></td>
           <td>Usar em jogo comercial, mudar, redistribuir. Traz outorga de patente.</td>
         </tr>
         <tr>
           <th scope="row">Especificação</th>
-          <td><a href="../formato/LICENSE">CC BY 4.0</a></td>
+          <td><a href="../formato/LICENSE.txt">CC BY 4.0</a></td>
           <td>Copiar, traduzir e escrever o seu próprio leitor. Basta citar a fonte.</td>
         </tr>
       </tbody>

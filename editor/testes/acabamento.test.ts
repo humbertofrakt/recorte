@@ -376,9 +376,9 @@ describe('describePointer', () => {
 
 describe('translateWarning e fixFor', () => {
   it('as três frases de forma fixa', () => {
-    expect(translateWarning('image "body" not found in any atlas')).toBe('imagem "body" não está em nenhum atlas');
+    expect(translateWarning('image "body" not found in any atlas')).toBe('imagem "body" não está em nenhuma folha de imagens (atlas)');
     expect(translateWarning('image "body" not found in any atlas; attachment will be invisible'))
-      .toBe('imagem "body" não está em nenhum atlas; o desenho fica invisível');
+      .toBe('imagem "body" não está em nenhuma folha de imagens (atlas); o desenho fica invisível');
     expect(translateWarning('unknown value "xyz", using "normal"')).toBe('valor "xyz" desconhecido; usando "normal"');
     expect(translateWarning('file version 1.3 newer than reader 1.0: partial read'))
       .toBe('arquivo na versão 1.3, leitor na 1.0: leitura parcial');
@@ -415,7 +415,8 @@ describe('o aviso de verdade, de ponta a ponta', () => {
     expect(line).toBeDefined();
 
     const row = warningRow(file, line);
-    expect(row.text).toMatch(/^skin "default" › desenho "body".*: imagem "nao-existe" não está em nenhum atlas/);
+    expect(row.text).toMatch(/^skin "default" › desenho "body".*: imagem "nao-existe" não está em nenhuma folha de imagens \(atlas\)/);
+    expect(row.imagemQueFalta).toBe('nao-existe');
     expect(row.target).toEqual({ kind: 'attachment', skin: 'default', slot: 'body', name: 'body' });
     expect(row.fix?.action).toBe('swap-image');
   });
@@ -423,7 +424,7 @@ describe('o aviso de verdade, de ponta a ponta', () => {
   it('linha sem ponteiro fica como está, sem botão', () => {
     expect(parseWarning('imagem não encontrada: x')).toEqual({ pointer: null, message: 'imagem não encontrada: x' });
     expect(warningRow(heroi(), 'imagem não encontrada: x')).toEqual({
-      text: 'imagem não encontrada: x', pointer: null, target: null, fix: null,
+      text: 'imagem não encontrada: x', pointer: null, target: null, fix: null, imagemQueFalta: 'x',
     });
   });
 });

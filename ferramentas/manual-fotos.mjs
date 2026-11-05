@@ -361,6 +361,20 @@ passo('00-menu-', async () => {
   await fecharMenus();
 });
 
+passo('00-quero-fazer', async () => {
+  // O botão do rodapé, a palavra "arma", e o Mostrar onde.
+  await heroi();
+  await pagina.getByRole('button', { name: 'Quero fazer…' }).click();
+  await esperar(300);
+  await pagina.keyboard.type('arma');
+  await esperar(300);
+  await foto('00-quero-fazer-arma.png');
+  await pagina.getByRole('button', { name: 'Mostrar onde' }).click();
+  await esperar(400);
+  await foto('00-quero-fazer-onde.png');
+  await fecharMenus();
+});
+
 passo('00-item-cinza.png', async () => {
   // Um item cinza diz por quê: na dica, e no rodapé ao passar o mouse.
   await heroi();

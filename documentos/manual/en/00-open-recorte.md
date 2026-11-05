@@ -557,6 +557,25 @@ ones are in a column. Click to open; click the one already in front to close.
 
 ---
 
+## Don't know how? **"Quero fazer…" (I want to…)**
+
+You know what you want, but not the command's name. Start here.
+
+1. Click **"Quero fazer…" (I want to…)**, in the status bar, on the right. Or **"Ajuda → Quero fazer…" (Help → I want to…)**.
+2. Type the thing, in Portuguese: `arma` (weapon), `roupa` (outfit), `gif`, `psd`. Accents are optional.
+3. Click the task. The steps appear below.
+4. Click **"Mostrar onde" (Show where)**. The menu opens, and the item is **lit in orange**.
+5. Click the lit item yourself.
+
+![The Quero fazer… window with the word arma: the task Pôr uma arma na mão (Put a weapon in the hand), the four steps with each menu path, and the Mostrar onde and Fechar buttons](../imagens/00-quero-fazer-arma.png)
+
+![After Mostrar onde: the Entidades menu open, Trazer entidade de fora… lit in orange, and the status bar giving the path](../imagens/00-quero-fazer-onde.png)
+
+The path written in each step comes from the program's menus. If an item is
+renamed, the step changes with it.
+
+---
+
 ## A grey item: it says why
 
 A **grey** item is not broken. Something is missing first.

@@ -11,7 +11,7 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
 | TS × Python, campo a campo | 120 de 120 | **138 de 138** |
 | Pacote do Construct | 120 de 120 | **138 de 138** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.856**, o mesmo 1 vermelho |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **6.007**, 0 vermelho (depois dos merges da noite) |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
@@ -141,5 +141,31 @@ no rascunho da sessão.
 | Regra 26 | com a `translateWarning` antiga, **198 de 204** voltavam em inglês | — |
 
 Os avisos de `actor.ts`, `nested.ts`, `file.ts` e do binário já nasciam em português.
+
+## 8. Tarefa nova do Diretor: a página na web
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| `ferramentas/pagina-md.mjs`: os `.md` da página viram `.html` que se lê (a spec, o manual, a conformidade, o ESTADO). Link para arquivo que a página não publica vai para o GitHub | Playwright com o `_site` servido em `/recorte/`, igual ao Pages: **0 links quebrados**, 0 erros no console | o HTML dos documentos não passou pela régua do jargão (é o texto da spec e do manual, como está) |
+| `formato/especificacao.html`: endereço que não muda, sempre a spec mais nova | o teste prende | — |
+| `pagina.yml`: gera o runtime do visualizador, `LICENSE` vira `.txt` (sem extensão o Pages manda baixar), roda o conversor | o teste prende | — |
+| `site/index.html` em palavras simples; **"Abrir o editor"** grande, em primeiro; uma tabela "Por onde começar". Link velho (`ESPECIFICACAO 2026-09-06.md`) consertado, no site e no conferidor | — | — |
+| Visualizador: a **espada** do herói não aparecia (aviso em inglês). Agora lê as entidades vizinhas e desenha | foto: a espada inteira, sem aviso | — |
+| Conferidor e visualizador sem jargão nos textos de tela, com caminho de volta | — | as mensagens do núcleo do conferidor (presas por `site.test.ts`) não mexi |
+| Teste novo `ferramentas/testes/pagina.test.ts` (12) | com as páginas antigas: **7 vermelhos** | — |
+| Funcionando, com o `heroi.bone` | conferidor: "Arquivo válido", desenho na tela; visualizador anima (0,53 s → 1,15 s); editor abre sem erro | — |
+
+**A frase com "atlas" na barra de avisos — consertada.** A linha do aviso
+ganhou um marcador estável, `imagemQueFalta`, tirado da frase **original** do
+leitor. A janela de avisos (`problems-dialog.ts`) junta as imagens pelo
+marcador, e não lendo a tradução. A frase virou *"imagem "x" não está em
+nenhuma folha de imagens (atlas)"*. Os testes foram trocados junto.
+
+**O workflow da página:** as actions vão para as versões novas, todas em Node 24
+(conferido no `action.yml` de cada uma): `checkout` v7, `setup-node` v7,
+`setup-python` v7, `upload-pages-artifact` v5, `deploy-pages` v5. E roda
+`npx vitest run` **antes** de montar: se a suíte cair, não publica. O Python
+entra porque alguns testes chamam o runtime Python. **Não deu para rodar o
+workflow daqui**; a primeira rodada no GitHub é a prova.
 
 FIM
