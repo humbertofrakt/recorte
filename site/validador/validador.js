@@ -345,7 +345,8 @@ function mostrarResumo(resumo, principal, extras) {
     ficha.append(linhaFicha('Versão do formato', resumo.versao))
     ficha.append(linhaFicha('Leitor mínimo', resumo.versaoMinima))
     ficha.append(linhaFicha('Gravado por', resumo.programa))
-    if (resumo.atlases.length > 0) ficha.append(linhaFicha('Atlas que ele usa', resumo.atlases.join(', ')))
+    if (resumo.atlases.length > 0) ficha.append(linhaFicha('Folha de imagens (atlas)', resumo.atlases.join(', ')))
+    if (resumo.animacoesDeFora.length > 0) ficha.append(linhaFicha('Animações de fora', `vêm de ${resumo.animacoesDeFora.join(', ')}`))
     if (resumo.extensoes.length > 0) ficha.append(linhaFicha('Extensões', resumo.extensoes.join(', ')))
   } else if (resumo.tipo === 'atlas') {
     ficha.append(linhaFicha('Páginas', resumo.nome))

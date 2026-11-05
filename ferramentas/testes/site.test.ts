@@ -508,3 +508,28 @@ describe('frase do placar', () => {
       .toBe('Arquivo inválido. 2 erros e 1 aviso.')
   })
 })
+
+describe('animações de fora (assets.animations): o boneco NÃO é pose de montagem', () => {
+  // Achado da Oficina (05/11/2026): o cavaleiro não tem `animations` próprias e
+  // toca as do `humanoide-v1-animacoes.bone`, por `assets.animations` (2.8). O
+  // validador dizia "não tem nenhuma animação, é pose de montagem" — e não é.
+  const base = { bone: { version: '1.0', minVersion: '1.0', generator: 't' }, bones: [{ name: 'root' }] }
+  const textos = (doc: unknown): string[] => nucleo.avisos(doc, 'esqueleto').map((p: { texto: string }) => p.texto)
+
+  it('sem animação nenhuma, nem de fora: pose de montagem', () => {
+    expect(textos({ ...base }).join(' ')).toContain('pose de montagem')
+  })
+
+  it('com animações de fora: não chama de pose de montagem, e o resumo diz de onde elas vêm', () => {
+    const doc = { ...base, assets: { animations: ['humanoide-v1-animacoes.bone'] }, animations: [] }
+    expect(textos(doc).join(' ')).not.toContain('pose de montagem')
+    expect(nucleo.resumirConteudo(doc, 'esqueleto').animacoesDeFora).toEqual(['humanoide-v1-animacoes.bone'])
+  })
+
+  it('os bonecos da oficina, como estão no disco', () => {
+    for (const nome of ['cavaleiro', 'goblin', 'mecha', 'robo']) {
+      const doc = JSON.parse(readFileSync(join(raiz, 'exemplo', 'oficina', `${nome}.bone`), 'utf8'))
+      expect(textos(doc).join(' '), nome).not.toContain('pose de montagem')
+    }
+  })
+})
