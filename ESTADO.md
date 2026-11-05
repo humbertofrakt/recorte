@@ -1,4 +1,19 @@
-# Onde o projeto está — 07/10/2026 (v36.5: a aba que o Humberto circulou; a Árvore do quadro com a chave slot/bone; as sobras dos docs 100 e 101 (rodada 50, lote 4))
+# Onde o projeto está — 05/11/2026 (v37.0: a noite das tomadas, do guarda-roupa, do reaproveitar e do programa achável)
+
+> **Leia primeiro:** `documentos/projeto do programa/noite/RESUMO DA NOITE.md`. O quadro abaixo é o de 05/11; o de 07/10 (v36.5) continua mais abaixo, como história.
+
+| O quê | Hoje (05/11/2026, 03h50 UTC) |
+|:---|:---|
+| Versão | **v37.0** — `programa/` montado; publicado em https://humbertofrakt.github.io/recorte/ |
+| Testes | **6.124** (6.113 passam, 11 pulados, **0 vermelho**). `tsc` limpo |
+| Conformidade | **138 de 138** (TS, Python e o pacote do Construct). O Godot não rodou na nuvem: 4 comandos em `noite/godot.md` |
+| Roteiro dos 30 minutos | **14 de 14** |
+| Pesos | **14 de 14** |
+| Painéis | **92 de 92** de lado e de altura (e 92/92 com os Detalhes abertos) |
+| Provas de pessoa (só cliques à vista) | tomadas 13/13 · espada 18/18 · prova final 13/13 · oficina · skins · reaproveitar |
+
+
+## O quadro de 07/10/2026 (v36.5)
 
 | O quê | Hoje |
 |:---|:---|

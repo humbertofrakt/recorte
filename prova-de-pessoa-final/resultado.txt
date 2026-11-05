@@ -1,0 +1,14 @@
+PASSOU · as boas-vindas mostram "Abrir a oficina"
+PASSOU · a oficina abriu, e o rodapé diz por onde começar · Abra walk e aperte ▶: a motosserra gira na mão do herói.
+PASSOU · walk toca, com a motosserra na mão
+PASSOU · a motosserra aparece como entidade do herói
+PASSOU · Bases → mecha: a vista se ajusta à base nova · 216% → 106%
+PASSOU · o herói está na cabine do mecha (a Árvore mostra "cabine · piloto")
+PASSOU · Skins → Guarda-roupa abre, e diz como usar · Guarda-roupa Fechar Cada coluna é uma skin (uma roupa). Clique numa casa para tr
+PASSOU · "Vestir só esta" na coluna armadura veste a armadura · Vestida: armadura
+ATRITO · Bases → cavaleiro · a lista Bases não está à vista: outra aba (Skins) ficou na frente da aba Animações; é preciso clicar na aba
+PASSOU · a janela diz o que faz · Usar animações de outro boneco Muitos bonecos, as mesmas animações: o andar de um serve no
+PASSOU · "Usar as animações": o rodapé diz que as animações vieram, ligadas · 3 animações de heroi, copiadas
+PASSOU · Quero fazer… "arma" acha "Pôr uma arma na mão", com os passos · Quero fazer… Pôr uma arma na mão Trocar a roupa (skin) Pôr uma arma na mão Abra o boneco que vai seg
+PASSOU · o GIF sai · heroi-walk.gif 152×242
+PASSOU · nenhum erro na página

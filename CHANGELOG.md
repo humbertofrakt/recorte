@@ -21,6 +21,24 @@ hoje tornaria não conformes os arquivos já gravados. Ver `ESTADO.md`,
 > `versao.py` e o `backup/INDICE.md` guardam a ordem real por data e hora.
 > Quem procurar uma versao especifica use a busca, nao a posicao.
 
+### v37.0 — a noite de 04 para 05/11/2026: tomadas, guarda-roupa, reaproveitar animação, e o programa achável — 05/11/2026
+
+Palavra do Humberto, 04/11: *"o Claude dizia que programava, mas o que eu pedia não aparecia na tela, não tinha um menu"*. A régua da noite: **o que uma pessoa não faz clicando no que vê não está pronto.** Dez sessões; um relatório por sessão em `documentos/projeto do programa/noite/`, e o resumo em `noite/RESUMO DA NOITE.md`.
+
+- **Tomadas** (antes "Entidades"): ícone de tomada no osso, na cena; botão direito no osso → *Encaixar um projeto…* / *Pôr uma tomada aqui…*; *Este boneco entra em…*; *Mexe junto com a animação de quem segura*; *Animação própria, sempre ligada*. O formato não mudou.
+- **Skins → Guarda-roupa: desenho × skin…**: coluna = roupa, linha = desenho; passar o mouse prova a roupa; *+ Nova skin*, *+ Cópia*, *Vestir só esta*.
+- **Reaproveitar animação**: *Animação → Animações de outro boneco…* (mostra quantos ossos combinam; Cópia ou Ligadas) e *Base → Seguir o Esqueleto padrão…*.
+- **A Oficina**: *Arquivo → Abrir a oficina (exemplo)* e o cartão nas boas-vindas — herói com motosserra, herói na cabine do mecha, três bonecos com as mesmas animações, duas roupas.
+- **Achar as coisas**: *Ajuda → Quero fazer…* e o botão no rodapé, com *Mostrar onde*; todo item cinza diz por quê; o dicionário da tela (`ui/jargao.ts`) e o teste de que toda ação tem porta.
+- **Recorte na cena (N-4b)**: *Animação → Recorte na cena*, com alças.
+- **A tela**: as colunas descem até o rodapé; a linha do tempo fica embaixo da cena. Painéis 92/92 na altura e de lado, com os Detalhes abertos ou fechados. A barra de menus cabe a 1024 px.
+- **Salvar sem pasta** baixa um `.bonez` só, com as imagens (antes: sem imagens). **Salvar com outra base em foco** grava cada base no seu arquivo (antes: gravava por cima da principal). O GIF leva o nome da animação.
+- **Avisos em português**: as 204 frases do leitor; o rodapé tira o ponteiro JSON.
+- **Manual**: reescrito para hoje, sem pausa (o vermelho do manual acabou); capítulo 11, *a espada de um, o boneco de outro*.
+- **Formato e runtimes**: o P-002 fechado; casos novos; conformidade **138 de 138** (TS, Python e Construct). O leitor do Godot recebeu o conserto do C-326, sem prova no Godot (fica para a mão).
+- **Página na web**: https://humbertofrakt.github.io/recorte/ — o editor, o validador, o visualizador, a spec e o manual; o workflow roda a suíte antes de publicar.
+- **Os testes rodam fora do PC do Humberto**: sem o caminho `C:/Users/...`, e os que dependem de `backup/` pulam sem ela.
+
 ### v36.5 — a aba que o Humberto circulou; a Árvore do quadro com a chave slot/bone; as sobras dos docs 100 e 101 (rodada 50, lote 4) — 07/10/2026
 
 Rodada 50, lote 4 (doc `98`, itens E e D; docs `100` e `101`).
