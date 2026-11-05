@@ -392,7 +392,8 @@ export function exportPlan(
         field: 'frame',
       };
     }
-    return { ok: true, tasks: [{ animation: chosen.name, base, times: [t] }] };
+    // Prova de pessoa (4c): o nome da animação no arquivo (era heroi.png).
+    return { ok: true, tasks: [{ animation: chosen.name, base: `${base}-${chosen.name}`, times: [t] }] };
   }
   if (options.all === true) {
     if (animations.length === 0) {
@@ -437,7 +438,8 @@ export function exportPlan(
     ok: true,
     tasks: [{
       animation: chosen.name,
-      base,
+      // Prova de pessoa (4c): "aceno" saía heroi.gif; agora heroi-aceno.gif.
+      base: `${base}-${chosen.name}`,
       times: frameTimes({ duration: chosen.duration, fps, from, to }),
     }],
   };

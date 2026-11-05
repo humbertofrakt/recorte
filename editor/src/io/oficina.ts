@@ -80,6 +80,9 @@ export function oficinaFolder(
 }
 
 /** A frase do rodapé depois de abrir: o primeiro passo de cada caso. */
-export const OFICINA_PRIMEIRO_PASSO = 'Oficina aberta — no herói, abra walk e aperte ▶ (a motosserra gira sozinha); '
-  + 'em Bases, o mecha leva o herói na cabine; cavaleiro, goblin e robô andam com as mesmas animações (Compartilhadas); '
+// O essencial vem primeiro e curto: o rodapé apertado mostra só a primeira
+// frase, ou o que vem antes dos dois-pontos (`ui/shell-status.ts`). A frase
+// longa de antes saía cortada com "…" (prova de pessoa, 05/11/2026).
+export const OFICINA_PRIMEIRO_PASSO = 'Abra walk e aperte ▶: a motosserra gira na mão do herói. '
+  + 'Em Bases, o mecha leva o herói na cabine; cavaleiro, goblin e robô andam com as mesmas animações (Compartilhadas); '
   + 'na aba Skins, a outra roupa do herói';

@@ -51,7 +51,7 @@ import {
 import { toggleEntityLoop } from './entities-actions.js';
 import type { BandSegment, EntitySlot } from '../anim/entity-band.js';
 import { DEFAULT_SEQUENCE_MODE, SEQUENCE_MODES, activeAttachmentOf, describeSequenceKey, findSequence, noSequenceNotice, sequenceKeyValue } from '../anim/sequence-key.js';
-import { allKeyRefs, findTimeline, newKeysNotice, onRevealKey, revealKey, allKeyTimes, cloneKeys, dopesheetGroups, durationOf, findAnimation, hasSteppedCells, keyRefKey, keyRefsForTargets, moveKeys, nestedTarget, nextKeyTime, previousKeyTime, removeKey, roundTime, sameTime, sequenceTarget, setKey, steppedCells, CURVE_KINDS, curveKindOf, setKeyCurve, targetKey, targetInfo, setKeyFocus, onKeyFocus } from '../anim/keying.js';
+import { allKeyRefs, findTimeline, newKeysNotice, onRevealKey, revealKey, allKeyTimes, cloneKeys, dopesheetGroups, durationOf, findAnimation, hasSteppedCells, keyRefKey, keyRefsForTargets, keysCoveredByMove, moveKeys, nestedTarget, nextKeyTime, previousKeyTime, removeKey, roundTime, sameTime, sequenceTarget, setKey, steppedCells, CURVE_KINDS, curveKindOf, setKeyCurve, targetKey, targetInfo, setKeyFocus, onKeyFocus } from '../anim/keying.js';
 import type { CurveKind, KeyRef, RowGroup, StepCell, TimelineRow } from '../anim/keying.js';
 import { type MirrorPair } from '../anim/timeline-tools.js';
 import { EditKeys, keyValuesNow, targetsForSelection } from '../anim/pose-mode.js';
@@ -63,7 +63,7 @@ import { askForm } from '../ui/dialog.js';
 import { renderEventKeyEditor } from './event-key-editor.js';
 import { registerAction, runAction } from '../ui/actions.js';
 import { actionsFor, isTyping, keyOf } from '../ui/keys.js';
-import { BASE_SHEET_NOTE, KEY_HINT, dragReadout, keyTitle, popupPlacement, segmentPath, shouldAnnounceNewKeys, entityStartValue, formatSeconds, bandLimitNotice, deleteKeyGoesTo, DUPLICATE_IN_TIMELINE_NOTICE, keyMenuPlan, curveAppliedNotice, closesPopup } from './dopesheet-model.js';
+import { BASE_SHEET_NOTE, KEY_HINT, dragReadout, keyTitle, popupPlacement, segmentPath, shouldAnnounceNewKeys, entityStartValue, formatSeconds, bandLimitNotice, deleteKeyGoesTo, DUPLICATE_IN_TIMELINE_NOTICE, keyMenuPlan, curveAppliedNotice, closesPopup, coveredKeysNotice } from './dopesheet-model.js';
 import { removeKeyRef } from '../anim/body.js';
 
 import { hasKeysCopied, setEntityAnimationAt } from './dopesheet-actions.js';
@@ -2319,6 +2319,9 @@ export class DopesheetPanel implements Panel {
     if (this.drag === 'chaves' && doc !== null && doc.animation !== null && this.dragDelta !== 0) {
       const delta = this.dragDelta;
       let written: KeyRef[] = [];
+      // QA da noite (04/11/2026): quem estava no destino, ANTES de mover.
+      const origem = this.cloning ? this.cloneSource : this.selectedRefs;
+      const cobertas = keysCoveredByMove(doc.file, doc.animation, origem, delta, this.cloning);
       if (this.cloning) {
         // Item 6: clona — os originais (já tirados da seleção no clique) não
         // se mexem; as cópias nascem no novo tempo e ficam escolhidas.
@@ -2332,6 +2335,7 @@ export class DopesheetPanel implements Panel {
           written = moveKeys(file, animation, refs, delta);
         }));
       }
+      if (cobertas.length > 0) doc.notice(coveredKeysNotice(cobertas, this.cloning ? 'Clonar chaves' : 'Mover chaves'));
       this.selected.clear();
       for (const ref of written) this.selected.set(keyRefKey(ref), ref);
     }

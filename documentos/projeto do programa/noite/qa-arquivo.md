@@ -65,11 +65,12 @@ Cada conserto: um commit, com teste no arquivo da parte, visto **vermelho antes*
 | Spriter `bcp.scml` | pergunta qual projeto (scml × scon), avisa o peso (801 MB), 2 avisos, 91 imagens — como o doc 89 diz |
 | Skin: exportar e importar | a armadura apagada volta **idêntica** |
 | Trocar imagem nas skins | troca, e `Ctrl+Z` desfaz |
+| A aba Partículas | Novo ▾ → "Novo: fogo" nasce no osso do meio (torso), a aba lista, Ctrl+Z desfaz |
 | Partículas | Fumaça, Fogo, Faísca nascem; tocando, emitem (foto 01); a chave "Emitindo" nasce na linha do tempo; Salvar + `validar` OK |
 | Cor ao nascer × Cor na vida | a faixa fina de baixo fica vermelha ao trocar «de» (foto 02) |
 | Biblioteca | exportar as 3 animações → importar noutra base (PSD com ossos): a janela lista os 14 nomes que não batem; a biblioteca de fábrica abre |
 | Soltar pasta na cena | `mao` abre como projeto ("pelo arrasto: 13 imagens"); `game` reabre o `.bone` dela (e, depois do D14, desenha) |
-| Spine pela tela | a pasta com `.json` + `.atlas` + `.png`: entra inteiro, "Nada se perdeu" |
+| Spine pela tela | a pasta com `.json` + `.atlas` + `.png`: entra inteiro, "Nada se perdeu"; depois do D24, o Ctrl+S grava na pasta, valida e desenha 18 desenhos |
 | DragonBones pela tela | a pasta com `_ske.json` + `_tex.json` + `_tex.png` (montada da amostra dos testes): entra; Salvar grava na pasta; valida e desenha |
 | Folha do Aseprite | `fogo.png` + `fogo.json` soltos na cena: 4 quadros, a etiqueta vira a animação "queimar"; os quadros trocam a cada 100 ms no `render-png` |
 | Soltar arquivos na cena | `.psd`, `.bonez`, `.boneb`, `.scml` — cada um pela sua porta, perguntando antes de trocar o que está aberto |
@@ -141,15 +142,32 @@ Do doc `89`, nada disto se prova num Chrome sem janela:
 
 ## Fotos
 
-## A régua, na última medida (05/11, 01h28 pelo relógio da máquina, casa parada)
+## A régua, na última medida (05/11, 01h48 pelo relógio da máquina, casa parada)
 
 | Medida | Resultado |
 |:---|:---|
-| `npx vitest run` | 5.828 verdes (eram 5.774 na partida), 1 vermelho: o conhecido do manual (`ajuda.test.ts`) |
+| `npx vitest run` | 5.839 verdes (eram 5.774 na partida), 1 vermelho: o conhecido do manual (`ajuda.test.ts`) |
 | `npx tsc --noEmit -p editor/tsconfig.json` | limpo |
 | `node ferramentas/conformidade.mjs` | 120 de 120 |
 
 Em `fotos-qa-arquivo/`:
 01 partículas na linha do tempo · 02 a faixa fina da Cor ao nascer · 03 o fogo no editor × na linha de comando · 04 o herói no `render-png` × no editor · 05 o rodapé do Salvar fora da pasta · 06 o Spriter importado · 07 trocar imagem nas skins · 08 a pasta `game` aberta depois do D14 (2 avisos, o bcp desenhado).
+
+## O Salvar sem seletor (prova de pessoa 5 e 6) — 05/11, ~03h40
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| Sem seletor de pasta (o download), o Salvar baixa **um arquivo só, `heroi.bonez`**: o boneco, a espada, a folha de imagens e as páginas. Antes: `heroi.bone` + `manifest.json`, sem imagens | só cliques, num Chromium sem os seletores: Abrir o herói → Ctrl+S → baixou só `heroi.bonez` → recarregar → Ctrl+O nele → herói inteiro, **Nenhum aviso** (fotos 09 e 10). Teste em `arquivo.test.ts`, visto vermelho antes | o rodapé diz: *"heroi.bonez baixado, com as imagens dentro: para reabrir, Arquivo → Abrir projeto… e escolha heroi.bonez nos Downloads"*. Com seletor (o Chrome do Humberto) nada muda: pede a pasta e grava a folha junto |
+
+Decisão no lugar do Humberto: **um arquivo só** (`.bonez`), e não três soltos — é o mais simples de achar e de reabrir, e o Spine e o Spriter também salvam o projeto num arquivo.
+
+Depois, ainda antes das 05:00:
+
+| O que fiz | Como provei |
+|:---|:---|
+| **Salvar com o foco noutra base** (reaproveitar §6): a raiz no `io/open-save.ts` — o Salvar grava com a base principal em foco (cada base no SEU arquivo) e volta ao foco de antes, para todo chamador | teste com a pasta do lobisomem, foco no lobisomem: `entrada.bone` fica o homem, `lobisomem.bone` o lobisomem, o manifesto inteiro; visto vermelho antes |
+| **(4c) o arquivo exportado leva o nome da animação**: `heroi-walk.gif`, `heroi-attack.gif` (era `heroi.gif` para todas, e uma pisava a outra). A pose de repouso continua `heroi` | só cliques: exportar walk e attack → Downloads com os dois nomes; teste visto vermelho antes |
+
+Ficou: a régua do ":" em `io/`, e a palavra "objeto" da grade.
 
 FIM

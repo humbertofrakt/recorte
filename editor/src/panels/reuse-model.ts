@@ -28,7 +28,7 @@ import {
 import type { BoneMatch, BoneRename } from '../anim/bone-match.js';
 import { buildAnimationFile, ImportAnimationCopy } from '../io/export-animation.js';
 import { renameBoneEverywhere } from './rename.js';
-import { composeShared, sharedUrisOf } from '../doc/shared-animations.js';
+import { composeShared, sharedFileOf, sharedUrisOf } from '../doc/shared-animations.js';
 export { ownerSharedFile } from '../io/shared-save.js';
 
 // ---------------------------------------------------------------------------
@@ -189,6 +189,15 @@ export function linkCommand(
   host: BoneFile, source: ReuseSource, match: BoneMatch,
 ): { command: FileSnapshotCommand; report: ReuseReport } | { refused: string } {
   const { renames, conflicts } = renamesFor(match, (host.bones ?? []).map((b) => b.name));
+  // A prova final (05/11): o cavaleiro já tocava as do Esqueleto padrão; ligar
+  // as do herói renomeava "quadril" para "hips", e o andar de antes parava.
+  const quebra = linkBreaks(host, match);
+  if (quebra.length > 0) {
+    return {
+      refused: `Ligadas mudaria nomes de ossos que ${quebra.join(', ')} usa, e as animações de lá parariam; `
+        + 'use Cópia (as animações entram com os nomes daqui)',
+    };
+  }
   if (conflicts.length > 0) {
     return {
       refused: `Este boneco já tem ${conflicts.length === 1 ? 'um osso chamado' : 'ossos chamados'} `
@@ -208,6 +217,23 @@ export function linkCommand(
     rememberMatch(file, source.uri, match);
   });
   return { command, report: { mode: 'ligadas', brought, skipped, renamed: renames, dropped: [] } };
+}
+
+/**
+ * Os arquivos que este boneco já toca LIGADO e que parariam se os ossos daqui
+ * mudassem de nome como a tabela pede. Vazio = ligar não estraga nada.
+ */
+export function linkBreaks(host: BoneFile, match: BoneMatch): string[] {
+  const { renames } = renamesFor(match, (host.bones ?? []).map((b) => b.name));
+  if (renames.length === 0) return [];
+  const saem = new Set(renames.map((r) => r.de));
+  const out: string[] = [];
+  for (const uri of sharedUrisOf(host)) {
+    const f = sharedFileOf(uri);
+    if (f === null) continue;
+    if (bonesUsedBy(f.animations ?? []).some((b) => saem.has(b))) out.push(uri);
+  }
+  return out;
 }
 
 /**

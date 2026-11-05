@@ -466,7 +466,8 @@ describe('exportPlan — o que a janela Exportar imagem vai desenhar', () => {
     if (!plan.ok) return;
     expect(plan.tasks).toHaveLength(1);
     expect(plan.tasks[0]!.times).toEqual([0.2, 0.3, 0.4]);
-    expect(plan.tasks[0]!.base).toBe('heroi');
+    // Prova de pessoa (4c): o nome da animação no arquivo.
+    expect(plan.tasks[0]!.base).toBe('heroi-walk');
   });
 
   it('Todas as animações: uma tarefa por animação, com o nome de cada uma', () => {
@@ -1538,10 +1539,10 @@ describe('rodada 17, lote 4: a janela Exportar imagem', () => {
   };
 
   it('N-5: antes de exportar, a janela diz o que vai sair', () => {
-    expect(exportPreviewLine(base, ANIMS, 'heroi')).toBe('Vai sair: heroi.gif — idle, 60 quadros a 30 por segundo');
-    expect(exportPreviewLine({ ...base, format: 'png' }, ANIMS, 'heroi')).toBe('Vai sair: heroi.zip (60 PNG) — idle, 60 quadros a 30 por segundo');
+    expect(exportPreviewLine(base, ANIMS, 'heroi')).toBe('Vai sair: heroi-idle.gif — idle, 60 quadros a 30 por segundo');
+    expect(exportPreviewLine({ ...base, format: 'png' }, ANIMS, 'heroi')).toBe('Vai sair: heroi-idle.zip (60 PNG) — idle, 60 quadros a 30 por segundo');
     expect(exportPreviewLine({ ...base, format: 'png', zip: false }, ANIMS, 'heroi'))
-      .toBe('Vai sair: heroi_0000.png … heroi_0059.png (60 PNG) — idle, 60 quadros a 30 por segundo');
+      .toBe('Vai sair: heroi-idle_0000.png … heroi-idle_0059.png (60 PNG) — idle, 60 quadros a 30 por segundo');
     expect(exportPreviewLine({ ...base, all: true }, ANIMS, 'heroi'))
       .toBe('Vai sair: heroi-idle.gif, heroi-walk.gif — 2 animações, 90 quadros a 30 por segundo');
     // A recusa também é dita antes do clique.
@@ -1608,7 +1609,7 @@ describe('rodada 45, lote 2: exportar a pose, com a janela que cabe', () => {
     const { exportPlan } = await import('../src/io/export-image.js');
     const plan = exportPlan({ animation: 'idle', fps: 30, frame: 0.5 }, anims, 'heroi');
     expect(plan.ok).toBe(true);
-    if (plan.ok) expect(plan.tasks).toEqual([{ animation: 'idle', base: 'heroi', times: [0.5] }]);
+    if (plan.ok) expect(plan.tasks).toEqual([{ animation: 'idle', base: 'heroi-idle', times: [0.5] }]);
     const zero = exportPlan({ animation: 'idle', fps: 30, frame: 0, from: 0, to: 0 }, anims, 'heroi');
     expect(zero.ok && zero.tasks[0]!.times).toEqual([0]);
     const longe = exportPlan({ animation: 'attack', fps: 30, frame: 1.5 }, anims, 'heroi');
@@ -1705,7 +1706,7 @@ describe('rodada 45, lote 2: uma imagem só fala no singular, sem receita de ví
     const { exportPreviewLine, imageExportLine, imageExportReport, defaultImageOptions } = await import('../src/io/export-image.js');
     const base = { ...defaultImageOptions(new Doc()), animation: 'idle', format: 'png' as const, frame: 0 };
     // Rodada 50, lote 2: reescrito de propósito — uma imagem só sai heroi.png.
-    expect(exportPreviewLine(base, [{ name: 'idle', duration: 2 }], 'heroi')).toBe('Vai sair: heroi.png — idle, 1 imagem');
+    expect(exportPreviewLine(base, [{ name: 'idle', duration: 2 }], 'heroi')).toBe('Vai sair: heroi-idle.png — idle, 1 imagem');
     const result = {
       files: [{ name: 'heroi_0000.png', blob: new Blob(['x']) }], frameCount: 1, width: 126, height: 257,
       index: null, warnings: [], animations: ['idle'], bases: ['heroi'],
@@ -2144,5 +2145,19 @@ describe('QA 04/11/2026 — D24: importar com atlas, pela pasta: a conta certa e
     const r = await adoptForeignImages(doc as never, { format: 'spine', looseImages: [], folderName: '' } as never);
     expect(r.notice).toBeNull();
     expect(projectFolder(doc as never)).toBeNull();
+  });
+});
+
+describe('Prova de pessoa (4c): o arquivo exportado leva o nome da animação', () => {
+  // A prova: exportar a animação "aceno" saía heroi.gif — o nome do boneco, e
+  // duas exportações seguidas se pisavam nos Downloads.
+  it('uma animação, um trecho ou um quadro: heroi-aceno; a pose de repouso: heroi', () => {
+    const anims = [{ name: 'aceno', duration: 1 }, { name: 'idle', duration: 2 }];
+    const um = exportPlan({ animation: 'aceno', fps: 10 }, anims, 'heroi');
+    expect(um.ok && um.tasks[0]!.base).toBe('heroi-aceno');
+    const quadro = exportPlan({ animation: 'aceno', fps: 10, frame: 0.5 }, anims, 'heroi');
+    expect(quadro.ok && quadro.tasks[0]!.base).toBe('heroi-aceno');
+    const pose = exportPlan({ animation: 'recorte:base', fps: 10 }, anims, 'heroi');
+    expect(pose.ok && pose.tasks[0]!.base).toBe('heroi');
   });
 });

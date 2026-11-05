@@ -27,6 +27,12 @@ const passo = (ok, t) => { console.log(`${ok ? 'passou' : 'TRAVOU'}  ${t}`); if 
   const foto = async (n) => { if (FOTOS) { fs.mkdirSync(FOTOS, { recursive: true }); await p.screenshot({ path: path.join(FOTOS, `${n}.png`) }); } };
   const cena = p.locator('canvas').first();
   const base = async (n) => { await p.locator('.anim-corpos button').filter({ hasText: n }).first().click(); await p.waitForTimeout(700); };
+  const menuItem = async (topo, item) => {
+    await p.locator('button').filter({ hasText: new RegExp(`^${topo}$`) }).first().click();
+    await p.waitForTimeout(250);
+    await p.locator('.menu-name').filter({ hasText: item }).last().click();
+    await p.waitForTimeout(500);
+  };
   const tocar = async (ms) => {
     await p.getByRole('button', { name: /^Tocar/ }).first().click();
     await p.waitForTimeout(ms);
@@ -90,6 +96,27 @@ const passo = (ok, t) => { console.log(`${ok ? 'passou' : 'TRAVOU'}  ${t}`); if 
   await tocar(400);
   passo(!r1.equals(await cena.screenshot()), '(3) o robô anda com o andar do Esqueleto padrão');
   await foto('3-robo-andando');
+
+  // (5) A prova final achou (05/11, 03:40): cavaleiro → Animações de outro
+  // boneco… → heroi → Usar dava 82 avisos (47 iguais), e as que entravam não
+  // ficavam à vista. Agora: Cópia de começo, nenhum aviso a mais, e a
+  // primeira que entrou fica aberta e escolhida na lista.
+  await base('cavaleiro');
+  const avisosAntes = (await p.getByRole('button', { name: /aviso/ }).last().innerText()).trim();
+  await menuItem('Animação', 'Animações de outro boneco…');
+  await p.locator('.dialog-box label').filter({ hasText: /^heroi/ }).first().click();
+  await p.waitForTimeout(300);
+  const marcada = await p.locator('#reaproveitar-copia').isChecked();
+  passo(marcada, '(5) heroi num boneco que já toca o Esqueleto padrão: a janela começa em Cópia');
+  await p.locator('.dialog-box button').filter({ hasText: 'Usar as animações' }).click();
+  await p.waitForTimeout(900);
+  const avisosDepois = (await p.getByRole('button', { name: /aviso/ }).last().innerText()).trim();
+  passo(avisosDepois === avisosAntes, `(5) os avisos não mudaram ("${avisosAntes}" → "${avisosDepois}")`);
+  const ativa = (await p.locator('.anim-item[aria-selected="true"]').allInnerTexts()).join(' ').replace(/\s+/g, ' ');
+  passo(/idle|walk|attack/.test(ativa), `(5) a que entrou está aberta e escolhida na lista: "${ativa.slice(0, 40)}"`);
+  const naLista = await p.locator('.anim-item[aria-selected="true"]').first().isVisible();
+  passo(naLista, '(5) e à vista');
+  await foto('5-cavaleiro-com-as-do-heroi');
   if (erros.length) { for (const e of erros) console.log('erro da página:', e); travou += erros.length; }
   await b.close();
 

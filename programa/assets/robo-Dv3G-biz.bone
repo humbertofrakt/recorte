@@ -1,0 +1,417 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte — fazer-oficina.mjs",
+    "id": "00000000-0000-4000-8000-0000000000c3",
+    "created": "2026-11-05T00:00:00Z",
+    "modified": "2026-11-05T00:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo \"oficina\" do Recorte — robo"
+  },
+  "skeleton": {
+    "name": "robo",
+    "x": -70,
+    "y": -10,
+    "width": 140,
+    "height": 235,
+    "fps": 30,
+    "referenceScale": 100
+  },
+  "assets": {
+    "atlases": [
+      "oficina.atlas.json"
+    ],
+    "imagesBase": "",
+    "skeletonsBase": "",
+    "animations": [
+      "humanoide-v1-animacoes.bone"
+    ]
+  },
+  "rig": {
+    "name": "humanoide-v1",
+    "bones": [
+      "raiz",
+      "quadril",
+      "tronco",
+      "pescoco",
+      "cabeca",
+      "braco_e",
+      "antebraco_e",
+      "mao_e",
+      "braco_d",
+      "antebraco_d",
+      "mao_d",
+      "coxa_e",
+      "canela_e",
+      "pe_e",
+      "coxa_d",
+      "canela_d",
+      "pe_d"
+    ]
+  },
+  "bones": [
+    {
+      "name": "raiz"
+    },
+    {
+      "name": "quadril",
+      "parent": "raiz",
+      "x": 0,
+      "y": 90,
+      "length": 10,
+      "folder": "corpo"
+    },
+    {
+      "name": "tronco",
+      "parent": "quadril",
+      "x": 0,
+      "y": 0,
+      "rotation": 90,
+      "length": 70,
+      "folder": "corpo"
+    },
+    {
+      "name": "pescoco",
+      "parent": "tronco",
+      "x": 70,
+      "y": 0,
+      "length": 12,
+      "folder": "corpo"
+    },
+    {
+      "name": "cabeca",
+      "parent": "pescoco",
+      "x": 12,
+      "y": 0,
+      "length": 40,
+      "folder": "corpo"
+    },
+    {
+      "name": "braco_e",
+      "parent": "tronco",
+      "x": 55,
+      "y": 10,
+      "rotation": -185,
+      "length": 40,
+      "folder": "braco_e"
+    },
+    {
+      "name": "antebraco_e",
+      "parent": "braco_e",
+      "x": 40,
+      "y": 0,
+      "rotation": 15,
+      "length": 35,
+      "folder": "braco_e"
+    },
+    {
+      "name": "mao_e",
+      "parent": "antebraco_e",
+      "x": 35,
+      "y": 0,
+      "length": 20,
+      "folder": "braco_e"
+    },
+    {
+      "name": "braco_d",
+      "parent": "tronco",
+      "x": 55,
+      "y": -10,
+      "rotation": -160,
+      "length": 40,
+      "folder": "braco_d"
+    },
+    {
+      "name": "antebraco_d",
+      "parent": "braco_d",
+      "x": 40,
+      "y": 0,
+      "rotation": 20,
+      "length": 35,
+      "folder": "braco_d"
+    },
+    {
+      "name": "mao_d",
+      "parent": "antebraco_d",
+      "x": 35,
+      "y": 0,
+      "length": 20,
+      "folder": "braco_d"
+    },
+    {
+      "name": "coxa_e",
+      "parent": "quadril",
+      "x": -4,
+      "y": -4,
+      "rotation": -95,
+      "length": 44,
+      "folder": "perna_e"
+    },
+    {
+      "name": "canela_e",
+      "parent": "coxa_e",
+      "x": 44,
+      "y": 0,
+      "rotation": -5,
+      "length": 40,
+      "folder": "perna_e"
+    },
+    {
+      "name": "pe_e",
+      "parent": "canela_e",
+      "x": 40,
+      "y": 0,
+      "rotation": 85,
+      "length": 24,
+      "folder": "perna_e"
+    },
+    {
+      "name": "coxa_d",
+      "parent": "quadril",
+      "x": 4,
+      "y": -4,
+      "rotation": -85,
+      "length": 44,
+      "folder": "perna_d"
+    },
+    {
+      "name": "canela_d",
+      "parent": "coxa_d",
+      "x": 44,
+      "y": 0,
+      "rotation": -5,
+      "length": 40,
+      "folder": "perna_d"
+    },
+    {
+      "name": "pe_d",
+      "parent": "canela_d",
+      "x": 40,
+      "y": 0,
+      "rotation": 95,
+      "length": 24,
+      "folder": "perna_d"
+    }
+  ],
+  "slots": [
+    {
+      "name": "braco_e",
+      "bone": "braco_e",
+      "attachment": "robo/braco_e"
+    },
+    {
+      "name": "antebraco_e",
+      "bone": "antebraco_e",
+      "attachment": "robo/antebraco_e"
+    },
+    {
+      "name": "mao_e",
+      "bone": "mao_e",
+      "attachment": "robo/mao_e"
+    },
+    {
+      "name": "coxa_e",
+      "bone": "coxa_e",
+      "attachment": "robo/coxa_e"
+    },
+    {
+      "name": "canela_e",
+      "bone": "canela_e",
+      "attachment": "robo/canela_e"
+    },
+    {
+      "name": "pe_e",
+      "bone": "pe_e",
+      "attachment": "robo/pe_e"
+    },
+    {
+      "name": "pescoco",
+      "bone": "pescoco",
+      "attachment": "robo/pescoco"
+    },
+    {
+      "name": "tronco",
+      "bone": "tronco",
+      "attachment": "robo/tronco"
+    },
+    {
+      "name": "cabeca",
+      "bone": "cabeca",
+      "attachment": "robo/cabeca"
+    },
+    {
+      "name": "coxa_d",
+      "bone": "coxa_d",
+      "attachment": "robo/coxa_d"
+    },
+    {
+      "name": "canela_d",
+      "bone": "canela_d",
+      "attachment": "robo/canela_d"
+    },
+    {
+      "name": "pe_d",
+      "bone": "pe_d",
+      "attachment": "robo/pe_d"
+    },
+    {
+      "name": "braco_d",
+      "bone": "braco_d",
+      "attachment": "robo/braco_d"
+    },
+    {
+      "name": "antebraco_d",
+      "bone": "antebraco_d",
+      "attachment": "robo/antebraco_d"
+    },
+    {
+      "name": "mao_d",
+      "bone": "mao_d",
+      "attachment": "robo/mao_d"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "braco_e": {
+          "robo/braco_e": {
+            "type": "region",
+            "x": 20,
+            "y": 0,
+            "width": 44,
+            "height": 17
+          }
+        },
+        "antebraco_e": {
+          "robo/antebraco_e": {
+            "type": "region",
+            "x": 17.5,
+            "y": 0,
+            "width": 39,
+            "height": 14
+          }
+        },
+        "mao_e": {
+          "robo/mao_e": {
+            "type": "region",
+            "x": 10,
+            "y": 0,
+            "width": 24,
+            "height": 13
+          }
+        },
+        "coxa_e": {
+          "robo/coxa_e": {
+            "type": "region",
+            "x": 22,
+            "y": 0,
+            "width": 48,
+            "height": 19
+          }
+        },
+        "canela_e": {
+          "robo/canela_e": {
+            "type": "region",
+            "x": 20,
+            "y": 0,
+            "width": 44,
+            "height": 17
+          }
+        },
+        "pe_e": {
+          "robo/pe_e": {
+            "type": "region",
+            "x": 12,
+            "y": 0,
+            "width": 28,
+            "height": 13
+          }
+        },
+        "pescoco": {
+          "robo/pescoco": {
+            "type": "region",
+            "x": 6,
+            "y": 0,
+            "width": 16,
+            "height": 14
+          }
+        },
+        "tronco": {
+          "robo/tronco": {
+            "type": "region",
+            "x": 35,
+            "y": 0,
+            "width": 74,
+            "height": 41
+          }
+        },
+        "cabeca": {
+          "robo/cabeca": {
+            "type": "region",
+            "x": 20,
+            "y": 0,
+            "width": 44,
+            "height": 37
+          }
+        },
+        "coxa_d": {
+          "robo/coxa_d": {
+            "type": "region",
+            "x": 22,
+            "y": 0,
+            "width": 48,
+            "height": 19
+          }
+        },
+        "canela_d": {
+          "robo/canela_d": {
+            "type": "region",
+            "x": 20,
+            "y": 0,
+            "width": 44,
+            "height": 17
+          }
+        },
+        "pe_d": {
+          "robo/pe_d": {
+            "type": "region",
+            "x": 12,
+            "y": 0,
+            "width": 28,
+            "height": 13
+          }
+        },
+        "braco_d": {
+          "robo/braco_d": {
+            "type": "region",
+            "x": 20,
+            "y": 0,
+            "width": 44,
+            "height": 17
+          }
+        },
+        "antebraco_d": {
+          "robo/antebraco_d": {
+            "type": "region",
+            "x": 17.5,
+            "y": 0,
+            "width": 39,
+            "height": 14
+          }
+        },
+        "mao_d": {
+          "robo/mao_d": {
+            "type": "region",
+            "x": 10,
+            "y": 0,
+            "width": 24,
+            "height": 13
+          }
+        }
+      }
+    }
+  ],
+  "animations": []
+}

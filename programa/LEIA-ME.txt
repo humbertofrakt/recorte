@@ -1,5 +1,5 @@
 RECORTE - editor pronto para usar
-Versao v36.5, montada em 07/10/2026.
+Versao v37.0, montada em 05/11/2026.
 
 COMO ABRIR
   1. Clique duas vezes em "Abrir o editor.bat".

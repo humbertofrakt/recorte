@@ -94,6 +94,8 @@ export async function applyReuse(
   if (mode === 'copia') {
     const r = copyCommand(doc.file, source, names, match);
     doc.run(r.command);
+    // (b) da prova final: a primeira que entrou fica aberta e escolhida na lista.
+    if (r.copy.brought.length > 0) openAnimation(doc, r.copy.brought[0]!);
     doc.notice(reuseNotice(source, { ...r.report, brought: r.copy.brought }));
     return true;
   }
@@ -118,6 +120,9 @@ export async function applyReuse(
   const r = linkCommand(doc.file, ligar, match);
   if ('refused' in r) { doc.notice(r.refused); return false; }
   doc.run(r.command);
+  // (b): a primeira ligada fica aberta e escolhida, em Compartilhadas.
+  const primeira = r.report.brought[0];
+  if (primeira !== undefined && doc.data?.findAnimation(primeira)) openAnimation(doc, primeira);
   doc.notice(reuseNotice(ligar, r.report));
   return true;
 }
@@ -215,12 +220,24 @@ export function registerReuseActions(doc: EditorDoc): Array<() => void> {
   });
   // Abriu outra coisa: lê da pasta o que o arquivo cita e o editor não tem.
   const tentados = new Set<string>();
+  // A última frase do rodapé. O `rebuild` abaixo é uma mudança sem nome, e
+  // chegava DEPOIS do "Base de mecha" do clique em Bases: o rodapé ficava só
+  // com "Sem mudanças por salvar" (prova de pessoa, 05/11/2026). Depois de
+  // remontar, a frase é dita de novo.
+  let ultimaFala: string | null = null;
+  const lembra = doc.on((change) => { if (change.label !== undefined && change.label !== '') ultimaFala = change.label; });
   const stop = doc.on((change) => {
     if (change.kind !== 'file') return;
     // Trocou de base (ou abriu): a dona pode ter mudado o andar enquanto esta
     // base estava fora do foco. Remonta com o arquivo de agora — sem isto o
     // goblin mostrava o andar de antes até alguém mexer nele (a prova achou).
-    if (sharedUrisOf(doc.file).length > 0) queueMicrotask(() => doc.rebuild());
+    if (sharedUrisOf(doc.file).length > 0) {
+      queueMicrotask(() => {
+        const fala = ultimaFala;
+        doc.rebuild();
+        if (fala !== null) doc.notice(fala);
+      });
+    }
     if (projetoDe(doc) === null || projectDocs(doc).length <= 1) forgetSharedFilesSoft(tentados);
     const faltam = new Set<string>();
     for (const d of projectDocs(doc)) {
@@ -240,6 +257,7 @@ export function registerReuseActions(doc: EditorDoc): Array<() => void> {
       why: () => 'Este boneco não tem ossos para renomear',
     }),
     stop,
+    lembra,
     () => setSharedSupplier(null),
   ];
 }

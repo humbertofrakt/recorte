@@ -356,3 +356,50 @@ describe('o Salvar grava o arquivo da dona', () => {
     expect(lido.rig?.bones).toContain('coxa_e');
   });
 });
+
+// ---------------------------------------------------------------------------
+// A prova final achou (05/11, 03:40): na Oficina, o cavaleiro usa as do herói
+// LIGADAS e aparecem 82 avisos (47 iguais) — linhas do herói para slots,
+// regras e eventos que o cavaleiro não tem. Uma pessoa acha que quebrou.
+// ---------------------------------------------------------------------------
+
+import { sharedWarnings } from '../src/doc/shared-animations.js';
+import { linkBreaks } from '../src/panels/reuse-model.js';
+
+describe('Ligadas a um boneco inteiro: um aviso só, não 82', () => {
+  const of = (p: string): BoneFile => JSON.parse(readFileSync(join(RAIZ, 'exemplo/oficina', p), 'utf8')) as BoneFile;
+  it('o cavaleiro já ligado ao padrão: Ligadas ao herói RECUSA (renomear desfaria o andar), e diz por quê', () => {
+    forgetSharedFiles();
+    setSharedSupplier(null);
+    const heroi = of('heroi.bone');
+    rememberSharedFile(PADRAO_URI, FABRICA);
+    const doc = new Doc(of('cavaleiro.bone'));
+    const src: ReuseSource = { kind: 'arquivo', label: 'heroi.bone', uri: 'heroi.bone', file: heroi, animations: ['idle', 'walk', 'attack'] };
+    const r = linkCommand(doc.file, src, initialMatch(doc.file, src, src.animations));
+    expect('refused' in r).toBe(true);
+    expect((r as { refused: string }).refused).toContain(PADRAO_URI);
+    expect(linkBreaks(doc.file, initialMatch(doc.file, src, src.animations))).toEqual([PADRAO_URI]);
+  });
+
+  it('um boneco sem outras ligadas: o que não tem onde cair vira UMA frase com o porquê', () => {
+    forgetSharedFiles();
+    const heroi = of('heroi.bone');
+    rememberSharedFile('heroi.bone', heroi);
+    const host = of('cavaleiro.bone') as BoneFile & { assets: Record<string, unknown> };
+    host.assets = { ...host.assets, animations: [] };
+    const doc = new Doc(host);
+    const antes = doc.warnings.length;
+    const src: ReuseSource = { kind: 'arquivo', label: 'heroi.bone', uri: 'heroi.bone', file: heroi, animations: ['idle', 'walk', 'attack'] };
+    const r = linkCommand(doc.file, src, initialMatch(doc.file, src, src.animations));
+    if ('refused' in r) throw new Error(r.refused);
+    doc.run(r.command);
+    // Antes deste conserto: 82 avisos a mais (47 iguais).
+    expect(doc.warnings.length - antes).toBe(1);
+    const frase = sharedWarnings(doc.file);
+    expect(frase).toHaveLength(1);
+    expect(frase[0]).toMatch(/^heroi\.bone: \d+ linhas das animações de fora ficam de fora/);
+    expect(frase[0]).toContain('slot "hand"');
+    expect(doc.data?.findAnimation('walk')!.timelines.length).toBeGreaterThan(5);
+    forgetSharedFiles();
+  });
+});

@@ -674,6 +674,23 @@ export interface SaveOptions {
 
 /** Writes the document. Returns the file name written, or `null` if cancelled. */
 export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise<string | null> {
+  // QA 05/11/2026 (reaproveitar §6, a raiz): o arquivo aberto é o da base
+  // PRINCIPAL; com o foco noutra base, o texto do foco ia para ele, e o
+  // manifesto saía sem a base em foco — perda calada. Salva com a principal em
+  // foco (cada base vai para o SEU arquivo), e volta ao foco de antes.
+  const projeto = doc.project;
+  if (options.saveAs !== true && projeto instanceof Projeto && projeto.temVarios) {
+    const principal = projeto.manifesto.main;
+    const foco = projeto.emFocoUri;
+    if (principal !== foco && projeto.corpos.has(principal)) {
+      projeto.trocarFoco(principal);
+      try {
+        return await saveDocument(doc, options);
+      } finally {
+        projeto.trocarFoco(foco);
+      }
+    }
+  }
   // Lote 61: o pivô da pasta de uma imagem que já está na cena mora na região.
   pruneFolderPivots(doc);
   lastNote = null;
@@ -746,16 +763,20 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
     return handle.name;
   }
 
-  const pack = await buildFolderPack(doc, stemOfName(suggested));
-  const text = doc.serialize();
-  downloadText(suggested, text);
-  lastNote = await saveAtlasBeside(doc, null, pack);
-  lastNote = joinNotes(lastNote, await saveProjectBeside(doc, null));
-  // Reaproveitar (04/11/2026): o arquivo das animações que uma base compartilha.
-  lastNote = joinNotes(lastNote, await saveSharedBeside(doc));
-  markProjectSaved(doc, suggested);
-  void rememberRecent(suggested);
-  return suggested;
+  // Prova de pessoa (5) e (6), 05/11/2026: sem seletor (o download), baixavam
+  // só o .bone e o manifest.json — a folha de imagens ficava para trás, e ao
+  // reabrir o herói vinha sem desenho (42 avisos). Agora baixa UM arquivo, o
+  // pacote .bonez: o boneco, as entidades, a folha de imagens e as páginas,
+  // dentro. É o mesmo do "Salvar como pacote…", e o Abrir projeto… o reabre.
+  const { packageBytes } = await import('./save-binary.js');
+  const built = await packageBytes(doc);
+  const nome = `${stemOfName(suggested)}.bonez`;
+  downloadBlob(nome, new Blob([built.bytes.slice().buffer as ArrayBuffer], { type: 'application/vnd.bone+zip' }));
+  lastNote = `${nome} baixado, com as imagens dentro: para reabrir, Arquivo → Abrir projeto… e escolha ${nome} nos Downloads`;
+  lastNoteWarns = true;
+  markProjectSaved(doc, nome);
+  void rememberRecent(nome);
+  return nome;
 }
 
 /** Duas frases do rodapé numa, ou a que houver. */
