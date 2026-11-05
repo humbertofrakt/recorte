@@ -568,6 +568,25 @@ está na coluna. Clicar abre; clicar no que já está à frente fecha.
 
 ---
 
+## Não sabe como fazer? **Quero fazer…**
+
+Você sabe o que quer, mas não sabe o nome do comando. Comece aqui.
+
+1. Clique em **Quero fazer…**, no rodapé, à direita. Ou **Ajuda → Quero fazer…**.
+2. Digite a coisa: `arma`, `roupa`, `gif`, `psd`. Sem acento serve.
+3. Clique na tarefa. Os passos aparecem embaixo.
+4. Clique em **Mostrar onde**. O menu abre, e o item fica **aceso em laranja**.
+5. Clique você no item aceso.
+
+![A janela Quero fazer… com a palavra arma: a tarefa Pôr uma arma na mão, os quatro passos com o caminho de cada menu, e os botões Mostrar onde e Fechar](imagens/00-quero-fazer-arma.png)
+
+![Depois de Mostrar onde: o menu Entidades aberto, Trazer entidade de fora… aceso em laranja, e o rodapé dizendo o caminho](imagens/00-quero-fazer-onde.png)
+
+O caminho escrito em cada passo vem dos menus do programa. Se um item mudar
+de nome, o passo muda junto.
+
+---
+
 ## Item cinza: ele diz por quê
 
 Um item **cinza** não está quebrado. Falta alguma coisa antes.

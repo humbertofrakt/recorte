@@ -1848,6 +1848,12 @@ export function windowMenu(state: WindowMenuState): MenuItem[] {
 export function helpMenu(): MenuItem[] {
   return [
     { label: 'Manual', shortcut: 'F1', action: 'manual', enabled: true },
+    // Noite de 04/11 (`ui/quero-fazer.ts`): procurar pela COISA que se quer
+    // fazer, e não pelo nome do comando. Também no botão do rodapé.
+    {
+      label: 'Quero fazer…', action: 'quero-fazer', enabled: true,
+      hint: 'Diga o que quer fazer — "arma", "roupa", "gif" — e veja os passos, com o lugar aceso no menu',
+    },
     {
       label: 'Atalhos do teclado',
       shortcut: 'Shift+F1',
