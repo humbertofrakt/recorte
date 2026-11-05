@@ -564,6 +564,25 @@ export class SetProperty implements Command {
 }
 
 /** Builds the command a field produces for a new value. */
+/**
+ * **A Cor ao nascer se grava aos pares** — QA de 04/11/2026 (D9). `startColor`
+ * é `[cor, cor]` (§9.7 da `BONE_particles`, `minItems: 2`). Gravar uma ponta
+ * num emissor que ainda não tinha o par criava `[[cor]]` (ou `[null, cor]`), e
+ * o `.bone` salvo não passava no validador. A ponta que falta entra branca —
+ * é o que o leitor usa na falta dela, e o que a ficha mostrava.
+ */
+export function startColorCommand(
+  file: BoneFile, pairPointer: string, index: 0 | 1, value: unknown, label: string,
+): SetProperty {
+  const branco = [1, 1, 1, 1];
+  const atual = getAtPointer(file as unknown as Record<string, unknown>, pairPointer);
+  const lido = Array.isArray(atual) ? atual : [];
+  const ponta = (i: number): unknown => (Array.isArray(lido[i]) ? [...(lido[i] as unknown[])] : [...branco]);
+  const par = [ponta(0), ponta(1)];
+  par[index] = value;
+  return new SetProperty(pairPointer, par, label, 'structure');
+}
+
 export function setFieldCommand(field: FieldDef, value: unknown): SetProperty {
   return new SetProperty(field.pointer, value, `Mudar ${field.label}`, field.changeKind ?? 'structure');
 }
@@ -1467,10 +1486,16 @@ export function attachmentFields(file: BoneFile, slot: string, name: string): Fi
             // a barra de um token (`startColor/0` sairia `startColor~10`), e o
             // ponteiro deixaria de achar o campo. Medido pelo teste.
             pointer: `${at('startColor')}/0`, fallback: [1, 1, 1, 1], changeKind: 'structure',
+            // QA 04/11/2026 (D9): a escrita é do PAR — `startColor/0` sozinho
+            // criava `[[cor]]`, e o schema pede duas cores.
+            commandFor: (doc: EditorDoc, value: unknown): Command =>
+              startColorCommand(corpoDe(doc).file, at('startColor'), 0, value, 'Mudar cor ao nascer (de)'),
           },
           {
             key: 'startColor1', label: 'Cor ao nascer (até)', kind: 'color',
             pointer: `${at('startColor')}/1`, fallback: [1, 1, 1, 1], changeKind: 'structure',
+            commandFor: (doc: EditorDoc, value: unknown): Command =>
+              startColorCommand(corpoDe(doc).file, at('startColor'), 1, value, 'Mudar cor ao nascer (até)'),
           },
           // Rodada 16, lote 4: o gradiente, a transparência ao longo da vida
           // (§9.7) e a cor do anexo, que multiplica tudo.

@@ -14,7 +14,7 @@ import { createEmptyFile } from '../doc/new-file.js';
 import { describeDraftTime, draftsToOffer, readDraft, takeKeptDraft } from '../doc/rascunho.js';
 import {
   abrindoPelaPasta, cameFromOutside, deliverBody, deliveredLine, entitySaveLines, forgetHandle, forgetOutside,
-  hasOpenHandle, lastSaveNote, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
+  hasOpenHandle, lastSaveNote, lastSaveWarns, saveStatusLine, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
   saveDocument, uriForOpened, useOpenHandle,
 } from '../io/open-save.js';
 import { perguntaSalvarComAvisos } from './salvar-avisos.js';
@@ -39,7 +39,7 @@ import { importPsd, psdWarningsNote } from '../io/import-psd.js';
 import { saveAsBinary, saveAsPackage, savingLine, stem as fileStem } from '../io/save-binary.js';
 import { gltfLine, saveAsGltf } from '../io/export-gltf.js';
 import {
-  buildImageExport, exportImageWindow, imageExportLine, imageExportReport,
+  buildImageExport, exportImageWindow, imageExportLead, imageExportLine, imageExportReport,
   saveExport,
 } from '../io/export-image.js';
 import type { ImageExportOptions } from '../io/export-image.js';
@@ -374,8 +374,16 @@ export async function open(shell: Shell): Promise<void> {
 
 export async function save(shell: Shell, saveAs: boolean): Promise<void> {
   // Rodada 7: sem pasta, o Salvar primeiro pede a pasta (Salvar como… não).
-  if (!saveAs && await askFolderFirst(shell, 'salvar') === 'cancelar') return;
-  if (saveAs && await askFolderFirst(shell, 'salvar', true) === 'cancelar') return;
+  const primeira = await askFolderFirst(shell, 'salvar', saveAs);
+  if (primeira === 'cancelar') return;
+  // QA 04/11/2026 (D5): a pasta acabou de ser escolhida nesta mesma volta —
+  // perguntar "onde vai a cópia?" de novo era a mesma pergunta duas vezes.
+  // Grava nela, como o "Numa pasta nova…" abaixo.
+  const pastaEscolhidaAgora = saveAs && primeira === 'pasta';
+  if (pastaEscolhidaAgora) {
+    forgetHandle();
+    saveAs = false;
+  }
   // Rodada 45, lote 4 (doc 64, d): com o projeto numa pasta, Salvar como
   // pergunta: pasta nova (leva tudo) ou só o .bone.
   const pastaAtual = projectFolder(shell.doc);
@@ -412,10 +420,8 @@ export async function save(shell: Shell, saveAs: boolean): Promise<void> {
     if (name === null && problema !== null) shell.statusState.textContent = problema;
     if (name !== null) {
       // Lote 62: o que o Salvar fez com o atlas da pasta, ou por que baixou.
-      const nota = lastSaveNote();
-      const extra = nota !== null ? ` ${nota}.`
-        : atlasFileText(shell.doc) === null ? '' : ' Atlas e páginas gravados junto.';
-      shell.statusState.textContent = `Salvo em ${name}.${extra}`;
+      // QA 04/11/2026 (D3): o aviso de "baixado" vem primeiro, senão o rodapé o corta.
+      shell.statusState.textContent = saveStatusLine(name, lastSaveNote(), lastSaveWarns(), atlasFileText(shell.doc) !== null);
     }
   } catch (error) {
     shell.statusState.textContent = error instanceof Error ? error.message : String(error);
@@ -724,7 +730,7 @@ export async function exportImage(shell: Shell): Promise<void> {
     saveLastExport('imagem', run.options as unknown as Record<string, unknown>);
     await tellUser({
       title: 'Imagem exportada',
-      lead: `${run.result.files.length} arquivo(s) gravado(s).`,
+      lead: imageExportLead(run.result, run.options, run.base),
       lines: imageExportReport(run.result, run.options, run.base, run.where),
     });
   } catch (error) {
@@ -1018,8 +1024,9 @@ export async function importForeign(shell: Shell): Promise<void> {
     if (imported === null) return;
     forgetHandle();
     forgetImportedImages(shell.doc);
+    // QA 04/11/2026 (D7): o bcp.bone ainda não existe no disco — nasce "não salvo".
     shell.doc.setFile(imported.file, {
-      path: imported.path, atlases: imported.atlases, images: imported.images,
+      path: imported.path, atlases: imported.atlases, images: imported.images, unsaved: true,
     });
     const program = FORMAT_LABELS[imported.format];
     // E3b (29/09/2026): o passo 2, o mesmo do arrasto. Um projeto do Spriter

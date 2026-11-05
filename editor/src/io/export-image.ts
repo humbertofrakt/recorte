@@ -1075,6 +1075,25 @@ export function forgetImageOptions(): void {
 }
 
 /** The lines the window shows after an export, in Portuguese. */
+/**
+ * A frase de cima da janela "Imagem exportada" — QA de 04/11/2026 (D6). Com a
+ * sequência num `.zip`, sai UM arquivo: a janela dizia "60 arquivo(s)
+ * gravado(s)" enquanto o rodapé dizia "1 .zip com 60 PNG".
+ */
+export function imageExportLead(result: ImageExportResult, options: ImageExportOptions, base: string): string {
+  const n = result.files.length;
+  if (wantsZip(options, n)) return `1 arquivo gravado: ${zipPlan([], base).file}, com ${n} PNG dentro.`;
+  return n === 1 ? '1 arquivo gravado.' : `${n} arquivos gravados.`;
+}
+
+/** A linha "Arquivos:" — o `.zip` e o primeiro e o último de dentro, ou a lista do que saiu solto. */
+function arquivosLine(result: ImageExportResult, options: ImageExportOptions, base: string): string {
+  const nomes = result.files.map((file) => file.name);
+  if (!wantsZip(options, nomes.length)) return `Arquivos: ${nomes.join(', ')}`;
+  const plano = zipPlan(nomes, base);
+  return `Arquivos: ${plano.file}, com ${plano.entries[0]} … ${plano.entries[plano.entries.length - 1]} dentro`;
+}
+
 export function imageExportReport(
   result: ImageExportResult, options: ImageExportOptions, base: string, where: string = DOWNLOAD_FOLDER_LINE,
 ): string[] {
@@ -1085,7 +1104,7 @@ export function imageExportReport(
       : `Animação: ${result.animations[0] ?? options.animation}`,
     `Quadros: ${result.frameCount}, a ${options.fps} por segundo`,
     ...frameSizeLines(result),
-    `Arquivos: ${result.files.map((file) => file.name).join(', ')}`,
+    arquivosLine(result, options, base),
     // N-8 (rodada 17): o aviso nunca dizia onde o arquivo foi parar.
     where,
   ];

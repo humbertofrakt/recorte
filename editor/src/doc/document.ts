@@ -65,6 +65,11 @@ export interface DocOptions {
    * todos os corpos: um `Ctrl+Z` desfaz o último passo, em qualquer corpo.
    */
   undo?: UndoStack;
+  /**
+   * `true` = o que entra NÃO está no disco: o rascunho recuperado — QA de
+   * 04/11/2026 (D4). Nasce sujo, e nem desfazer o limpa: só o Salvar.
+   */
+  unsaved?: boolean;
 }
 
 /**
@@ -232,8 +237,9 @@ export class Doc implements EditorDoc {
     // keeping the old ones would put the last file's sword in this one's hand.
     this.nestedSkeletons = options.skeletons ?? new Map();
     this.undoStack.clear();
-    this.dirtyFlag = false;
-    this.savedCursor = this.undoStack.cursor();
+    this.dirtyFlag = options.unsaved === true;
+    // -2: nenhum ponto da pilha é o salvo (o mesmo truque do passo novo além do salvo).
+    this.savedCursor = options.unsaved === true ? -2 : this.undoStack.cursor();
     this.currentSelection = emptySelection();
     this.currentTime = 0;
     this.currentAnimation = null;

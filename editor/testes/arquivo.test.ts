@@ -2093,7 +2093,9 @@ describe('rodada 45, lote 4: abrir, soltar e voltar falam claro', () => {
     const escolhas = salvarComoEscolhas('meu-heroi');
     expect(escolhas.map((e) => e.id)).toEqual(['pasta', 'sem']);
     expect(escolhas[0]!.hint).toContain('o atlas, as imagens em uso e as entidades vão juntos');
-    expect(escolhas[1]!.hint).toContain('continuam na pasta meu-heroi');
+    // QA 04/11/2026 (D3): fora da pasta o atlas vai para Downloads; a dica diz isso.
+    expect(escolhas[1]!.hint).toContain('Dentro da pasta meu-heroi, o atlas vai junto');
+    expect(escolhas[1]!.hint).toContain('fora dela, o atlas e as páginas vão para Downloads');
     const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
     expect(fonte).toContain('options: [...salvarComoEscolhas(pastaAtual.name)');
   });
@@ -2338,5 +2340,90 @@ describe('rodada 50, lote 4: o Reabrir o fechado diz o remédio das imagens (doc
   it('a frase diz por que as imagens não vieram E onde buscá-las', () => {
     const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
     expect(fonte).toContain('As imagens não vêm no guardado: para trazê-las, Arquivo → Abrir pasta do projeto…');
+  });
+});
+
+describe('QA 04/11/2026 — D3: o aviso do Salvar não some no rodapé', () => {
+  // A prova (Chromium sem janela, 1920x1080): Salvar como → Só o arquivo .bone…
+  // numa pasta fora da do projeto. O atlas e as páginas foram baixados, e o
+  // rodapé mostrou só "Salvo em copia.bone." — a frase do aviso vinha depois,
+  // e o rodapé corta na primeira frase que cabe.
+  const aviso = 'O .bone foi salvo fora da pasta mao: o atlas e as páginas foram baixados. '
+    + 'Salve o .bone dentro da pasta para eles irem juntos';
+
+  it('o jeito antigo perdia o aviso na versão curta (o defeito)', async () => {
+    const { versoesDaFrase } = await import('../src/ui/shell-status.js');
+    const antigo = `Salvo em copia.bone. ${aviso}.`;
+    const curtas = versoesDaFrase(antigo).slice(1);
+    expect(curtas.some((v) => v.includes('baixados'))).toBe(false);
+  });
+
+  it('com aviso, o aviso vem primeiro e sobrevive ao corte', async () => {
+    const { saveStatusLine } = await import('../src/io/open-save.js');
+    const { versoesDaFrase } = await import('../src/ui/shell-status.js');
+    const linha = saveStatusLine('copia.bone', aviso, true, false);
+    expect(linha.startsWith('O .bone foi salvo fora da pasta mao')).toBe(true);
+    expect(linha).toContain('Salvo em copia.bone.');
+    for (const curta of versoesDaFrase(linha)) expect(curta).toMatch(/fora da pasta mao/);
+  });
+
+  it('sem aviso, a notícia segue depois do nome, como antes', async () => {
+    const { saveStatusLine } = await import('../src/io/open-save.js');
+    expect(saveStatusLine('mao.bone', 'Atlas da pasta gravado ao lado: mao.atlas.json, com 2 imagens em uso', false, true))
+      .toBe('Salvo em mao.bone. Atlas da pasta gravado ao lado: mao.atlas.json, com 2 imagens em uso.');
+    expect(saveStatusLine('a.bone', null, false, false)).toBe('Salvo em a.bone.');
+    expect(saveStatusLine('a.bone', null, false, true)).toBe('Salvo em a.bone. Atlas e páginas gravados junto.');
+  });
+
+  it('o Salvar da casca usa a frase nova, e o io marca os três caminhos que baixam', () => {
+    const casca = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(casca).toContain('saveStatusLine(name, lastSaveNote(), lastSaveWarns()');
+    const io = readFileSync(resolve(__dirname, '../src/io/open-save.ts'), 'utf8');
+    expect(io.match(/lastNoteWarns = true;/g)?.length).toBe(3);
+  });
+});
+
+describe('QA 04/11/2026 — D5: Salvar como sem pasta pergunta UMA vez', () => {
+  // A prova (Chromium sem janela, herói aberto, sem pasta): Salvar como… →
+  // "Escolher a pasta do projeto…" → o seletor deu a pasta proj → e logo a
+  // segunda janela: "O projeto mora na pasta proj. Onde vai a cópia?". A
+  // pessoa tinha acabado de dizer onde.
+  const fonte = (): string => readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+  const corpoDoSave = (): string => {
+    const f = fonte();
+    const i = f.indexOf('export async function save(');
+    return f.slice(i, f.indexOf('\n}\n', i));
+  };
+
+  it('o save pergunta a pasta uma vez e guarda a resposta', () => {
+    const corpo = corpoDoSave();
+    expect(corpo.match(/askFolderFirst\(/g)?.length).toBe(1);
+    expect(corpo).toContain("const pastaEscolhidaAgora = saveAs && primeira === 'pasta';");
+  });
+
+  it('com a pasta escolhida agora, grava nela: esquece o arquivo de antes e não é mais "como"', () => {
+    const corpo = corpoDoSave();
+    const bloco = corpo.slice(corpo.indexOf('if (pastaEscolhidaAgora)'), corpo.indexOf('const pastaAtual'));
+    expect(bloco).toContain('forgetHandle();');
+    expect(bloco).toContain('saveAs = false;');
+    // A pergunta "Onde vai a cópia?" só vem depois, e só com saveAs ainda de pé.
+    expect(corpo.indexOf('if (pastaEscolhidaAgora)')).toBeLessThan(corpo.indexOf('Onde vai a cópia?'));
+  });
+});
+
+describe('QA 04/11/2026 — D8: o .boneb aberto sozinho fala português', () => {
+  // A prova (Chromium sem janela): Ctrl+O → heroi.boneb, sem o atlas. O
+  // rodapé mostrou '/skins/0/attachments/cape_upper/cape_upper/path: image
+  // "cape_upper" not found in any atlas; attachment will be invisible' — a
+  // frase crua do leitor, em inglês. O mesmo herói em .bone diz "Esta base usa
+  // heroi.atlas.json, que mora na pasta do projeto, e ela veio sozinha…".
+  it('a primeira frase é a do atlas que não veio, como no .bone', async () => {
+    const { writeBoneb } = await import('../../runtime/src/binario/escrever.js');
+    const { readOpenedFiles } = await import('../src/io/open-save.js');
+    const texto = readFileSync(resolve(__dirname, '../../formato/exemplos/heroi.bone'), 'utf8');
+    const bytes = writeBoneb(JSON.parse(texto));
+    const aberto = await readOpenedFiles([new File([bytes.slice().buffer as ArrayBuffer], 'heroi.boneb')]);
+    expect(aberto).not.toBeNull();
+    expect(aberto!.warnings[0]).toMatch(/^Esta base usa heroi\.atlas\.json, que mora na pasta do projeto, e ela veio sozinha/);
   });
 });
