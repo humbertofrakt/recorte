@@ -461,6 +461,29 @@ body {
   }
 }
 
+/*
+ * A barra de menus em tela estreita — noite de 05/11/2026 (achado do manual).
+ * Em 1024 px os doze menus pediam 1271 px, e Exibir, Janela e Ajuda ficavam
+ * FORA da tela. Nenhum menu some: encolhe o espaço de dentro de cada botão, e
+ * a marca "Recorte" (que é só o nome do programa) sai da barra; o nome do
+ * arquivo cede com reticências, como já cedia em 1280.
+ */
+@media (max-width: 1399px) {
+  .menu-button {
+    padding: 6px 7px;
+  }
+}
+
+@media (max-width: 1150px) {
+  .brand {
+    display: none;
+  }
+
+  .menu-button {
+    padding: 6px 5px;
+  }
+}
+
 .doc-mark {
   color: var(--warn);
   font-weight: 700;
