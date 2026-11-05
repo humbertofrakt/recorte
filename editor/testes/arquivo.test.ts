@@ -1131,6 +1131,41 @@ describe('abrir e salvar a pasta do projeto (degrau 4b)', () => {
     },
   });
 
+  it('QA 05/11 (reaproveitar §6): Salvar com o foco noutra base grava cada base no SEU arquivo, e o manifesto fica inteiro', async () => {
+    // A raiz: o arquivo aberto (o da base principal) recebia o texto do FOCO.
+    // Com o foco no lobisomem, o lobisomem ia para entrada.bone, e o
+    // manifesto saía sem ele — perda calada. Aqui, sem a casca no meio.
+    const dir = pasta([arquivo('manifest.json', manifesto()), arquivo('entrada.bone', texto('entrada.bone')), arquivo('lobisomem.bone', texto('lobisomem.bone'))]);
+    const lido = (await openProjectFiles(dir, (await readManifestInFolder(dir))!))!;
+    const doc = new Doc(createEmptyFile());
+    const projeto = new Projeto(doc);
+    openProjectInto(projeto, lido);
+    const { saveDocument, useOpenHandle } = await import('../src/io/open-save.js');
+    const gravados = new Map<string, string>();
+    const alca = (name: string) => ({
+      kind: 'file', name,
+      createWritable: async () => ({ write: async (d: string | Blob) => { gravados.set(name, typeof d === 'string' ? d : await d.text()); }, close: async () => {} }),
+      getParent: async () => ({ getFileHandle: async (n: string) => alca(n) }),
+    });
+    useOpenHandle(alca('entrada.bone'));
+    const g = globalThis as unknown as Record<string, unknown>;
+    g['showSaveFilePicker'] = async () => alca('nao-devia-perguntar.bone');
+    try {
+      projeto.trocarFoco('lobisomem.bone');
+      expect(doc.file.skeleton?.name).toBe('lobisomem');
+      await saveDocument(doc, { confirmProblems: () => true });
+    } finally {
+      delete g['showSaveFilePicker'];
+    }
+    expect((JSON.parse(gravados.get('entrada.bone')!) as BoneFile).skeleton?.name).toBe('homem');
+    expect((JSON.parse(gravados.get('lobisomem.bone')!) as BoneFile).skeleton?.name).toBe('lobisomem');
+    const salvo = JSON.parse(gravados.get('manifest.json')!) as ReturnType<typeof emptyManifest>;
+    expect(salvo.main).toBe('entrada.bone');
+    expect(salvo.skeletons).toEqual(expect.arrayContaining(['entrada.bone', 'lobisomem.bone']));
+    // O foco volta para onde estava.
+    expect(projeto.emFocoUri).toBe('lobisomem.bone');
+  });
+
   it('o manifesto se reconhece pelo texto; um .bone não é manifesto', () => {
     expect(readManifestText(manifesto())?.main).toBe('entrada.bone');
     expect(readManifestText(texto('entrada.bone'))).toBe(null);
