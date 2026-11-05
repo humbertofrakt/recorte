@@ -1940,3 +1940,23 @@ describe('QA 04/11/2026 — D6: a janela do PNG em .zip conta o que saiu', () =>
     expect(fonte).toContain('lead: imageExportLead(run.result, run.options, run.base),');
   });
 });
+
+describe('QA 04/11/2026 — D7: o projeto importado de outro programa nasce "não salvo"', () => {
+  // A prova (Chromium sem janela): Importar → De outro programa… → exemplo/game
+  // → bcp.scml. O documento abria com path "bcp.bone" e dirty=false: o rodapé
+  // diria "Sem mudanças por salvar." de um arquivo que não existe no disco, e
+  // fechar a aba não perguntava nada. O PSD importado já nascia sujo.
+  const fonte = (arquivo: string): string => readFileSync(resolve(__dirname, '../src/ui', arquivo), 'utf8');
+
+  it('pelo menu: o setFile do importado leva unsaved', () => {
+    const f = fonte('shell-file.ts');
+    const corpo = f.slice(f.indexOf('export async function importForeign('), f.indexOf('const program = FORMAT_LABELS[imported.format]'));
+    expect(corpo).toMatch(/shell\.doc\.setFile\(imported\.file, \{[^}]*unsaved: true/);
+  });
+
+  it('pelo arrasto da pasta: o mesmo', () => {
+    const f = fonte('shell-drop.ts');
+    const corpo = f.slice(f.indexOf("case 'outro': {"), f.indexOf('const programa = FORMAT_LABELS[importado.format]'));
+    expect(corpo).toMatch(/shell\.doc\.setFile\(importado\.file, \{[^}]*unsaved: true/);
+  });
+});
