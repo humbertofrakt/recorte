@@ -94,6 +94,8 @@ export async function applyReuse(
   if (mode === 'copia') {
     const r = copyCommand(doc.file, source, names, match);
     doc.run(r.command);
+    // (b) da prova final: a primeira que entrou fica aberta e escolhida na lista.
+    if (r.copy.brought.length > 0) openAnimation(doc, r.copy.brought[0]!);
     doc.notice(reuseNotice(source, { ...r.report, brought: r.copy.brought }));
     return true;
   }
@@ -118,6 +120,9 @@ export async function applyReuse(
   const r = linkCommand(doc.file, ligar, match);
   if ('refused' in r) { doc.notice(r.refused); return false; }
   doc.run(r.command);
+  // (b): a primeira ligada fica aberta e escolhida, em Compartilhadas.
+  const primeira = r.report.brought[0];
+  if (primeira !== undefined && doc.data?.findAnimation(primeira)) openAnimation(doc, primeira);
   doc.notice(reuseNotice(ligar, r.report));
   return true;
 }

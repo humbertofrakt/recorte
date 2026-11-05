@@ -862,7 +862,12 @@ class AnimationsPanel implements Panel {
         const nome = row.name!;
         const item = el('li');
         const botao = el('button', 'anim-item anim-item-fora');
-        if (doc.animation === nome) botao.classList.add('is-active');
+        botao.setAttribute('aria-selected', doc.animation === nome ? 'true' : 'false');
+        if (doc.animation === nome) {
+          botao.classList.add('is-active');
+          // A que acabou de chegar fica à vista (a prova final, 05/11).
+          requestAnimationFrame(() => botao.scrollIntoView({ block: 'nearest' }));
+        }
         const dica = `${nome}, ${de}: ligada, muda junto com o original. Clique para ver tocar aqui; `
           + 'para mudar, Abrir o original';
         botao.title = dica;

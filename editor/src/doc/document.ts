@@ -38,7 +38,7 @@ import { applyHandPivots } from './hand-pivots.js';
 import type { UndoView } from '../contract.js';
 import { aroundWarnings } from './around-warnings.js';
 import { createEmptyFile } from './new-file.js';
-import { composeShared, sharedUrisOf, withSharedAnimations } from './shared-animations.js';
+import { composeShared, sharedUrisOf, sharedWarnings, withSharedAnimations } from './shared-animations.js';
 
 /** Camera the viewport owns; the document only stores it between sessions. */
 export interface CameraState {
@@ -560,6 +560,8 @@ export class Doc implements EditorDoc {
       });
       for (const warning of data.warnings) warnings.push(`${warning.pointer}: ${warning.message}`);
       for (const image of data.missingImages) warnings.push(`imagem não encontrada: ${image}`);
+      // Reaproveitar (05/11): o que as compartilhadas deixam de fora, uma frase por arquivo.
+      for (const aviso of sharedWarnings(this.currentFile)) warnings.push(aviso);
       this.skeletonData = data;
       // Degrau 9 (regra 21): pele ligada que este corpo não tem é DITA na barra
       // de avisos, e não só na aba Peles — com a aba fechada, o personagem
