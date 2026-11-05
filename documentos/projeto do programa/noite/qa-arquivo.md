@@ -30,6 +30,13 @@ Executor: `EXECUTANDO · QA arquivo`. Quem coordena: o DIRETOR.
 | D11 | `render-png --bone X` diz "Nenhum esqueleto passado" | `ferramentas/render-png.mjs` | o mesmo comando | sim |
 | D12 | Exportar imagem de um arquivo só de partículas: sai "1 quadro de 1x1" (a caixa não contava partículas — a mesma forma do D10, dentro do editor) | `io/export-image.ts` | `fogo.bone` → Só este quadro (0,4 s) | sim |
 | D13 | Exportar animações do herói sugere `animacoes-animacoes.bone` | `io/export-animation.ts` | Exportar → Animações, para outra base… | sim |
+| D14 | Abrir (ou soltar) a pasta `exemplo/game`: reabre `bcp 2026-09-09.bone` com **176 avisos** — 88 imagens "não encontradas" que **estão na pasta** (os mesmos 176 do doc 89). Agora: 2 avisos (a 1 que falta de verdade é uma pasta no disco) | `io/folder-save.ts` | Arquivo → Abrir pasta → `exemplo/game` | sim |
+| D15 | O menu diz **"Uma imagem por skin…"**, mas a janela fatia o `.bone` por skin; não sai imagem nenhuma (o manual já avisa: *"o nome do menu está errado"*) | `ui/menus.ts` (passagem) | Arquivo → Exportar → Uma imagem por skin… | **não** (ver abaixo) |
+| D16 | "Exportar por skin", tudo marcado: "Tamanho 48.326 / 48.319" — o recorte maior que o inteiro (anotado desde o doc 57) | `io/export-skin.ts` | a mesma janela | sim |
+| D17 | Entregar uma base depois de importar do Spine: sai só o `.bone`, citando `heroi-spine.atlas.json` que não existe em lugar nenhum; a janela dizia "o atlas que ele já citava vale" | `io/open-save.ts`, `ui/shell-file.ts` | Importar Spine → Exportar → Entregar uma base… | sim |
+| D18 | Reabrir o fechado: o guardado abre "Sem mudanças por salvar." (a forma do D4, na outra porta) | `ui/shell-file.ts` | Arquivo → Reabrir o fechado | sim |
+| — | Linha de comando: opção errada saía com 1 em `empacotar`, `exportar`, `exportar-imagem`, `fatiar`, `render-png` (os outros com 2); `fatiar --animacoes X` não dizia quais há | `ferramentas/*.mjs` | `npm run fatiar -- a.bone x --bobagem` | sim |
+| — | Importar PSD: com a janela de avisos aberta, o rodapé dizia "Importar PSD." | `ui/shell-file.ts`, `ui/shell-drop.ts` | Importar → PSD… | sim |
 
 Cada conserto: um commit, com teste no arquivo da parte, visto **vermelho antes** (regra 26).
 
@@ -53,6 +60,12 @@ Cada conserto: um commit, com teste no arquivo da parte, visto **vermelho antes*
 | Partículas | Fumaça, Fogo, Faísca nascem; tocando, emitem (foto 01); a chave "Emitindo" nasce na linha do tempo; Salvar + `validar` OK |
 | Cor ao nascer × Cor na vida | a faixa fina de baixo fica vermelha ao trocar «de» (foto 02) |
 | Biblioteca | exportar as 3 animações → importar noutra base (PSD com ossos): a janela lista os 14 nomes que não batem; a biblioteca de fábrica abre |
+| Soltar pasta na cena | `mao` abre como projeto ("pelo arrasto: 13 imagens"); `game` reabre o `.bone` dela (e, depois do D14, desenha) |
+| Spine pela tela | a pasta com `.json` + `.atlas` + `.png`: entra inteiro, "Nada se perdeu" |
+| Repetir a última exportação | `Ctrl+Shift+E` repete o GIF sem perguntar |
+| Fazer a skin de uma pasta | a subpasta `inverno/` vira a skin "inverno" (2 desenhos); Salvar + `validar` OK; `fatiar --peles inverno` OK |
+| glTF | `heroi.glb`, 77.640 bytes, e a lista do que o glTF não leva |
+| 1280×720 | todos os passeios fecham; as janelas grandes (Exportar imagem, animação, por skin, biblioteca) cabem, os botões à vista |
 
 ## A linha de comando
 
@@ -61,11 +74,11 @@ Cada conserto: um commit, com teste no arquivo da parte, visto **vermelho antes*
 | `validar` | 0 (era: validava os exemplos) | 0 (valida os exemplos, de propósito) | 2 (era 0) | `.bone`, `.bonez`, `manifest.json` do editor: OK |
 | `importar` | 0 | 2 | 2 | `bcp.scml`: 2.456 recursos, 2 avisos |
 | `importar-psd` | 0 | 2 | 2 | `heroi.psd`: 19 slots; `--ossos`: 18 ossos |
-| `empacotar` | 0 | 1 | 1 | `exemplo/game/mao`: 785×521, 73% |
+| `empacotar` | 0 | 2 (era 1) | 2 (era 1) | `exemplo/game/mao`: 785×521, 73% |
 | `converter` | 0 | 2 (era 0) | 2 (era 0) | `.bone → .bonez → .boneb → .bone`: igual |
-| `exportar` | 0 | 2 | 1 | `heroi.glb`, com a lista do que o glTF não leva |
-| `exportar-imagem` | 0 | 2 | 1 | GIF de 30 quadros; agora com partículas |
-| `fatiar` | 0 | 2 | 1 | `--animacoes` errada: "não achei a animação" |
+| `exportar` | 0 | 2 | 2 (era 1) | `heroi.glb`, com a lista do que o glTF não leva |
+| `exportar-imagem` | 0 | 2 | 2 (era 1) | GIF de 30 quadros; agora com partículas |
+| `fatiar` | 0 | 2 | 2 (era 1) | `--animacoes` errada: "não achei…; há: walk, attack, falar" |
 
 Todas as mensagens em português.
 
@@ -83,8 +96,7 @@ Todas as mensagens em português.
 
 | O quê | Por quê |
 |:---|:---|
-| `empacotar`, `exportar`, `exportar-imagem`, `fatiar` saem com 1 na opção errada (os outros com 2) | não quebra nada; mexer muda o que outros scripts esperam |
-| `fatiar --animacoes X` errada não diz quais existem | pequeno; fica para a próxima |
+| **D15, o nome "Uma imagem por skin…"** | o rótulo mora em `ui/menus.ts` (arquivo de passagem) e o manual (outra sessão desta noite) escreve sobre ele. **Recomendo**: "Um arquivo por skin…", dica *"Corta o .bone: só as skins e as animações marcadas"*. É uma linha; o Diretor decide junto com o manual |
 | Exportar skin grava só o `.bone` da skin, sem atlas | é o desenho (o arquivo de skin exige o rig e os nomes); noutro boneco as imagens vêm do atlas dele |
 | Rascunho recuperado vem **sem as imagens** (avisa 4) | o navegador não guarda a licença da pasta; a casca já diz "para trazê-las, Arquivo → Abrir pasta do projeto…" |
 | O rodapé do Importar PSD diz "Importar PSD." até fechar a janela | cosmético |
@@ -95,7 +107,7 @@ Do doc `89`, nada disto se prova num Chrome sem janela:
 
 | # | O quê |
 |:---:|:---|
-| 1 | o seletor de cor do Windows (Cor ao nascer) |
+| 1 | o seletor de cor do Windows (Cor ao nascer). A faixa fina muda — provado pelo valor, não pelo seletor |
 | 2 | soltar a pasta do Explorer na cena (provei só o caminho por dentro: a pasta de mentira entra pela mesma porta) |
 | 3 | o seletor de pasta do Windows (Novo projeto, Abrir pasta, Salvar como) |
 | 4 | a pasta Downloads de verdade (`Ctrl+J`) |
@@ -104,7 +116,15 @@ Do doc `89`, nada disto se prova num Chrome sem janela:
 
 ## Fotos
 
+## A régua, na última medida (05/11, ~01h10 pelo relógio da máquina)
+
+| Medida | Resultado |
+|:---|:---|
+| `npx vitest run` | 5.819 verdes (eram 5.774 na partida), 1 vermelho: o conhecido do manual (`ajuda.test.ts`) |
+| `npx tsc --noEmit -p editor/tsconfig.json` | limpo |
+| `node ferramentas/conformidade.mjs` | 120 de 120 |
+
 Em `fotos-qa-arquivo/`:
-01 partículas na linha do tempo · 02 a faixa fina da Cor ao nascer · 03 o fogo no editor × na linha de comando · 04 o herói no `render-png` × no editor · 05 o rodapé do Salvar fora da pasta · 06 o Spriter importado · 07 trocar imagem nas skins.
+01 partículas na linha do tempo · 02 a faixa fina da Cor ao nascer · 03 o fogo no editor × na linha de comando · 04 o herói no `render-png` × no editor · 05 o rodapé do Salvar fora da pasta · 06 o Spriter importado · 07 trocar imagem nas skins · 08 a pasta `game` aberta depois do D14 (2 avisos, o bcp desenhado).
 
 FIM
