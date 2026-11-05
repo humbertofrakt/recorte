@@ -761,6 +761,10 @@ export function setupDefaultFor(target: TimelineTarget): KeyValue | undefined {
     case 'constraint': return clone(CONSTRAINT_SETUP_DEFAULTS[property]);
     case 'morph': return 0;
     case 'parameter': return 0;
+    // QA da noite (04/11/2026): `value: []` = sem deform (§9.6). Sem isto a
+    // primeira chave de deform depois de 0 nascia sozinha, a malha já
+    // começava deformada, e a animação não andava (`keepStartKey`).
+    case 'deform': return [];
     // §9.1 da extensão: `emitting` é `true` quando o anexo não diz.
     case PARTICLE_TIMELINE: return property === 'emitting' ? true : undefined;
     default: return undefined;

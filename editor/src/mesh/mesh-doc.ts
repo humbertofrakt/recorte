@@ -559,7 +559,10 @@ export function deformWarningFor(doc: EditorDoc, ref: MeshRef): string {
     if (typeof name !== 'string') continue;
     const timeline = findTimeline(doc.file, name, target);
     if (timeline === null) continue;
-    const keys = (timeline as unknown as { keys?: unknown[] }).keys ?? [];
+    // QA da noite (04/11/2026): a chave do começo é `[]` ("sem deform") e não
+    // tem número que caia em outro vértice — não entra na conta do aviso.
+    const keys = ((timeline as unknown as { keys?: Array<{ value?: unknown }> }).keys ?? [])
+      .filter((key) => !Array.isArray(key.value) || key.value.some((n) => n !== 0));
     if (keys.length === 0) continue;
     chaves += keys.length;
     animacoes.add(name);
