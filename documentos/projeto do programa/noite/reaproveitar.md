@@ -57,7 +57,7 @@ Em `reaproveitar-o-desenho.md`: Unreal (Skeleton dono, Retarget), Unity (Avatar,
 | (c) Compartilhadas no robô: **↗ do cavaleiro**, e o andar toca | passou |
 | (d) goblin: Ligadas; **Abrir o original** leva ao cavaleiro com o andar aberto | passou |
 | (d) mudar a cabeça no andar do cavaleiro → **a cena do goblin muda sozinha** | passou |
-| Salvar grava `cavaleiro-animacoes.bone` ao lado | passou |
+| Salvar **com o foco no goblin** grava as 3 bases e `cavaleiro-animacoes.bone` ao lado | passou |
 | (e) fechar e reabrir a pasta: o goblin ainda toca as do cavaleiro | passou |
 | (f) o goblin sozinho, sem o cavaleiro: lê o arquivo da pasta | passou |
 
@@ -72,15 +72,17 @@ Em `reaproveitar-o-desenho.md`: Unreal (Skeleton dono, Retarget), Unity (Avatar,
 | **Montei o corpo uma vez e não remontei quando o chão mudou.** O goblin mostrava o andar velho depois que o cavaleiro mudou | trocar de base remonta a que toca compartilhadas |
 | **A Biblioteca gravava o nome e não o arquivo.** A lista dizia o nome, e nada tocava | o arquivo fica guardado; as 4 tocam |
 
-## 6. Defeito de OUTRA parte (não mexi) — para o Diretor
+## 6. Defeito de OUTRA parte, achado pela prova — consertei na casca, e aviso o dono
 
-**Salvar com o foco numa base que não é a principal perde essa base.** Dono: o Salvar do projeto (`io/open-save.ts` `saveDocument` + `io/project-open.ts` `projectFilesToSave`).
+**Salvar com o foco numa base que não é a principal perdia essa base.** Dono: o Salvar do projeto (`io/open-save.ts` `saveDocument` + `io/project-open.ts` `projectFilesToSave`).
 
-| Passo | O que acontece |
+| Passo | O que acontecia |
 |:---|:---|
-| abrir a pasta com `cavaleiro.bone`; trazer `goblin.bone`; clicar no goblin; Ctrl+S | o goblin é gravado em `cavaleiro.bone`; logo depois o cavaleiro é gravado por cima. O `manifest.json` sai sem o goblin. As mudanças do goblin somem, sem aviso |
+| abrir a pasta com `cavaleiro.bone`; trazer `goblin.bone`; clicar no goblin; Ctrl+S | o goblin era gravado em `cavaleiro.bone`; logo depois o cavaleiro era gravado por cima. O `manifest.json` saía sem o goblin. As mudanças do goblin sumiam, sem aviso |
 
-A forma: *gravo o foco no arquivo que ABRI, e não no arquivo do FOCO.* A prova contorna (volta ao cavaleiro antes de salvar) e o "Como fazer" avisa.
+A forma: *gravo o foco no arquivo que ABRI, e não no arquivo do FOCO.*
+
+**O conserto (mínimo, na casca, `ui/shell-file.ts` `save`)**: com o foco fora da base principal (`manifesto.main`), o Salvar volta à principal, salva, e volta ao foco de antes. Provado antes: a prova, salvando com o foco no goblin, tirava o goblin do manifesto; agora as 3 bases ficam, e o `goblin.bone` salvo cita o arquivo compartilhado. **Para a sessão do arquivo**: a raiz é o `openHandle` não seguir o foco; o conserto de verdade é lá. O `Salvar como…` com o foco fora da principal não foi mexido.
 
 ## 7. O que ficou de fora
 
@@ -91,13 +93,14 @@ A forma: *gravo o foco no arquivo que ABRI, e não no arquivo do FOCO.* A prova 
 | Ligadas a outra base dá 2 passos de desfazer (a dona e este) | dois arquivos mudam |
 | Ligar sem renomear | precisa de campo novo (`rig.map`), decisão do Humberto |
 
-## 8. Régua de fecho (05/11/2026, ~01:10 UTC)
+## 8. Régua de fecho (05/11/2026, 01:15 UTC, depois de juntar `obra/noite-2026-11-04`)
 
 | Régua | Resultado |
 |:---|:---|
-| `npx vitest run` | 5.793 passaram, 1 vermelho (o conhecido: `ajuda.test.ts`, imagens do manual), 31 pulados |
+| `npx vitest run` | **5.959 passaram, 0 vermelho**, 11 pulados (o vermelho do manual sumiu com o ramo da noite) |
 | `npx tsc --noEmit -p editor/tsconfig.json` | limpo |
-| `node ferramentas/conformidade.mjs` | 120 de 120 |
+| `node ferramentas/conformidade.mjs` | 132 de 132 |
 | Testes desta parte | `editor/testes/reaproveitar.test.ts`: 19 |
+| Prova de pessoa | `prova.cjs`: nenhum passo travou |
 
 FIM

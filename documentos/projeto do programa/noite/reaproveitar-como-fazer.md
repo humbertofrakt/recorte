@@ -48,5 +48,4 @@ Uma ação por linha.
 
 | O quê | Por quê |
 |:---|:---|
-| Salve com a base **principal** em foco (a que abriu a pasta) | Salvar com outra base em foco perde essa base. Defeito do Salvar do projeto, já relatado |
 | Uma compartilhada não se muda no boneco que a usa | Muda-se no dono: **Abrir o original** |

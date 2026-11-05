@@ -374,6 +374,29 @@ export async function open(shell: Shell): Promise<void> {
 }
 
 export async function save(shell: Shell, saveAs: boolean): Promise<void> {
+  // Reaproveitar (05/11/2026): com várias bases, o Salvar grava o FOCO no
+  // arquivo que abriu a pasta (a base principal), e depois grava a principal
+  // por cima. Com o foco noutra base, ela SUMIA do disco e do manifesto, sem
+  // aviso (relatório `noite/reaproveitar.md`, §6). Salva com a principal em
+  // foco, e volta ao foco de antes, com o rodapé do Salvar.
+  const projetoAqui = projetoDe(shell.doc);
+  const principal = projetoAqui?.manifesto.main ?? null;
+  if (!saveAs && projetoAqui !== null && principal !== null
+    && projetoAqui.emFocoUri !== principal && projetoAqui.corpos.has(principal)) {
+    const volta = projetoAqui.emFocoUri;
+    projetoAqui.trocarFoco(principal);
+    let frase = '';
+    try {
+      await save(shell, saveAs);
+      frase = shell.statusState.textContent ?? '';
+    } finally {
+      projetoAqui.trocarFoco(volta);
+    }
+    // Depois da volta: a base que volta ao foco se remonta (as compartilhadas)
+    // e o rodapé seria trocado por "sem mudanças"; a frase do Salvar fica.
+    if (frase !== '') setTimeout(() => { shell.statusState.textContent = frase; }, 0);
+    return;
+  }
   // Rodada 7: sem pasta, o Salvar primeiro pede a pasta (Salvar como… não).
   const primeira = await askFolderFirst(shell, 'salvar', saveAs);
   if (primeira === 'cancelar') return;

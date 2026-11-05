@@ -181,12 +181,8 @@ const passo = (ok, texto) => { log(`${ok ? 'passou' : 'TRAVOU'}  ${texto}`); if 
   await foto('7-goblin-mudou-junto');
 
   // --- Salvar --------------------------------------------------------------
-  // DEFEITO ACHADO (de outra parte, o Salvar do projeto — 05/11/2026): com o
-  // foco numa base que NÃO é a principal (a que abriu a pasta), o Salvar grava
-  // essa base por cima da principal e depois a principal por cima dela — a
-  // base em foco some do manifesto e as mudanças dela se perdem. Por isso a
-  // prova volta ao cavaleiro antes de salvar. Está no relatório, com o dono.
-  await focarBase('cavaleiro');
+  // Com o foco no GOBLIN, de propósito: até 05/11/2026 o Salvar com o foco
+  // numa base que não é a principal perdia essa base (relatório, §6).
   await p.keyboard.press('Control+s');
   await p.waitForTimeout(1500);
   await p.locator('.dialog-box button').filter({ hasText: /Salvar assim mesmo|Salvar mesmo/ }).first().click({ timeout: 800 }).catch(() => {});
@@ -197,6 +193,13 @@ const passo = (ok, texto) => { log(`${ok ? 'passou' : 'TRAVOU'}  ${texto}`); if 
   const salvos = await disco.ler(p);
   fs.mkdirSync(SAIDA, { recursive: true });
   for (const [n, buf] of Object.entries(salvos)) fs.writeFileSync(path.join(SAIDA, n), buf);
+  const manifesto = JSON.parse(salvos['manifest.json']?.toString() ?? '{}');
+  const corpos = manifesto.extras?.RECORTE_projeto?.corpos ?? [];
+  passo(['cavaleiro.bone', 'goblin.bone', 'robo.bone'].every((c) => corpos.includes(c)),
+    `Salvar com o foco no goblin guarda as 3 bases no manifesto (${corpos.join(', ')})`);
+  const goblinSalvo = JSON.parse(salvos['goblin.bone']?.toString() ?? '{}');
+  passo((goblinSalvo.assets?.animations ?? []).includes('cavaleiro-animacoes.bone'),
+    'o goblin.bone salvo cita cavaleiro-animacoes.bone (a ligação foi para o disco)');
   passo('cavaleiro-animacoes.bone' in salvos, `o arquivo das compartilhadas foi gravado ao lado: ${Object.keys(salvos).filter((n) => n.endsWith('.bone')).join(', ')}`);
   log(`arquivos em ${SAIDA}`);
 
