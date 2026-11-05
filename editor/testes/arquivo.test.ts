@@ -2382,3 +2382,31 @@ describe('QA 04/11/2026 — D3: o aviso do Salvar não some no rodapé', () => {
     expect(io.match(/lastNoteWarns = true;/g)?.length).toBe(3);
   });
 });
+
+describe('QA 04/11/2026 — D5: Salvar como sem pasta pergunta UMA vez', () => {
+  // A prova (Chromium sem janela, herói aberto, sem pasta): Salvar como… →
+  // "Escolher a pasta do projeto…" → o seletor deu a pasta proj → e logo a
+  // segunda janela: "O projeto mora na pasta proj. Onde vai a cópia?". A
+  // pessoa tinha acabado de dizer onde.
+  const fonte = (): string => readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+  const corpoDoSave = (): string => {
+    const f = fonte();
+    const i = f.indexOf('export async function save(');
+    return f.slice(i, f.indexOf('\n}\n', i));
+  };
+
+  it('o save pergunta a pasta uma vez e guarda a resposta', () => {
+    const corpo = corpoDoSave();
+    expect(corpo.match(/askFolderFirst\(/g)?.length).toBe(1);
+    expect(corpo).toContain("const pastaEscolhidaAgora = saveAs && primeira === 'pasta';");
+  });
+
+  it('com a pasta escolhida agora, grava nela: esquece o arquivo de antes e não é mais "como"', () => {
+    const corpo = corpoDoSave();
+    const bloco = corpo.slice(corpo.indexOf('if (pastaEscolhidaAgora)'), corpo.indexOf('const pastaAtual'));
+    expect(bloco).toContain('forgetHandle();');
+    expect(bloco).toContain('saveAs = false;');
+    // A pergunta "Onde vai a cópia?" só vem depois, e só com saveAs ainda de pé.
+    expect(corpo.indexOf('if (pastaEscolhidaAgora)')).toBeLessThan(corpo.indexOf('Onde vai a cópia?'));
+  });
+});

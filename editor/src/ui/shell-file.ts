@@ -374,8 +374,16 @@ export async function open(shell: Shell): Promise<void> {
 
 export async function save(shell: Shell, saveAs: boolean): Promise<void> {
   // Rodada 7: sem pasta, o Salvar primeiro pede a pasta (Salvar como… não).
-  if (!saveAs && await askFolderFirst(shell, 'salvar') === 'cancelar') return;
-  if (saveAs && await askFolderFirst(shell, 'salvar', true) === 'cancelar') return;
+  const primeira = await askFolderFirst(shell, 'salvar', saveAs);
+  if (primeira === 'cancelar') return;
+  // QA 04/11/2026 (D5): a pasta acabou de ser escolhida nesta mesma volta —
+  // perguntar "onde vai a cópia?" de novo era a mesma pergunta duas vezes.
+  // Grava nela, como o "Numa pasta nova…" abaixo.
+  const pastaEscolhidaAgora = saveAs && primeira === 'pasta';
+  if (pastaEscolhidaAgora) {
+    forgetHandle();
+    saveAs = false;
+  }
   // Rodada 45, lote 4 (doc 64, d): com o projeto numa pasta, Salvar como
   // pergunta: pasta nova (leva tudo) ou só o .bone.
   const pastaAtual = projectFolder(shell.doc);
