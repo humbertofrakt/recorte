@@ -81,6 +81,7 @@ import {
   openAnimationLibrary, openBody, openEntityAnimation, pickEntitySlots, returnToHost, takeNameRequest,
 } from './animations-actions.js';
 import { redrawPlan, signature } from './list-redraw.js';
+import { CropStrip } from './animations-crop.js';
 import type { ListShape } from './list-redraw.js';
 
 class AnimationsPanel implements Panel {
@@ -125,6 +126,8 @@ class AnimationsPanel implements Panel {
   private renaming: string | null = null;
   /** A que a Nova animação criou e ainda não foi aberta: o campo espera por ela. */
   private waitingBorn: string | null = null;
+  /** N-4b: a tira do Recorte da animação aberta, embaixo de tudo. */
+  private cropStrip: CropStrip | null = null;
   /** O tipo da mudança que pediu este desenho — `file` nunca abre o campo. */
   private drawingFor: DocChange['kind'] = 'structure';
 
@@ -224,7 +227,15 @@ class AnimationsPanel implements Panel {
     this.tiraDeFora = tiraDeFora;
     this.deFora = deFora;
 
+    // N-4b: o recorte da animação aberta (spec 4.6), numa linha. Fica fora
+    // da parte que rola: é ficha, não lista (R11).
+    this.cropStrip?.dispose();
+    this.cropStrip = new CropStrip();
     body.append(tiraCorpos, corpos, tiraAnimacoes, list, tiraDeFora, deFora);
+    // Logo abaixo do título das Animações, e não no fim: em 1440×900 o corpo
+    // tem 145 px, e o que fica embaixo da lista sai da vista. A lista rola;
+    // a linha do recorte, não.
+    tiraAnimacoes.after(this.cropStrip.node);
     this.list = list;
 
     host.append(body);
@@ -279,6 +290,8 @@ class AnimationsPanel implements Panel {
       this.waitingBorn = null;
     }
     this.drawingFor = change.kind;
+    // N-4b: a tira do recorte confere a assinatura dela, à parte da lista.
+    this.cropStrip?.update(doc);
     // A lista Corpos muda por fora do arquivo aberto (trocar o foco, criar uma
     // base nova, rebaixar): a assinatura dela é conferida à parte, e qualquer
     // diferença refaz as duas listas de uma vez.
@@ -358,6 +371,8 @@ class AnimationsPanel implements Panel {
     this.list = null;
     this.tiraDeFora = null;
     this.deFora = null;
+    this.cropStrip?.dispose();
+    this.cropStrip = null;
   }
 
   // -------------------------------------------------------------------------
@@ -588,6 +603,7 @@ class AnimationsPanel implements Panel {
     if (!doc || !list) return;
 
     this.renderBodies(doc);
+    this.cropStrip?.update(doc);
     clear(list);
     this.buttons = new Map();
     this.drawn = this.shapeNow(doc);

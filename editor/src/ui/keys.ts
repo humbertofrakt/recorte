@@ -186,6 +186,10 @@ export const SCENE_KEYS: readonly KeyBinding[] = Object.freeze([
   // 7 8 9 0: ver e travar. A cena atende e para, senão a casca viraria de novo.
   // Rodada 41, lote 4: o Raio do pincel, com a ferramenta Pesos na mão (como o
   // Photoshop). Fora dela, [ e ] seguem escolhendo os pais e os filhos.
+  // N-4b: Enter ou Esc terminam o Recorte na cena (o C do menu Animação liga).
+  // Durante o arrasto, Esc desiste dele.
+  { key: 'enter', scope: 'cena', action: 'local:recorte-fim', label: 'Terminar o recorte na cena', when: 'com Recorte na cena ligado' },
+  { key: 'escape', scope: 'cena', action: 'local:recorte-fim', label: 'Terminar o recorte na cena', when: 'com Recorte na cena ligado' },
   { key: '[', scope: 'cena', action: 'local:raio-menor', label: 'Raio do pincel menor', when: 'ferramenta Pesos na mão' },
   { key: ']', scope: 'cena', action: 'local:raio-maior', label: 'Raio do pincel maior', when: 'ferramenta Pesos na mão' },
   { key: '7', scope: 'cena', action: 'ver-ossos', label: 'Ossos' },
