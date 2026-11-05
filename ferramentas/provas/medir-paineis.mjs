@@ -167,6 +167,14 @@ const SO = (() => {
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : null;
 })();
 
+/**
+ * '--detalhes': as abas medidas com a linha do tempo de DETALHES ABERTOS — o
+ * painel cheio, como o Humberto usa (05/11/2026, pedido do Diretor). A faixa
+ * de baixo cresce e a coluna encolhe. É uma rodada à parte: o número dela sai
+ * com nome próprio, e não se mistura com o de fecho.
+ */
+const DETALHES = process.argv.includes('--detalhes');
+
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // ---------------------------------------------------------------------------
@@ -819,6 +827,11 @@ try {
         try {
           // A seleção de novo, antes de cada aba: ver `SELECIONAR`.
           await ava(SELECIONAR);
+          if (DETALHES) {
+            await ava(`(() => { const b = [...document.querySelectorAll('button')].find((e) => /Detalhes/.test(e.textContent ?? '')); `
+              + `if (b && /▴/.test(b.textContent)) b.click(); return true; })()`);
+            await esperar(150);
+          }
           await ava(`[...document.querySelectorAll('.panel-column .panel-tab')].find((t) => t.textContent.trim() === ${JSON.stringify(aba)})?.click()`);
           await esperar(250);
           r = await ava(`__m.medir(${JSON.stringify(aba)})`);
@@ -1070,6 +1083,7 @@ try {
     }
   }
 
+  if (DETALHES) console.log('\nCOM OS DETALHES DA LINHA DO TEMPO ABERTOS (--detalhes): rodada à parte, não é o número de fecho.');
   console.log(`\n${medicoes - ruins} de ${medicoes} medições sem nada passando da coluna.`);
   if (vazios.length > 0) {
     console.log(`\n${vazios.length} medição(ões) NÃO FEITAS, porque o painel estava vazio:`);

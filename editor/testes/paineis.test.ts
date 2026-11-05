@@ -1216,6 +1216,11 @@ describe('a Malha em 1280×720 rola com régua própria, e a régua não isenta'
     expect(passada.slice(0, 3000)).toContain('altas += 1;');
   });
 
+  it("'--detalhes' mede o painel cheio (linha do tempo aberta) como rodada à parte, com nome", () => {
+    expect(prova).toContain("const DETALHES = process.argv.includes('--detalhes');");
+    expect(prova).toContain('rodada à parte, não é o número de fecho');
+  });
+
   it('os botões da Forma vão dois por linha, com o nome inteiro (quebra entre palavras)', () => {
     const bloco = css.slice(css.indexOf('a Malha em 1280×720'));
     expect(bloco).toContain('grid-template-columns: 1fr 1fr');
