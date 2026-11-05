@@ -1,0 +1,92 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "path"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "b1",
+      "parent": "root",
+      "length": 100
+    },
+    {
+      "name": "b2",
+      "parent": "root",
+      "length": 100
+    },
+    {
+      "name": "b3",
+      "parent": "root",
+      "length": 100
+    }
+  ],
+  "slots": [
+    {
+      "name": "trilho",
+      "bone": "root",
+      "attachment": "trilho"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "trilho": {
+          "trilho": {
+            "type": "path",
+            "closed": false,
+            "constantSpeed": true,
+            "lengths": [
+              300,
+              600
+            ],
+            "vertices": [
+              -100,
+              0,
+              0,
+              0,
+              100,
+              0,
+              200,
+              0,
+              300,
+              0,
+              300,
+              100,
+              300,
+              200,
+              300,
+              300,
+              300,
+              400
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "type": "path",
+      "name": "pc",
+      "bones": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "target": "trilho",
+      "positionMode": "acme_curvatura",
+      "spacingMode": "percent",
+      "rotateMode": "acme_giro",
+      "position": 0.1,
+      "spacing": 0.3
+    }
+  ]
+}

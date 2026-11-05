@@ -1,0 +1,153 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "painel"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "alvo",
+      "parent": "root",
+      "x": 100
+    },
+    {
+      "name": "seguidor",
+      "parent": "root"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "a",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "name": "b",
+      "min": 0,
+      "max": 10
+    }
+  ],
+  "variables": [
+    {
+      "name": "n",
+      "type": "int"
+    },
+    {
+      "name": "f",
+      "type": "float"
+    }
+  ],
+  "constraints": [
+    {
+      "type": "driver",
+      "name": "dirige",
+      "parameter": "a",
+      "targets": [
+        {
+          "type": "parameter",
+          "target": "b",
+          "property": "value",
+          "keys": [
+            {
+              "input": 0,
+              "value": 0
+            },
+            {
+              "input": 1,
+              "value": 10
+            }
+          ]
+        },
+        {
+          "type": "variable",
+          "target": "n",
+          "property": "value",
+          "keys": [
+            {
+              "input": 0,
+              "value": 0
+            },
+            {
+              "input": 1,
+              "value": 10
+            }
+          ]
+        },
+        {
+          "type": "variable",
+          "target": "f",
+          "property": "value",
+          "keys": [
+            {
+              "input": 0,
+              "value": 0
+            },
+            {
+              "input": 1,
+              "value": 1
+            }
+          ]
+        },
+        {
+          "type": "constraint",
+          "target": "cola",
+          "property": "mix",
+          "keys": [
+            {
+              "input": 0,
+              "value": 0
+            },
+            {
+              "input": 1,
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "transform",
+      "name": "cola",
+      "bones": [
+        "seguidor"
+      ],
+      "target": "alvo",
+      "mix": 0,
+      "mixRotation": 0,
+      "mixX": 1,
+      "mixY": 0,
+      "mixScaleX": 0,
+      "mixScaleY": 0,
+      "mixShearY": 0
+    }
+  ],
+  "animations": [
+    {
+      "name": "girar",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "parameter",
+          "target": "a",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1,
+              "value": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

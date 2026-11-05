@@ -8,13 +8,10 @@
  * walks frame by frame, because an accumulator makes 30 fps and 60 fps disagree
  * and makes dragging the cursor backwards impossible (extension 3.4).
  *
- * 1st PHASE, and only it: `rate` is a fixed number on the attachment and what
- * animates is `emitting`, a boolean with `stepped` keys (extension 4.1). The
- * `linear` branch of extension 4.2 — the parabola and its stable inverse — is
- * 2nd phase: it is written out in full in the spec so the second reader does
- * not invent its own, and it is deliberately NOT implemented here. Case P-002
- * is the case for it, its `esperado.json` is empty on purpose, and
- * `runtime/testes/particulas.test.ts` holds that sentence in place.
+ * Two things animate the rate. `emitting`, a boolean with `stepped` keys
+ * (extension 4.1, the 1st phase), and — since the 2nd phase — `rate` itself,
+ * by integral (extension 4.2): a `linear` key makes `E` a parabola, and the
+ * birth is its STABLE inverse. Case P-002 is the case for it.
  *
  * The only sum allowed is the one below, per key, taken when the curve is
  * built: fixed order, fixed number of terms, independent of the frame.
@@ -41,7 +38,27 @@ export interface EmittingKeys {
 }
 
 /**
- * The piecewise-constant effective rate and its integral `E` (extension 4.1).
+ * The animated `rate` (extension 4.2, 2nd phase): one value per key, and the
+ * curve from key `i` to key `i + 1`. The loader already swapped a negative
+ * value for `0` and a Bézier for `linear`, so only `linear` and `stepped` come
+ * here — the two curves whose integral is closed.
+ */
+export interface RateKeys {
+  readonly times: Float64Array;
+  readonly values: Float64Array;
+  readonly curves: readonly { readonly kind: string }[];
+}
+
+/**
+ * The effective rate and its integral `E` (extension 4.1 and 4.2).
+ *
+ * The rate is piecewise LINEAR: each segment `[boundaries[k], boundaries[k+1])`
+ * starts with rate `rates[k]` and climbs with slope `slopes[k]`. A segment cut
+ * by `emitting` or by a `stepped` key has slope `0`, and then `E` is a straight
+ * line and the inverse a division — the 1st phase, unchanged bit for bit. A
+ * `linear` key of `rate` gives a slope, `E` becomes a parabola, and the inverse
+ * is the STABLE root of 4.2: `τ = 2d / (r0 + sqrt(r0² + 2·s·d))`, which does not
+ * divide by `s` and holds with `s = 0` without a branch.
  *
  * `E` is anchored at the emission origin — `startDelay` — so that `E(origin)`
  * is `0` and index `0` is born there. Before the origin the rate is the one of
@@ -55,13 +72,15 @@ export class EmissionCurve {
   readonly rateBefore: number;
   /** Segment starts, ascending; `boundaries[0] === origin`. */
   readonly boundaries: Float64Array;
-  /** Constant effective rate inside `[boundaries[k], boundaries[k+1])`. */
+  /** Effective rate at the START of `[boundaries[k], boundaries[k+1])`. */
   readonly rates: Float64Array;
+  /** Slope of the effective rate inside the segment; `0` in the 1st phase. */
+  readonly slopes: Float64Array;
   /** `E(boundaries[k])`, summed once here and never per frame. */
   readonly totals: Float64Array;
 
-  constructor(attachment: ParticleAttachment, emitting: EmittingKeys | null) {
-    const rate = attachment.rate > 0 ? attachment.rate : 0;
+  constructor(attachment: ParticleAttachment, emitting: EmittingKeys | null, rate: RateKeys | null = null) {
+    const fixed = attachment.rate > 0 ? attachment.rate : 0;
     this.origin = attachment.startDelay;
 
     const on = (t: number): boolean => {
@@ -78,7 +97,35 @@ export class EmissionCurve {
       return emitting.values[lo];
     };
 
-    this.rateBefore = on(-Infinity) ? rate : 0;
+    // The key of `rate` in force at `t` (`-1` before the first), spec 9.10.
+    const rateKey = (t: number): number => {
+      const times = rate!.times;
+      if (t < times[0]) return -1;
+      let lo = 0;
+      let hi = times.length - 1;
+      while (lo < hi) {
+        const mid = (lo + hi + 1) >> 1;
+        if (times[mid] <= t) lo = mid;
+        else hi = mid - 1;
+      }
+      return lo;
+    };
+    const animated = rate !== null && rate.times.length > 0;
+    // The rate at `t` and its slope from `t` on, inside the key segment.
+    const rateAt = (t: number): [number, number] => {
+      if (!animated) return [fixed, 0];
+      const k = rateKey(t);
+      const values = rate!.values;
+      if (k < 0) return [values[0], 0];
+      const last = rate!.times.length - 1;
+      if (k >= last || rate!.curves[k].kind === 'stepped') return [values[k], 0];
+      const t0 = rate!.times[k];
+      const t1 = rate!.times[k + 1];
+      const slope = (values[k + 1] - values[k]) / (t1 - t0);
+      return [values[k] + slope * (t - t0), slope];
+    };
+
+    this.rateBefore = on(-Infinity) ? (animated ? rate!.values[0] : fixed) : 0;
 
     const marks: number[] = [this.origin];
     if (emitting !== null) {
@@ -87,33 +134,51 @@ export class EmissionCurve {
         if (t > this.origin) marks.push(t);
       }
     }
+    if (animated) {
+      for (let i = 0; i < rate!.times.length; i++) {
+        const t = rate!.times[i];
+        if (t > this.origin) marks.push(t);
+      }
+    }
     marks.sort((a, b) => a - b);
     const boundaries: number[] = [];
     for (const t of marks) if (boundaries.length === 0 || t > boundaries[boundaries.length - 1]) boundaries.push(t);
 
     const rates = new Float64Array(boundaries.length);
+    const slopes = new Float64Array(boundaries.length);
     const totals = new Float64Array(boundaries.length);
     for (let k = 0; k < boundaries.length; k++) {
-      rates[k] = on(boundaries[k]) ? rate : 0;
-      if (k > 0) totals[k] = totals[k - 1] + rates[k - 1] * (boundaries[k] - boundaries[k - 1]);
+      if (on(boundaries[k])) {
+        const [r, s] = rateAt(boundaries[k]);
+        rates[k] = r > 0 ? r : 0;
+        slopes[k] = s;
+      }
+      if (k > 0) {
+        const dt = boundaries[k] - boundaries[k - 1];
+        totals[k] = totals[k - 1] + rates[k - 1] * dt + slopes[k - 1] * dt * dt / 2;
+      }
     }
     // `marks` always holds the origin, so there is always at least one segment.
     this.boundaries = new Float64Array(boundaries);
     this.rates = rates;
+    this.slopes = slopes;
     this.totals = totals;
   }
 
-  /** The effective rate in force at `t` (extension 4.1). */
+  /** The effective rate in force at `t` (extension 4.1 and 4.2). */
   rateAt(t: number): number {
     if (t < this.boundaries[0]) return this.rateBefore;
-    return this.rates[this.segmentAt(t)];
+    const k = this.segmentAt(t);
+    const r = this.rates[k] + this.slopes[k] * (t - this.boundaries[k]);
+    return r > 0 ? r : 0;
   }
 
   /** `E(t)`: how many births up to `t`, counted from the origin. Negative before it. */
   countAt(t: number): number {
     if (t < this.boundaries[0]) return -this.rateBefore * (this.boundaries[0] - t);
     const k = this.segmentAt(t);
-    return this.totals[k] + this.rates[k] * (t - this.boundaries[k]);
+    const dt = t - this.boundaries[k];
+    return this.totals[k] + this.rates[k] * dt + this.slopes[k] * dt * dt / 2;
   }
 
   /**
@@ -132,8 +197,19 @@ export class EmissionCurve {
       if (this.totals[mid] <= index) lo = mid;
       else hi = mid - 1;
     }
-    if (this.rates[lo] <= 0) return null;
-    return this.boundaries[lo] + (index - this.totals[lo]) / this.rates[lo];
+    const r0 = this.rates[lo];
+    const s = this.slopes[lo];
+    const d = index - this.totals[lo];
+    if (r0 <= 0 && s <= 0) return null;
+    // A ramp that starts at rate 0 has `0 / 0` here for the index sitting on
+    // the boundary; it is born on the boundary, where `E` reaches it.
+    if (d === 0) return this.boundaries[lo];
+    // Extension 4.2: the STABLE inverse. With `s = 0` it is `2d / 2r0 = d / r0`
+    // exactly (doubling is exact, and `sqrt(r0·r0) === r0` in IEEE 754), so the
+    // 1st phase keeps every bit. The other root, `(−r0 + sqrt(…)) / s`, divides
+    // by `s` and is forbidden.
+    const disc = r0 * r0 + 2 * s * d;
+    return this.boundaries[lo] + (2 * d) / (r0 + Math.sqrt(disc > 0 ? disc : 0));
   }
 
   private segmentAt(t: number): number {

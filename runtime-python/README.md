@@ -27,7 +27,7 @@ resultado mais valioso deste trabalho.
 | Comando | O que faz |
 |:---|:---|
 | `python runtime-python/conformidade.py` | Roda os 71 casos de conformidade |
-| `python runtime-python/conformidade.py --casos conformidade/casos-pendentes` | Roda os casos que ainda esperam os dois runtimes (hoje os 8 de partícula, P-001 a P-008) |
+| `python runtime-python/conformidade.py --casos conformidade/casos-pendentes` | Roda os casos que ainda esperam os dois runtimes (desde 05/11/2026 a pasta está vazia) |
 | `python runtime-python/conformidade.py --json` | O mesmo, em JSON, com o nível alcançado |
 | `python runtime-python/conformidade.py --nivel C` | Só os casos de um nível |
 | `python runtime-python/conformidade.py --caso C-212-ik-2-ossos` | Só um caso |

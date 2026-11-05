@@ -288,3 +288,79 @@
   padding-top: 1px;
   padding-bottom: 1px;
 }
+
+/*
+ * 04/11/2026 — a Malha em 1280×720 (a escolha das três saídas está em
+ * `documentos/projeto do programa/noite/paineis.md`). Abaixo de 800 px de
+ * altura, os botões da Forma vão DOIS POR LINHA, e o nome quebra em duas
+ * linhas DENTRO do botão ("Gerar / automática") em vez de sumir: nenhuma
+ * letra a menos, o ícone continua ao lado. É o que o Spine faz com as
+ * ferramentas da malha (uma grade de botões com nome), e é o que cabe numa
+ * coluna de 245 px. A mesma marca da Ordem compacta (`draw-order.css`).
+ */
+@media (max-height: 800px) {
+  .malha-dobra .malha-botoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .malha-dobra .malha-botoes .painel-botao {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    padding: 1px 3px;
+    text-align: left;
+    white-space: normal;
+    /* Quebra entre palavras, nunca no meio de uma ("automáti-ca"). */
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+    font-size: 14px;
+    line-height: 1.15;
+  }
+  .malha-dobra .malha-botoes .painel-botao > .painel-botao-icone {
+    flex: 0 0 auto;
+    padding: 0;
+  }
+}
+
+/*
+ * 05/11/2026 — a Malha com a ferramenta PESOS na mão, na tela baixa. A
+ * decisão (a mesma saída 3, doc `noite/paineis.md`): a aba rola com a régua da
+ * ferramenta, e a primeira seção da ferramenta (Ossos que influenciam) tem de
+ * aparecer inteira, com o título da seguinte (Pesos) logo abaixo. Faltavam
+ * 49 px. Só recheio: o aviso azul, o vão das seções e dos títulos, e a linha
+ * de cada osso (a lixeira tinha 34 px de altura; agora a da linha). Nenhum
+ * osso, botão, número ou palavra a menos.
+ */
+@media (max-height: 800px) {
+  .malha-recado.malha-recado-curto {
+    margin: 2px 12px;
+    padding: 3px 10px;
+  }
+  .malha-secao {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  .malha-secao-titulo {
+    margin-bottom: 1px;
+  }
+  .malha-osso {
+    padding: 0;
+  }
+  .malha-osso .painel-botao {
+    min-height: 22px;
+    padding: 0 4px;
+  }
+  /* O ícone da lixeira é um span com a mesma classe do botão de ícone, e
+     herdava o recheio dele (5 px em cima e embaixo): 32 px de botão. */
+  .malha-osso .painel-botao > .painel-botao-icone {
+    padding: 0;
+  }
+  .malha-osso-nome {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 20px;
+  }
+}

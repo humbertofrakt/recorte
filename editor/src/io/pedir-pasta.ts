@@ -180,7 +180,10 @@ export function salvarComoEscolhas(pasta: string): EscolhaDoPedido[] {
     },
     {
       id: 'sem', label: 'Só o arquivo .bone…',
-      hint: `Escolhe onde gravar o .bone. O atlas e as entidades continuam na pasta ${pasta}`,
+      // QA 04/11/2026 (D3): a dica prometia que o atlas "continuava na pasta";
+      // fora dela, o atlas e as páginas são baixados (Downloads), e o .bone os cita.
+      hint: `Escolhe onde gravar o .bone. Dentro da pasta ${pasta}, o atlas vai junto; `
+        + 'fora dela, o atlas e as páginas vão para Downloads: ponha-os ao lado do .bone',
     },
   ];
 }

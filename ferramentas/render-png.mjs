@@ -415,8 +415,20 @@ export function abrirEsqueleto(rt, caminhoBone) {
     if (cadeia.length + 1 > 8) {
       throw new Error(`esqueleto aninhado passou da profundidade máxima de 8 (12.6)`);
     }
-    const doc = JSON.parse(readFileSync(caminho0, 'utf8'));
+    let doc = JSON.parse(readFileSync(caminho0, 'utf8'));
     const atlases = carregarAtlas(caminho0, doc);
+    // §2.8: as animações e as skins de fora (`assets.animations`, `assets.skins`)
+    // entram pelo nome, pela conta do runtime. Sem isto, um boneco que toca as
+    // animações compartilhadas de outro arquivo (reaproveitar, 05/11/2026)
+    // dizia "animação não existe".
+    if ((doc.assets?.animations ?? []).length > 0 || (doc.assets?.skins ?? []).length > 0) {
+      const composto = rt.composeExternals(doc, '', (entrada) => {
+        const arq = resolve(dirname(caminho0), entrada);
+        return existsSync(arq) ? JSON.parse(readFileSync(arq, 'utf8')) : null;
+      });
+      for (const w of composto.warnings) process.stderr.write(`aviso: ${caminho0}: ${w}\n`);
+      doc = composto.tree;
+    }
     const dados = rt.loadSkeletonData(doc, { atlases });
     for (const w of dados.warnings) {
       process.stderr.write(`aviso: ${caminho0}: ${w.pointer} ${w.message}\n`);

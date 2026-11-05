@@ -1,0 +1,12 @@
+{
+  "bonez": {
+    "version": "1.0"
+  },
+  "main": "personagens/esqueleto.bone",
+  "skeletons": [
+    "personagens/esqueleto.bone"
+  ],
+  "atlases": [
+    "personagens/entrada.atlas.json"
+  ]
+}

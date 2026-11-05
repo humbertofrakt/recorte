@@ -178,6 +178,15 @@ function emittingKeys(animation, slotName, attachmentName) {
   }
   return null;
 }
+function rateKeys(animation, slotName, attachmentName) {
+  if (animation === null) return null;
+  for (const tl of animation.timelines) {
+    if (tl.kind !== "particle.rate") continue;
+    if (tl.slot.name !== slotName || tl.attachmentName !== attachmentName) continue;
+    return tl.keys;
+  }
+  return null;
+}
 function emitterPose(slot, att, prefix, poser) {
   const needsPast = att.space === "world" || att.shape === "mesh" || att.shape === "path";
   if (!needsPast) {
@@ -290,7 +299,7 @@ function makeSample(actor, animation, now, duration, loop, previous, want, child
         const att = slot.attachment;
         if (!(att instanceof import_particle.ParticleAttachment)) continue;
         const key = `${prefix}${slot.data.name}/${att.name}`;
-        const curve = new import_emission.EmissionCurve(att, emittingKeys(bound, slot.data.name, att.name));
+        const curve = new import_emission.EmissionCurve(att, emittingKeys(bound, slot.data.name, att.name), rateKeys(bound, slot.data.name, att.name));
         const pose = emitterPose(slot, att, prefix, poser);
         const frame = (0, import_emitter.computeParticles)(att, curve, { time: at, duration }, pose);
         out[key] = frame.particles.map(particleSample);

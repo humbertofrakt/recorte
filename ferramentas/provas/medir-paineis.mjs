@@ -93,7 +93,12 @@ import { fileURLToPath } from 'node:url';
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, '..', '..');
-const CHROME = process.env.CHROME ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+// No Linux (as sessões na nuvem), o Chromium do Playwright, sem sandbox:
+// roda como root. No Windows, o Chrome do Humberto, como sempre.
+const CHROME = process.env.CHROME ?? (process.platform === 'linux'
+  ? '/opt/pw-browsers/chromium-1243/chrome-linux64/chrome'
+  : 'C:/Program Files/Google/Chrome/Application/chrome.exe');
+const SEM_SANDBOX = process.platform === 'linux' ? ['--no-sandbox'] : [];
 const PORTA_EDITOR = 5192;
 const PORTA_CHROME = 9336;
 const URL_EDITOR = `http://localhost:${PORTA_EDITOR}/`;
@@ -150,6 +155,25 @@ const DETALHE = (() => {
   const i = process.argv.indexOf('--detalhe');
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : null;
 })();
+
+/**
+ * `--so "Aba"`: mede só essa aba, nas duas telas, e pula as passadas da regra
+ * e do emissor. É para quem está mexendo num painel e quer o número dele em
+ * meio minuto; **o número de fecho é sempre o da medição inteira**, e com
+ * `--so` a prova diz isso no fim, para ninguém relatar o parcial como total.
+ */
+const SO = (() => {
+  const i = process.argv.indexOf('--so');
+  return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : null;
+})();
+
+/**
+ * '--detalhes': as abas medidas com a linha do tempo de DETALHES ABERTOS — o
+ * painel cheio, como o Humberto usa (05/11/2026, pedido do Diretor). A faixa
+ * de baixo cresce e a coluna encolhe. É uma rodada à parte: o número dela sai
+ * com nome próprio, e não se mistura com o de fecho.
+ */
+const DETALHES = process.argv.includes('--detalhes');
 
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -214,8 +238,60 @@ window.__m = (() => {
       }
       return [];
     };
+    // A QUARTA espécie, 04/11/2026: o painel com FERRAMENTA (a Malha). Ver
+    // 'medirFerramenta'. Vale nas duas telas desde 05/11 (a Malha com os
+    // Pesos na mão também rola em 1440×900, e a decisão foi a mesma).
+    const ferramenta = (el) => el.dataset?.rolagem === 'ferramenta';
+    /**
+     * A régua do painel com ferramenta — a escolha da Malha (doc
+     * 'noite/paineis.md'; o Diretor estendeu ao caso dos Pesos em 05/11).
+     *
+     * O painel tem seções que dobram, e abre as da ferramenta na mão (com o
+     * Transformar, Forma; com os Pesos, Ossos, Pesos e Pincel). A régua, medida
+     * **como a aba se apresenta** (com a rolagem que ela tem agora, e não a
+     * de um painel imaginário rolado para o lugar certo):
+     *
+     *   1. nenhuma seção aberta começa ACIMA da vista e termina dentro dela
+     *      (cortada em cima);
+     *   2. a PRIMEIRA seção aberta que começa na vista aparece INTEIRA, e
+     *      mais uma linha do que vem depois dela.
+     *
+     * O que rola é o resto: as outras seções abertas e os títulos dobrados.
+     * A marca troca a régua, NUNCA isenta, como a do palco: sem seção aberta,
+     * ou com a primeira cortada, a medida falha.
+     *
+     * Seção: um filho com um título direto que dobra ('aria-expanded'), ou um
+     * '<details>'. Os outros filhos (o aviso, o nome do desenho) são texto
+     * fixo: estão antes da seção, e ficam à vista junto com ela.
+     */
+    const medirFerramenta = (caixa) => {
+      const filhos = [...caixa.children].filter((f) => f.getBoundingClientRect().height > 0);
+      if (filhos.length === 0) return [];
+      const ehSecao = (f) => f.tagName === 'DETAILS' || f.querySelector(':scope > [aria-expanded]') !== null;
+      const aberta = (f) => (f.tagName === 'DETAILS' ? f.open
+        : f.querySelector(':scope > [aria-expanded="true"]') !== null);
+      const topo = caixa.getBoundingClientRect().top - caixa.scrollTop;
+      const de = (f) => Math.floor(f.getBoundingClientRect().top - topo);
+      const ate = (f) => Math.ceil(f.getBoundingClientRect().bottom - topo);
+      const cima = caixa.scrollTop;
+      const cortada = filhos.find((f) => ehSecao(f) && aberta(f) && de(f) < cima - 1 && ate(f) > cima + 1);
+      if (cortada !== undefined) {
+        return ['a aba abre no meio de uma seção aberta: ' + descrever(cortada) + ' começa ' + (cima - de(cortada)) + ' px acima da vista'];
+      }
+      const i = filhos.findIndex((f) => ehSecao(f) && aberta(f) && de(f) >= cima - 1);
+      if (i < 0) return ['nenhuma seção aberta à vista: a régua da ferramenta não tem o que mostrar'];
+      const pede = ate(filhos[i]) + (i < filhos.length - 1 ? LINHA : 0) - cima;
+      if (pede > caixa.clientHeight) {
+        return ['a seção da ferramenta não cabe: do alto da vista até o fim de '
+          + descrever(filhos[i]) + (i < filhos.length - 1 ? ', e uma linha depois,' : '')
+          + ' pede ' + pede + ' px num painel de ' + caixa.clientHeight];
+      }
+      return [];
+    };
     if (palco(corpo)) {
       alto.push(...medirPalco(corpo));
+    } else if (ferramenta(corpo)) {
+      alto.push(...medirFerramenta(corpo));
     } else if (!lista(corpo) && corpo.scrollHeight > corpo.clientHeight + 1) {
       alto.push('o corpo rola para baixo: sobram ' + (corpo.scrollHeight - corpo.clientHeight)
         + ' px (' + corpo.scrollHeight + ' > ' + corpo.clientHeight + ')');
@@ -231,6 +307,8 @@ window.__m = (() => {
       // seria o falso verde de novo, agora feito de propósito.
       if (palco(el)) {
         alto.push(...medirPalco(el).map((linha) => descrever(el) + ': ' + linha));
+      } else if (ferramenta(el)) {
+        alto.push(...medirFerramenta(el).map((linha) => descrever(el) + ': ' + linha));
       } else if (!lista(el) && (cs.overflowY === 'auto' || cs.overflowY === 'scroll')
         && el.scrollHeight > el.clientHeight + 1) {
         alto.push('rola para baixo: ' + descrever(el) + ' (sobram '
@@ -422,7 +500,7 @@ async function subirChrome(perfil) {
   const chrome = spawn(CHROME, [
     '--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1',
     '--window-size=1440,900', `--remote-debugging-port=${PORTA_CHROME}`, `--user-data-dir=${perfil}`,
-    '--no-first-run', '--no-default-browser-check', 'about:blank',
+    '--no-first-run', '--no-default-browser-check', ...SEM_SANDBOX, 'about:blank',
   ], { stdio: 'ignore' });
   filhos.push(chrome);
   for (let i = 0; i < 60; i++) {
@@ -494,8 +572,18 @@ async function abrirEditor(largura, altura) {
   // da mesma rodada: a página voltava com a divisão de antes e a medição
   // seguinte media outra tela, sem ninguém perceber. A prova tem de medir
   // sempre a MESMA tela — a de quem abre o programa pela primeira vez.
+  //
+  // E o QUARTO buraco (04/11/2026): limpar com a página viva não basta. Ao
+  // sair, o editor grava o rascunho de novo (o autossalvar), e a volta
+  // seguinte nascia com a janela "Havia trabalho não salvo" por cima de tudo.
+  // As medidas não mudavam (a janela flutua), mas TODA foto saía coberta, e
+  // com a hora do rascunho escrita nela — duas fotos do mesmo painel nunca
+  // batiam byte a byte. Agora a página sai primeiro (about:blank) e o
+  // armazenamento da origem é limpo pelo próprio Chrome, depois.
   try {
-    await avaCru('localStorage.clear(); true');
+    await cmd('Page.navigate', { url: 'about:blank' });
+    await esperar(150);
+    await cmd('Storage.clearDataForOrigin', { origin: URL_EDITOR.replace(/\/$/, ''), storageTypes: 'local_storage,indexeddb' });
   } catch { /* primeira volta: ainda não há página */ }
   await cmd('Page.navigate', { url: URL_EDITOR });
   let montou = false;
@@ -721,6 +809,7 @@ try {
     const abas = await ava('__m.abas()');
     console.log(`\n${largura}x${altura} — ${abas.length} abas`);
     for (const aba of abas) {
+      if (SO !== null && aba !== SO) continue;
       // A página pode recarregar no meio da prova, e aí os ajudantes e o herói
       // vão embora com ela — a medição morria com "__m is not defined". A
       // causa mais comum não é defeito do editor: é o Vite, que recarrega a
@@ -738,6 +827,11 @@ try {
         try {
           // A seleção de novo, antes de cada aba: ver `SELECIONAR`.
           await ava(SELECIONAR);
+          if (DETALHES) {
+            await ava(`(() => { const b = [...document.querySelectorAll('button')].find((e) => /Detalhes/.test(e.textContent ?? '')); `
+              + `if (b && /▴/.test(b.textContent)) b.click(); return true; })()`);
+            await esperar(150);
+          }
           await ava(`[...document.querySelectorAll('.panel-column .panel-tab')].find((t) => t.textContent.trim() === ${JSON.stringify(aba)})?.click()`);
           await esperar(250);
           r = await ava(`__m.medir(${JSON.stringify(aba)})`);
@@ -789,6 +883,69 @@ try {
       }
     }
 
+    // A Malha UMA SEGUNDA VEZ, com a ferramenta PESOS na mão — 04/11/2026.
+    //
+    // A régua da ferramenta ('medirFerramenta') nasceu medida só com o
+    // Transformar, que abre a seção Forma. Com os Pesos na mão a aba abre
+    // Ossos, Pesos e o Pincel ao mesmo tempo — é o caso ALTO da aba, e é onde
+    // o Humberto pediu "não esconda a malha ou os pesos". Medir só o caso
+    // bonito é a mentira de sempre da prova (ver 'SO_A_REGRA'): por isso esta
+    // passada existe, conta no total, e o número cai se não couber.
+    if (SO === null || SO === 'Malha e pesos (Pesos)') {
+      let rp = null;
+      for (let tentativa = 0; tentativa < 3 && rp === null; tentativa++) {
+        if (tentativa > 0 || await ava('typeof window.__m !== "undefined" ? false : true')) {
+          if (tentativa > 0) consoleDaPagina.push('a página se recarregou na aba "Malha e pesos (Pesos)"; o editor foi reaberto');
+          await abrirEditor(largura, altura);
+        }
+        try {
+          await ava(SELECIONAR);
+          await ava(`(async () => { const r = await import('/src/viewport/tools/registry.ts'); r.setActiveTool('weights', __m.vp.doc); return r.getActiveToolId(); })()`);
+          await ava(`[...document.querySelectorAll('.panel-column .panel-tab')].find((t) => t.textContent.trim() === 'Malha e pesos')?.click()`);
+          await esperar(300);
+          rp = await ava('__m.medir("Malha e pesos")');
+          const d = await ava('__m.detalhar("Malha e pesos")');
+          if (rp !== null && d !== null) rp.numero = ` — conteúdo de ${d.conteudo} px numa vista de ${d.cabe} (a régua é a da ferramenta)`;
+        } catch {
+          rp = null;
+        }
+      }
+      medicoes += 1;
+      if (rp === null || rp.erro) {
+        ruins += 1; altas += 1;
+        console.log(`  FALTOU  Malha e pesos (ferramenta Pesos): ${rp?.erro ?? 'a página caiu três vezes seguidas'}`);
+      } else {
+        const porqueP = await ava('__m.vazio("Malha e pesos")');
+        if (porqueP !== '') {
+          vazios.push(`Malha e pesos (ferramenta Pesos) (${largura}x${altura}): ${porqueP}`);
+          ruins += 1; altas += 1;
+          console.log(`  VAZIO   Malha e pesos (ferramenta Pesos): ${porqueP} — não medido`);
+        } else if (rp.fora.length === 0 && rp.alto.length === 0) {
+          console.log(`  cabe    Malha e pesos (ferramenta Pesos)${rp.numero ?? ''}`);
+        } else {
+          if (rp.fora.length > 0) {
+            ruins += 1;
+            console.log(`  PASSA   Malha e pesos (ferramenta Pesos): ${rp.fora.length} coisa(s) de lado`);
+            for (const linha of rp.fora.slice(0, 6)) console.log(`            ${linha}`);
+          }
+          if (rp.alto.length > 0) {
+            altas += 1;
+            console.log(`  ROLA    Malha e pesos (ferramenta Pesos): ${rp.alto.length} coisa(s) de altura${rp.numero ?? ''}`);
+            for (const linha of rp.alto.slice(0, 6)) console.log(`            ${linha}`);
+          }
+        }
+        if (FOTOS !== null) {
+          const foto = await cmd('Page.captureScreenshot', { format: 'png' });
+          writeFileSync(join(FOTOS, `${largura}x${altura}-Malha-e-pesos-ferramenta-Pesos.png`), Buffer.from(foto.result.data, 'base64'));
+        }
+      }
+      // A mão volta ao Transformar (depois da foto): a próxima medida é a de sempre.
+      try {
+        await ava(`(async () => { const r = await import('/src/viewport/tools/registry.ts'); r.setActiveTool('transform', __m.vp.doc); return true; })()`);
+      } catch { /* a página caiu: a próxima volta reabre o editor */ }
+    }
+
+    if (SO !== null && SO !== 'Propriedades (regra Comando)') continue;
     // Propriedades UMA SEGUNDA VEZ, com a regra `look_driver` e nenhum desenho:
     // é o caso alto do painel, e a seleção de cima não o alcança. Ver
     // `SO_A_REGRA`. Conta como medição própria — se este número for ruim, o
@@ -842,7 +999,7 @@ try {
   // A 3ª passada: a ficha do emissor, ABA POR ABA, com o número que cada aba
   // pede contra o que o painel tem — rodada 16. Sem abas (a ficha velha), mede
   // a ficha inteira uma vez: é assim que se vê o número grande antes do novo.
-  for (const [largura, altura] of TAMANHOS_EMISSOR) for (const modo of MODOS_DO_EMISSOR) {
+  for (const [largura, altura] of (SO !== null ? [] : TAMANHOS_EMISSOR)) for (const modo of MODOS_DO_EMISSOR) {
     await abrirEditor(largura, altura);
     console.log(`\n${largura}x${altura} — a ficha do emissor, ${modo}`);
     let abas = null;
@@ -926,6 +1083,7 @@ try {
     }
   }
 
+  if (DETALHES) console.log('\nCOM OS DETALHES DA LINHA DO TEMPO ABERTOS (--detalhes): rodada à parte, não é o número de fecho.');
   console.log(`\n${medicoes - ruins} de ${medicoes} medições sem nada passando da coluna.`);
   if (vazios.length > 0) {
     console.log(`\n${vazios.length} medição(ões) NÃO FEITAS, porque o painel estava vazio:`);
@@ -933,6 +1091,7 @@ try {
     console.log('  Um painel que mostra uma frase no lugar do conteúdo cabe sempre: medir isso é o falso verde.');
   }
   console.log(`${medicoes - altas} de ${medicoes} medições cabem na altura, sem barra de rolagem.`);
+  if (SO !== null) console.log(`PARCIAL: só a aba "${SO}" (--so). Não é o número de fecho.`);
   console.log(consoleDaPagina.length === 0 ? 'Console limpo.' : `Console:\n  ${consoleDaPagina.slice(0, 10).join('\n  ')}`);
   if (ruins > 0 || altas > 0) codigo = 1;
 } catch (erro) {

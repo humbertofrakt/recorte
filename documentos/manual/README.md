@@ -9,6 +9,22 @@ A especificação está em `formato/ESPECIFICACAO 2026-09-17.md`.
 
 ---
 
+## 05/11/2026 — o manual volta a valer (degrau D13)
+
+O manual estava **pausado** desde 10/09: primeiro o programa, depois o manual.
+O programa ficou pronto. O Humberto pediu para terminar. A pausa saiu.
+
+| O que mudou | Como |
+|:---|:---|
+| **As fotos** | todas tiradas de novo do programa de verdade, em 1440×900, por `node ferramentas/manual-fotos.mjs` |
+| **Os caminhos de clique** | conferidos um a um contra os menus do código: 298 caminhos, os errados consertados |
+| **Os testes do manual** | voltaram a rodar. Foto sem legenda, foto sobrando, botão que mudou de nome: o teste reprova |
+| **O começo de cada capítulo** | três linhas: o que você vai conseguir fazer |
+| **O fim de cada capítulo** | a lista honesta: o que ainda não funciona |
+| **O inglês** | acompanhou, capítulo por capítulo |
+
+---
+
 ## 07/10/2026 — o manual alcança a v36.5
 
 O manual de 15/09 ficou para trás: o programa andou muito desde então.
@@ -82,11 +98,13 @@ Gerado da **mesma página** que o **Ajuda → Manual** (`F1`) monta, e não de
 uma segunda cópia do texto — nunca duas fontes dizendo coisas diferentes. O
 PDF de 09/09 saiu da pasta: era o manual velho, sem selo, e ficaria
 confundindo ao lado do novo (guardado em `backup/`, não volta). Para gerar um
-novo, com o editor aberto numa outra janela:
+novo:
 
 ```
 npm run manual-pdf
 ```
+
+O script sobe o editor sozinho, e acha o Chrome ou o Chromium sozinho.
 
 O arquivo sai com a data no nome, e o de ontem não é sobrescrito.
 
@@ -130,9 +148,9 @@ Cada uma é explicada de novo no capítulo em que aparece.
 
 ## O manual em inglês
 
-**Parado.** [`en/`](en/README.md) tem a tradução dos nove capítulos do
-modelo velho — decisão da casa: traduzir depois do português estar certo,
-nunca junto. Vai ser refeito quando os onze capítulos novos fecharem.
+**Em dia.** [`en/`](en/README.md) tem os capítulos 00 a 10, da v36.5. As
+fotos são as mesmas nas duas línguas. O teste confere que cada capítulo tem o
+seu par na outra língua.
 
 **Os rótulos do editor continuam em português.** Por isso o manual em inglês
 escreve cada botão em inglês com o rótulo português entre parênteses:

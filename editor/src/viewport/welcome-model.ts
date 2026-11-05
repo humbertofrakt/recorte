@@ -78,3 +78,17 @@ export function isEmptyDocument(file: BoneFile, hasImages = false): boolean {
   );
   return ossos <= 1 && slots === 0 && !desenhos;
 }
+
+/**
+ * O primeiro passo depois de **Abrir o herói** — prova de pessoa, 05/11/2026.
+ *
+ * O herói abre na base, a pose de montar (lote 68), e ali o ▶ fica cinza: a
+ * base tem um quadro só. Quem nunca abriu o programa clicava no ▶ e nada
+ * acontecia; o porquê só morava na dica do botão. O rodapé diz onde clicar.
+ * **Curta, sem ponto e sem dois-pontos**: o rodapé mostra a versão que cabe
+ * na largura (`ui/shell-status.ts`) — a inteira, a primeira frase, ou o que
+ * vem antes dos dois-pontos. Em 1440×900 a primeira versão desta frase saía
+ * cortada em *"O herói abriu parado, na base"*, e o passo sumia.
+ */
+export const EXAMPLE_FIRST_STEP =
+  'Para ver o herói se mexer, clique em idle na aba Animações e aperte ▶';

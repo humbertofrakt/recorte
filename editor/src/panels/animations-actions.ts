@@ -26,6 +26,7 @@ import {
   importAnimationNotice, unmetRig,
 } from '../io/export-animation.js';
 import { rememberAnimationNames } from '../io/export-animation.js';
+import { rememberSharedFile } from '../doc/shared-animations.js';
 import { animationLibraryWindow, libraryNotice } from '../io/animation-library.js';
 import type { LibraryPick } from '../io/animation-library.js';
 import { putBoneFile } from '../io/export-skin.js';
@@ -605,6 +606,10 @@ export async function openAnimationLibrary(
   const falta = unmetRig(doc.file, escolhido.entry.file);
   doc.run(new ImportAnimationFile(escolhido.savedAs));
   rememberAnimationNames(escolhido.savedAs, escolhido.entry.animations);
+  // Reaproveitar (04/11/2026): o editor guarda o arquivo gravado, e as quatro
+  // TOCAM aqui (doc/shared-animations.ts). Antes só o nome entrava.
+  rememberSharedFile(escolhido.savedAs, escolhido.entry.file);
+  doc.rebuild();
   doc.notice(libraryNotice(escolhido, falta));
   return escolhido.savedAs;
 }

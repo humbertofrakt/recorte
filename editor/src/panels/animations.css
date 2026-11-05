@@ -60,7 +60,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 8px 2px 12px;
+  /* QA da noite (04/11): 4 px à direita, e não 8 — "Animações" media 68,16 px
+     numa caixa de 68 e saía "Animaçõ…" ao lado dos seis botões. */
+  padding: 2px 4px 2px 12px;
   background: var(--painel-fundo);
   border-bottom: 1px solid var(--painel-borda);
 }
@@ -277,6 +279,32 @@
 
 .anim-de-fora {
   border-top: 1px solid var(--painel-linha);
+}
+
+/* Reaproveitar (04/11/2026): a compartilhada tem clique (toca para ver). */
+button.anim-item-fora {
+  cursor: pointer;
+}
+
+button.anim-item-fora:hover {
+  background: var(--painel-campo);
+}
+
+.anim-original {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--painel-realce);
+  background: transparent;
+  border: 1px solid var(--painel-linha);
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.anim-original:hover {
+  border-color: var(--painel-realce);
 }
 
 /* ------------------------------------------------------------------ */

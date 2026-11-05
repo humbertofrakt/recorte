@@ -1092,3 +1092,19 @@ export class MoveSlotKeepingFolders extends SlotArrayCommand {
     return [...resto.slice(0, at), peca, ...resto.slice(at)];
   }
 }
+
+/**
+ * **O detalhe da linha, só quando diz outra coisa** — QA da noite de
+ * 04/11/2026. No herói do PSD o desenho tem o mesmo nome do slot, e a linha
+ * dizia "forearm_b…  forearm_b…": o detalhe repetia o nome e os dois
+ * cortavam. Como no Spine: o nome do slot; o do desenho só quando é outro.
+ */
+export function orderRowDetail(name: string, detail: string): string | null {
+  return detail === name ? null : detail;
+}
+
+/** A dica da linha, sem dizer o nome duas vezes. */
+export function orderRowHint(name: string, detail: string, bone: string): string {
+  const shown = orderRowDetail(name, detail);
+  return shown === null ? `${name}, no osso ${bone}` : `${name}: ${shown}, no osso ${bone}`;
+}

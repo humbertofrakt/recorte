@@ -86,8 +86,8 @@ export const MOVED_OUT: ReadonlyArray<{ label: string; why: string }> = Object.f
   {
     label: 'Novo → Esqueleto filho…',
     why: 'Um esqueleto filho precisa do encaixe por nome (socket) para servir '
-      + 'de alguma coisa: sem ele, criar um slot com outro arquivo dentro é '
-      + 'um item que ninguém consegue usar. Volta ao menu no lote do socket, '
+      + 'de alguma coisa: sem ele, criar um desenho (slot) com outro arquivo dentro é '
+      + 'um item que ninguém consegue usar. Volta ao menu no lote do encaixe (socket), '
       + 'que tem plano próprio. Até lá o formato já o suporta e o runtime já o '
       + 'desenha: o que não existe é a porta.',
   },
@@ -315,12 +315,12 @@ export function fileMenu(_state: FileMenuState = { canRepack: false }): MenuItem
     SEP,
     {
       label: 'Salvar', shortcut: 'Ctrl+S', action: 'salvar', enabled: true,
-      hint: 'Grava a pasta inteira: o .bone, o atlas e as imagens em uso; com mais de uma base ou com entidade, '
+      hint: 'Grava a pasta inteira: o .bone, a folha de imagens (atlas) e as imagens em uso; com mais de uma base ou com entidade, '
         + 'um .bone para cada e o manifest.json',
     },
     {
       label: 'Salvar como…', shortcut: 'Ctrl+Shift+S', action: 'salvar-como', enabled: true,
-      hint: 'Uma cópia: numa pasta nova, com o atlas, as imagens e as entidades, ou só o .bone',
+      hint: 'Uma cópia: numa pasta nova, com a folha de imagens (atlas), as imagens e as entidades, ou só o .bone',
     },
     {
       label: 'Salvar a entidade editada…', action: 'salvar-entidade', enabled: true,
@@ -357,12 +357,12 @@ export function fileMenu(_state: FileMenuState = { canRepack: false }): MenuItem
         },
         {
           label: 'Salvar como pacote…', action: 'salvar-pacote', enabled: true,
-          hint: 'Zipa o projeto num .bonez só: as bases, as entidades, o atlas e as imagens',
+          hint: 'Zipa o projeto num .bonez só: as bases, as entidades, a folha de imagens (atlas) e as imagens',
         },
         // Degrau 10, 10.1 (P2) e 10.3 (E4).
         {
           label: 'Entregar uma base…', action: 'entregar-corpo', enabled: true,
-          hint: 'Uma base sozinha para o jogo, com o atlas fatiado: só as imagens que ela usa',
+          hint: 'Uma base sozinha para o jogo, com a folha de imagens (atlas) fatiada: só as imagens que ela usa',
         },
         SEP,
         // Degrau 12, parte `B` (18/09/2026): a biblioteca. Sai um `.bone` com o
@@ -371,7 +371,7 @@ export function fileMenu(_state: FileMenuState = { canRepack: false }): MenuItem
           label: 'Animações, para outra base…',
           action: 'exportar-animacao',
           enabled: true,
-          hint: 'Grava as animações marcadas num .bone com o contrato de rig, para entrarem noutra base. '
+          hint: 'Grava as animações marcadas num .bone com a lista dos ossos que elas esperam (o contrato de rig), para entrarem noutra base. '
             + 'Era Animação → Exportar animação…',
         },
         // Degrau 9 (18/09/2026), I12 e I13. A pele de fora é o modelo do Dota 2.
@@ -718,6 +718,14 @@ export function skeletonMenu(state: SkeletonMenuState & { animating?: boolean })
       enabled: true,
       hint: 'Um .bone de fora entra na lista Bases, e a base dele abre. Era Abrir outra base…',
     },
+    // Reaproveitar (04/11/2026): os ossos deste boneco ganham os nomes do
+    // padrão, e as animações do padrão tocam aqui sem combinar nada.
+    {
+      label: 'Seguir o Esqueleto padrão…',
+      action: 'seguir-esqueleto-padrao',
+      enabled: true,
+      hint: 'Os ossos ganham os nomes do Esqueleto padrão (quadril, tronco, braco_d…); a janela mostra a tabela antes',
+    },
     SEP,
     {
       label: 'Novo',
@@ -735,16 +743,16 @@ export function skeletonMenu(state: SkeletonMenuState & { animating?: boolean })
         { label: 'Caixa de colisão', shortcut: 'X', action: 'novo-caixa', enabled: true },
         // Lote 40: com um slot escolhido, o anexo entra NELE (○), sem slot novo.
         {
-          label: 'Ponto neste slot',
+          label: 'Ponto neste desenho',
           action: 'novo-ponto-no-slot',
           enabled: true,
-          hint: 'Com um slot escolhido: o ponto entra nele como mais um desenho, sem criar slot',
+          hint: 'Com um desenho escolhido: o ponto entra nele como mais uma peça, sem criar outro desenho (slot)',
         },
         {
-          label: 'Caixa neste slot',
+          label: 'Caixa neste desenho',
           action: 'novo-caixa-no-slot',
           enabled: true,
-          hint: 'Com um slot escolhido: a caixa entra nele como mais um desenho, sem criar slot',
+          hint: 'Com um desenho escolhido: a caixa entra nele como mais uma peça, sem criar outro desenho (slot)',
         },
         SEP,
         { label: 'Máscara', action: 'novo-mascara', enabled: true },
@@ -786,7 +794,7 @@ export function skeletonMenu(state: SkeletonMenuState & { animating?: boolean })
       label: 'Limpar desenhos vazios',
       action: 'limpar-slots-vazios',
       enabled: true,
-      hint: 'Apaga os slots que não mostram nada em skin nenhuma',
+      hint: 'Apaga os desenhos (slots) que não mostram nada em skin nenhuma',
     },
     // Rodada 13: tirar uma peça da base guarda as chaves dela. Aqui se vê
     // quantas, de quem, e se joga fora de propósito.
@@ -868,7 +876,7 @@ export function imagesMenu(): MenuItem[] {
     // palavra do formato; nos três programas o gesto é pôr a imagem na cena.
     {
       label: 'Pôr imagem na cena…', action: 'novo-imagem', enabled: true,
-      hint: 'Escolhe uma imagem e ela entra na cena, presa ao osso escolhido. Era Imagem no slot…',
+      hint: 'Escolhe uma imagem e ela entra na cena, presa ao osso escolhido (antes se chamava Imagem no slot…)',
     },
     // Degrau 7, tarefa 7.5 (defeito A7): a outra metade do botão direito. Em
     // cima de um desenho ele abre esta grade; aqui ela abre pelo desenho
@@ -906,7 +914,7 @@ export function imagesMenu(): MenuItem[] {
     },
     {
       label: 'Carimbar pivôs', action: 'carimbar-pivos', enabled: true,
-      hint: 'Grava no atlas onde cada imagem encaixa no osso',
+      hint: 'Grava na folha de imagens (atlas) onde cada imagem encaixa no osso',
     },
     // Rodada 13, caso (b): mudar o pivô deixa o desenho parado, e o pivô fica
     // "à mão" — o osso não está nele. Este item o devolve ao osso.
@@ -966,7 +974,7 @@ export function meshRulesMenu(): MenuItem[] {
         SEP,
         {
           label: 'Usar a forma de outra malha', action: 'usar-forma-de-outra', enabled: true,
-          hint: 'Malha ligada: empresta a forma de outra malha do mesmo slot e troca só a imagem',
+          hint: 'Malha ligada: empresta a forma de outra malha do mesmo desenho (slot) e troca só a imagem',
         },
       ],
     },
@@ -1078,6 +1086,12 @@ export function meshRulesMenu(): MenuItem[] {
  */
 export function skinsMenu(): MenuItem[] {
   return [
+    // Noite de 04/11/2026: a grade peça × skin — trocar, comparar, vestir.
+    {
+      label: 'Guarda-roupa: desenho × skin…', action: 'guarda-roupa', enabled: true,
+      hint: 'Uma grade: cada coluna é uma skin (uma roupa), cada linha um desenho. Clique numa casa para trocar a imagem',
+    },
+    SEP,
     {
       label: 'Nova skin', action: 'nova-pele', enabled: true,
       hint: 'Uma skin nova, vazia, que passa a ser a do lápis. Era Esqueleto → Novo → Pele',
@@ -1148,7 +1162,7 @@ export function entitiesMenu(): MenuItem[] {
     {
       label: 'Encaixar um projeto…', action: 'encaixar-projeto', enabled: true,
       hint: 'Escolhe um .bone e o encaixa na tomada do osso escolhido (a tomada nasce, se não houver). '
-        + 'A espada na mão; o herói na cabine do mecha. É um anexo skeleton (7.11)',
+        + 'A espada na mão; o herói na cabine do mecha (anexo skeleton, 7.11)',
     },
     {
       label: 'Pôr uma tomada aqui…', action: 'por-tomada', enabled: true,
@@ -1365,6 +1379,14 @@ export function animationMenu(state: AnimationMenuState): MenuItem[] {
     // vai animar, e é o passo que a dica do rodapé aponta (P19). A panela não
     // vai para dentro do armário. O resto da lista mora em Animações ▸.
     { label: 'Nova animação', action: 'nova-animacao', enabled: true },
+    // Reaproveitar (04/11/2026): à vista, ao lado da Nova — é o outro jeito de
+    // ter animação, e quem procura "como o goblin anda igual" acha aqui.
+    {
+      label: 'Animações de outro boneco…',
+      action: 'usar-animacoes',
+      enabled: true,
+      hint: 'O Esqueleto padrão, outra base do projeto, ou um arquivo: ligadas (mudam junto) ou cópia',
+    },
     {
       label: 'Animações',
       action: 'animacoes',

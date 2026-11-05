@@ -1,0 +1,104 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "tinta"
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "liga",
+      "bone": "root"
+    },
+    {
+      "name": "corta",
+      "bone": "root",
+      "darkColor": [
+        0.2,
+        0.2,
+        0.2
+      ]
+    },
+    {
+      "name": "parado",
+      "bone": "root",
+      "darkColor": [
+        0.1,
+        0.3,
+        0.5
+      ]
+    },
+    {
+      "name": "nada",
+      "bone": "root"
+    }
+  ],
+  "animations": [
+    {
+      "name": "tingir",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "slot",
+          "target": "liga",
+          "property": "darkColor",
+          "keys": [
+            {
+              "time": 0,
+              "value": [
+                0,
+                0,
+                0
+              ],
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "value": [
+                1,
+                0.5,
+                0
+              ]
+            }
+          ]
+        },
+        {
+          "type": "slot",
+          "target": "corta",
+          "property": "darkColor",
+          "keys": [
+            {
+              "time": 0,
+              "value": [
+                1,
+                1,
+                1
+              ],
+              "curve": "linear"
+            },
+            {
+              "time": 0.5,
+              "value": null,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

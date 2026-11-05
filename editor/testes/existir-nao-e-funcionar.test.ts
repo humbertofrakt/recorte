@@ -479,12 +479,12 @@ const O_ESTADO_DE_CADA: ReadonlyArray<{
 }> = [
   {
     id: 'novo-ponto-no-slot',
-    porque: 'sem um slot escolhido',
+    porque: 'sem um desenho escolhido',
     prepara: (doc) => doc.select({ ...emptySelection(), slots: [SLOT] }),
   },
   {
     id: 'novo-caixa-no-slot',
-    porque: 'sem um slot escolhido',
+    porque: 'sem um desenho escolhido',
     prepara: (doc) => doc.select({ ...emptySelection(), slots: [SLOT] }),
   },
   {

@@ -9,12 +9,13 @@
  * função. Nada mudou no que cada um faz.
  */
 
+import { avisoNoRodape } from '../panels/warning-model.js';
 import { setViewSettings, viewSettings } from '../viewport/onion.js';
 import { createEmptyFile } from '../doc/new-file.js';
 import { describeDraftTime, draftsToOffer, readDraft, takeKeptDraft } from '../doc/rascunho.js';
 import {
   abrindoPelaPasta, cameFromOutside, deliverBody, deliveredLine, entitySaveLines, forgetHandle, forgetOutside,
-  hasOpenHandle, lastSaveNote, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
+  hasOpenHandle, lastSaveNote, lastSaveWarns, saveStatusLine, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
   saveDocument, uriForOpened, useOpenHandle,
 } from '../io/open-save.js';
 import { perguntaSalvarComAvisos } from './salvar-avisos.js';
@@ -39,7 +40,7 @@ import { importPsd, psdWarningsNote } from '../io/import-psd.js';
 import { saveAsBinary, saveAsPackage, savingLine, stem as fileStem } from '../io/save-binary.js';
 import { gltfLine, saveAsGltf } from '../io/export-gltf.js';
 import {
-  buildImageExport, exportImageWindow, imageExportLine, imageExportReport,
+  buildImageExport, exportImageWindow, imageExportLead, imageExportLine, imageExportReport,
   saveExport,
 } from '../io/export-image.js';
 import type { ImageExportOptions } from '../io/export-image.js';
@@ -306,7 +307,7 @@ async function abrirNaPasta(shell: Shell, folder: ProjectFolder, boneEscolhido?:
         if (lido.mainHandle !== null) useOpenHandle(lido.mainHandle);
         await adoptFolderAtlases(shell.doc);
         shell.statusState.textContent = lido.warnings.length > 0
-          ? `${projectOpenedNotice(folder.name, lido.lists)}. ${lido.warnings[0]}`
+          ? `${projectOpenedNotice(folder.name, lido.lists)}. ${avisoNoRodape(lido.warnings[0]!)}`
           : projectOpenedNotice(folder.name, lido.lists);
         return;
       }
@@ -362,7 +363,7 @@ export async function open(shell: Shell): Promise<void> {
     });
     // Lote 62: com a pasta aberta, as imagens dela voltam a vir da pasta.
     await adoptFolderAtlases(shell.doc);
-    if (opened.warnings.length > 0) shell.statusState.textContent = opened.warnings[0];
+    if (opened.warnings.length > 0) shell.statusState.textContent = avisoNoRodape(opened.warnings[0]!);
     // Rodada 45, lote 4 (doc 64, c): o pacote diz o que veio dentro.
     else if (/\.bonez$/i.test(opened.path ?? '')) {
       shell.statusState.textContent = pacoteAbertoNotice(opened.path ?? '', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);
@@ -373,9 +374,40 @@ export async function open(shell: Shell): Promise<void> {
 }
 
 export async function save(shell: Shell, saveAs: boolean): Promise<void> {
+  // Reaproveitar (05/11/2026): com várias bases, o Salvar grava o FOCO no
+  // arquivo que abriu a pasta (a base principal), e depois grava a principal
+  // por cima. Com o foco noutra base, ela SUMIA do disco e do manifesto, sem
+  // aviso (relatório `noite/reaproveitar.md`, §6). Salva com a principal em
+  // foco, e volta ao foco de antes, com o rodapé do Salvar.
+  const projetoAqui = projetoDe(shell.doc);
+  const principal = projetoAqui?.manifesto.main ?? null;
+  if (!saveAs && projetoAqui !== null && principal !== null
+    && projetoAqui.emFocoUri !== principal && projetoAqui.corpos.has(principal)) {
+    const volta = projetoAqui.emFocoUri;
+    projetoAqui.trocarFoco(principal);
+    let frase = '';
+    try {
+      await save(shell, saveAs);
+      frase = shell.statusState.textContent ?? '';
+    } finally {
+      projetoAqui.trocarFoco(volta);
+    }
+    // Depois da volta: a base que volta ao foco se remonta (as compartilhadas)
+    // e o rodapé seria trocado por "sem mudanças"; a frase do Salvar fica.
+    if (frase !== '') setTimeout(() => { shell.statusState.textContent = frase; }, 0);
+    return;
+  }
   // Rodada 7: sem pasta, o Salvar primeiro pede a pasta (Salvar como… não).
-  if (!saveAs && await askFolderFirst(shell, 'salvar') === 'cancelar') return;
-  if (saveAs && await askFolderFirst(shell, 'salvar', true) === 'cancelar') return;
+  const primeira = await askFolderFirst(shell, 'salvar', saveAs);
+  if (primeira === 'cancelar') return;
+  // QA 04/11/2026 (D5): a pasta acabou de ser escolhida nesta mesma volta —
+  // perguntar "onde vai a cópia?" de novo era a mesma pergunta duas vezes.
+  // Grava nela, como o "Numa pasta nova…" abaixo.
+  const pastaEscolhidaAgora = saveAs && primeira === 'pasta';
+  if (pastaEscolhidaAgora) {
+    forgetHandle();
+    saveAs = false;
+  }
   // Rodada 45, lote 4 (doc 64, d): com o projeto numa pasta, Salvar como
   // pergunta: pasta nova (leva tudo) ou só o .bone.
   const pastaAtual = projectFolder(shell.doc);
@@ -412,10 +444,8 @@ export async function save(shell: Shell, saveAs: boolean): Promise<void> {
     if (name === null && problema !== null) shell.statusState.textContent = problema;
     if (name !== null) {
       // Lote 62: o que o Salvar fez com o atlas da pasta, ou por que baixou.
-      const nota = lastSaveNote();
-      const extra = nota !== null ? ` ${nota}.`
-        : atlasFileText(shell.doc) === null ? '' : ' Atlas e páginas gravados junto.';
-      shell.statusState.textContent = `Salvo em ${name}.${extra}`;
+      // QA 04/11/2026 (D3): o aviso de "baixado" vem primeiro, senão o rodapé o corta.
+      shell.statusState.textContent = saveStatusLine(name, lastSaveNote(), lastSaveWarns(), atlasFileText(shell.doc) !== null);
     }
   } catch (error) {
     shell.statusState.textContent = error instanceof Error ? error.message : String(error);
@@ -499,9 +529,9 @@ async function askEntityFolder(bone: string, missing: readonly string[]): Promis
   const escolha = await askChoice({
     title: `${bone}: falta ${missing.join(', ')}`,
     lead: `As imagens de ${bone} moram em ${missing.join(', ')}, ao lado dele. Escolha a pasta onde ${bone} está, `
-      + 'e o atlas e as imagens vêm juntos.',
+      + 'e a folha de imagens (atlas) e as imagens vêm juntas.',
     options: [
-      { id: 'pasta', label: `Escolher a pasta de ${bone}…`, hint: 'O .bone, o atlas e as imagens entram juntos' },
+      { id: 'pasta', label: `Escolher a pasta de ${bone}…`, hint: 'O .bone, a folha de imagens (atlas) e as imagens entram juntos' },
       { id: 'sem', label: 'Trazer sem as imagens', hint: 'A peça entra sem desenho, e o rodapé avisa' },
     ],
     cancelId: 'sem',
@@ -556,7 +586,7 @@ export async function deliverOneBody(shell: Shell): Promise<void> {
     await tellUser({
       title: 'Base entregue',
       lead: result.atlas === null
-        ? `Saiu ${result.name}, sozinho. Não havia imagem da pasta para fatiar: o atlas que ele já citava vale.`
+        ? `Saiu ${result.name}, sozinho. Não havia imagem da pasta para fatiar: vale a folha de imagens (atlas) que ele já citava.`
         : `Saíram ${result.name} e ${result.atlas}, com ${result.images} ${result.images === 1 ? 'imagem' : 'imagens'} — só as que ESTA base usa.`,
       // Rodada 45, lote 4: sem atlas novo, a frase de cima já diz o aviso de baixo.
       lines: result.atlas === null ? result.warnings.filter((aviso) => !aviso.startsWith('As imagens desta base não vieram da pasta')) : result.warnings,
@@ -724,7 +754,7 @@ export async function exportImage(shell: Shell): Promise<void> {
     saveLastExport('imagem', run.options as unknown as Record<string, unknown>);
     await tellUser({
       title: 'Imagem exportada',
-      lead: `${run.result.files.length} arquivo(s) gravado(s).`,
+      lead: imageExportLead(run.result, run.options, run.base),
       lines: imageExportReport(run.result, run.options, run.base, run.where),
     });
   } catch (error) {
@@ -1018,8 +1048,9 @@ export async function importForeign(shell: Shell): Promise<void> {
     if (imported === null) return;
     forgetHandle();
     forgetImportedImages(shell.doc);
+    // QA 04/11/2026 (D7): o bcp.bone ainda não existe no disco — nasce "não salvo".
     shell.doc.setFile(imported.file, {
-      path: imported.path, atlases: imported.atlases, images: imported.images,
+      path: imported.path, atlases: imported.atlases, images: imported.images, unsaved: true,
     });
     const program = FORMAT_LABELS[imported.format];
     // E3b (29/09/2026): o passo 2, o mesmo do arrasto. Um projeto do Spriter

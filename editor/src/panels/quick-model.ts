@@ -504,3 +504,14 @@ export function heldByRuleAfterWrite(
   const rules = rulesOn(file, name);
   return rules.length === 0 ? null : heldNotice(name, rules, grip, depoisDeGravar && doc.animation === null);
 }
+
+/**
+ * **O "mundo" ao lado do Ângulo, ou na dica** — QA da noite de 04/11/2026.
+ * O campo tinha 50 px e cortava "-166,03" em "-166,0": o número lido era
+ * outro. Agora o campo cresce com o número; com mais de 4 letras não sobra
+ * lugar para o "mundo -76°" na coluna de 258 px, e ele vai para a dica do
+ * disco — o mesmo caminho de quando a "base" aparece ao lado (rodada 43).
+ */
+export function worldAngleBeside(fieldText: string): boolean {
+  return fieldText.length <= 4;
+}

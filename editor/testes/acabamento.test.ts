@@ -300,22 +300,24 @@ describeManual('o menu Arquivo, item por item, nas duas línguas', () => {
     expect(rotulos).toContain('PSD com ossos…');
   });
 
-  it('o cap. 1 em inglês tem a tabela, com todo item e o rótulo português', () => {
-    const en = readFileSync(join(MANUAL, 'en', '01-open-recorte.md'), 'utf8');
-    const tabela = trecho(en, '## The File menu, item by item', '\n---');
+  // D13 (05/11/2026): a tabela do Arquivo mora no capítulo 0 desde a v36.5,
+  // dentro de "os doze menus, item por item", e vai até a seção do Editar.
+  it('o cap. 0 em inglês tem a tabela, com todo item e o rótulo português', () => {
+    const en = readFileSync(join(MANUAL, 'en', '00-open-recorte.md'), 'utf8');
+    const tabela = trecho(en, '### File ("Arquivo")', '### Edit ("Editar")');
     expect(tabela).not.toBe('');
     expect(rotulos.filter((rotulo) => !tabela.includes(rotulo))).toEqual([]);
   });
 
   it('em inglês, as Configurações dizem os dois campos do lote 46', () => {
-    const en = readFileSync(join(MANUAL, 'en', '01-open-recorte.md'), 'utf8');
-    const tabela = trecho(en, '## The File menu, item by item', '\n---');
+    const en = readFileSync(join(MANUAL, 'en', '00-open-recorte.md'), 'utf8');
+    const tabela = trecho(en, '### File ("Arquivo")', '### Edit ("Editar")');
     expect(tabela).toContain('animation switch');
     expect(tabela).toContain('mix time');
   });
 
   it('a tabela em português também tem todo item', () => {
-    const pt = readFileSync(join(MANUAL, '01-abrir-o-recorte.md'), 'utf8');
+    const pt = readFileSync(join(MANUAL, '00-abrir-o-recorte.md'), 'utf8');
     const tabela = trecho(pt, '### Arquivo', '### Editar');
     expect(tabela).not.toBe('');
     expect(rotulos.filter((rotulo) => !tabela.includes(rotulo))).toEqual([]);

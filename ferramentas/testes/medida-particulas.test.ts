@@ -71,31 +71,28 @@ describe('a medida particles do pose-dump (extensão BONE_particles 14.1)', () =
     });
   });
 
-  it('`casos-pendentes/` guarda EXATAMENTE o P-002, e o leiame diz por quê', () => {
-    // O P-002 voltou para cá em 18/09/2026, depois de ter entrado em `casos/`
-    // por engano. O motivo é o mais fino que esta rodada achou: **ele passa sem
-    // exercitar o que o nome dele promete.** O anexo tem `rate: 0`, a prova
-    // está numa timeline de `rate` que nenhum runtime de 1ª fase implementa, e
-    // o esperado traz lista vazia — então um runtime de 1ª fase produz zero
-    // partículas e passa.
+  it('`casos-pendentes/` não guarda mais caso P: o P-002 entrou em `casos/` com a 2ª fase', () => {
+    // O P-002 voltou para lá em 18/09/2026, depois de ter entrado em `casos/`
+    // por engano: o anexo tem `rate: 0`, a prova está numa timeline de `rate`
+    // que nenhum runtime de 1ª fase implementava, e o esperado trazia lista
+    // vazia — um runtime de 1ª fase produzia zero partículas e PASSAVA. O nome
+    // mentia.
     //
-    // Ele não é mudo: prende a regra da §14.1 (emissor sem ninguém vivo sai
-    // como lista VAZIA e não some da chave). Mas não é isso que o nome dele
-    // diz. Um caso mudo não engana — vê-se a lista vazia e desconfia-se. Um
-    // caso que passa por OUTRO MOTIVO que não o do nome engana, porque quem lê
-    // "P-002 taxa em rampa: passou" conclui que a inversa estável da integral
-    // está coberta. O nome mente, e o nome é o que se lê num relatório.
-    //
-    // Este teste é o guarda de que ninguém o promova de novo por engano: ele só
-    // sai daqui quando a 2ª fase abrir e os números dele forem preenchidos.
-    expect(pendentes).toEqual(['P-002-taxa-em-rampa']);
+    // Em 05/11/2026 a 2ª fase abriu (a taxa animada, §4.2), o esperado foi
+    // preenchido por uma conta à parte (E = 20·t², raiz direta), os dois
+    // runtimes passaram e o caso entrou. O teste abaixo prende que a lista está
+    // CHEIA: um runtime sem a rampa agora reprova.
+    expect(pendentes).toEqual([]);
+    expect(oficiais).toContain('P-002-taxa-em-rampa');
   });
 
-  it('o P-002 continua com a lista VAZIA — não se preenche para ele passar', () => {
+  it('o P-002 tem a lista CHEIA — 8, 21 e 33 vivas, e a partícula 7 em sqrt(7/20)', () => {
     const want = JSON.parse(
-      readFileSync(join(PENDENTES, 'P-002-taxa-em-rampa', 'esperado.json'), 'utf8'),
-    ) as { samples: { particles: Record<string, unknown[]> }[] };
-    expect(want.samples[0].particles['fx/jato']).toEqual([]);
+      readFileSync(join(CASOS, 'P-002-taxa-em-rampa', 'esperado.json'), 'utf8'),
+    ) as { samples: { particles: Record<string, { index: number; birth: number }[]> }[] };
+    expect(want.samples.map((s) => s.particles['fx/jato'].length)).toEqual([8, 21, 33]);
+    const sete = want.samples[0].particles['fx/jato'].find((p) => p.index === 7);
+    expect(sete?.birth).toBeCloseTo(Math.sqrt(7 / 20), 6);
   });
 
   for (const nome of casos) {
@@ -118,15 +115,14 @@ describe('a medida particles do pose-dump (extensão BONE_particles 14.1)', () =
 
   it('emissor sem ninguém vivo sai como lista VAZIA, e não some da chave', () => {
     // Confusing "there is no particle" with "this reader does not implement P"
-    // is exactly the kind of quiet green house rule 21 is about. The P-002 is
-    // the live example: its rate is fixed at 0, so nobody is born.
-    //
-    // And this IS the one thing P-002 proves — a reader without the P module
-    // writes no `fx/jato` key at all and the comparison says `<emissor
-    // ausente>`. It is not what the case's NAME promises, which is why the case
-    // sits in `casos-pendentes/`; but the property is real and worth a test of
-    // its own, right here, where it is not pretending to be about a ramp.
-    const { obtido } = rodar('P-002-taxa-em-rampa');
+    // is exactly the kind of quiet green house rule 21 is about. The input of
+    // P-002 WITHOUT its rate timeline is the live example: the rate is fixed
+    // at 0 on the attachment, so nobody is born — and the key must stay.
+    const pasta = pastaDoCaso('P-002-taxa-em-rampa');
+    const probe = (JSON.parse(readFileSync(join(pasta, 'esperado.json'), 'utf8')) as { probe: Probe }).probe;
+    const doc = JSON.parse(readFileSync(join(pasta, 'entrada.bone'), 'utf8')) as { animations: { timelines: unknown[] }[] };
+    doc.animations[0].timelines = [];
+    const obtido = buildPoseDump(loadSkeletonData(doc as unknown as Record<string, unknown>), probe);
     const bloco = (obtido.samples[0] as { particles: Record<string, unknown> }).particles;
     expect(Object.keys(bloco)).toEqual(['fx/jato']);
     expect(particulas(obtido, 0)).toEqual([]);

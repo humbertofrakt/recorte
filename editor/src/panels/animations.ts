@@ -32,7 +32,7 @@ import { registerPanel } from '../contract.js';
 import { clear, el, ensureStylesheet, separador, iconButton} from './dom.js';
 import {
   DeleteAnimation, DuplicateAnimation, MoveAnimationToTop,
-  animationRowMenu, baseLineLabel, renameAfter, renameAnswer, renamedNotice, showBodiesList,
+  animationRowMenu, baseLineLabel, renameAfter, renameAnswer, renamedNotice, deletedNotice, showBodiesList,
   externalCount, externalHint, formatTime, listAnimations, listBodies, listExternalAnimations,
   entityBaseHint, hostOfEntityView, listEntityBases,
 } from './animations-model.js';
@@ -62,23 +62,27 @@ export function bodyHint(row: BodyRow): string {
 }
 
 /** A dica da Biblioteca — degrau 12, parte `B`, lote 2. */
-const BIBLIOTECA_DICA = 'Biblioteca de animações: parado, andar, correr e pular, prontas, '
-  + 'gravadas contra a convenção de nomes humanoide-v1. A janela diz o que esta base não tem '
-  + 'antes de trazer';
+const BIBLIOTECA_DICA = 'Usar animações de outro boneco: as do Esqueleto padrão (parado, andar, '
+  + 'correr e pular), as de outra base do projeto, ou de um arquivo. A tabela combina os ossos antes';
 
 /** O título da seção das que vêm de fora — spec 2.8, `assets.animations`. */
-const DE_FORA_DICA = 'Arquivos de animação de fora que esta base cita (assets.animations). '
-  + 'As animações deles entram pelo nome ao carregar; o editor não as edita aqui';
+const DE_FORA_DICA = 'Compartilhadas: animações que este boneco toca LIGADAS a outro arquivo '
+  + '(assets.animations). Mudam junto com o original. Clique para ver tocar; "Abrir o original" vai '
+  + 'para onde se muda';
 
 /** A dica do sinal da próxima — lote 46. */
 const PROXIMA_DICA =
   'Próxima: entra do começo quando a atual chegar ao fim. Isto é do tocador; Repetir é outra coisa.';
 import { RenameItem } from './tree-model.js';
+// Reaproveitar animação (04/11/2026): as compartilhadas, e a porta da janela.
+import { listShared, sharedFrom } from './reuse-model.js';
+import { openOriginal, ownerOf, useAnimations } from './reuse-actions.js';
+import { projetoDe } from '../doc/projeto.js';
 import { registerAction } from '../ui/actions.js';
 import { transport } from '../anim/transport.js';
 import {
   BASE_NOVA_DICA, addAnimation as addAnimationNow, askNewBase, demoteBody, exportAnimation, openAnimation,
-  openAnimationLibrary, openBody, openEntityAnimation, pickEntitySlots, returnToHost, takeNameRequest,
+  openBody, openEntityAnimation, pickEntitySlots, returnToHost, takeNameRequest,
 } from './animations-actions.js';
 import { redrawPlan, signature } from './list-redraw.js';
 import { CropStrip } from './animations-crop.js';
@@ -161,7 +165,7 @@ class AnimationsPanel implements Panel {
     topo.title = `Mandar para o topo: ${TOPO_DICA.toLowerCase()}`;
     // Degrau 12, parte `B`, lote 2: a biblioteca. Sexto ícone, com o nome na
     // dica (regra 12) — a porta que o Spine tem em `File -> Import -> Project`.
-    const biblioteca = iconButton('pasta', 'Biblioteca de animações', () => this.openLibrary());
+    const biblioteca = iconButton('pasta', 'Usar animações de outro boneco', () => this.openLibrary());
     biblioteca.title = BIBLIOTECA_DICA;
     toolbar.append(
       iconButton('plus', 'Nova animação', () => this.addAnimation()),
@@ -220,7 +224,7 @@ class AnimationsPanel implements Panel {
     // vazio ocupa a altura do painel, e a altura é o que falta nesta coluna.
     const tiraDeFora = el('div', 'anim-secao');
     tiraDeFora.title = DE_FORA_DICA;
-    tiraDeFora.append(el('span', 'anim-secao-nome', 'De fora'));
+    tiraDeFora.append(el('span', 'anim-secao-nome', 'Compartilhadas'));
     const deFora = el('ul', 'anim-lista anim-de-fora');
     tiraDeFora.hidden = true;
     deFora.hidden = true;
@@ -329,6 +333,9 @@ class AnimationsPanel implements Panel {
         // refaria a lista, e a seção "De fora" só apareceria no desenho
         // seguinte, por outro motivo — um verde que não é verde (regra 21).
         ...listExternalAnimations(doc.file).map((row) => [row.uri, externalCount(row)]),
+        // Reaproveitar: as compartilhadas, uma por animação, com a duração —
+        // o dono mudou o andar, a lista do goblin muda junto.
+        ...listShared(doc.file).map((row) => [row.uri, row.name, formatTime(row.duration)]),
         // Rodada 8b, C9: as entidades encaixadas, com as animações delas.
         ...[hostOfEntityView(doc), ...listEntityBases(doc)].filter((row) => row !== null).map((row) => [
           row.uri, row.slots.join(','), (row.animations ?? []).map((a) => a.name).join(','),
@@ -396,11 +403,15 @@ class AnimationsPanel implements Panel {
     this.refresh({ kind: 'time' });
   }
 
-  /** A biblioteca de fábrica (`animations-actions.ts`), e a lista redesenhada. */
+  /**
+   * **Usar animações de outro boneco…** (reaproveitar, 04/11/2026). Era a
+   * Biblioteca de fábrica; as quatro continuam lá, como a primeira fonte da
+   * janela ("Esqueleto padrão"). A Biblioteca antiga segue no menu.
+   */
   private openLibrary(): void {
     const doc = this.doc;
     if (!doc) return;
-    void openAnimationLibrary(doc).then(() => this.render());
+    void useAnimations(doc).then(() => this.render());
   }
 
   /** A mesma animação nova do menu (`animations-actions.ts`), e a lista redesenhada. */
@@ -423,8 +434,11 @@ class AnimationsPanel implements Panel {
     const doc = this.doc;
     if (!doc || doc.animation === null) return;
     transport.forget();
+    const apagada = doc.animation;
     doc.run(new DeleteAnimation(doc.animation));
     doc.animation = doc.file.animations?.[0]?.name ?? null;
+    // QA da noite (04/11): depois do "Abriu…" que a troca escreve, o que sumiu.
+    doc.notice(deletedNotice(apagada, doc.animation));
     this.render();
   }
 
@@ -467,7 +481,7 @@ class AnimationsPanel implements Panel {
     if (doc.animation === from) doc.animation = command.to;
     // Depois de trocar o nome aberto: o documento acabou de escrever "Abriu a
     // animação", e quem renomeou não abriu nada.
-    doc.notice(renamedNotice(from, command.to));
+    doc.notice(renamedNotice(from, command.to, resposta.to));
     this.render();
   }
 
@@ -617,7 +631,10 @@ class AnimationsPanel implements Panel {
     if (agora.renaming !== null) this.renaming = agora.renaming;
     if (this.renaming !== null && !nomes.includes(this.renaming)) this.renaming = null;
     if (rows.length === 0) {
-      list.append(el('li', 'painel-aviso', 'Nenhuma animação ainda. Clique no + ao lado de "Animações".'));
+      // Reaproveitar: com compartilhadas, "nenhuma animação" era mentira (regra 21).
+      list.append(el('li', 'painel-aviso', listShared(doc.file).length > 0
+        ? 'Só compartilhadas, abaixo.'
+        : 'Nenhuma animação ainda. Clique no + ao lado de "Animações".'));
     }
     // A que está aberta, para rolar a lista até ela no fim do desenho. Antes
     // disso a lista mostrava uma linha de cada vez e nunca andava: a barra de
@@ -780,29 +797,71 @@ class AnimationsPanel implements Panel {
     const lista = this.deFora;
     const tira = this.tiraDeFora;
     if (lista === null || tira === null) return;
-    const rows = listExternalAnimations(doc.file);
+    // Reaproveitar (04/11/2026): uma linha por ANIMAÇÃO, com de onde ela vem,
+    // e ela toca com um clique. Era uma linha por arquivo, sem clique, e a
+    // compartilhada não tocava — o diagnóstico (b).
+    const rows = listShared(doc.file, ownerOf(doc));
     clear(lista);
     const vazio = rows.length === 0;
     tira.hidden = vazio;
     lista.hidden = vazio;
     if (vazio) return;
-    for (const row of rows) {
-      const item = el('li');
-      const node = el('div', 'anim-item anim-item-fora');
-      node.title = externalHint(row);
-      node.setAttribute('aria-label', externalHint(row));
-      node.append(
-        el('span', 'arvore-nome', row.uri),
-        separador(),
-        el('span', 'anim-duracao', externalCount(row)),
-      );
-      if (row.names === null) {
-        const marca = el('span', 'anim-repete', 'não aberto');
-        marca.title = externalHint(row);
-        node.append(marca);
+    const projeto = projetoDe(doc);
+    const nomeDe = (uri: string): string => projeto?.nameOf(uri) ?? uri;
+    // Agrupadas por origem: a linha de cima diz DE ONDE e tem o "Abrir o
+    // original"; embaixo, só os nomes — a coluna é estreita (1440×900).
+    const origens = [...new Set(rows.map((r) => r.uri))];
+    for (const uri of origens) {
+      const doGrupo = rows.filter((r) => r.uri === uri);
+      const primeira = doGrupo[0]!;
+      const cab = el('li', 'anim-compartilhada-origem');
+      cab.style.display = 'flex';
+      cab.style.alignItems = 'center';
+      cab.style.gap = '6px';
+      cab.style.padding = '2px 8px';
+      if (primeira.name === null) {
+        const dica = `${uri}: este boneco cita o arquivo, e ele não foi achado na pasta do projeto. `
+          + 'O jogo também não vai achar. Grave o arquivo ao lado do .bone, ou use Animações de outro boneco… de novo';
+        cab.title = dica;
+        cab.setAttribute('aria-label', dica);
+        cab.append(el('span', 'arvore-nome', uri), el('span', 'anim-repete', 'não achado'));
+        lista.append(cab);
+        continue;
       }
-      item.append(node);
-      lista.append(item);
+      const de = sharedFrom(primeira, nomeDe);
+      const rotulo = el('span', 'anim-duracao', `↗ ${de}`);
+      rotulo.style.flex = '1 1 auto';
+      rotulo.title = `Ligadas a ${uri}: mudam junto com o original`;
+      const original = el('button', 'anim-original', 'Abrir o original') as HTMLButtonElement;
+      original.type = 'button';
+      original.title = primeira.owner !== null
+        ? `Vai para ${nomeDe(primeira.owner)}, com a animação aberta. Mudou lá, muda em todos os que a usam ligada`
+        : `Estas vêm de ${uri}: diz onde se muda`;
+      original.setAttribute('aria-label', `Abrir o original ${de}`);
+      original.addEventListener('click', () => {
+        const aberta = doGrupo.find((r) => r.name === doc.animation)?.name ?? primeira.name!;
+        openOriginal(doc, aberta, uri);
+      });
+      cab.append(rotulo, original);
+      lista.append(cab);
+      for (const row of doGrupo) {
+        const nome = row.name!;
+        const item = el('li');
+        const botao = el('button', 'anim-item anim-item-fora');
+        if (doc.animation === nome) botao.classList.add('is-active');
+        const dica = `${nome}, ${de}: ligada, muda junto com o original. Clique para ver tocar aqui; `
+          + 'para mudar, Abrir o original';
+        botao.title = dica;
+        botao.setAttribute('aria-label', `${nome} ${de}`);
+        botao.append(el('span', 'arvore-nome', nome), separador(), el('span', 'anim-duracao', formatTime(row.duration)));
+        if (row.loop) botao.append(el('span', 'anim-repete', 'repete'));
+        botao.addEventListener('click', () => {
+          openAnimation(doc, nome);
+          doc.notice(`"${nome}" ${de}: compartilhada, só para ver aqui; para mudar, Abrir o original`);
+        });
+        item.append(botao);
+        lista.append(item);
+      }
     }
   }
 }

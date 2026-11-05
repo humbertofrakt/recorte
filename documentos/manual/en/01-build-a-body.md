@@ -63,6 +63,13 @@ As in Spriter, **art first, bones second**.
 **Nothing enters the stage by itself.** You drag each image from the Images tab
 to the stage (see below).
 
+![The folder open: the images in the Images tab, one section per subfolder (bracos, corpo, pernas), and the stage still empty](../imagens/01-1-a-pasta.png)
+
+*A test puppet: each piece is a colored rectangle. The photo shows the
+program, not the art.*
+
+![The pieces dragged from the Images tab to the stage, each in its place, still without bones](../imagens/01-2-as-pecas.png)
+
 Changed the image in Photoshop? **"Imagens → Recarregar a pasta" (Images →
 Reload the folder).** A new image comes in, a deleted one goes out, and the
 status bar says what changed.
@@ -157,7 +164,7 @@ atlas) is gone**: repacking is Save.
 
 **Images** tab, at the top of the right column.
 
-![The Images panel: the regions in a grid, each with a thumbnail, a name and the number of drawings that use it](../imagens/02-imagens.png)
+![The Images panel: the regions in a grid, each with a thumbnail, a name and the number of drawings that use it](../imagens/01-imagens.png)
 
 The numbered dot on an image says **how many drawings use it**. An image nobody
 uses has no dot.
@@ -205,12 +212,12 @@ drawings is the normal gesture, and `Ctrl` is the exception.
 
 **With the tool in hand, the status bar says the gestures.**
 
-| Before dragging | After releasing |
-|:---:|:---:|
-| ![The Create bone tool selected, and the status bar listing the gestures](../imagens/02-gesto-criar-osso-antes.png) | ![A new bone on the stage, and a new line in the Tree](../imagens/02-gesto-criar-osso-depois.png) |
+![The Create bone tool in hand (key B): the status bar says the gesture](../imagens/01-criar-osso.png)
 
-*Photos from 15/09: the status bar in the photo still talks about the old
-`Ctrl`. Where you start the drag is the bone's root; where you release is the
+![The new bones on the stage, one inside the other, and the new lines in the Tree](../imagens/01-4-os-ossos.png)
+
+
+*Where you start the drag is the bone's root; where you release is the
 tip.*
 
 The new bone is born **as a child of the bone you selected**. With no bone
@@ -243,7 +250,7 @@ short pieces: `_b` also catches `arm_back`.
 
 **Tree** tab, at the top of the left column.
 
-![The Tree panel](../imagens/02-arvore.png)
+![The Tree panel](../imagens/01-arvore.png)
 
 | In the Tree | What it is |
 |:---|:---|
@@ -318,9 +325,10 @@ parent) and the "Virar filho de qual osso?" ("Become child of which bone?")
 window. Today `P` is a single gesture: **the parent first**. With any other
 selection, `P` only says in the status bar what to do.
 
-| Before: one bone selected | After: with `P` held down |
-|:---:|:---:|
-| ![The hips bone selected in the Tree, and the status bar quiet](../imagens/02-gesto-pegar-filhos-antes.png) | ![The status bar saying: click the bones and drawings that will become children of hips](../imagens/02-gesto-pegar-filhos-depois.png) |
+![The torso bone selected and P held: the status bar says what the click will do](../imagens/01-5-segurar-p.png)
+
+![After the clicks: the status bar says how many children the bone got, and the Tree shows each piece inside its bone](../imagens/01-6-preso.png)
+
 
 *Hold `P` and the status bar starts saying whose children your clicks are
 creating. The cursor changes too.*
@@ -422,7 +430,7 @@ the torso leaning — turn off **Inherits rotation**.
 
 **Properties** tab, below the Tree.
 
-![The Properties panel with a bone selected: the name at the top and the quick sheet just below](../imagens/02-propriedades.png)
+![The Properties panel with a bone selected: the name at the top and the quick sheet just below](../imagens/01-propriedades.png)
 
 *At the top, always the same six lines: X, Y, Scale X, Scale Y, Angle and
 Alpha. Below, everything else that bone or drawing has.*
@@ -488,10 +496,12 @@ to the field: it does not move along the timeline. *(I did not recheck the
 
 **"Ordem" (Order)** tab, next to the Tree.
 
-![The Order tab: one drawing per line, with thumbnail and name, and the foldable folders](../imagens/02-ordem.png)
+![The Order tab: one drawing per line, with thumbnail and name, and the foldable folders](../imagens/01-ordem.png)
 
 *One drawing per line, with the thumbnail. **The one at the top of the list is
 in FRONT**, as in every layer program.*
+
+![The test puppet with the back arm sent behind the torso, and the Order tab listing from front to back](../imagens/01-3-a-ordem.png)
 
 **The six buttons at the top of the tab:**
 
@@ -584,9 +594,8 @@ It is Spriter's way: the selection gets a **box**, with small squares, the
 
 The box rotates along with the drawing.
 
-| Before | After dragging the stalk's dot |
-|:---:|:---:|
-| ![The leg selected with the Transform tool: the dashed box around the drawing, the eight small squares, the pivot and the stalk](../imagens/02-gesto-transformar-antes.png) | ![The leg brought forward by the stalk's dot, without changing tool](../imagens/02-gesto-transformar-depois.png) |
+![The torso selected with the Transform tool: the dashed box, the small squares, the pivot and the stalk with its dot](../imagens/01-transformar.png)
+
 
 | Where you drag | What happens |
 |:---|:---|
@@ -630,9 +639,8 @@ takes the click.
 The **selection rectangle** has no button. With **"Selecionar" (Select)** (`Q`)
 or **Transform** (`T`), drag on empty space:
 
-| Before dragging | After releasing |
-|:---:|:---:|
-| ![The hero with nothing selected, with the Select tool in hand](../imagens/02-gesto-retangulo-antes.png) | ![The rectangle caught the whole character: the Tree lines lit and Properties saying Several items](../imagens/02-gesto-retangulo-depois.png) |
+![With Select (Q), a rectangle dragged in the empty space caught the whole character: the Tree lines lit](../imagens/01-retangulo.png)
+
 
 *Everything the rectangle touches gets selected. The Properties panel then says
 **"Vários itens" (Several items)**.*
@@ -700,7 +708,7 @@ Guides travel inside the file, in `RECORTE_editor_state` — the part of the
 
 **"Exibição" (Display)** tab, in the right column.
 
-![The Display panel](../imagens/02-exibicao.png)
+![The Display panel](../imagens/01-exibicao.png)
 
 | Group | What it has |
 |:---|:---|
@@ -825,8 +833,8 @@ you want is the opposite: the punch box **inside the hand drawing**, swapping by
 key like the open hand swaps with the closed one.
 
 1. Select the **drawing** (in the Tree, its line — with no bone alongside).
-2. **"Base → Novo → Ponto neste slot" (Base → New → Point in this slot)**, or
-   **"Caixa neste slot" (Box in this slot)**.
+2. **"Base → Novo → Ponto neste desenho" (Base → New → Point in this drawing)**, or
+   **"Caixa neste desenho" (Box in this drawing)**.
 3. **Hold `Alt` and drag**, as always.
 
 The attachment is born **in the pencil's skin**, and does not become what the

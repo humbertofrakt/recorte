@@ -74,7 +74,7 @@ if (caminho === undefined) {
 // o `.bonez` já traz os atlas dentro do pacote — `loadSkeletonFile` acha.
 const atlases = [];
 if (caminho.endsWith('.bone')) {
-  const doc = JSON.parse(readFileSync(caminho, 'utf8'));
+  const doc = parseBoneText(readFileSync(caminho, 'utf8'));   // §2.1: aceita BOM (X-309)
   for (const uri of doc.assets?.atlases ?? []) {
     const p = join(pasta, uri);
     if (existsSync(p)) atlases.push(loadAtlas(parseBoneText(readFileSync(p, 'utf8'))));

@@ -38,6 +38,7 @@ import { applyHandPivots } from './hand-pivots.js';
 import type { UndoView } from '../contract.js';
 import { aroundWarnings } from './around-warnings.js';
 import { createEmptyFile } from './new-file.js';
+import { composeShared, sharedUrisOf, withSharedAnimations } from './shared-animations.js';
 
 /** Camera the viewport owns; the document only stores it between sessions. */
 export interface CameraState {
@@ -65,6 +66,11 @@ export interface DocOptions {
    * todos os corpos: um `Ctrl+Z` desfaz o último passo, em qualquer corpo.
    */
   undo?: UndoStack;
+  /**
+   * `true` = o que entra NÃO está no disco: o rascunho recuperado — QA de
+   * 04/11/2026 (D4). Nasce sujo, e nem desfazer o limpa: só o Salvar.
+   */
+  unsaved?: boolean;
 }
 
 /**
@@ -232,8 +238,9 @@ export class Doc implements EditorDoc {
     // keeping the old ones would put the last file's sword in this one's hand.
     this.nestedSkeletons = options.skeletons ?? new Map();
     this.undoStack.clear();
-    this.dirtyFlag = false;
-    this.savedCursor = this.undoStack.cursor();
+    this.dirtyFlag = options.unsaved === true;
+    // -2: nenhum ponto da pilha é o salvo (o mesmo truque do passo novo além do salvo).
+    this.savedCursor = options.unsaved === true ? -2 : this.undoStack.cursor();
     this.currentSelection = emptySelection();
     this.currentTime = 0;
     this.currentAnimation = null;
@@ -545,7 +552,9 @@ export class Doc implements EditorDoc {
     try {
       // The loader keeps references into what it is given, so it reads a copy:
       // the document must never be changed behind the commands' back.
-      const copy = JSON.parse(JSON.stringify(this.currentFile)) as unknown;
+      // Reaproveitar (04/11/2026): as animações de `assets.animations` entram
+      // na cópia, pela conta do runtime — senão a compartilhada não tocava.
+      const copy = withSharedAnimations(JSON.parse(JSON.stringify(this.currentFile)) as unknown);
       const data = loadSkeletonData(copy, {
         atlases: this.loadedAtlases, skeletons: this.nestedSkeletons,
       });
@@ -600,7 +609,9 @@ export class Doc implements EditorDoc {
     }
     try {
       const copy = JSON.parse(JSON.stringify({
-        animations: this.currentFile.animations ?? [],
+        animations: sharedUrisOf(this.currentFile).length === 0
+          ? this.currentFile.animations ?? []
+          : composeShared(this.currentFile).animations,
       })) as unknown;
       const loaded = loadAnimationsFor(data, copy);
       data.replaceAnimations(loaded.animations);

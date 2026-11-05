@@ -6,8 +6,7 @@ Também em inglês: [English](en/06-mesh-and-weights.md)
 
 1. Fazer uma capa ondular e um tronco curvar, em vez de girar como madeira.
 2. Ligar uma imagem a dois ossos e deixar o programa repartir os pesos.
-3. Criar e gerar malha **no meio da animação**, sem sair dela.
-4. Reconhecer os seis erros que todo mundo comete, pelo que se vê na tela.
+3. Reconhecer os seis erros comuns, pelo que se vê na tela.
 
 ---
 

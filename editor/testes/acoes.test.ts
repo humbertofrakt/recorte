@@ -171,8 +171,10 @@ describe('a tabela das ações', () => {
     // 305 (rodada 41, lote 4): +1, `criar-aresta` (Malha e regras → Malha).
     // Rodada 44, lote 7: + 'caber-na-antiga'.
     // 308 (N-4b, 05/11/2026): +2, `recorte-na-cena` e `tirar-recorte` (Animação, da cena).
-    // 05/11/2026: +3, as tomadas (encaixar-projeto, por-tomada, tirar-peca).
-    expect(tabela.length).toBe(311);
+    // 309 (noite de 04/11/2026, obra/skins): +1, `guarda-roupa` (Skins → Guarda-roupa).
+    // 311 (noite de 04/11/2026, obra/reaproveitar): +2, `usar-animacoes` e `seguir-esqueleto-padrao`.
+    // 314 (05/11/2026, obra/entidades): +3, as tomadas (encaixar-projeto, por-tomada, tirar-peca).
+    expect(tabela.length).toBe(314);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');
@@ -259,8 +261,10 @@ describe('as ações de arranque, sem painel montado', () => {
     // +3 (rodada 39b, lote 6): `anima-do-teste`, `skins-do-teste`, `teste-nas-iguais`. 129.
     // +1 (rodada 41, lote 4): `criar-aresta`. 130.
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    // 05/11/2026: +3, as tomadas.
-    expect(arranque().length).toBe(134);
+    // +1 (noite de 04/11/2026, obra/skins): `guarda-roupa`. 132.
+    // +2 (noite de 04/11/2026, obra/reaproveitar): `usar-animacoes`, `seguir-esqueleto-padrao`. 134.
+    // +3 (05/11/2026, obra/entidades): as tomadas. 137.
+    expect(arranque().length).toBe(137);
   });
 
   it('a função que ela devolve tira todas', () => {
@@ -444,6 +448,7 @@ function telaDeMentira(): { pedida: () => boolean; tirar: () => void } {
 const ESPERAM_JANELA: readonly string[] = [
   'nova-regra-guiada',      // a janela guiada da regra, em duas telas
   'biblioteca-animacoes',   // a janela da biblioteca (degrau 12, parte `B`)
+  'usar-animacoes', 'seguir-esqueleto-padrao', // reaproveitar (04/11/2026): a janela da tabela dos ossos
   'exportar-animacao', 'importar-animacao',
   'exportar-pele-arquivo', 'promover-pele-base',
   // Os tres efeitos (22/09/2026): a janela pergunta os numeros e mostra a

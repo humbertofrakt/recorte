@@ -1,0 +1,190 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "driver-em-malha"
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "malha",
+      "bone": "root",
+      "attachment": "malha"
+    },
+    {
+      "name": "s1",
+      "bone": "root"
+    },
+    {
+      "name": "s2",
+      "bone": "root"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "malha": {
+          "malha": {
+            "type": "mesh",
+            "path": "malha",
+            "width": 100,
+            "height": 100,
+            "vertices": [
+              0,
+              0,
+              100,
+              0,
+              0,
+              100
+            ],
+            "uvs": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              1
+            ],
+            "triangles": [
+              0,
+              1,
+              2
+            ],
+            "hull": 3
+          }
+        }
+      }
+    }
+  ],
+  "morphs": [
+    {
+      "name": "inchar",
+      "weight": 0,
+      "min": 0,
+      "max": 1,
+      "targets": [
+        {
+          "slot": "malha",
+          "attachment": "malha",
+          "offsets": [
+            10,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "parameters": [
+    {
+      "name": "p",
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "constraints": [
+    {
+      "type": "driver",
+      "name": "dirige",
+      "parameter": "p",
+      "targets": [
+        {
+          "type": "morph",
+          "target": "inchar",
+          "property": "weight",
+          "keys": [
+            {
+              "input": 0,
+              "value": 0
+            },
+            {
+              "input": 1,
+              "value": 2
+            }
+          ]
+        },
+        {
+          "type": "deform",
+          "target": "malha",
+          "attachment": "malha",
+          "keys": [
+            {
+              "input": 0,
+              "value": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "input": 1,
+              "value": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "type": "drawOrder",
+          "keys": [
+            {
+              "input": 0,
+              "value": []
+            },
+            {
+              "input": 0.5,
+              "value": [
+                {
+                  "slot": "malha",
+                  "offset": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "mexer",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "parameter",
+          "target": "p",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1,
+              "value": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

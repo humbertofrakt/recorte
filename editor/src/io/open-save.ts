@@ -11,6 +11,7 @@
  *   - `<input type="file">` and a download link everywhere else.
  */
 
+import { saveSharedBeside } from './shared-save.js';
 import { notePickerProblem, noteSaveRefused } from './picker-problem.js';
 import {
   loadAtlas, loadSkeletonData, loadSkeletonFileAsync, nestedAttachments, parseBoneText,
@@ -554,6 +555,16 @@ export async function readOpenedFiles(files: readonly File[], known?: KnownFiles
 async function readPackedFile(picked: File, warnings: string[]): Promise<OpenedDocument> {
   const bytes = new Uint8Array(await picked.arrayBuffer());
   const loaded = await loadSkeletonFileAsync(bytes);
+  // QA 04/11/2026 (D8): o `.boneb` vem sem atlas — o binário não o carrega
+  // dentro, como o `.bonez`. A primeira frase é a mesma do `.bone` sozinho, em
+  // português, antes das frases cruas do leitor, imagem por imagem.
+  const pedidos = (loaded.file as BoneFile).assets?.atlases ?? [];
+  if (loaded.archive === null && pedidos.length > 0 && loaded.atlases.length === 0) {
+    warnings.push(pastaAbrindo !== null
+      ? atlasForaDaPastaNotice(picked.name, pedidos, pastaAbrindo)
+      : missingAtlasNotice(picked.name, pedidos, companionFolder ?? foldersOfBone(picked.name)[0] ?? null));
+  }
+  companionFolder = null;
   warnings.push(...loaded.warnings);
   for (const warning of loaded.data.warnings) warnings.push(`${warning.pointer}: ${warning.message}`);
 
@@ -664,6 +675,7 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
   // Lote 61: o pivô da pasta de uma imagem que já está na cena mora na região.
   pruneFolderPivots(doc);
   lastNote = null;
+  lastNoteWarns = false;
 
   const check = checkBeforeSaving(doc.serialize(), doc.atlases, doc.skeletons);
   if (!check.ok || check.problems.length > 0) {
@@ -724,6 +736,8 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
     lastNote = await saveAtlasBeside(doc, handle, pack);
     // Degrau 4b: os outros corpos e o `manifest.json`, ao lado do `.bone`.
     lastNote = joinNotes(lastNote, await saveProjectBeside(doc, handle));
+    // Reaproveitar (04/11/2026): o arquivo das animações que uma base compartilha.
+    lastNote = joinNotes(lastNote, await saveSharedBeside(doc));
     markProjectSaved(doc, handle.name);
     // Salvo também é recente: é o arquivo em que se estava trabalhando.
     void rememberRecent(handle.name, [handle]);
@@ -735,6 +749,8 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
   downloadText(suggested, text);
   lastNote = await saveAtlasBeside(doc, null, pack);
   lastNote = joinNotes(lastNote, await saveProjectBeside(doc, null));
+  // Reaproveitar (04/11/2026): o arquivo das animações que uma base compartilha.
+  lastNote = joinNotes(lastNote, await saveSharedBeside(doc));
   markProjectSaved(doc, suggested);
   void rememberRecent(suggested);
   return suggested;
@@ -798,6 +814,7 @@ async function saveProjectBeside(doc: Doc, handle: FileHandle | null): Promise<s
     return `${frase} ${gravados} ao lado`;
   }
   for (const file of out) downloadBlob(file.name, file.blob);
+  lastNoteWarns = true;
   return `${frase} ${baixados}: salve o .bone dentro da pasta do projeto para ${quantos === 0 ? 'ir junto' : 'irem juntos'}`;
 }
 
@@ -931,6 +948,32 @@ let lastNote: string | null = null;
 /** O que o último Salvar disse do atlas da pasta — lote 62. */
 export function lastSaveNote(): string | null {
   return lastNote;
+}
+
+/**
+ * `true` quando o último Salvar **não** pôs tudo ao lado do `.bone`: o atlas,
+ * as páginas ou os outros corpos foram baixados — QA de 04/11/2026.
+ */
+let lastNoteWarns = false;
+
+export function lastSaveWarns(): boolean {
+  return lastNoteWarns;
+}
+
+/**
+ * **A frase do rodapé depois do Salvar** — QA de 04/11/2026 (D3).
+ *
+ * O rodapé mostra a primeira frase que cabe (`versoesDaFrase`), e a frase era
+ * sempre *"Salvo em copia.bone. O .bone foi salvo fora da pasta mao: o atlas e
+ * as páginas foram baixados…"*: em 1920 px só o "Salvo em copia.bone." cabia,
+ * e quem salvou fora da pasta não ficava sabendo que o `.bone` saiu sem atlas
+ * ao lado (regra 21). Quando a nota é um aviso, ela vem **primeiro**; quando é
+ * só uma notícia ("Atlas da pasta gravado ao lado"), vem depois, como antes.
+ */
+export function saveStatusLine(name: string, note: string | null, warns: boolean, atlasTogether: boolean): string {
+  if (note !== null && warns) return `${note}. Salvo em ${name}.`;
+  if (note !== null) return `Salvo em ${name}. ${note}.`;
+  return atlasTogether ? `Salvo em ${name}. A folha de imagens (atlas e páginas) foi gravada junto.` : `Salvo em ${name}.`;
 }
 
 /**
@@ -1181,6 +1224,7 @@ async function gravarAtlasAoLado(doc: Doc, handle: FileHandle | null, pack: Fold
       }
       if (route.kind === 'baixar') {
         for (const file of out) downloadBlob(file.name, file.blob);
+        lastNoteWarns = true;
         return route.why;
       }
     }
@@ -1193,6 +1237,7 @@ async function gravarAtlasAoLado(doc: Doc, handle: FileHandle | null, pack: Fold
     return pack === null ? null : `Atlas gravado ao lado: ${pack.atlasName}`;
   }
   for (const file of out) downloadBlob(file.name, file.blob);
+  if (pack !== null) lastNoteWarns = true;
   return pack === null ? null : `Atlas e páginas baixados: ${pack.atlasName}`;
 }
 

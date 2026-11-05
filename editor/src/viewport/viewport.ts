@@ -98,7 +98,7 @@ import * as viewportToolbar from './viewport-toolbar.js';
 import * as viewportDraw from './viewport-draw.js';
 import { EMITTER_MARK_PIXELS, renewsParticleCache } from './particles-view.js';
 import { selectedEmitterShapes, shapeHandleAt, shapeHandleCommand, type SelectedShape, type ShapeHandle } from './emitter-shape.js';
-import { GestureNotice } from './gesture-notice.js';
+import { GestureNotice, gestureSays } from './gesture-notice.js';
 import {
   CROP_DRAW_CURSOR, CROP_HANDLE_PIXELS, CROP_MIN_DRAW_PIXELS, CROP_NEEDS_ANIMATION, CROP_ZONE_CURSOR, SetCrop,
   cropEditing, cropFromCorners, cropInFile, cropSays, cropZoneAt, cropZoneHint, dragCrop, hasCropField,
@@ -1788,6 +1788,7 @@ export class ViewportPanel implements Panel {
       (doc as EditorDoc & DocWithCamera).endMerge?.();
       // F1: o último recado do gesto, dito de novo DEPOIS do último `repose`
       // — antes ele era apagado no mesmo quadro em que nascia.
+      const chave = this.gestureNotice.keyNotice();
       const said = this.gestureNotice.release();
       if (said !== null) {
         const preso = this.heldByRule(doc, this.gestureNotice.lastCommand() ?? said);
@@ -1797,7 +1798,7 @@ export class ViewportPanel implements Panel {
           runAction('mostrar-painel-regras');
           doc.notice(preso + HELD_DOOR);
         } else {
-          doc.notice(preso ?? said);
+          doc.notice(preso ?? gestureSays(said, chave, this.gestureNotice.lastCommand()));
         }
       }
       // Lote 60b: o clique parado que abria a lista da pasta saiu. A grade de

@@ -37,7 +37,7 @@ import {
   belowQuick, compensationApplies, evalFieldInput, notNumberSays, scrubValue,
 } from './properties-model.js';
 import {
-  alphaDragSays, alphaShown, alphaTip, arrowDirection, emptyGradientSays, EMPTY_GRADIENT_SHORT, buildProperties, entityShownName, evalNumberExpression, fieldIsSet, fieldValue, formatNumberField,
+  alphaDragSays, alphaShown, alphaTip, arrowDirection, fieldKeyAction, emptyGradientSays, EMPTY_GRADIENT_SHORT, buildProperties, entityShownName, evalNumberExpression, fieldIsSet, fieldValue, formatNumberField,
   REFUSED_MESSAGE, findAttachment, silhouetteSources, skinFieldCommand, stepValue, writeFieldValue,
   type FieldDef, type FieldGroup,
 } from './properties-model.js';
@@ -52,6 +52,7 @@ import { openFloatingMenu } from '../ui/floating-menu.js';
 import {
   alphaFromSlider, angleFromDial, dialPoint, formatQuick, quickFields, quickSubject,
   heldByRuleAfterWrite, readQuickNow, sliderFromAlpha, worldAngleOfField, writeQuickValue,
+  worldAngleBeside,
 } from './quick-model.js';
 import type { QuickField } from './quick-model.js';
 
@@ -228,7 +229,11 @@ class PropertiesPanel implements Panel {
       }
     }
     // Rodada 43, lote 1: embaixo da ficha rápida, só o que ela não mostra.
-    else for (const node of this.renderGroups(belowQuick(model.groups, ficha === null ? [] : this.quickKeysShown()))) body.append(node);
+    else {
+      // 04/11/2026: na tela baixa, com a rápida em cima, a completa nasce dobrada.
+      const baixaComRapida = ficha !== null && (globalThis.innerHeight ?? 1080) <= 800;
+      for (const node of this.renderGroups(belowQuick(model.groups, ficha === null ? [] : this.quickKeysShown()), baixaComRapida)) body.append(node);
+    }
     if (silhueta !== null) body.append(silhueta);
 
     // O bloco da chave de evento vem no fim: é onde se escolhe QUAL evento a
@@ -529,7 +534,8 @@ class PropertiesPanel implements Panel {
           + 'Só para ler: o campo grava o giro local, em relação ao pai';
         // Rodada 43, lote 3 (doc 59): com a "base" ao lado (animação aberta), não
         // cabem os dois na coluna — o mundo vai para a dica do disco.
-        if (leitura.animated && Math.abs(leitura.frame - leitura.base) > 1e-9) {
+        // QA da noite (04/11): número longo no campo também manda o mundo para a dica.
+        if ((leitura.animated && Math.abs(leitura.frame - leitura.base) > 1e-9) || !worldAngleBeside(campo.value)) {
           dica.textContent = `${field.hint}. ${frase}`;
           disco.setAttribute('aria-label', dica.textContent);
         } else {
@@ -764,12 +770,12 @@ class PropertiesPanel implements Panel {
    * anterior; a linha já diz "Cor" no próprio rótulo, então nada se perde.
    * O primeiro grupo nunca funde: não há "anterior" para receber.
    */
-  private renderGroups(groups: readonly FieldGroup[]): HTMLElement[] {
+  private renderGroups(groups: readonly FieldGroup[], baixaComRapida = false): HTMLElement[] {
     const out: HTMLElement[] = [];
     let last: HTMLElement | null = null;
     // Rodada 47, lote 6c (nota 5 do doc 90): os grupos dobram no título; abre o do nome.
     const juntos = groups.filter((g, i) => !(g.fields.length === 1 && i > 0));
-    const abertos = groupsOpen(juntos, gruposDaMao);
+    const abertos = groupsOpen(juntos, gruposDaMao, baixaComRapida);
     let k = 0;
     for (const group of groups) {
       if (group.fields.length === 1 && last !== null) {
@@ -777,7 +783,7 @@ class PropertiesPanel implements Panel {
         continue;
       }
       const box = this.renderGroup(group);
-      if (juntos.length > 2) this.dobrarGrupo(box, group.title, abertos[k] ?? true);
+      if (juntos.length > 2 || baixaComRapida) this.dobrarGrupo(box, group.title, abertos[k] ?? true);
       k += 1;
       out.push(box);
       last = box;
@@ -1659,6 +1665,15 @@ class PropertiesPanel implements Panel {
     read: () => number, write: (value: number) => void, show: (value: number) => string,
   ): void {
     input.addEventListener('keydown', (event) => {
+      // QA da noite (04/11): Esc devolve o número de antes e sai do campo; o
+      // Ctrl+Z seguinte volta a ser do documento.
+      if (fieldKeyAction(event.key) === 'cancelar') {
+        event.preventDefault();
+        event.stopPropagation();
+        input.value = show(read());
+        input.blur();
+        return;
+      }
       const direction = arrowDirection(event.key);
       if (direction === 0) return;
       event.preventDefault();

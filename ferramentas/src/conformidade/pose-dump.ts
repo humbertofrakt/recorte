@@ -31,7 +31,7 @@ import { LinkedMeshAttachment } from '../../../runtime/src/attachments/linkedmes
 import { BoundingBoxAttachment } from '../../../runtime/src/attachments/boundingbox.js';
 import { PointAttachment } from '../../../runtime/src/attachments/point.js';
 import { ParticleAttachment } from '../../../runtime/src/attachments/particle.js';
-import { EmissionCurve, type EmittingKeys } from '../../../runtime/src/particles/emission.js';
+import { EmissionCurve, type EmittingKeys, type RateKeys } from '../../../runtime/src/particles/emission.js';
 import { computeParticles, type ParticleSample } from '../../../runtime/src/particles/emitter.js';
 import { BonePoser } from '../../../runtime/src/particles/bone-poser.js';
 
@@ -430,6 +430,20 @@ function emittingKeys(animation: AnimationData | null, slotName: string, attachm
 }
 
 /**
+ * The animated `rate` of one emitter (extension 4.2, 2nd phase), read off the
+ * animation the same way as `emitting`, and for the same reason.
+ */
+function rateKeys(animation: AnimationData | null, slotName: string, attachmentName: string): RateKeys | null {
+  if (animation === null) return null;
+  for (const tl of animation.timelines) {
+    if (tl.kind !== 'particle.rate') continue;
+    if (tl.slot.name !== slotName || tl.attachmentName !== attachmentName) continue;
+    return tl.keys;
+  }
+  return null;
+}
+
+/**
  * What the emitter may ask the skeleton (extension 7.2).
  *
  * In `local` it only ever asks for the frame being drawn, and the slot's
@@ -569,7 +583,7 @@ function makeSample(
         const att = slot.attachment;
         if (!(att instanceof ParticleAttachment)) continue;
         const key = `${prefix}${slot.data.name}/${att.name}`;
-        const curve = new EmissionCurve(att, emittingKeys(bound, slot.data.name, att.name));
+        const curve = new EmissionCurve(att, emittingKeys(bound, slot.data.name, att.name), rateKeys(bound, slot.data.name, att.name));
         const pose = emitterPose(slot, att, prefix, poser);
         const frame = computeParticles(att, curve, { time: at, duration }, pose);
         out[key] = frame.particles.map(particleSample);

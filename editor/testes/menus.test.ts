@@ -1908,3 +1908,119 @@ describe('rodada 47, lote 5: o Colar espelhado mora ao lado do Colar', () => {
     expect((pose.children ?? []).map((c) => c.label)).not.toContain('Colar espelhado');
   });
 });
+
+// ---------------------------------------------------------------------------
+// O dicionário da tela — noite de 05/11/2026
+// ---------------------------------------------------------------------------
+
+import { DICIONARIO, ESPERANDO, esperando, jargaoNaFrase, jargaoNoNome } from '../src/ui/jargao.js';
+import { ACTION_TABLE as TABELA_DICIONARIO } from '../src/ui/actions-table.js';
+import { KEY_TABLE as TECLAS_DICIONARIO } from '../src/ui/keys.js';
+import { TOOL_ORDER as ORDEM_DICIONARIO } from '../src/ui/toolbar-model.js';
+import { readdirSync as lerPasta, statSync as estado } from 'node:fs';
+
+describe('o dicionário da tela: toda função tem porta, e a porta fala a língua da pessoa', () => {
+  const grupos = allMenus({ ...NEUTRAL_MENU_STATE, animating: true, canUndo: true, canRedo: true } as MenuState);
+  const entradas = grupos.flatMap((g) => flatEntries(g.entries).map((e) => ({ grupo: g.label, ...e })));
+
+  it('a régua acusa: "slot" no nome, e "atlas" fora de parênteses na dica (regra 26)', () => {
+    expect(jargaoNoNome('Ponto neste slot')).toEqual(['slot']);
+    expect(jargaoNaFrase('Grava no atlas onde cada imagem encaixa')).toEqual(['atlas']);
+    // Entre parênteses ou crases, o termo técnico pode morar; nome de arquivo não é jargão.
+    expect(jargaoNaFrase('Grava na folha de imagens (atlas), no .bonez e no manifest.json')).toEqual([]);
+    expect(jargaoNaFrase('o campo `slot` do arquivo')).toEqual([]);
+    // "Slots" com maiúscula e no plural também.
+    expect(jargaoNoNome('Limpar Slots')).toEqual(['slot']);
+    // Palavra que só CONTÉM o termo não é ele: "região", "rigoroso".
+    expect(jargaoNaFrase('uma região rigorosa')).toEqual([]);
+  });
+
+  it('toda ação da tabela tem porta à vista: um item de menu, com nome de gente', () => {
+    const semPorta: string[] = [];
+    for (const row of TABELA_DICIONARIO) {
+      if (row.where === 'submenu') continue;
+      const entrada = entradas.find((e) => e.action === row.id);
+      const nome = entrada?.label.trim() ?? '';
+      // Um nome: pelo menos uma palavra de três letras, não só símbolo.
+      if (entrada === undefined || !/\p{L}{3,}/u.test(nome)) semPorta.push(row.id);
+    }
+    expect(semPorta, 'ação sem item de menu com nome').toEqual([]);
+  });
+
+  it('nenhum NOME de menu, aba, ferramenta ou tecla leva termo técnico', () => {
+    const nomes = [
+      ...grupos.map((g) => `menu ${g.label}`),
+      ...entradas.map((e) => `${e.grupo} → ${e.label}`),
+      ...WINDOW_PANELS.map((p) => `aba ${p.label}`),
+      ...TECLAS_DICIONARIO.map((k) => `tecla ${k.label}`),
+      ...ORDEM_DICIONARIO.map((id) => `ferramenta ${getTools().find((t) => t.id === id)?.label ?? ''}`),
+    ];
+    const ruins = nomes.filter((n) => !esperando(n) && jargaoNoNome(n.replace(/^(menu|aba|tecla|ferramenta) /, '')).length > 0);
+    expect(ruins).toEqual([]);
+  });
+
+  it('nas dicas dos menus, o termo técnico só entre parênteses, depois da palavra da pessoa', () => {
+    const ruins = entradas
+      .filter((e) => e.hint !== undefined && !esperando(e.hint) && jargaoNaFrase(e.hint).length > 0)
+      .map((e) => `${e.grupo} → ${e.label}: ${jargaoNaFrase(e.hint!).join(', ')}`);
+    expect(ruins).toEqual([]);
+  });
+
+  it('nos textos da casca e da cena (dica, rodapé, janela), o mesmo', () => {
+    const raiz = resolve(__dirname, '../src');
+    const arquivos: string[] = [];
+    const anda = (d: string): void => {
+      for (const f of lerPasta(d)) {
+        const p = resolve(d, f);
+        if (estado(p).isDirectory()) anda(p);
+        else if (p.endsWith('.ts')) arquivos.push(p);
+      }
+    };
+    anda(resolve(raiz, 'ui'));
+    anda(resolve(raiz, 'viewport'));
+    // O dicionário cita os termos; as auditorias falam com quem programa, e não aparecem na tela.
+    const fora = new Set(['jargao.ts', 'command-audit.ts', 'call-audit.ts']);
+    const ruins: string[] = [];
+    for (const arquivo of arquivos) {
+      if (fora.has(arquivo.split(/[\\/]/).pop()!)) continue;
+      const fonte = readFileSync(arquivo, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+      for (const m of fonte.matchAll(/'((?:[^'\\\n]|\\.)*)'|`((?:[^`\\]|\\.)*)`/g)) {
+        const texto = (m[1] ?? m[2] ?? '').replace(/\$\{[^}]*\}/g, 'X');
+        // Só frase de gente: duas palavras com letra minúscula. Nome de campo e caminho ficam de fora.
+        if (!/\p{Ll}{3,} \p{Ll}{2,}/u.test(texto) || esperando(texto)) continue;
+        const termos = jargaoNaFrase(texto);
+        if (termos.length > 0) ruins.push(`${arquivo.slice(raiz.length + 1)}: ${termos.join(', ')} | ${texto.slice(0, 80)}`);
+      }
+    }
+    expect(ruins).toEqual([]);
+  });
+
+  it('a lista do que espera outro dono não mente: cada linha ainda tem o termo, e diz quem paga', () => {
+    for (const e of ESPERANDO) {
+      expect(jargaoNaFrase(e.texto).length + jargaoNoNome(e.texto).length, e.texto).toBeGreaterThan(0);
+      expect(e.dono.length).toBeGreaterThan(5);
+      expect(e.porque.length).toBeGreaterThan(20);
+    }
+    // E todo verbete diz de onde veio a palavra: o dicionário não inventa.
+    for (const v of DICIONARIO) expect(v.fonte.length, v.termo).toBeGreaterThan(10);
+  });
+});
+
+// Noite de 04/11/2026: o aviso do leitor chegava em inglês no rodapé, porque
+// quatro lugares punham `warnings[0]` cru. Regra 26: a forma crua existia
+// (`warnings[0]` sem tradução), e a frase crua é inglesa.
+import { avisoNoRodape } from '../src/panels/warning-model.js';
+describe('o rodapé fala português quando o arquivo abre com aviso', () => {
+  it('a frase do leitor vira português, e o ponteiro sai', () => {
+    const cru = '/animations/0/timelines/3: deform needs a vertex attachment; timeline ignored';
+    expect(avisoNoRodape(cru)).toBe('chaves de deformação num desenho que não é malha: ficam sem efeito');
+    expect(avisoNoRodape('A pasta abriu.')).toBe('A pasta abriu.');
+  });
+  it('nenhum lugar da casca põe o aviso cru no rodapé', () => {
+    for (const nome of ['shell-file.ts', 'shell-drop.ts']) {
+      const fonte = readFileSync(resolve(__dirname, '../src/ui', nome), 'utf8');
+      expect(fonte, nome).not.toMatch(/textContent = (aberto|opened)\.warnings\[0\](;|\s*\?\?)/);
+      expect(fonte, nome).not.toMatch(/\$\{lido\.warnings\[0\]\}/);
+    }
+  });
+});

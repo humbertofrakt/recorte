@@ -1,6 +1,6 @@
 # 8. Exportar e usar no jogo
 
-Também em inglês: [English](en/07-export-and-use-in-a-game.md)
+Também em inglês: [English](en/08-export-and-use-in-a-game.md)
 
 *Conferido no código em 07/10/2026, versão v36.5.*
 
@@ -103,7 +103,7 @@ pasta do projeto…**
 **Arquivo → Exportar ▸**. Dois blocos: em cima o que vai **para o jogo**, embaixo
 o que vai **para outro boneco**.
 
-![O menu Arquivo aberto, com o submenu Exportar](imagens/07-menu-exportar.png)
+![O menu Arquivo aberto, com o submenu Exportar](imagens/08-menu-exportar.png)
 
 | Item | O que grava |
 |:---|:---|
@@ -568,6 +568,8 @@ Tem que ser por servidor. Abrir o arquivo direto não funciona.
 **Arquivo → Exportar → GIF, PNG, folha, vídeo…** abre a janela *Exportar
 imagem*. A janela mora no topo da tela: trocar o formato não move as caixas.
 
+![A janela Exportar imagem: a animação, o formato, o tempo, a escala, o fundo, e a frase dizendo o arquivo que vai sair](imagens/08-exportar-imagem.png)
+
 | Campo | O que faz |
 |:---|:---|
 | **Animação** | qual vai virar imagem. Sem animação: *A base (pose de repouso)* |
@@ -590,6 +592,23 @@ imagem*. A janela mora no topo da tela: trocar o formato não move as caixas.
 antes. O arquivo sai como `heroi.png`.
 
 De maior que Até, ou fora da animação: a janela **recusa por escrito**.
+
+### Recorte na cena: o retângulo que vai para a imagem
+
+Cada animação pode ter **o seu** retângulo. A exportação corta por ele.
+
+1. Abra a animação (clique nela, na aba **Animações**).
+2. **Animação → Recorte na cena** (tecla `C`).
+3. O retângulo nasce em volta do desenho.
+4. Puxe os quadradinhos dos cantos e dos lados. O meio move.
+5. Ou digite **X**, **Y**, **L** e **A** na barra que aparece embaixo da cena.
+6. **Pronto**, ou `Enter`, termina.
+
+![Animação → Recorte na cena com a walk aberta: o retângulo rosa em volta do herói, a barra Recorte com X, Y, L e A embaixo da cena, e o rodapé dizendo o tamanho](imagens/08-recorte-na-cena.png)
+
+Na janela *Exportar imagem*, **Recorte → A área desenhada nesta animação** usa
+esse retângulo. Para apagar: **Animação → Tirar o recorte**, ou a lixeira da
+barra.
 
 No fim, o relatório diz os arquivos, o tamanho de cada quadro e **a pasta**: a de
 downloads do navegador (`Ctrl+J` mostra).

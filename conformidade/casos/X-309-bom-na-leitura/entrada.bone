@@ -1,0 +1,30 @@
+﻿{
+  "bone": { "version": "1.0", "minVersion": "1.0", "generator": "suite de conformidade bone" },
+  "skeleton": { "name": "attachment" },
+  "bones": [ { "name": "root" } ],
+  "slots": [ { "name": "mao", "bone": "root", "attachment": "aberta" } ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "mao": {
+          "aberta":  { "type": "region", "path": "aberta",  "width": 20, "height": 20 },
+          "fechada": { "type": "region", "path": "fechada", "width": 40, "height": 10 }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "fechar",
+      "duration": 1,
+      "timelines": [
+        { "type": "slot", "target": "mao", "property": "attachment",
+          "keys": [
+            { "time": 0, "value": "aberta" },
+            { "time": 0.5, "value": "fechada" },
+            { "time": 1, "value": null }
+          ] }
+      ] }
+  ]
+}

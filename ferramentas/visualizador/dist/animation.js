@@ -501,10 +501,11 @@ export function applyResets(skeleton, animation, prev, now, loop) {
 }
 /** `true` for the timeline kinds `applyAnimation` writes (everything but `event` and `reset`). */
 export function isPoseTimeline(tl) {
-    // `particle.emitting` joins `body` here: it changes no field of the pose.
+    // `particle.emitting` and `particle.rate` join `body` here: they change no
+    // field of the pose.
     // The emitter reads its keys directly, at the birth instants, because a
     // particle is a pure function of time and those instants are not the frame
     // being drawn (extension `BONE_particles`, 4.1 and 6).
     return tl.kind !== 'event' && tl.kind !== 'constraint.reset' && tl.kind !== 'body'
-        && tl.kind !== 'particle.emitting';
+        && tl.kind !== 'particle.emitting' && tl.kind !== 'particle.rate';
 }

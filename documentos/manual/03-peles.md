@@ -1,7 +1,6 @@
 # 3. Skins
 
-Também em inglês: [English](en/03-skins.md) *(a versão inglesa ainda é a de
-15/09)*.
+Também em inglês: [English](en/03-skins.md)
 
 Atualizado em 07/10/2026, na v36.5. A "pele" agora se chama **skin**, no menu
 e na aba (decisão de 04/10).
@@ -9,9 +8,8 @@ e na aba (decisão de 04/10).
 ## O que você vai conseguir fazer no fim
 
 1. Vestir a mesma base com outra roupa, sem refazer o rig nem as animações.
-2. Empilhar duas skins ao mesmo tempo — armadura **e** capa.
-3. Esconder ou ignorar uma imagem numa skin, e apagar um osso só nela.
-4. Trocar a roupa dentro do jogo, com uma linha de código.
+2. Empilhar duas skins, e esconder ou ignorar uma imagem numa delas.
+3. Trocar a roupa dentro do jogo, com uma linha de código.
 
 ---
 
@@ -38,11 +36,27 @@ Serve para:
 
 ---
 
+## O jeito mais fácil: o Guarda-roupa
+
+Tudo de skin cabe numa janela só.
+
+| # | Ação |
+|:---:|:---|
+| 1 | **Skins → Guarda-roupa: desenho × skin…** (ou o botão **Guarda-roupa** na aba Skins) |
+| 2 | Cada **coluna** é uma skin. Cada **linha** é um desenho |
+| 3 | **+ Nova skin**: digite o nome, **Criar a skin** |
+| 4 | Clique na casa do desenho, e depois na imagem nova, embaixo |
+| 5 | **+ Cópia**: uma skin igual, para mudar só um pouco |
+| 6 | Passe o mouse numa coluna: o boneco **prova** a roupa, sem mudar nada |
+| 7 | **Vestir só esta**: o boneco fica com esta roupa |
+
+O resto do capítulo explica as mesmas coisas pela aba Skins.
+
 ## A aba Skins
 
 **Janela → Skins.** Coluna da direita, junto de Animações e Regras.
 
-![A aba Skins do herói: a barra de sete ícones, Feitas com três skins, Ativas com a default](imagens/03-peles.png)
+![A aba Skins do herói: a barra de sete ícones, Feitas com três skins, Ativas com a default](imagens/03-skins.png)
 
 *No herói: `armadura` e `armadura_capa` estão desligadas (têm o olho). Só a
 `default` está em Ativas.*
@@ -325,6 +339,14 @@ Osso só sai quando ninguém que ficou lê ele. O
 
 ---
 
+## O que ainda não funciona
+
+| O quê | Como é hoje |
+|:---|:---|
+| Entregar só uma skin, com o nome certo no menu | o item chama **Arquivo → Exportar → Uma imagem por skin…**: o nome diz imagem, mas a janela fatia o arquivo |
+
+---
+
 ## O selo — o que este capítulo confirma
 
 | Função | Selo | Gesto |
@@ -337,7 +359,7 @@ Osso só sai quando ninguém que ficou lê ele. O
 | O lápis (onde nasce o que se cria) | existe | lápis da linha · Skins → Editar esta skin… |
 | Ligar, desligar, reordenar a pilha | existe | arrastar entre Feitas e Ativas · olho · × |
 | Tirar a `default` da pilha | existe | arrastar para Feitas, ou × |
-| Esconder e ignorar uma imagem na skin | existe | botão direito na cena · Skins → Esconder / Ignorar esta imagem |
+| Esconder e ignorar uma imagem na skin | existe | botão direito na cena · Skins → Esconder esta imagem · Skins → Ignorar esta imagem |
 | A seção Nesta skin | existe | aba Skins, com o lápis numa skin |
 | Trocar a imagem em todas as skins | existe | Skins → Trocar imagem nas skins… · Árvore, botão direito |
 | Osso e regra só com a skin | existe | Propriedades → Skins → Só com a skin |

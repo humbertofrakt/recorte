@@ -1,0 +1,182 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "fallbacks"
+  },
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "um",
+      "parent": "root",
+      "rotation": 10
+    },
+    {
+      "name": "dois",
+      "parent": "root",
+      "rotation": 10
+    },
+    {
+      "name": "tres",
+      "parent": "root",
+      "rotation": 10
+    },
+    {
+      "name": "alavanca",
+      "parent": "root",
+      "x": 50
+    }
+  ],
+  "parameters": [
+    {
+      "name": "p",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "name": "fonte",
+      "min": 0,
+      "max": 1,
+      "default": 0.3,
+      "source": {
+        "bone": "alavanca",
+        "property": "brilho",
+        "from": 0,
+        "to": 100
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "type": "driver",
+      "name": "alvos",
+      "parameter": "p",
+      "targets": [
+        {
+          "type": "acme_luz",
+          "target": "lampada",
+          "property": "watts",
+          "keys": [
+            {
+              "input": 0,
+              "value": 0
+            },
+            {
+              "input": 1,
+              "value": 100
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "um",
+          "property": "rotation",
+          "mode": "acme_multiplica",
+          "keys": [
+            {
+              "input": 0,
+              "value": 0
+            },
+            {
+              "input": 1,
+              "value": 80
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "driver",
+      "name": "continuo",
+      "parameter": "p",
+      "animation": "controle",
+      "mode": "acme_mistura"
+    }
+  ],
+  "animations": [
+    {
+      "name": "controle",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "dois",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1,
+              "value": 80
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "mover",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "parameter",
+          "target": "p",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1,
+              "value": 1
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "um",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 30
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "dois",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 30
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "tres",
+          "property": "gingado",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 1,
+              "value": 500
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -60,6 +60,6 @@ Para o Humberto, pelo Diretor.
 
 ## A régua
 
-`npx vitest run`: 5.806 passam, 1 vermelho — o de antes (`ajuda.test.ts`, as dez imagens `00-*` sem capítulo; dono: o manual). `tsc` limpo. Conformidade 120 de 120. `npm run espada` 18/18. `npm run tomadas` 11/11.
+`npx vitest run` (com o `obra/noite-2026-11-04` juntado, 01:35 UTC): **6.010 passam, nenhum vermelho**. `tsc` limpo. Conformidade 138 de 138. `npm run espada` 18/18. `npm run tomadas` 11/11.
 
 FIM

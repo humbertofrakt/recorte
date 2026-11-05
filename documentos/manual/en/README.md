@@ -14,6 +14,21 @@ specification. That lives in `formato/ESPECIFICACAO 2026-09-17.md`.
 
 ---
 
+## 05/11/2026 — the manual counts again (step D13)
+
+The manual was **paused** from 10/09: first the program, then the manual. The
+program is ready. Humberto asked to finish. The pause is off.
+
+| What changed | How |
+|:---|:---|
+| **The photos** | all taken again from the real program, at 1440×900, by `node ferramentas/manual-fotos.mjs` |
+| **The click paths** | checked one by one against the menus in the code |
+| **The manual's tests** | run again. A photo without a caption, a spare photo, a renamed button: the test fails |
+| **The start of each chapter** | three lines: what you will be able to do |
+| **The end of each chapter** | the honest list: what does not work yet |
+
+---
+
 ## 07/10/2026 — the manual catches up with v36.5
 
 The 15/09 manual fell behind: the program has moved a long way since then. In
@@ -73,6 +88,7 @@ The backbone is **bodies · animations · entities**, the program's new model
 | 8 | [Export and use in a game](08-export-and-use-in-a-game.md) | The three packagings, opening and saving, the Export menu, the validator, and the character in the game: Construct 3, Godot, or code. *Checked on 07/10.* |
 | 9 | [Coming from Spriter, Spine and DragonBones](09-coming-from-spriter-spine-and-dragonbones.md) | Every Spriter thing and where it is here, with its key. Bringing the project in by its folder. Also Spine and DragonBones. *Checked on 07/10.* |
 | 10 | [Particles and library](10-particles-and-library.md) | Fire, smoke, spark and dust in one click; the sheet in ten tabs, the shape, the colour, the bursts, the weight. And ready-made idle, walk, run and jump. *Written on 07/10.* |
+| 11 | [One's sword, another's puppet](../11-a-espada-de-um-o-boneco-de-outro.md) | One person draws the sword, another animates the hero, and the file joins the two. Step by step. *In Portuguese only, written on 05/11.* |
 
 Every chapter opens with **"What you will be able to do by the end"**, in three
 lines, and closes with a **seal** table — the honest list of what exists, what
@@ -86,13 +102,14 @@ Generated from **the same page** that **"Ajuda → Manual"** (Help → Manual)
 (`F1`) builds, and not from a second copy of the text — never two sources saying
 different things. The 09/09 PDF left the folder: it was the old manual, with no
 seals, and would cause confusion next to the new one (kept in `backup/`, it does
-not come back). To generate a new one, with the editor open in another window:
+not come back). To generate a new one:
 
 ```
 npm run manual-pdf
 ```
 
-The file comes out with the date in its name, and yesterday's is not
+The script starts the editor by itself, and finds Chrome or Chromium by
+itself. The file comes out with the date in its name, and yesterday's is not
 overwritten.
 
 ---

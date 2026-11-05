@@ -13,6 +13,8 @@
 
 import type { EditorDoc } from '../contract.js';
 import { registerAnimationActions } from '../panels/animations-actions.js';
+// Reaproveitar animação (04/11/2026): Usar animações de outro boneco…
+import { registerReuseActions } from '../panels/reuse-actions.js';
 import { registerTimelineActions } from '../panels/dopesheet-actions.js';
 import { registerOrderActions } from '../panels/draw-order-actions.js';
 import { registerRuleActions } from '../panels/rules-actions.js';
@@ -35,6 +37,7 @@ export function registerCoreActions(doc: EditorDoc): () => void {
     ...registerTreeActions(doc),
     ...registerOrderActions(doc),
     ...registerAnimationActions(doc),
+    ...registerReuseActions(doc),
     ...registerSkinActions(doc),
     // Defeito 2 (19/09/2026): com a aba Regras fechada, o painel nunca montava
     // e estas acoes nao existiam — o gesto ficava mudo.

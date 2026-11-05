@@ -13,9 +13,8 @@ the menu and in the tab (decision of 04/10).
 ## What you will be able to do by the end
 
 1. Dress the same base in another outfit, without redoing the rig or the animations.
-2. Stack two skins at the same time — armour **and** cape.
-3. Hide or ignore an image in a skin, and delete a bone in that skin only.
-4. Change the outfit inside the game, with one line of code.
+2. Stack two skins, and hide or ignore an image in one of them.
+3. Change the outfit inside the game, with one line of code.
 
 ---
 
@@ -48,7 +47,7 @@ piece into it ([chapter 5](05-entities.md)).
 **"Janela → Skins" (Window → Skins).** Right column, together with
 **"Animações" (Animations)** and **"Regras" (Rules)**.
 
-![The old Skins tab, from 15/09: three buttons and one line per skin, with eye and pencil](../imagens/03-peles.png)
+![The old Skins tab, from 15/09: three buttons and one line per skin, with eye and pencil](../imagens/03-skins.png)
 
 From top to bottom:
 
@@ -336,6 +335,14 @@ in. One file per skin at once: `--um-arquivo-por-pele`.
 
 A bone is only removed when nobody that stayed reads it.
 [Chapter 8](08-export-and-use-in-a-game.md) covers this in full.
+
+---
+
+## What does not work yet
+
+| What | How it is today |
+|:---|:---|
+| Deliver a single skin, with the right name in the menu | the item is called **"Arquivo → Exportar → Uma imagem por skin…" (File → Export → One image per skin…)**: the name says image, but the window slices the file |
 
 ---
 

@@ -419,6 +419,17 @@ export interface StepModifiers {
 }
 
 /** `↑` é +1, `↓` é −1, qualquer outra tecla é 0 — e 0 quer dizer "não é minha". */
+/**
+ * O que uma tecla faz num campo de número — QA da noite de 04/11/2026.
+ * `passo`: as setas andam o número. `cancelar`: o Esc devolve o número de
+ * antes e sai do campo (como no Photoshop) — antes o texto digitado ficava,
+ * e a seta seguinte o gravava. `null`: a tecla é do próprio campo.
+ */
+export function fieldKeyAction(key: string): 'passo' | 'cancelar' | null {
+  if (key === 'Escape') return 'cancelar';
+  return arrowDirection(key) === 0 ? null : 'passo';
+}
+
 export function arrowDirection(key: string): 1 | -1 | 0 {
   if (key === 'ArrowUp') return 1;
   if (key === 'ArrowDown') return -1;
@@ -553,6 +564,25 @@ export class SetProperty implements Command {
 }
 
 /** Builds the command a field produces for a new value. */
+/**
+ * **A Cor ao nascer se grava aos pares** — QA de 04/11/2026 (D9). `startColor`
+ * é `[cor, cor]` (§9.7 da `BONE_particles`, `minItems: 2`). Gravar uma ponta
+ * num emissor que ainda não tinha o par criava `[[cor]]` (ou `[null, cor]`), e
+ * o `.bone` salvo não passava no validador. A ponta que falta entra branca —
+ * é o que o leitor usa na falta dela, e o que a ficha mostrava.
+ */
+export function startColorCommand(
+  file: BoneFile, pairPointer: string, index: 0 | 1, value: unknown, label: string,
+): SetProperty {
+  const branco = [1, 1, 1, 1];
+  const atual = getAtPointer(file as unknown as Record<string, unknown>, pairPointer);
+  const lido = Array.isArray(atual) ? atual : [];
+  const ponta = (i: number): unknown => (Array.isArray(lido[i]) ? [...(lido[i] as unknown[])] : [...branco]);
+  const par = [ponta(0), ponta(1)];
+  par[index] = value;
+  return new SetProperty(pairPointer, par, label, 'structure');
+}
+
 export function setFieldCommand(field: FieldDef, value: unknown): SetProperty {
   return new SetProperty(field.pointer, value, `Mudar ${field.label}`, field.changeKind ?? 'structure');
 }
@@ -1456,10 +1486,16 @@ export function attachmentFields(file: BoneFile, slot: string, name: string): Fi
             // a barra de um token (`startColor/0` sairia `startColor~10`), e o
             // ponteiro deixaria de achar o campo. Medido pelo teste.
             pointer: `${at('startColor')}/0`, fallback: [1, 1, 1, 1], changeKind: 'structure',
+            // QA 04/11/2026 (D9): a escrita é do PAR — `startColor/0` sozinho
+            // criava `[[cor]]`, e o schema pede duas cores.
+            commandFor: (doc: EditorDoc, value: unknown): Command =>
+              startColorCommand(corpoDe(doc).file, at('startColor'), 0, value, 'Mudar cor ao nascer (de)'),
           },
           {
             key: 'startColor1', label: 'Cor ao nascer (até)', kind: 'color',
             pointer: `${at('startColor')}/1`, fallback: [1, 1, 1, 1], changeKind: 'structure',
+            commandFor: (doc: EditorDoc, value: unknown): Command =>
+              startColorCommand(corpoDe(doc).file, at('startColor'), 1, value, 'Mudar cor ao nascer (até)'),
           },
           // Rodada 16, lote 4: o gradiente, a transparência ao longo da vida
           // (§9.7) e a cor do anexo, que multiplica tudo.
@@ -2469,7 +2505,16 @@ export function variableFields(file: BoneFile, name: string): FieldGroup[] {
 export function groupsOpen(
   groups: ReadonlyArray<{ title: string; fields: ReadonlyArray<{ key: string; renameOf?: unknown }>; problem?: string }>,
   hand: ReadonlyMap<string, boolean> = new Map(),
+  baixaComRapida = false,
 ): boolean[] {
+  // 04/11/2026 — a ficha do desenho em 1280×720 rolava 135 px. Na tela baixa
+  // (até 800 px de altura) e com a Ficha rápida em cima, a ficha completa
+  // nasce DOBRADA, grupo por grupo, com cada título à vista: a rápida já tem
+  // o de todo dia (Imagem, Alfa), e a completa abre num clique no título. O
+  // grupo com problema abre sempre; o que a mão escolheu fica.
+  if (baixaComRapida) {
+    return groups.map((g) => hand.get(g.title) ?? (g.problem !== undefined));
+  }
   if (groups.length <= 2) return groups.map(() => true);
   return groups.map((g) => {
     const mao = hand.get(g.title);

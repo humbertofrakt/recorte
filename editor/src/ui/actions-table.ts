@@ -185,6 +185,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
     owner: 'animacoes', where: 'arranque', ids: [
       'abrir-a-base', 'nova-animacao', 'exportar-animacao', 'importar-animacao',
       'biblioteca-animacoes',
+      // Reaproveitar (04/11/2026): muitos bonecos, as mesmas animações.
+      'usar-animacoes', 'seguir-esqueleto-padrao',
     ],
   },
   // Colar corpo aqui pergunta qual corpo numa janela: é da casca (degrau 4b).
@@ -279,7 +281,9 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
   },
   {
     // `panels/skins-actions.ts`: os botões e o lápis da aba Peles.
-    owner: 'peles', where: 'arranque', ids: ['clonar-pele', 'pele-de-pasta', 'apagar-pele', 'editar-pele'],
+    owner: 'peles', where: 'arranque', ids: ['clonar-pele', 'pele-de-pasta', 'apagar-pele', 'editar-pele',
+      // Noite de 04/11/2026: a grade peça × skin.
+      'guarda-roupa'],
   },
   {
     // `panels/entities-actions.ts` e `panels/particles-actions.ts`.
@@ -371,8 +375,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
 /** Quando uma ação de arranque fica cinza. As outras dizem no próprio menu. */
 const GREY_WHEN: Readonly<Record<string, string>> = Object.freeze({
   duplicar: 'sem nada escolhido que se duplique',
-  'novo-ponto-no-slot': 'sem um slot escolhido',
-  'novo-caixa-no-slot': 'sem um slot escolhido',
+  'novo-ponto-no-slot': 'sem um desenho escolhido',
+  'novo-caixa-no-slot': 'sem um desenho escolhido',
   apagar: 'sem nada escolhido, ou só a raiz',
   'limpar-slots-vazios': 'sem nenhum desenho vazio no arquivo',
   'subir-ordem': 'sem desenho escolhido',

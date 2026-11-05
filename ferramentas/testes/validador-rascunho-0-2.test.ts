@@ -153,7 +153,7 @@ describe('o socket saiu do formato', () => {
     expect(readFileSync(join(raiz, 'formato', 'rigs', 'humanoide-v1.bone'), 'utf8')).not.toContain('socket')
   })
 
-  it.skipIf(!existsSync(join(raiz, 'backup')))('um arquivo do 0.1 com socket abre com aviso, nunca em silêncio', () => {
+  it.skipIf(!existsSync(join(raiz, 'backup', 'exemplos_2026-09-17_antes-de-tirar-o-socket', 'mecha.bone')))('um arquivo do 0.1 com socket abre com aviso, nunca em silêncio', () => {
     const doc = ler(join(raiz, 'backup', 'exemplos_2026-09-17_antes-de-tirar-o-socket', 'mecha.bone'))
     const r = nucleo.validarDocumento(doc, 'esqueleto', VALIDADORES)
     expect(r.valido).toBe(true)
@@ -298,7 +298,7 @@ describe('a linha de comando', () => {
     expect(r.codigo, r.saida).toBe(0)
   })
 
-  it.skipIf(!existsSync(join(raiz, 'backup')))('--json devolve um relatório de máquina com os códigos', () => {
+  it.skipIf(!existsSync(join(raiz, 'backup', 'exemplos_2026-09-17_antes-de-tirar-o-socket', 'mecha.bone')))('--json devolve um relatório de máquina com os códigos', () => {
     const saida = execFileSync(process.execPath, [cli, '--json', join(raiz, 'backup', 'exemplos_2026-09-17_antes-de-tirar-o-socket', 'mecha.bone')], { encoding: 'utf8' })
     const rel = JSON.parse(saida)
     expect(rel.validos).toBe(1)

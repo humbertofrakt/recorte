@@ -8,10 +8,9 @@ Also in Portuguese: [Português](../04-animar.md)
 
 ## What you will be able to do by the end
 
-1. Make two poses and watch the program draw the twenty-eight in between.
+1. Make two poses and watch the program draw the ones in between.
 2. Close a walk cycle that goes back to the start without a jolt.
-3. Find the pose you want among sixty timeline rows.
-4. Copy the front leg to the back leg, half a cycle later.
+3. Find, copy and paste keys on the timeline.
 
 ---
 

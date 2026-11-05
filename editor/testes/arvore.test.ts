@@ -2178,7 +2178,7 @@ function ouvindo(doc: Doc): string[] {
     expect(plano).toEqual({ kind: 'icone', icon: 'particle', tipo: 'emissor de partículas' });
   });
 
-  it.skipIf(!existsSync(resolve(__dirname, '../../backup')))('o defeito EXISTIA: sem a linha do POR_TIPO, o tipo caía no buraco do fim', () => {
+  it.skipIf(!existsSync(resolve(__dirname, '../../backup/thumbnail-kind_2026-09-22_antes-do-lote-1-das-particulas.ts')))('o defeito EXISTIA: sem a linha do POR_TIPO, o tipo caía no buraco do fim', () => {
     // Esta é a prova de que o teste de cima pega alguma coisa. O `POR_TIPO` do
     // `thumbnail-kind.ts` é o que tapa o buraco; a cópia de antes do lote está
     // no `backup/`, e ela NÃO cita o emissor — era o buraco.
@@ -3116,5 +3116,28 @@ describe('rodada 50, lote 4: a chave slot/bone (o desenho troca de osso no quadr
     expect(arvore).toMatch(/appliedSlotBones\(doc\)/);
     const reparent = readFileSync(resolve(__dirname, '../src/doc/reparent.ts'), 'utf8');
     expect(reparent).toMatch(/export function appliedSlotBones\(doc: EditorDoc\)/);
+  });
+});
+
+// QA da noite de 04/11/2026 (obra/qa-animar): no herói importado do PSD,
+// "weapon" (6 letras) e "forearm" (7) cortavam na Árvore — o recuo de 16 px
+// por nível comia a linha: na profundidade 5 o nome começava em 154 px de 191.
+// Os dois primeiros níveis ficam como eram; os fundos encolhem.
+describe('o recuo da Árvore encolhe no fundo (QA da noite)', () => {
+  it('raiz, filho e neto: o recuo de sempre', () => {
+    expect(TR43.treeIndent(0)).toBe(6);
+    expect(TR43.treeIndent(1)).toBe(22);
+    expect(TR43.treeIndent(2)).toBe(38);
+  });
+  it('fundo: cada nível ainda anda para a direita, mas menos', () => {
+    let antes = TR43.treeIndent(0);
+    for (let d = 1; d <= 12; d++) {
+      const agora = TR43.treeIndent(d);
+      expect(agora - antes).toBeGreaterThanOrEqual(6);
+      antes = agora;
+    }
+  });
+  it('na profundidade 5 (a "weapon" do herói) o recuo deixa 18 px a mais que antes', () => {
+    expect(TR43.treeIndent(5)).toBeLessThanOrEqual(6 + 5 * 16 - 18);
   });
 });
