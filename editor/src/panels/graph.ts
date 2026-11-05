@@ -26,6 +26,7 @@
 import type { CurveDef, KeyDef, KeyValue } from '../../../runtime/src/index.js';
 import type { Command, DocChange, EditorDoc, Panel } from '../contract.js';
 import { registerPanel } from '../contract.js';
+import { barButtonsKeepNoFocus } from './sem-foco.js';
 import {
   durationOf, findAnimation, keyFocus, moveKeys, onKeyFocus, sameTime, setKey, setKeyFocus,
   targetInfo, targetKey, targetOfTimeline, timelinesOf,
@@ -415,6 +416,9 @@ class GraphPanel implements Panel {
     ensureGraphStylesheet();
     this.doc = doc;
     clear(host);
+    // QA da noite (04/11): clicar "Suave" deixava o foco no botão, e o Espaço
+    // seguinte reaplicava a curva em vez de tocar.
+    barButtonsKeepNoFocus(host);
     host.classList.add('painel', 'grafico');
 
     /*

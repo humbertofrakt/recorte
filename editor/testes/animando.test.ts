@@ -1912,7 +1912,7 @@ describe('o botão de barra não guarda o foco do clique (QA da noite)', () => {
     expect(clickKeepsFocusQA(['anim-item', 'is-active'])).toBe(true);
   });
   it('as cinco abas armam a regra ao montar', () => {
-    for (const arquivo of ['tree', 'animations', 'draw-order', 'mesh-panel', 'properties']) {
+    for (const arquivo of ['tree', 'animations', 'draw-order', 'mesh-panel', 'properties', 'graph']) {
       const fonte = readFileSync(resolve(__dirname, `../src/panels/${arquivo}.ts`), 'utf8');
       expect(fonte, arquivo).toMatch(/barButtonsKeepNoFocus\(host\)/);
     }
