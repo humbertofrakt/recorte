@@ -59,6 +59,9 @@ Relatório em andamento. A versão final fica no fim da noite.
 | D13 | **"Suave" virava "passa do alvo" ao mudar o valor de uma chave**: a alça ficava no valor velho | Linha do tempo | Suave em 0 → arrastar a chave de 0,5 de −54,7 para −64 (Curvas, cena ou campo) | — | as alças andam com o valor, como já andavam com o tempo (rodada 40) |
 | D14 | **Duplo clique renomeava a linha de CIMA** (em 1920: clicar "osso_16" renomeou "leg_front") | Árvore | 1920 → rolar a Árvore até o fim → duplo clique num nome | — | a lista se monta inteira antes de focar; o clique não rola |
 | D15 | Na Ordem, clicar numa peça com a lista rolada a fazia voltar a 0 e saltar; o duplo clique caía em outra | Ordem | rolar a Ordem → clicar numa peça | — | a rolagem é guardada e devolvida; o clique não rola |
+| D16 | Com o foco numa linha da Árvore ou da lista de Animações, o Espaço não tocava (apertava a linha de novo) | Árvore, Animações | clicar num osso → Espaço | — | a tabela de teclas diz: Espaço nessas linhas é Tocar |
+| D17 | **Clicar "Duplicar" e depois Espaço duplicava de novo** (o foco ficava no botão) | Animações, Árvore, Ordem, Malha, Propriedades | Animações → Duplicar → Espaço | — | o clique do mouse num botão de barra não leva o foco; Tab continua |
+| D18 | Clicar "Suave" na aba Curvas e depois Espaço reaplicava a curva | Curvas (Linha do tempo) | Detalhes → Curvas → Suave → Espaço | — | a mesma regra do D17 |
 
 ## Os defeitos — fora da minha parte (só descritos)
 
@@ -83,6 +86,13 @@ Relatório em andamento. A versão final fica no fim da noite.
 | Na Ordem, o clique na cabeça da pasta dobra a pasta; no fim da lista, o duplo clique para renomear pode cair noutra linha | mudar o que o clique na cabeça faz é decisão de desenho (Photoshop dobra pela seta); fica para o Humberto |
 | Seleção por caixa na folha não diz quantas chaves escolheu (o "Selecionar todas" diz) | o número aparece nos losangos acesos |
 
+## Desvios das regras desta noite
+
+| O quê | Por quê |
+|:---|:---|
+| Uma linha em `ui/key-swaps.ts` (Casca): a palavra do escopo novo `animacoes` | o tipo `Record<KeyScope, string>` exige; sem ela o `tsc` não fecha |
+| Arquivo novo `panels/sem-foco.ts` | uma regra só para as seis abas da parte; o `panels/dom.ts` é de todos, não mexi nele |
+
 ## Decisões que tomei no lugar do Humberto
 
 | Decisão | Por quê |
@@ -93,5 +103,7 @@ Relatório em andamento. A versão final fica no fim da noite.
 | A chave do começo também na malha | a regra do lote 68 (Spriter) vale para toda chave; §9.6 diz que `[]` é sem deform |
 | Mudar o valor de uma chave leva as alças junto, proporcionalmente | é o que o Spine faz; a curva do arquivo é absoluta (9.3) |
 | Clique de mouse numa linha não rola a lista (Árvore e Ordem) | quem clicou está apontando para a linha; seta e escolha de fora rolam |
+| Espaço toca com o foco numa linha da Árvore ou das Animações | lote 68: "Espaço toca em toda parte"; Enter continua apertando a linha |
+| Botão de barra não guarda o foco do clique do mouse | o Espaço seguinte é Tocar; quem usa Tab continua apertando o botão com Espaço (regra da casca) |
 
 FIM
