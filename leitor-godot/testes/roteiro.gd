@@ -99,6 +99,14 @@ func _faiscas() -> Array:
 	return _pecas().filter(func(p): return p["tipo"] == "BONE_particle")
 
 
+## Os cantos de todas as faíscas do quadro, numa lista só.
+func _mundo_das_faiscas() -> Array:
+	var out: Array = []
+	for p in _faiscas():
+		out.append_array(p["mundo"])
+	return out
+
+
 # 1 — abre sem erro vermelho
 func _passo_1_abre() -> void:
 	var pacote = load("res://exemplo/exemplo.tscn")
@@ -225,9 +233,29 @@ func _passo_7_faiscas() -> void:
 	_ok("7: somem aos poucos (no mesmo quadro há faísca fraca e faísca forte)",
 		not alfas.is_empty() and alfas.min() < 0.5 and alfas.max() > 0.5, str(alfas))
 	# 8 — W com faíscas: as que já saíram ficam no ar (não seguem a mão).
+	_apertar(KEY_W)
+	_quadros(30)
 	var r: Array = heroi.esqueleto.attachment_for(heroi.esqueleto.slot_by_name["fogo"])
+	var emissor = r[0]
 	_ok("8: o emissor das faíscas está no espaço do mundo (space = world)",
-		r[0] != null and r[0].space == "world", str(r))
+		emissor != null and emissor.space == "world", str(r))
+	if emissor != null:
+		# A mão anda 100 unidades AGORA, depois da pose. No mundo, a faísca
+		# já saiu: nenhuma se move. A régua de controle (regra 26): o mesmo
+		# emissor em `local` segue a mão, e as faíscas andam.
+		var mundo := _mundo_das_faiscas()
+		var antebraco = heroi.esqueleto.bone_by_name["forearm"]
+		antebraco.world_x += 100.0
+		var mundo_mao_longe := _mundo_das_faiscas()
+		emissor.space = "local"
+		var local_longe := _mundo_das_faiscas()
+		antebraco.world_x -= 100.0
+		var local_perto := _mundo_das_faiscas()
+		emissor.space = "world"
+		_ok("8: a mão anda 100 depois que a faísca saiu, e nenhuma faísca se move (%d números)" % mundo.size(),
+			not mundo.is_empty() and mundo == mundo_mao_longe)
+		_ok("8: controle — o mesmo emissor em local segue a mão (a régua de cima mede alguma coisa)",
+			not local_perto.is_empty() and local_perto != local_longe)
 	_apertar(KEY_F)
 	_quadros(1)
 	_ok("7: F de novo apaga", _faiscas().is_empty() and not heroi.esta_vestindo("fogo"), str(_faiscas().size()))
