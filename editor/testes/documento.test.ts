@@ -1790,3 +1790,30 @@ describe('a entidade com entidade dentro (rodada 8b, C18)', () => {
     expect(garantirAninhadoC18(doc, 'heroi-2.bone')).toBe(false);
   });
 });
+
+describe('QA 04/11/2026 — D4: o rascunho recuperado não está salvo', () => {
+  // A prova (Chromium sem janela): mexer, recarregar, "Recuperar este
+  // trabalho". O rodapé dizia "Sem mudanças por salvar." e o Abrir pasta
+  // seguinte trocava o trabalho recuperado sem perguntar — o trabalho que o
+  // rascunho existe para salvar se perdia de novo, calado.
+  it('setFile com unsaved: o documento nasce sujo, e desfazer não o limpa', () => {
+    const doc = new Doc(createEmptyFile('teste'));
+    doc.setFile(createEmptyFile('recuperado'), { path: 'copia.bone', unsaved: true } as never);
+    expect(doc.dirty).toBe(true);
+    doc.undo();
+    expect(doc.dirty).toBe(true);
+    doc.markSaved('copia.bone');
+    expect(doc.dirty).toBe(false);
+  });
+
+  it('sem a marca, abrir continua limpo, como sempre', () => {
+    const doc = new Doc(createEmptyFile('teste'));
+    doc.setFile(createEmptyFile('aberto'), { path: 'a.bone' });
+    expect(doc.dirty).toBe(false);
+  });
+
+  it('o Recuperar do arranque abre o rascunho com a marca', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/main.ts'), 'utf8');
+    expect(fonte).toMatch(/doc\.setFile\(file, \{ path: rascunho\.path, atlases: \[\], images: new Map\(\), unsaved: true \}\)/);
+  });
+});
