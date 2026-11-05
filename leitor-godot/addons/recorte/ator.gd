@@ -93,6 +93,9 @@ class NestedInstance:
 	var layers := {}
 	# nome da camada -> [animação, tempo do filho] na última amostra de eventos
 	var event_clock := {}
+	# nome da camada -> [animação, tempo do filho] na última pose: onde as
+	# chaves `reset` de 9.8 foram procuradas, no relógio do próprio filho
+	var reset_clock := {}
 
 	func _init(attachment) -> void:
 		resolved = attachment.resolved
@@ -111,6 +114,7 @@ class NestedInstance:
 		skeleton = null
 		layers.clear()
 		event_clock.clear()
+		reset_clock.clear()
 
 
 ## Posa toda entidade que `skeleton` mostra, depois que o mundo dele está pronto.
@@ -233,6 +237,21 @@ static func _pose_instance(skeleton, slot, attachment, instance, animation,
 		instance.layers["base"] = base
 	if top != null:
 		instance.layers["top"] = top
+
+	# 7.11: a animação do filho conta INTEIRA — as chaves `reset` também (9.8).
+	# Disparam no relógio do filho, antes do `physicsApply` deste mesmo quadro
+	# (o `update_pose` abaixo), como no nível de cima (C-262, C-326).
+	for layer in instance.layers:
+		var l: Array = instance.layers[layer]
+		var previous = instance.reset_clock.get(layer)
+		var previous_time := -INF
+		if previous != null and previous[0] == l[0] and previous[1] <= l[1]:
+			previous_time = previous[1]
+		A.fire_physics_resets(child, l[0], previous_time, l[1], l[2])
+		instance.reset_clock[layer] = [l[0], l[1]]
+	for layer in instance.reset_clock.keys():
+		if not instance.layers.has(layer):
+			instance.reset_clock.erase(layer)
 
 	# P = M × T(x, y)·R(rotation)·S(scaleX, scaleY). M é o quadro do slot: o
 	# osso aplicado, com o `transform` de uma chave `slot/bone` (9.5).
