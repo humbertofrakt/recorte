@@ -3538,6 +3538,6 @@ describe('QA 04/11/2026 — D22: o Salvar do projeto grande diz que está salvan
     const io = readFileSync(resolve(__dirname, '../src/io/open-save.ts'), 'utf8');
     expect(io.match(/buildFolderPack\(doc, stemOfName\(handle\.name\), options\.onProgress\)/g)?.length).toBe(1);
     const casca = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
-    expect(casca).toContain('onProgress: (feito, total, fase) => { shell.statusState.textContent = `Salvando: ${fase}, ${feito} de ${total}…`; },');
+    expect(casca).toContain('onProgress: (feito, total, fase) => { shell.statusState.textContent = `Salvando ${feito} de ${total}: ${fase}…`; },');
   });
 });

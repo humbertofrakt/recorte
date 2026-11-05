@@ -2483,7 +2483,7 @@ describe('QA 04/11/2026 — o projeto com manifesto aberto com aviso: o aviso pr
   // corta na primeira frase, e o aviso some. Achado na varredura da forma.
   it('o aviso vem antes da notícia', () => {
     const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
-    expect(fonte).toContain('? `${lido.warnings[0]}. ${projectOpenedNotice(folder.name, lido.lists)}`');
+    expect(fonte).toContain("? `${avisoNoRodape(lido.warnings[0]!)}. ${projectOpenedNotice(folder.name, lido.lists)}`");
   });
 });
 
