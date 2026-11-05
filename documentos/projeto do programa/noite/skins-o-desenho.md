@@ -62,7 +62,7 @@ Fotos: `fotos-skins/antes-1-aba-skins.png`, `antes-2-trocar-pela-ficha.png`,
 | **Por cima** | Liga esta junto, por cima das vestidas (armadura + capa). |
 | **Igual à base** | A skin não mexe nesta peça (era "Ignorar"). |
 | **Esconder** | A peça some com esta skin vestida. |
-| **Nova a partir desta** | Era "Clonar". |
+| **+ Cópia** | "Nova a partir desta" (na dica). Era "Clonar". Curto para caber na coluna. |
 
 O lápis continua na aba. No Guarda-roupa ele não aparece:
 **a coluna em que você clica é a que muda.** Uma ideia, não duas.
@@ -95,7 +95,7 @@ O lápis continua na aba. No Guarda-roupa ele não aparece:
 │         │  [boneco]  │  [boneco]  │  [boneco]  │   ← miniatura        │
 │         │ ● vestida  │ [Vestir só]│ [Vestir só]│                      │
 │         │            │ ☐ por cima │ ☑ por cima │                      │
-│         │            │ [Nova a p.]│ [Levar…]   │                      │
+│         │            │[+Cópia][Levar…]│ ...    │                      │
 ├─────────┼────────────┼────────────┼────────────┤                      │
 │ body    │  [img]     │  [img]     │  [img]     │                      │
 │ head    │  [img]     │   = base   │  [img]     │  "= base": não mexe  │
@@ -136,3 +136,12 @@ Clique numa casa abre a escolha, embaixo da grade:
 | Guarda-roupa é uma **janela**, não a aba | A aba tem 260 px. A grade precisa de largura. Spriter faz igual (janela própria). |
 | Clicar numa casa **veste** a coluna e põe o lápis nela | Mudar uma roupa que não está na tela é pintar no escuro. |
 | A grade mostra a peça pelo desenho de partida dela | Peça com várias imagens (mão aberta/fechada) mostra a de partida. As outras: Propriedades, como antes. |
+
+## 8. Achados da prova de pessoa (depois)
+
+| Achado | Conserto |
+|:---|:---|
+| A janela do nome da skin nova abria **atrás** do Guarda-roupa | O Guarda-roupa fica embaixo das janelas de pergunta |
+| O nome proposto vinha sem seleção: digitar dava "skinferro" | O nome vem selecionado |
+| Depois de marcar **por cima**, o mouse continuava na coluna e a prova mostrava só ela | Clicou na coluna: a prova pausa até o mouse sair |
+| A janela cobre a cena: a prova não se via | O **manequim** (boneco grande) dentro da janela mostra a prova |

@@ -87,6 +87,8 @@ class Wardrobe {
   private readonly offDoc: () => void;
   /** A pilha de antes da prova; `null` quando não há prova na cena. */
   private provando: string[] | null = null;
+  /** A coluna em que se acabou de clicar: o mouse nela não prova até sair. */
+  private semProvaEm: string | null = null;
   /** A casa escolhida, para a escolha de imagem embaixo. */
   private casa: { piece: WardrobePiece; skin: string } | null = null;
   private readonly onKey: (event: KeyboardEvent) => void;
@@ -297,8 +299,21 @@ class Wardrobe {
     }
     if (par.childElementCount > 0) head.append(par);
 
-    head.addEventListener('mouseenter', () => this.startPreview(coluna.name));
-    head.addEventListener('mouseleave', () => this.stopPreview());
+    head.addEventListener('mouseenter', () => {
+      if (this.semProvaEm === coluna.name) return;
+      this.startPreview(coluna.name);
+    });
+    head.addEventListener('mouseleave', () => {
+      this.semProvaEm = null;
+      this.stopPreview();
+    });
+    // Clicou na coluna (vestir, por cima): a prova pausa até o mouse sair.
+    // Sem isso, quem marcava "por cima" via só a skin do mouse, e não as
+    // duas juntas — o que acabou de pedir sumia da tela (prova de pessoa, c).
+    head.addEventListener('mousedown', () => {
+      this.semProvaEm = coluna.name;
+      this.stopPreview();
+    }, true);
     return head;
   }
 

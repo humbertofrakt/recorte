@@ -1,0 +1,56 @@
+{
+ "bone": {
+  "version": "1.0",
+  "minVersion": "1.0",
+  "generator": "amigo",
+  "id": "0b0b0b0b-1111-4222-8333-444455556666",
+  "created": "2026-11-05T00:00:00Z",
+  "modified": "2026-11-05T00:00:00Z",
+  "license": "CC0-1.0"
+ },
+ "skeleton": {
+  "name": "capacete"
+ },
+ "assets": {
+  "atlases": [],
+  "imagesBase": "",
+  "audioBase": "",
+  "skeletonsBase": ""
+ },
+ "rig": {
+  "name": "capacete-v1",
+  "bones": [
+   "head"
+  ],
+  "slots": [
+   "head"
+  ]
+ },
+ "bones": [
+  {
+   "name": "root"
+  },
+  {
+   "name": "head",
+   "parent": "root"
+  }
+ ],
+ "skins": [
+  {
+   "name": "capacete",
+   "attachments": {
+    "head": {
+     "face": {
+      "type": "region",
+      "path": "capacete",
+      "x": 30,
+      "y": 5,
+      "rotation": -90,
+      "width": 70,
+      "height": 70
+     }
+    }
+   }
+  }
+ ]
+}
