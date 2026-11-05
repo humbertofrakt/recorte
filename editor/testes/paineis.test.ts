@@ -3596,3 +3596,25 @@ describe('o Ângulo mostra o número inteiro (QA da noite)', () => {
     expect(base).toMatch(/text-overflow: ellipsis/);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): no campo X, digitar 77 e
+// apertar Esc deixava "77" escrito; a seta ↑ seguinte gravava 78 — um número
+// que ninguém confirmou. E o foco ficava no campo: o Ctrl+Z ia para o texto,
+// não para o documento. Como no Photoshop: Esc devolve o número e sai.
+import { fieldKeyAction as fieldKeyActionQA } from '../src/panels/properties-model.js';
+describe('Esc num campo de número cancela (QA da noite)', () => {
+  it('Esc cancela; as setas andam; o resto é do campo', () => {
+    expect(fieldKeyActionQA('Escape')).toBe('cancelar');
+    expect(fieldKeyActionQA('ArrowUp')).toBe('passo');
+    expect(fieldKeyActionQA('ArrowDown')).toBe('passo');
+    expect(fieldKeyActionQA('a')).toBeNull();
+    expect(fieldKeyActionQA('Enter')).toBeNull();
+  });
+  it('o painel trata o Esc no mesmo lugar das setas: devolve o número e sai', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/properties.ts'), 'utf8');
+    const arrows = fonte.slice(fonte.indexOf('private attachArrows('), fonte.indexOf('private refocus('));
+    expect(arrows).toMatch(/fieldKeyAction\(event\.key\) === 'cancelar'/);
+    expect(arrows).toMatch(/input\.value = show\(read\(\)\)/);
+    expect(arrows).toMatch(/input\.blur\(\)/);
+  });
+});

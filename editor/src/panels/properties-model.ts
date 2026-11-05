@@ -419,6 +419,17 @@ export interface StepModifiers {
 }
 
 /** `↑` é +1, `↓` é −1, qualquer outra tecla é 0 — e 0 quer dizer "não é minha". */
+/**
+ * O que uma tecla faz num campo de número — QA da noite de 04/11/2026.
+ * `passo`: as setas andam o número. `cancelar`: o Esc devolve o número de
+ * antes e sai do campo (como no Photoshop) — antes o texto digitado ficava,
+ * e a seta seguinte o gravava. `null`: a tecla é do próprio campo.
+ */
+export function fieldKeyAction(key: string): 'passo' | 'cancelar' | null {
+  if (key === 'Escape') return 'cancelar';
+  return arrowDirection(key) === 0 ? null : 'passo';
+}
+
 export function arrowDirection(key: string): 1 | -1 | 0 {
   if (key === 'ArrowUp') return 1;
   if (key === 'ArrowDown') return -1;

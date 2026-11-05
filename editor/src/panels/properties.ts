@@ -37,7 +37,7 @@ import {
   belowQuick, compensationApplies, evalFieldInput, notNumberSays, scrubValue,
 } from './properties-model.js';
 import {
-  alphaDragSays, alphaShown, alphaTip, arrowDirection, emptyGradientSays, EMPTY_GRADIENT_SHORT, buildProperties, entityShownName, evalNumberExpression, fieldIsSet, fieldValue, formatNumberField,
+  alphaDragSays, alphaShown, alphaTip, arrowDirection, fieldKeyAction, emptyGradientSays, EMPTY_GRADIENT_SHORT, buildProperties, entityShownName, evalNumberExpression, fieldIsSet, fieldValue, formatNumberField,
   REFUSED_MESSAGE, findAttachment, silhouetteSources, skinFieldCommand, stepValue, writeFieldValue,
   type FieldDef, type FieldGroup,
 } from './properties-model.js';
@@ -1661,6 +1661,15 @@ class PropertiesPanel implements Panel {
     read: () => number, write: (value: number) => void, show: (value: number) => string,
   ): void {
     input.addEventListener('keydown', (event) => {
+      // QA da noite (04/11): Esc devolve o número de antes e sai do campo; o
+      // Ctrl+Z seguinte volta a ser do documento.
+      if (fieldKeyAction(event.key) === 'cancelar') {
+        event.preventDefault();
+        event.stopPropagation();
+        input.value = show(read());
+        input.blur();
+        return;
+      }
       const direction = arrowDirection(event.key);
       if (direction === 0) return;
       event.preventDefault();
