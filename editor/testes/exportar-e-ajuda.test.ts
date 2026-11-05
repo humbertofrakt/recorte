@@ -133,3 +133,14 @@ describe('the manual page', () => {
     for (const chapter of manualChapters()) expect(html).toContain(`id="${chapter.id}"`);
   });
 });
+
+// Noite de 04/11/2026: uma linha com `|` sem a linha de traços embaixo não
+// entrava em ramo nenhum do renderMarkdown, e o laço girava no mesmo lugar
+// (o Ajuda → Manual travava). Ela vira parágrafo.
+describe('o manual não trava numa linha com | que não é tabela', () => {
+  it('termina, e o texto aparece', () => {
+    const html = renderMarkdown('Antes.\n\n| só uma linha |\n\nDepois.');
+    expect(html).toContain('só uma linha');
+    expect(html).toContain('Depois.');
+  });
+});

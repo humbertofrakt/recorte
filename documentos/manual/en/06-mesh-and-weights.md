@@ -10,9 +10,7 @@ Also in Portuguese: [Português](../06-malha-e-pesos.md)
 
 1. Make a cape ripple and a torso curve, instead of turning like wood.
 2. Connect an image to two bones and let the program share out the weights.
-3. Create and generate a mesh **in the middle of an animation**, without leaving
-   it.
-4. Recognise the six mistakes everybody makes, by what you see on screen.
+3. Recognise the six common mistakes, by what you see on screen.
 
 ---
 

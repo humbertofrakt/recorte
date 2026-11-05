@@ -55,14 +55,14 @@ Fotos: `fotos-skins/antes-1-aba-skins.png`, `antes-2-trocar-pela-ficha.png`,
 |:---|:---|
 | **Skin** | O Humberto usa "skin". O menu já se chama **Skins**. Fica. A dica explica: *"skin é uma roupa: as peças trocam de imagem"*. |
 | **Guarda-roupa** | A janela nova da grade. Nome de casa, não de programa. |
-| **Peça** | O slot. Quem veste não pensa em "slot". |
+| **Desenho** | O slot. É a palavra do dicionário da casa (`ui/jargao.ts`, chegou nesta noite). Eu tinha posto "peça"; troquei: "peça" na casa é a peça encaixada (entidade). Uma coisa, um nome. |
 | **Vestida** | Era "Ativa". A skin que está na tela. |
 | **Todas** | Era "Feitas". |
 | **Vestir só esta** | Tira as outras e veste esta. Um clique. |
 | **Por cima** | Liga esta junto, por cima das vestidas (armadura + capa). |
 | **Igual à base** | A skin não mexe nesta peça (era "Ignorar"). |
 | **Esconder** | A peça some com esta skin vestida. |
-| **Nova a partir desta** | Era "Clonar". |
+| **+ Cópia** | "Nova a partir desta" (na dica). Era "Clonar". Curto para caber na coluna. |
 
 O lápis continua na aba. No Guarda-roupa ele não aparece:
 **a coluna em que você clica é a que muda.** Uma ideia, não duas.
@@ -73,7 +73,7 @@ O lápis continua na aba. No Guarda-roupa ele não aparece:
 
 | # | Objetivo | Cliques |
 |:-:|:---|:---|
-| a | Roupa nova, 3 peças | Skins → **Guarda-roupa…** · **+ Nova skin** (nome) · clique na casa *peça × skin* · clique na imagem nova. ×3 |
+| a | Roupa nova, 3 peças | Skins → **Guarda-roupa…** · **+ Nova skin** (nome) · clique na casa *desenho × skin* · clique na imagem nova. ×3 |
 | b | Ver lado a lado e alternar | No Guarda-roupa, cada coluna tem **o boneco inteiro** vestido com ela. Passar o mouse **prova** na cena. **Vestir só esta** alterna |
 | c | Combinar | **Por cima** na coluna da capa |
 | d | Mandar para outro boneco | **Levar…** na coluna (grava o `.bone` da skin). No outro boneco: **Trazer skin de fora…** |
@@ -88,14 +88,14 @@ O lápis continua na aba. No Guarda-roupa ele não aparece:
 ```
 ┌ Guarda-roupa ── peça × skin ──────────────────────────────── [Fechar] ┐
 │ Cada coluna é uma skin. Clique numa casa para trocar a imagem         │
-│ daquela peça naquela skin. Mouse em cima da coluna: prova na cena.    │
+│ daquele desenho naquela skin. Mouse em cima da coluna: prova na cena.    │
 │ [+ Nova skin]  [Trazer skin de fora…]                                 │
 ├─────────┬────────────┬────────────┬────────────┬──────────────────────┤
 │         │  default   │  armadura  │  ferro     │                      │
 │         │  [boneco]  │  [boneco]  │  [boneco]  │   ← miniatura        │
 │         │ ● vestida  │ [Vestir só]│ [Vestir só]│                      │
 │         │            │ ☐ por cima │ ☑ por cima │                      │
-│         │            │ [Nova a p.]│ [Levar…]   │                      │
+│         │            │[+Cópia][Levar…]│ ...    │                      │
 ├─────────┼────────────┼────────────┼────────────┤                      │
 │ body    │  [img]     │  [img]     │  [img]     │                      │
 │ head    │  [img]     │   = base   │  [img]     │  "= base": não mexe  │
@@ -115,7 +115,7 @@ Clique numa casa abre a escolha, embaixo da grade:
 
 ```
  [+][⧉][📁][⬆][⬇][⭱][🗑]
- [ Guarda-roupa: peça × skin… ]     ← botão com texto
+ [ Guarda-roupa: desenho × skin… ]     ← botão com texto
  Vestida: ferro · Editando: ferro   ← uma linha que diz o estado
  TODAS               VESTIDAS
 ```
@@ -136,3 +136,13 @@ Clique numa casa abre a escolha, embaixo da grade:
 | Guarda-roupa é uma **janela**, não a aba | A aba tem 260 px. A grade precisa de largura. Spriter faz igual (janela própria). |
 | Clicar numa casa **veste** a coluna e põe o lápis nela | Mudar uma roupa que não está na tela é pintar no escuro. |
 | A grade mostra a peça pelo desenho de partida dela | Peça com várias imagens (mão aberta/fechada) mostra a de partida. As outras: Propriedades, como antes. |
+
+## 8. Achados da prova de pessoa (depois)
+
+| Achado | Conserto |
+|:---|:---|
+| A janela do nome da skin nova abria **atrás** do Guarda-roupa | O Guarda-roupa fica embaixo das janelas de pergunta |
+| O nome proposto vinha sem seleção: digitar dava "skinferro" | O nome vem selecionado |
+| Depois de marcar **por cima**, o mouse continuava na coluna e a prova mostrava só ela | Clicou na coluna: a prova pausa até o mouse sair |
+| A janela cobre a cena: a prova não se via | O **manequim** (boneco grande) dentro da janela mostra a prova |
+| Depois de trocar, a grade rolava e escondia o nome das colunas (a foto mostrou) | A linha dos nomes fica fora da parte que rola, e a rolagem se guarda |

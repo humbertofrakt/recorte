@@ -12,9 +12,8 @@ program is now called **base** (decision of 04/10: *"body" becomes base*).
 ## What you will be able to do by the end
 
 1. Build the character on the **base** and see the change apply to every animation.
-2. Have **several bases** in the same project, each with its own animations.
-3. Make a new base from an animation frame.
-4. Make the man **turn into a werewolf** in the middle of the animation.
+2. Have **several bases**, and make a new base from an animation frame.
+3. Make the man **turn into a werewolf** in the middle of the animation.
 
 ---
 
@@ -58,6 +57,8 @@ Opening the base shows the usual stage and timeline, with a single frame.
 > list, like the mecha's. **A menu similar to Spriter's entity menu.**"*
 
 **"Janela → Animações" (Window → Animations).** From top to bottom:
+
+![The hero's Animations tab: the Base — montar line at the top, and the idle, walk and attack animations below, each with its length](../imagens/02-animacoes.png)
 
 ```
 Animações (Animations)
@@ -260,6 +261,14 @@ chainsaw.)*
 | **A single file** | one `.bonez` with everything inside | "Arquivo → Exportar → Salvar como pacote…" (File → Export → Save as package…) |
 | **Delivering to the game** | only the base the game needs, with its images | "Arquivo → Exportar → Entregar uma base…" (File → Export → Deliver a base…) |
 | **Format** | zero new fields for the box: it is the `.bonez`'s `manifest.json` (§2.9) | — |
+
+---
+
+## What does not work yet
+
+| What | How to get around it today |
+|:---|:---|
+| Clone a base **with** its animations | **"Base → Salvar como base nova…" (Save as new base…)** makes the base; bring the animations one by one through **"Arquivo → Importar → Animações, de outra base…" (File → Import → Animations, from another base…)** |
 
 ---
 

@@ -493,6 +493,19 @@ Animations…) ([chapter 5](05-entities.md)).
 
 ---
 
+## What does not work yet
+
+| What | How it is today |
+|:---|:---|
+| The explicit list of frames (`frames`) | no field on the sheet; a file that carries it opens |
+| The emitter's other numbers becoming keys | decided for another round |
+| Trail and sub-emitter | decided for later |
+| Editing the library animations in the program | the editor does not edit them |
+| More ready-made animations beyond the four | only `humanoide-v1-animacoes.bone` has animations |
+| Attaching the emitter through the Tree, or with `P` + click | not confirmed: use **"Partículas → Prender ao osso escolhido" (Particles → Attach to the selected bone)** |
+
+---
+
 ## The seal — what this chapter confirms
 
 Seals: **exists** · **exists differently** · **missing** · **changes with the

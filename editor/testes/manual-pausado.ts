@@ -1,15 +1,17 @@
 /**
- * O manual está PAUSADO — ordem do Humberto, 10/09/2026: "primeiro vamos
+ * O manual foi PAUSADO em 10/09/2026 — ordem do Humberto: "primeiro vamos
  * terminar o programa, depois vamos fazer o manual".
  *
- * Todo teste que lê `documentos/manual/` usa `describeManual` ou `itManual`
- * no lugar de `describe` e `it`. Enquanto a pausa vale, eles aparecem como
- * PULADOS no vitest: não somem, e não reprovam o programa por falta de texto.
+ * DESPAUSADO no degrau D13 (05/11/2026): o programa ficou pronto, o Humberto
+ * pediu para terminar o projeto, e o manual foi refeito para a v36.5.
  *
- * Para voltar a conferir o manual, tire o `.skip` das duas linhas abaixo.
+ * Todo teste que lê `documentos/manual/` usa `describeManual` ou `itManual`.
+ * Hoje eles são `describe` e `it` de verdade: o manual reprova quando
+ * envelhece. Para pausar de novo (só por ordem do Humberto), troque as duas
+ * linhas abaixo por `describe.skip` e `it.skip`.
  */
 
 import { describe, it } from 'vitest';
 
-export const describeManual = describe.skip;
-export const itManual = it.skip;
+export const describeManual = describe;
+export const itManual = it;

@@ -1,6 +1,6 @@
 # 0. Abrir o Recorte
 
-Também em inglês: [English](en/01-open-recorte.md)
+Também em inglês: [English](en/00-open-recorte.md)
 
 > Revisto em 07/10/2026, pela versão **v36.5**. O capítulo de 15/09 falava
 > de sete menus, de um interruptor Montagem | Animando e de onze ferramentas.
@@ -70,6 +70,8 @@ Há também o editor **montado**, que não precisa do terminal: dois cliques em
 O editor abre **vazio**, com a ferramenta **Transformar** na mão. No meio da
 cena, quatro botões grandes:
 
+![O editor recém-aberto: a cena vazia e os quatro botões grandes no meio](imagens/00-boas-vindas.png)
+
 | Botão | O que faz |
 |:---|:---|
 | **Abrir pasta** | as imagens da pasta vão para a aba **Imagens**; você arrasta para montar |
@@ -86,9 +88,9 @@ volta. Nada abre por conta própria.
 
 ## A tela, de cima para baixo
 
-![O editor recém-aberto, com o herói de exemplo: menu em cima, barra de ações, duas colunas de painéis, a cena no meio e a linha do tempo embaixo](imagens/01-a-tela.png)
+![O editor recém-aberto, com o herói de exemplo: menu em cima, barra de ações, duas colunas de painéis, a cena no meio e a linha do tempo embaixo](imagens/00-a-tela.png)
 
-*Foto de 07/10/2026, com a base do herói aberta.*
+*Foto de 05/11/2026, com a base do herói aberta.*
 
 | Faixa | O que é |
 |:---|:---|
@@ -111,10 +113,10 @@ cima: a frase inteira aparece na dica.
 
 Fica logo abaixo do menu e é **uma linha só**.
 
-![A barra de ações inteira](imagens/01-barra-de-acoes.png)
+![A barra de ações inteira](imagens/00-barra-de-acoes.png)
 
-*Foto de 07/10/2026, em 1440 de largura: **Travar desenhos** já foi para
-**Mais ▾**.*
+*Foto de 05/11/2026, em 1440 de largura: **Ver desenhos** e **Travar
+desenhos** já foram para **Mais ▾**.*
 
 | Grupo | O que tem |
 |:---|:---|
@@ -170,7 +172,10 @@ cada linha.
 Estes quatro são **em palavra**, e não em ícone. Ficam **laranja** enquanto
 estão ligados.
 
-![Os quatro botões de ver e travar, com Ver ossos e Ver desenhos acesos em laranja](imagens/08-ver-e-travar.png)
+![Ver ossos aceso em laranja, e Travar ossos apagado, na barra de ações](imagens/00-ver-e-travar.png)
+
+*Em 1440 de largura, só os dois dos ossos cabem na barra. Os dois dos
+desenhos estão em **Mais ▾**.*
 
 | Botão | Tecla | O que faz |
 |:---|:---:|:---|
@@ -189,9 +194,9 @@ Um estado ligado se lê melhor numa palavra acesa. É assim no Spriter.
 **O interruptor Montagem | Animando saiu** (18/09/2026). O `Ctrl+Tab` saiu com
 ele. Não há modo: há **o que está aberto**.
 
-![O rodapé com a base aberta: Base: heroi](imagens/01-modo.png)
+![O rodapé com a base aberta: Base: heroi](imagens/00-rodape-base.png)
 
-![O rodapé com uma animação aberta: Animação: walk](imagens/01-modo-animacao.png)
+![O rodapé com uma animação aberta: Animação: walk](imagens/00-rodape-animacao.png)
 
 *Em cima, a base aberta. Embaixo, a `walk` aberta. É a caixa do meio do
 rodapé que diz onde você está.*
@@ -250,7 +255,7 @@ regras, animar, vestir, encaixar, efeito — e então olhar.
 | **Peles** | **Skins** |
 | corpo | base |
 
-![O menu Exibir aberto](imagens/01-menu-exibir.png)
+![O menu Exibir aberto](imagens/00-menu-exibir.png)
 
 *O menu Exibir tem os submenus **O boneco ▸**, **A cena ▸**
 e **Travar ▸**. As três colunas: a **marca** do que está ligado, o
@@ -285,7 +290,7 @@ navegador. Se o navegador barrar a aba, o editor avisa.
 
 ### Arquivo
 
-![O menu Arquivo aberto](imagens/01-menu-arquivo.png)
+![O menu Arquivo aberto](imagens/00-menu-arquivo.png)
 
 | Item | Tecla | O que faz |
 |:---|:---:|:---|
@@ -312,7 +317,7 @@ navegador. Se o navegador barrar a aba, o editor avisa.
 | **Exportar ▸ Animações, para outra base…** | — | grava as animações marcadas num `.bone` |
 | **Exportar ▸ Skin, para outro boneco…** | — | grava a skin do lápis num `.bone` |
 | **Repetir a última exportação** | `Ctrl+Shift+E` | exporta de novo, sem abrir a janela |
-| **Configurações do projeto…** | — | quadros por segundo, cor de fundo, grade, tempo de mistura |
+| **Configurações do projeto…** | — | quadros por segundo, cor de fundo, grade, o que fazer ao trocar de animação tocando, tempo de mistura |
 | **Sair** | — | fecha. O não salvo volta pelo Reabrir o fechado |
 
 **Saíram do Arquivo:** **Importar → Imagens…** (as imagens chegam pela pasta,
@@ -320,7 +325,7 @@ ou soltas na janela) e **Reempacotar atlas** (o Salvar faz o atlas).
 
 ### Editar
 
-![O menu Editar aberto](imagens/01-menu-editar.png)
+![O menu Editar aberto](imagens/00-menu-editar.png)
 
 | Item | Tecla | O que faz |
 |:---|:---:|:---|
@@ -350,6 +355,8 @@ ou soltas na janela) e **Reempacotar atlas** (o Salvar faz o atlas).
 
 ### Imagens
 
+![O menu Imagens aberto: recarregar a pasta, pôr imagem na cena, o pivô](imagens/00-menu-imagens.png)
+
 | Item | O que faz |
 |:---|:---|
 | **Recarregar a pasta** | relê a pasta do disco: imagem nova entra, apagada sai |
@@ -365,7 +372,7 @@ ou soltas na janela) e **Reempacotar atlas** (o Salvar faz o atlas).
 
 ### Base
 
-![O menu Base aberto](imagens/01-menu-esqueleto.png)
+![O menu Base aberto](imagens/00-menu-base.png)
 
 *Era o menu Esqueleto. Hoje se chama **Base**.*
 
@@ -377,7 +384,7 @@ ou soltas na janela) e **Reempacotar atlas** (o Salvar faz o atlas).
 | **Novo ▸ Osso** | — | um osso, filho do escolhido |
 | **Novo ▸ Ponto** | `O` | uma posição com nome e direção |
 | **Novo ▸ Caixa de colisão** | `X` | um contorno para o jogo medir |
-| **Novo ▸ Ponto neste slot** · **Caixa neste slot** | — | entra no desenho escolhido, sem criar outro |
+| **Novo ▸ Ponto neste desenho** · **Caixa neste desenho** | — | entra no desenho escolhido, sem criar outro |
 | **Novo ▸ Máscara** | — | um contorno que recorta sem apagar |
 | **Virar filho de…** | `P` | com um osso escolhido: clique em quem vira filho dele, até o `Esc` |
 | **Trazer para a frente** | `+` | sobe uma posição na ordem de desenho |
@@ -399,6 +406,8 @@ regras (foram para **Malha e regras**).
 
 ### Malha e regras
 
+![O menu Malha e regras aberto: Malha, Pesos, as regras, os parâmetros e a Física](imagens/00-menu-malha-e-regras.png)
+
 | Item | O que faz |
 |:---|:---|
 | **Malha ▸** | Virar malha · Gerar automática · Traçar contorno · Criar vértice · Criar ou apagar aresta · Apagar vértice · Usar a forma de outra malha |
@@ -412,7 +421,7 @@ Veja os capítulos [6](06-malha-e-pesos.md) e [7](07-as-cinco-regras.md).
 
 ### Animação
 
-![O menu Animação aberto](imagens/01-menu-animacao.png)
+![O menu Animação aberto](imagens/00-menu-animacao.png)
 
 | Item | Tecla | O que faz |
 |:---|:---:|:---|
@@ -424,24 +433,29 @@ Veja os capítulos [6](06-malha-e-pesos.md) e [7](07-as-cinco-regras.md).
 | **Tocar / Pausar** | `Espaço` | toca e pausa |
 | **Tocar para trás** | `Shift+Espaço` | do fim para o começo |
 | **Abrir a Prévia** | — | a aba Prévia, com a animação tocando |
-| **Ir para ▸** | `Home` `End` `←` `→` `↑` `↓` | início, fim, quadro, chave; `Shift+↑` `Shift+↓`: só do escolhido |
+| **Ir para ▸** | `Home` `End` `←` `→` `↑` `↓` | Início · Fim · Quadro anterior · Quadro seguinte · Chave anterior · Chave seguinte |
+| **Ir para ▸** | `Shift+↑` `Shift+↓` | Chave anterior do escolhido · Chave seguinte do escolhido |
 | **Chavear** | `K` | protege a pose: grava a chave do escolhido |
 | **Chavear tudo** | `Ctrl+K` | grava a chave de todas as linhas |
 | **Troca de base ▸** | — | Colar outra base aqui · Tirar a troca daqui |
+| **Recorte na cena** | `C` | o retângulo que a exportação de imagem usa, só desta animação. Veja o [capítulo 8](08-exportar-e-usar-no-jogo.md) |
+| **Tirar o recorte** | — | apaga o retângulo; a exportação volta a cortar a borda sozinha |
 | **Apagar chave** | — | apaga a chave do tempo atual |
 | **Apagar as linhas** | `Shift+Delete` | tira a propriedade inteira da animação |
 | **Limpar a animação inteira…** | — | pergunta antes |
 | **Curva da chave ▸** | — | Linear · Suave · Entrada suave · Saída suave · Parada · Curva à mão… |
-| **Marcas ▸** | `M` · `Ctrl+↑` · `Ctrl+↓` | pôr ou tirar marca, marca anterior, marca seguinte |
+| **Marcas ▸** | `M` · `Ctrl+↑` · `Ctrl+↓` | Pôr ou tirar marca aqui · Marca anterior · Marca seguinte |
 | **Novo evento** | — | um aviso que a animação manda ao jogo |
-| **Trecho de laço ▸** | — | começo · fim · tirar o trecho |
-| **Variáveis e etiquetas ▸** | — | nova, apagar, renomear, mostrar na aba Regras |
+| **Trecho de laço ▸** | — | Começo do trecho aqui · Fim do trecho aqui · Tirar o trecho |
+| **Variáveis e etiquetas ▸** | — | Nova variável · Apagar a variável · Nova etiqueta · Renomear etiqueta · Apagar etiqueta · Mostrar na aba Regras |
 | **Efeitos de chave ▸** | — | Flash… · Pulso… · Tremor… |
 | **Chaves ▸** | — | Selecionar todas · Esticar · Espelhar no tempo · Fechar ciclo · Espelhar esquerda e direita · Empurrar · Deslocar em laço · Limpar repetidas |
 
 **Saíram da Animação:** Montagem ⇄ Animando (`Ctrl+Tab`) e Gravar sozinho (`A`).
 
 ### Skins
+
+![O menu Skins aberto: criar, clonar, apagar e promover skins](imagens/00-menu-skins.png)
 
 | Item | O que faz |
 |:---|:---|
@@ -458,6 +472,8 @@ Importar e exportar skin ficam no **Arquivo**. Veja o [capítulo 3](03-peles.md)
 
 ### Entidades
 
+![O menu Entidades aberto: trazer, pôr na cena, testar e promover](imagens/00-menu-entidades.png)
+
 | Item | O que faz |
 |:---|:---|
 | **Trazer entidade de fora…** | um `.bone` de fora entra na lista Entidades |
@@ -472,6 +488,8 @@ Importar e exportar skin ficam no **Arquivo**. Veja o [capítulo 3](03-peles.md)
 Veja o [capítulo 5](05-entidades.md).
 
 ### Partículas
+
+![O menu Partículas aberto: o emissor vazio e os quatro prontos](imagens/00-menu-particulas.png)
 
 | Item | O que faz |
 |:---|:---|
@@ -512,13 +530,13 @@ O mesmo está no botão **Partículas** da barra de ações.
 
 ### Janela
 
-![O menu Janela aberto](imagens/01-menu-janela.png)
+![O menu Janela aberto](imagens/00-menu-janela.png)
 
 *São dezesseis painéis. O menu tem Arranjos e Arrumar no alto.*
 
 | Item | Tecla | O que faz |
 |:---|:---:|:---|
-| **Arranjos ▸** | — | Montar · Animar · Pesos · Pivô · Visualização · os seus · Guardar · Apagar · Voltar ao padrão |
+| **Arranjos ▸** | — | Montar · Animar · Pesos · Pivô · Visualização · os seus · Guardar este arranjo… · Apagar um arranjo… · Voltar ao padrão |
 | **Arrumar ▸ Esconder painéis** | `Tab` | somem as colunas e a linha do tempo |
 | **Arrumar ▸ Esconder só as colunas** | `Shift+Tab` | somem as colunas; a linha do tempo fica |
 | **Arrumar ▸ Soltar o painel da parede** | — | o painel em uso flutua sobre a cena |
@@ -538,7 +556,7 @@ está na coluna. Clicar abre; clicar no que já está à frente fecha.
 
 ### Ajuda
 
-![O menu Ajuda aberto](imagens/01-menu-ajuda.png)
+![O menu Ajuda aberto](imagens/00-menu-ajuda.png)
 
 | Item | Tecla | O que faz |
 |:---|:---:|:---|
@@ -556,6 +574,8 @@ São doze menus e mais de duzentas entradas. A pergunta mais comum não é
 "isso existe?" — é **"em qual menu está?"**.
 
 Aperte `Ctrl+Shift+P`, digite três letras, aperte `Enter`.
+
+![A Paleta de comandos aberta, com a palavra chave digitada: cada linha diz o nome, o menu onde ele mora e a tecla](imagens/00-paleta.png)
 
 - Não precisa de acento nem de maiúscula: `cebola` acha **Casca de cebola**.
 - As setas andam na lista, `Enter` escolhe, `Esc` fecha.

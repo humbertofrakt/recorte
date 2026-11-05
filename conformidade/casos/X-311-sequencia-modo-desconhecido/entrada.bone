@@ -1,0 +1,96 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "sequencia-estranha"
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "estranho",
+      "bone": "root",
+      "attachment": "quadro"
+    },
+    {
+      "name": "loop",
+      "bone": "root",
+      "attachment": "quadro"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "estranho": {
+          "quadro": {
+            "type": "region",
+            "path": "q",
+            "width": 8,
+            "height": 8,
+            "sequence": {
+              "count": 4,
+              "setup": 2
+            }
+          }
+        },
+        "loop": {
+          "quadro": {
+            "type": "region",
+            "path": "q",
+            "width": 8,
+            "height": 8,
+            "sequence": {
+              "count": 4,
+              "setup": 2
+            }
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "rodar",
+      "duration": 0.6,
+      "timelines": [
+        {
+          "type": "sequence",
+          "target": "estranho",
+          "attachment": "quadro",
+          "keys": [
+            {
+              "time": 0,
+              "value": {
+                "mode": "acme_vaivem",
+                "index": 1,
+                "delay": 0.1
+              }
+            }
+          ]
+        },
+        {
+          "type": "sequence",
+          "target": "loop",
+          "attachment": "quadro",
+          "keys": [
+            {
+              "time": 0,
+              "value": {
+                "mode": "loop",
+                "index": 1,
+                "delay": 0.1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,15 +1,15 @@
 # 5. Entidades
 
+Também em inglês: [English](en/05-entities.md)
+
 Atualizado em 07/10/2026, na v36.5. **Quase tudo que em 15/09 "faltava" já
 existe.** Cada seção diz o selo; a tabela do fim junta todos.
 
 ## O que você vai conseguir fazer no fim
 
-1. Trazer uma peça animada pronta (a espada, o fogo, o pneu) para o projeto.
-2. Pôr a peça no lugar de uma imagem, e ela herdar o lugar e as chaves.
-3. Dirigir a peça pela **faixa** na linha do tempo.
-4. Testar encaixes sem mexer no arquivo, e gravar só o que ficou bom.
-5. Pôr o personagem **dentro** de outra peça ("Este boneco").
+1. Trazer uma peça animada pronta (a espada, o fogo) e pô-la no lugar de uma imagem.
+2. Dirigir a peça pela **faixa** na linha do tempo, e testar sem mexer no arquivo.
+3. Pôr o personagem **dentro** de outra peça (**Este boneco…**).
 
 ---
 
@@ -272,6 +272,8 @@ Tirar o Este boneco** · `Ctrl+Z`.
 **Janela → Entidades.** Caixa dentro de caixa: quem está dentro de quem se lê
 de cima para baixo. **Sem fio.**
 
+![A aba Entidades do herói, na coluna da direita: a Montagem em cima e a Prateleira embaixo](imagens/05-entidades.png)
+
 | Parte | O que é |
 |:---|:---|
 | **A barra** | **Na cena** e **Pôr no projeto** (ícone e palavra) |
@@ -369,6 +371,17 @@ Na pasta `formato/exemplos/`, citados na especificação.
 | `exemplos/capacete.bone` | um capacete com esqueleto e animações próprias |
 
 `npm run conformidade`: **120 de 120** casos passam (07/10).
+
+---
+
+## O que ainda não funciona
+
+| O quê | Como é hoje |
+|:---|:---|
+| Trocar pela grade numa animação valer **só dali em diante** | a grade grava na base. O arrasto para a cena é que vale só na animação |
+| Escolher o canal de fundo (`baseAnimation`) | o editor lê do arquivo, mas não há porta para escolher |
+| A Prévia mostrar o de fora **em volta** (o mecha) | a Prévia mostra só as peças de teste **no** boneco |
+| **Pôr no projeto…** numa animação, da agulha em diante | vai sempre para a base |
 
 ---
 

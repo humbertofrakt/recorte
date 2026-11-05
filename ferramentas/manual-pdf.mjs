@@ -16,10 +16,16 @@
 // As imagens entram porque a página é impressa **na mesma origem** em que o
 // editor está servindo: os endereços que o Vite gera continuam válidos.
 //
-// USO, da raiz do projeto, com o editor servindo em 5173
-// (`npm run editor` numa outra janela):
+// USO, da raiz do projeto:
 //
 //   npm run manual-pdf
+//
+// Se o editor já estiver servindo em 5173 (`npm run editor`), usa ele. Se
+// não, sobe um servidor próprio na porta 5194 e o derruba no fim (D13,
+// 05/11/2026: antes o script parava e pedia o `npm run editor`).
+//
+// O navegador: o da variável CHROME, se houver; senão o Chrome do Windows;
+// senão o Chromium que o ambiente da nuvem traz em /opt/pw-browsers.
 //
 // Sai `documentos/manual/Manual do Recorte AAAA-MM-DD.pdf`, com a data no
 // nome. Para gravar em outro lugar, passe o caminho:
@@ -27,15 +33,32 @@
 //   npm run manual-pdf -- C:/Users/F-rak/Desktop/manual.pdf
 
 import { spawn } from 'node:child_process';
-import { writeFileSync, mkdirSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
+import { existsSync, mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, '..');
-const CHROME = 'C:/Program Files/Google/Chrome/Application/chrome.exe';
+const CHROME = [
+  process.env.CHROME,
+  'C:/Program Files/Google/Chrome/Application/chrome.exe',
+  '/opt/pw-browsers/chromium',
+  '/usr/bin/chromium',
+  '/usr/bin/google-chrome',
+].find((c) => c !== undefined && existsSync(c));
+if (CHROME === undefined) {
+  console.error('Não achei o Chrome. Diga onde ele está: CHROME=caminho npm run manual-pdf');
+  process.exit(2);
+}
+const EXECUTAVEL = CHROME;
 const PORTA = 9335;
-const URL_EDITOR = 'http://localhost:5173/';
+// Um perfil NOVO a cada vez (D13): o perfil guardado em node_modules/.perfil-pdf
+// guardou a página do manual de uma rodada anterior, e o PDF saiu do texto
+// velho — com um defeito que já tinha sido consertado no disco.
+const PERFIL = mkdtempSync(join(tmpdir(), 'recorte-pdf-'));
+let URL_EDITOR = 'http://localhost:5173/';
+let servidor = null;
 
 const hoje = new Date().toISOString().slice(0, 10);
 const SAIDA = process.argv[2] !== undefined
@@ -48,13 +71,27 @@ const SAIDA = process.argv[2] !== undefined
 
 // Sem o editor servindo não há de onde tirar o manual. Dizer isso agora, com o
 // comando escrito, é melhor que um erro de rede trinta segundos depois.
-try {
-  const r = await fetch(URL_EDITOR, { signal: AbortSignal.timeout(3000) });
-  if (!r.ok) throw new Error(String(r.status));
-} catch {
-  console.error('O editor não está servindo em http://localhost:5173.');
-  console.error('Abra outra janela do terminal, rode `npm run editor`, e tente de novo.');
-  process.exit(2);
+async function servindo(url) {
+  try {
+    const r = await fetch(url, { signal: AbortSignal.timeout(3000) });
+    return r.ok;
+  } catch {
+    return false;
+  }
+}
+if (!(await servindo(URL_EDITOR))) {
+  URL_EDITOR = 'http://localhost:5194/';
+  servidor = spawn(process.execPath, [resolve(RAIZ, 'node_modules', 'vite', 'bin', 'vite.js'), 'editor', '--port', '5194', '--strictPort'], { cwd: RAIZ, stdio: 'ignore' });
+  process.on('exit', () => servidor?.kill());
+  let subiu = false;
+  for (let i = 0; i < 60 && !subiu; i++) {
+    subiu = await servindo(URL_EDITOR);
+    if (!subiu) await new Promise((r) => setTimeout(r, 500));
+  }
+  if (!subiu) {
+    console.error('O editor não subiu na porta 5194. Rode `npm run editor` numa outra janela e tente de novo.');
+    process.exit(2);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -106,10 +143,11 @@ const CSS_IMPRESSAO = `
 // A conversa com o Chrome
 // ---------------------------------------------------------------------------
 
-const chrome = spawn(CHROME, [
+const chrome = spawn(EXECUTAVEL, [
   '--headless=new', '--disable-gpu', '--hide-scrollbars',
+  ...(process.platform === 'linux' ? ['--no-sandbox'] : []),
   '--force-device-scale-factor=1', '--window-size=1200,1600',
-  `--remote-debugging-port=${PORTA}`, `--user-data-dir=${resolve(RAIZ, 'node_modules', '.perfil-pdf')}`,
+  `--remote-debugging-port=${PORTA}`, `--user-data-dir=${PERFIL}`,
   '--no-first-run', '--no-default-browser-check', URL_EDITOR,
 ], { stdio: 'ignore' });
 
@@ -230,4 +268,5 @@ console.log(`  Imagens    ${carregadas.prontas} de ${carregadas.total}`);
 
 ws.close();
 chrome.kill();
+servidor?.kill();
 process.exit(0);

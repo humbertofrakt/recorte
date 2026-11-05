@@ -1,0 +1,61 @@
+{
+  "probe": {
+    "animation": "rodar",
+    "times": [
+      0,
+      0.1,
+      0.2,
+      0.3
+    ],
+    "measure": [
+      "slots"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "slots": {
+        "estranho": {
+          "sequenceIndex": 1
+        },
+        "loop": {
+          "sequenceIndex": 1
+        }
+      }
+    },
+    {
+      "time": 0.1,
+      "slots": {
+        "estranho": {
+          "sequenceIndex": 1
+        },
+        "loop": {
+          "sequenceIndex": 2
+        }
+      }
+    },
+    {
+      "time": 0.2,
+      "slots": {
+        "estranho": {
+          "sequenceIndex": 1
+        },
+        "loop": {
+          "sequenceIndex": 3
+        }
+      }
+    },
+    {
+      "time": 0.3,
+      "slots": {
+        "estranho": {
+          "sequenceIndex": 1
+        },
+        "loop": {
+          "sequenceIndex": 0
+        }
+      }
+    }
+  ]
+}

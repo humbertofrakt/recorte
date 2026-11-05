@@ -217,6 +217,13 @@ export function renderMarkdown(text: string): string {
       paragraph.push(current);
       index += 1;
     }
+    // Noite de 04/11/2026: uma linha com `|` que não é tabela (sem a linha
+    // de traços embaixo) não entrava em ramo nenhum, e o laço girava sem fim
+    // no mesmo índice: o F1 travava. Ela vira um parágrafo, como o texto é.
+    if (paragraph.length === 0) {
+      paragraph.push(lines[index].trim());
+      index += 1;
+    }
     out.push(`<p>${inline(paragraph.join(' '))}</p>`);
   }
 

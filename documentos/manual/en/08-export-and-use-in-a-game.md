@@ -107,7 +107,7 @@ The editor saves what is open by itself, every few seconds.
 **"Arquivo → Exportar ▸"** (File → Export). Two blocks: on top what goes **to the
 game**, below what goes **to another character**.
 
-![The File menu open, with the Export submenu](../imagens/07-menu-exportar.png)
+![The File menu open, with the Export submenu](../imagens/08-menu-exportar.png)
 
 *(The picture is from 15/09. The submenu's names have changed: the table is what
 counts.)*
@@ -622,6 +622,24 @@ De greater than Até, or outside the animation: the window **refuses in writing*
 
 At the end, the report gives the files, the size of each frame and **the
 folder**: the browser's downloads folder (`Ctrl+J` shows it).
+
+### "Recorte na cena" (Crop on the stage): the rectangle that goes to the image
+
+Each animation can have **its own** rectangle. The export crops by it.
+
+1. Open the animation (click it, in the **Animations** tab).
+2. **"Animação → Recorte na cena" (Animation → Crop on the stage)** (key `C`).
+3. The rectangle is born around the drawing.
+4. Pull the small squares on the corners and sides. The middle moves it.
+5. Or type **X**, **Y**, **L** (width) and **A** (height) in the bar under the stage.
+6. **"Pronto" (Done)**, or `Enter`, finishes.
+
+![Animation → Crop on the stage with walk open: the pink rectangle around the hero, the Recorte bar with X, Y, L and A under the stage, and the status bar giving the size](../imagens/08-recorte-na-cena.png)
+
+In the *Export image* window, **"Recorte → A área desenhada nesta animação"
+(Crop → The area drawn in this animation)** uses that rectangle. To delete it:
+**"Animação → Tirar o recorte" (Animation → Remove the crop)**, or the bin on
+the bar.
 
 ### WebM video
 
