@@ -29,7 +29,7 @@ import { avisoSemPasta, boneDaPasta, escolhasDoPedido, novoNaPasta, pedirPastaAn
 import { hasCharacter } from '../panels/palette-model.js';
 import { corpoDe } from '../contract.js';
 import { resumoDoGltf } from '../io/export-gltf.js';
-import { pacoteAbertoNotice } from '../io/open-save.js';
+import { openEntityFromOutside, pacoteAbertoNotice } from '../io/open-save.js';
 import type { GestoSemPasta } from '../io/pedir-pasta.js';
 import type { ProjectFolder } from '../io/project-folder.js';
 import { openProjectFiles, openProjectInto, projectOpenedNotice, readManifestInFolder } from '../io/project-open.js';
@@ -448,7 +448,12 @@ export async function openAnother(shell: Shell, como: 'corpo' | 'entidade'): Pro
   try {
     // Rodada 8b, C18: o arquivo que vem sozinho procura as imagens nos atlas
     // que o projeto já tem abertos.
-    const opened = await openAnotherSkeleton({ atlases: shell.doc.atlases, images: shell.doc.pageImages });
+    const known = { atlases: shell.doc.atlases, images: shell.doc.pageImages };
+    // 05/11/2026: a entidade de fora traz o atlas DELA. Escolheu só o .bone?
+    // O programa pede a pasta dela, em vez de deixá-la sem imagem.
+    const opened = como === 'entidade'
+      ? await openEntityFromOutside(known, (bone, missing) => askEntityFolder(bone, missing))
+      : await openAnotherSkeleton(known);
     if (opened === null) return;
     const lists = projeto.lists;
     const uri = uriForOpened(opened.path, [...lists.corpos, ...lists.entidades]);
@@ -482,6 +487,31 @@ export async function openAnother(shell: Shell, como: 'corpo' | 'entidade'): Pro
     }
   } catch (error) {
     await shell.reportFailure('Não deu para abrir o arquivo', error);
+  }
+}
+
+/**
+ * A pergunta de quem trouxe só o `.bone` de uma entidade com atlas próprio —
+ * 05/11/2026. O botão diz o que acontece; o seletor de pasta abre no clique.
+ */
+async function askEntityFolder(bone: string, missing: readonly string[]): Promise<FolderDirectoryHandle | null> {
+  if (!hasFolderPicker()) return null;
+  const escolha = await askChoice({
+    title: `${bone}: falta ${missing.join(', ')}`,
+    lead: `As imagens de ${bone} moram em ${missing.join(', ')}, ao lado dele. Escolha a pasta onde ${bone} está, `
+      + 'e o atlas e as imagens vêm juntos.',
+    options: [
+      { id: 'pasta', label: `Escolher a pasta de ${bone}…`, hint: 'O .bone, o atlas e as imagens entram juntos' },
+      { id: 'sem', label: 'Trazer sem as imagens', hint: 'A peça entra sem desenho, e o rodapé avisa' },
+    ],
+    cancelId: 'sem',
+  });
+  if (escolha !== 'pasta') return null;
+  try {
+    const w = globalThis as unknown as { showDirectoryPicker(o?: unknown): Promise<FolderDirectoryHandle> };
+    return await w.showDirectoryPicker({ id: 'recorte-entidade', mode: 'read' });
+  } catch {
+    return null; // Fechou a janela.
   }
 }
 
