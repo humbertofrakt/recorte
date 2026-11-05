@@ -396,3 +396,17 @@
 .anim-item-entidade {
   padding-left: 28px;
 }
+
+/*
+ * N-4b: a tira do Recorte da animação aberta (`animations-crop.ts`). Logo
+ * abaixo do título das Animações, sem rolar, numa linha só: os números abrem
+ * na cena.
+ */
+.anim-corpo > .anim-recorte {
+  flex: 0 0 auto;
+}
+
+.anim-recorte .is-ligado {
+  outline: 2px solid #ff00c8;
+  outline-offset: -2px;
+}

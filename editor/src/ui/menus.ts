@@ -1374,6 +1374,16 @@ export function animationMenu(state: AnimationMenuState): MenuItem[] {
     },
     SEP,
     open('Mudar duração…', 'mudar-duracao'),
+    // N-4b: o recorte da exportação (spec 4.6), arrastado na cena, como o
+    // recorte do Photoshop. C de *crop*. O retângulo é de cada animação.
+    {
+      ...open('Recorte na cena', 'recorte-na-cena', 'C'),
+      ...(on ? { hint: 'Puxadores nos cantos e lados, o meio move. Sem recorte, ele nasce em volta do desenho. Enter ou Esc termina' } : {}),
+    },
+    {
+      ...open('Tirar o recorte', 'tirar-recorte'),
+      ...(on ? { hint: 'Apaga o recorte desta animação: a exportação volta ao corte automático da borda' } : {}),
+    },
     { ...open('Repetir', 'repetir', 'L'), checked: state.loop },
     // **No fim ▸** — a4 (29/09/2026). O que o TOCADOR faz ao chegar no fim
     // morava só no ⋯ Mais da linha do tempo. Os nomes são os do `END_MODES`

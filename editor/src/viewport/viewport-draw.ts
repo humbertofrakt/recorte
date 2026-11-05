@@ -38,6 +38,7 @@ import type { ReferenceState } from './reference.js';
 import { askForm } from '../ui/dialog.js';
 import { pickImages } from '../io/import-images.js';
 import { getActiveTool } from './tools/registry.js';
+import { CROP_HANDLE_PIXELS, cropEditing, cropHandles, cropNumber, cropOfOpenAnimation } from './crop-model.js';
 import type { ViewportPanel } from './viewport.js';
 import { POINT_PIXELS } from './viewport.js';
 import type { WorldPoint } from './viewport.js';
@@ -170,7 +171,8 @@ export function draw(panel: ViewportPanel): void {
     // avisa. Ele só aparece quando há o que dizer.
     drawEmitterWarnings(panel, ctx, skeleton, scale);
     // Degrau 10 (10.4): a área desenhada desta animação, em magenta.
-    drawCropBox(doc, ctx, scale);
+    // N-4b: com Recorte na cena ligado, os puxadores e o fora escurecido.
+    drawCropBox(doc, ctx, scale, cropEditing() && doc.animation !== null, panel.cropDragSays);
     // The handles belong to every tool, not only to "Posar".
     drawHandles(ctx, resolveHandles(doc, scale), scale);
     // Rodada 15, linha 1: TODO emissor tem marca, sadio ou não, parado ou
@@ -203,15 +205,8 @@ export function draw(panel: ViewportPanel): void {
 /** A cor do retângulo de recorte. Magenta porque desenho nenhum a usa (Spriter cap. 26). */
 export const CROP_COLOR = '#ff00c8';
 
-/** A área desenhada da animação aberta (spec 4.6), em unidades do esqueleto, ou `null`. */
-export function cropOfOpenAnimation(
-  doc: EditorDoc,
-): { x: number; y: number; width: number; height: number } | null {
-  if (doc.animation === null) return null;
-  const crop = doc.data?.animations.find((entry) => entry.name === doc.animation)?.crop ?? null;
-  if (crop === null || !(crop.width > 0) || !(crop.height > 0)) return null;
-  return crop;
-}
+/** A área desenhada da animação aberta — mora em `crop-model.ts` desde o N-4b. */
+export { cropOfOpenAnimation };
 
 /**
  * **O retângulo da exportação, em magenta** (10.4, `ARQUITETO 3` §8).
@@ -222,15 +217,56 @@ export function cropOfOpenAnimation(
  *
  * O `crop` é informativo no formato: nenhum leitor de pose o usa. Quem o usa é
  * a exportação de imagem, com a opção **A área desenhada nesta animação**.
+ *
+ * **N-4b**: com *Recorte na cena* ligado (`crop-model.ts`), o traço fica
+ * cheio, o que fica FORA escurece (o que não vai sair na imagem, como no
+ * recorte do Photoshop), e os oito puxadores aparecem. `says` é o tamanho
+ * durante o arrasto, escrito em cima do retângulo.
  */
-export function drawCropBox(doc: EditorDoc, ctx: CanvasRenderingContext2D, scale: number): void {
+export function drawCropBox(
+  doc: EditorDoc, ctx: CanvasRenderingContext2D, scale: number,
+  editing = false, says: string | null = null,
+): void {
   const crop = cropOfOpenAnimation(doc);
   if (crop === null) return;
   ctx.save();
+  if (editing) {
+    // O fora escurecido: um retângulo enorme com o furo do recorte (evenodd).
+    const far = 1e6 / Math.max(scale, 1e-6);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+    ctx.beginPath();
+    ctx.rect(crop.x - far, crop.y - far, crop.width + far * 2, crop.height + far * 2);
+    ctx.rect(crop.x, crop.y, crop.width, crop.height);
+    ctx.fill('evenodd');
+  }
   ctx.strokeStyle = CROP_COLOR;
-  ctx.lineWidth = 1 / scale;
-  ctx.setLineDash([6 / scale, 4 / scale]);
+  ctx.lineWidth = (editing ? 2 : 1) / scale;
+  if (!editing) ctx.setLineDash([6 / scale, 4 / scale]);
   ctx.strokeRect(crop.x, crop.y, crop.width, crop.height);
+  ctx.restore();
+  if (!editing) return;
+  const half = CROP_HANDLE_PIXELS / scale / 2;
+  ctx.save();
+  for (const h of cropHandles(crop)) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(h.x - half, h.y - half, half * 2, half * 2);
+    ctx.strokeStyle = CROP_COLOR;
+    ctx.lineWidth = 1.5 / scale;
+    ctx.strokeRect(h.x - half, h.y - half, half * 2, half * 2);
+  }
+  // O tamanho, em cima do canto de cima à esquerda: durante o arrasto, o que
+  // a mão está fazendo; parado, o que está gravado.
+  const text = says ?? `${cropNumber(crop.width)} × ${cropNumber(crop.height)} px`;
+  const size = 12 / scale;
+  ctx.font = `${size}px system-ui, sans-serif`;
+  ctx.textBaseline = 'bottom';
+  ctx.translate(crop.x, crop.y + crop.height + half + 3 / scale);
+  ctx.scale(1, -1);
+  ctx.lineWidth = 3 / scale;
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.75)';
+  ctx.strokeText(text, 0, 0);
+  ctx.fillStyle = CROP_COLOR;
+  ctx.fillText(text, 0, 0);
   ctx.restore();
 }
 

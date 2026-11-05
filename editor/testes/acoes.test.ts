@@ -170,7 +170,8 @@ describe('a tabela das ações', () => {
     // 304 (rodada 40, lote 4): +1, `deslocar-em-laco` (Animação → Chaves).
     // 305 (rodada 41, lote 4): +1, `criar-aresta` (Malha e regras → Malha).
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    expect(tabela.length).toBe(306);
+    // 308 (N-4b, 05/11/2026): +2, `recorte-na-cena` e `tirar-recorte` (Animação, da cena).
+    expect(tabela.length).toBe(308);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');

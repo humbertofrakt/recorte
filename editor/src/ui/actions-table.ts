@@ -121,6 +121,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
       // Degrau 7, tarefa 7.5: as duas portas do botão direito na cena.
       'ferramenta-de-antes', 'opcoes-do-desenho',
       'eixos-local', 'eixos-pai', 'eixos-mundo',
+      // N-4b: o recorte da exportação, arrastado na cena (`viewport/crop-model.ts`).
+      'recorte-na-cena', 'tirar-recorte',
     ],
   },
   // Rodada final, chat B, lote 1 (P5): os modelos prontos de partícula.
