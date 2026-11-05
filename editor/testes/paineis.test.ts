@@ -3647,6 +3647,9 @@ describe('Esc num campo de número cancela (QA da noite)', () => {
     expect(arrows).toMatch(/fieldKeyAction\(event\.key\) === 'cancelar'/);
     expect(arrows).toMatch(/input\.value = show\(read\(\)\)/);
     expect(arrows).toMatch(/input\.blur\(\)/);
+  });
+});
+
 describe('QA 04/11/2026 — D9: mudar uma ponta da Cor ao nascer grava o PAR', () => {
   // A prova (Chromium sem janela): Partículas → Fogo, aba Cor, «de» vermelho.
   // O arquivo saiu com `startColor: [[1,0,0,1]]` — UMA cor — e o schema da
