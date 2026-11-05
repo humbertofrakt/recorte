@@ -1,14 +1,15 @@
 # 2. Bases e animações
 
+Também em inglês: [English](en/02-bases-and-animations.md)
+
 Atualizado em 07/10/2026, na v36.5. O que era "corpo" no programa agora se
 chama **base** (decisão de 04/10: *"corpo" vira base*).
 
 ## O que você vai conseguir fazer no fim
 
 1. Montar o personagem na **base** e ver a mudança valer em todas as animações.
-2. Ter **várias bases** no mesmo projeto, cada uma com as animações dela.
-3. Fazer uma base nova a partir de um quadro de animação.
-4. Fazer o homem **virar lobisomem** no meio da animação.
+2. Ter **várias bases**, e fazer uma base nova de um quadro de animação.
+3. Fazer o homem **virar lobisomem** no meio da animação.
 
 ---
 
@@ -52,6 +53,8 @@ Abrir a base mostra a cena e a linha do tempo de sempre, com um quadro só.
 
 **Janela → Animações.** De cima para baixo:
 
+![A aba Animações do herói: a linha Base — montar no alto, e as animações idle, walk e attack embaixo, cada uma com a duração](imagens/02-animacoes.png)
+
 ```
 Animações
 ├── Bases            Base — montar · homem   2
@@ -74,6 +77,8 @@ Animações
 | Botão direito numa animação | Renomear · Duplicar · Mandar para o topo · Exportar animação… · Apagar |
 | A estrela ★ | marca a primeira da lista: é a que o jogo abre |
 | A palavra *repete* | a animação volta ao começo. Liga-se no tocador (`L`) |
+
+![O herói com a walk aberta: a linha walk acesa na aba Animações, a linha do tempo com as chaves, e o rodapé dizendo Animação: walk](imagens/02-animacao-aberta.png)
 
 **Os ícones da tira Animações** (o nome está na dica):
 
@@ -243,6 +248,14 @@ Projeto: "mecha"
 | **Um arquivo só** | um `.bonez` com tudo dentro | Arquivo → Exportar → Salvar como pacote… |
 | **Entregar ao jogo** | só a base que o jogo precisa, com as imagens dela | Arquivo → Exportar → Entregar uma base… |
 | **Formato** | zero campo novo para a caixa: é o `manifest.json` do `.bonez` (§2.9) | — |
+
+---
+
+## O que ainda não funciona
+
+| O quê | Como contornar hoje |
+|:---|:---|
+| Clonar uma base **com** as animações dela | Base → Salvar como base nova… faz a base; as animações se trazem uma a uma por Arquivo → Importar → Animações, de outra base… |
 
 ---
 

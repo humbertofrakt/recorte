@@ -15,6 +15,12 @@ Escrito em 05/11/2026, do programa rodando. Cada foto saiu da prova
 
 Ninguém abre um JSON.
 
+## O que você vai conseguir fazer no fim
+
+1. Fazer uma espada num projeto, com imagens, ossos e animações.
+2. Trazer a espada para o projeto do herói e pô-la na mão dele.
+3. Animar o golpe com as duas peças juntas num arquivo só.
+
 ---
 
 ## Pessoa A: a espada

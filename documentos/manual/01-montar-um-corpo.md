@@ -1,6 +1,6 @@
 # 1. Montar um corpo
 
-Também em inglês: [English](en/02-build-the-character.md)
+Também em inglês: [English](en/01-build-a-body.md)
 
 > Revisto em 07/10/2026, pela versão **v36.5**. Desde 15/09 mudaram: a tecla do
 > Criar osso (`B`), a Árvore (uma árvore só), o gesto do `P`, onde a imagem
@@ -55,6 +55,13 @@ Como no Spriter, **primeiro a arte, depois os ossos**.
 
 **Nada entra na cena sozinho.** Você arrasta cada imagem da aba Imagens para
 a cena (veja abaixo).
+
+![A pasta aberta: as imagens na aba Imagens, uma seção por subpasta (bracos, corpo, pernas), e a cena ainda vazia](imagens/01-1-a-pasta.png)
+
+*Um boneco de teste: cada peça é um retângulo colorido. A foto mostra o
+programa, não a arte.*
+
+![As peças arrastadas da aba Imagens para a cena, cada uma no seu lugar, ainda sem osso](imagens/01-2-as-pecas.png)
 
 Mudou a imagem no Photoshop? **Imagens → Recarregar a pasta.** Imagem nova
 entra, apagada sai, e o rodapé diz o que mudou.
@@ -146,7 +153,7 @@ em uso. **Esqueleto → Reempacotar atlas saiu**: reempacotar é o Salvar.
 
 Aba **Imagens**, no alto da coluna da direita.
 
-![O painel Imagens: as regiões em grade, cada uma com miniatura, nome e o número de desenhos que a usam](imagens/02-imagens.png)
+![O painel Imagens: as regiões em grade, cada uma com miniatura, nome e o número de desenhos que a usam](imagens/01-imagens.png)
 
 *A aba mostra as imagens **por subpasta** da pasta do projeto. No herói:
 `armadura` e "Sem subpasta".*
@@ -195,9 +202,10 @@ gesto de sempre, e o `Ctrl` é a exceção.
 
 **Com a ferramenta na mão, o rodapé diz os gestos.**
 
-| Antes de arrastar | Depois de soltar |
-|:---:|:---:|
-| ![A ferramenta Criar osso escolhida, e o rodapé dizendo os gestos](imagens/02-gesto-criar-osso-antes.png) | ![Um osso novo na cena, e uma linha nova na Árvore](imagens/02-gesto-criar-osso-depois.png) |
+![A ferramenta Criar osso na mão (tecla B): o rodapé diz o gesto](imagens/01-criar-osso.png)
+
+![Os ossos novos na cena, um dentro do outro, e as linhas novas na Árvore](imagens/01-4-os-ossos.png)
+
 
 *O rodapé diz o gesto: "o osso novo pega os desenhos. Ctrl: sem pegar". Onde
 você começa o arrasto é a raiz do osso; onde solta é a ponta.*
@@ -230,7 +238,7 @@ pulado com o motivo. Cuidado com pedaços curtos: `_b` também pega `arm_back`.
 
 Aba **Árvore**, no alto da coluna da esquerda.
 
-![O painel Árvore](imagens/02-arvore.png)
+![O painel Árvore](imagens/01-arvore.png)
 
 *É **uma árvore só**, como a Hierarchy do Spriter: osso, e dentro dele os
 desenhos.*
@@ -305,9 +313,10 @@ Pronto: aquele desenho passa a andar com aquele osso.
 pai) e a janela "Virar filho de qual osso?". Hoje o `P` é um gesto só: **o pai
 primeiro**. Com outra escolha, o `P` só diz no rodapé o que fazer.
 
-| Antes: um osso escolhido | Depois: com o `P` embaixo |
-|:---:|:---:|
-| ![O osso hips escolhido na Árvore, e o rodapé quieto](imagens/02-gesto-pegar-filhos-antes.png) | ![O rodapé dizendo: clique nos ossos e desenhos que vão virar filhos de hips](imagens/02-gesto-pegar-filhos-depois.png) |
+![O tronco escolhido e P segurado: o rodapé diz o que o clique vai fazer](imagens/01-5-segurar-p.png)
+
+![Depois dos cliques: o rodapé diz quantos filhos o osso ganhou, e a Árvore mostra cada peça dentro do seu osso](imagens/01-6-preso.png)
+
 
 *Segure `P` e o rodapé passa a dizer de quem os cliques estão virando filhos. O
 cursor muda junto.*
@@ -400,7 +409,7 @@ o tronco inclinado — desligue **Herda rotação**.
 
 Aba **Propriedades**, embaixo da Árvore.
 
-![O painel Propriedades com um osso escolhido: o nome no alto e a ficha rápida logo abaixo](imagens/02-propriedades.png)
+![O painel Propriedades com um osso escolhido: o nome no alto e a ficha rápida logo abaixo](imagens/01-propriedades.png)
 
 *No alto, sempre as mesmas seis linhas: X, Y, Escala X, Escala Y, Ângulo e
 Alfa. Embaixo, tudo o mais que aquele osso ou desenho tem.*
@@ -466,10 +475,12 @@ campo: ela não anda na linha do tempo. Com `Shift` e `Alt` juntos, vale o
 
 Aba **Ordem**, ao lado da Árvore.
 
-![A aba Ordem: um desenho por linha, com miniatura e nome, e as pastas dobráveis](imagens/02-ordem.png)
+![A aba Ordem: um desenho por linha, com miniatura e nome, e as pastas dobráveis](imagens/01-ordem.png)
 
 *Um desenho por linha, com a miniatura. **O de cima da lista fica na FRENTE**,
 como em todo programa de camadas.*
+
+![O boneco de teste com o braço de trás mandado para trás do tronco, e a aba Ordem com a lista da frente para o fundo](imagens/01-3-a-ordem.png)
 
 **Os seis botões no alto da aba:**
 
@@ -561,9 +572,8 @@ Spriter: o escolhido ganha uma **caixa**, com quadradinhos, o **pivô** e uma
 
 A caixa gira junto com o desenho.
 
-| Antes | Depois de arrastar a bolinha da haste |
-|:---:|:---:|
-| ![A perna escolhida com a ferramenta Transformar: a caixa tracejada em volta do desenho, os oito quadradinhos, o pivô e a haste](imagens/02-gesto-transformar-antes.png) | ![A perna levada para a frente pela bolinha da haste, sem trocar de ferramenta](imagens/02-gesto-transformar-depois.png) |
+![O tronco escolhido com a ferramenta Transformar: a caixa tracejada, os quadradinhos, o pivô e a haste com a bolinha](imagens/01-transformar.png)
+
 
 | Onde você arrasta | O que acontece |
 |:---|:---|
@@ -606,9 +616,8 @@ clique.
 O **retângulo de seleção** não tem botão. Com **Selecionar** (`Q`) ou
 **Transformar** (`T`), arraste em área vazia:
 
-| Antes de arrastar | Depois de soltar |
-|:---:|:---:|
-| ![O herói sem nada escolhido, com a ferramenta Selecionar na mão](imagens/02-gesto-retangulo-antes.png) | ![O retângulo pegou o personagem inteiro: as linhas da Árvore acesas e Propriedades dizendo Vários itens](imagens/02-gesto-retangulo-depois.png) |
+![Com Selecionar (Q), um retângulo arrastado no vazio pegou o personagem inteiro: as linhas da Árvore acesas](imagens/01-retangulo.png)
+
 
 *Tudo o que o retângulo toca fica escolhido. O painel Propriedades passa a
 dizer **Vários itens**.*
@@ -674,7 +683,7 @@ As guias viajam dentro do arquivo, em `RECORTE_editor_state` — a parte do
 
 Aba **Exibição**, na coluna da direita.
 
-![O painel Exibição](imagens/02-exibicao.png)
+![O painel Exibição](imagens/01-exibicao.png)
 
 *Dois grupos: **Mostrar na tela** (Ver · Travar · Nome) e **A cena**.*
 
@@ -795,7 +804,7 @@ que se quer é o contrário: a caixa do soco **dentro do desenho da mão**,
 trocando por chave como a mão aberta troca com a fechada.
 
 1. Escolha o **desenho** (na Árvore, a linha dele — sem osso junto).
-2. **Base → Novo → Ponto neste slot**, ou **Caixa neste slot**.
+2. **Base → Novo → Ponto neste desenho**, ou **Caixa neste desenho**.
 3. **Segure `Alt` e arraste**, como sempre.
 
 O anexo nasce **na skin do lápis**, e não vira o que o desenho mostra. Para
@@ -965,7 +974,7 @@ programa com o mouse).
 | Eixos Local · Pai · Mundo | existe | `ui/menus.ts:828-837` |
 | Compensar aparece com Transformar, Mover, Girar, Escalar; desenhos e caixas só na base | existe | `panels/properties-model.ts:230`, `viewport/tools/compensate.ts:253` |
 | Ponto e Caixa: `Alt` + arrastar | existe | `ui/toolbar-model.ts:104-105,231-233` |
-| Ponto neste slot / Caixa neste slot | existe | `ui/menus.ts:736-748` |
+| Ponto neste desenho / Caixa neste desenho | existe | `ui/menus.ts:736-748` |
 | Máscara: Recorta até, Só estes, Inverter, Cantos, Copiar a silhueta | existe | `panels/properties-model.ts:1559-1580`, `panels/properties.ts:671-707` |
 | Máscara nasce no começo da ordem de desenho, recortando até o último | existe | `panels/tree-commands.ts:217-221,613-625` (`slots.unshift`) |
 | Imagem de referência: os quatro campos, guardada no navegador | existe | `viewport/viewport-draw.ts:397-425` |

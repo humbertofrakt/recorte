@@ -1,5 +1,7 @@
 # 10. Partículas e biblioteca
 
+Também em inglês: [English](en/10-particles-and-library.md)
+
 Escrito em 07/10/2026, na v36.5. Conferido no código, arquivo por arquivo.
 Cada seção diz o selo; a tabela do fim junta todos.
 
@@ -145,6 +147,10 @@ estrela:
 ## O painel Partículas
 
 **Janela → Partículas.** Uma linha por emissor.
+
+![O herói com Partículas → Fogo no osso torso: o emissor desenhado na cena, a aba Partículas com a linha torso_particulas, e a ficha do emissor em Propriedades](imagens/10-particulas.png)
+
+![O menu Partículas: o emissor vazio, os quatro prontos e Prender ao osso escolhido](imagens/00-menu-particulas.png)
 
 | Parte | Faz |
 |:---|:---|
@@ -437,6 +443,8 @@ fica de fora, e a base continua abrindo.
 
 ### Trazer
 
+![A janela Biblioteca de animações: o arquivo humanoide-v1, a lista das animações prontas, e os avisos dos ossos que esta base não tem](imagens/10-biblioteca.png)
+
 | Passo | Gesto |
 |:---:|:---|
 | 1 | **Animação → Animações → Biblioteca de animações…** · ou o ícone **pasta** na tira do painel Animações |
@@ -478,6 +486,19 @@ citar o nome dele.
 
 Levar e trazer animações **entre as suas bases** é outra porta: **Arquivo →
 Exportar / Importar → Animações…** ([capítulo 5](05-entidades.md)).
+
+---
+
+## O que ainda não funciona
+
+| O quê | Como é hoje |
+|:---|:---|
+| A lista explícita de quadros (`frames`) | sem campo na ficha; o arquivo que a traz abre |
+| Os outros números do emissor virarem chave | decidido para outra rodada |
+| Trilha e sub-emissor | decidido para depois |
+| Editar no programa as animações da biblioteca | o editor não as edita |
+| Mais animações prontas além das quatro | só `humanoide-v1-animacoes.bone` tem animação |
+| Prender o emissor pela Árvore, ou por `P` + clique | não confirmei: use **Partículas → Prender ao osso escolhido** |
 
 ---
 
