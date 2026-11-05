@@ -21,7 +21,7 @@ Relatório em andamento. A versão final fica no fim da noite.
 |:---:|:---:|:---:|:---:|
 | 1 a 14 | passou | passou | passou |
 
-## De ponta a ponta, com o herói do PSD (1440)
+## De ponta a ponta, com o herói do PSD (1920, 1440 e 1280: passou nas três)
 
 | Passo | Resultado |
 |:---|:---|
@@ -77,6 +77,7 @@ Relatório em andamento. A versão final fica no fim da noite.
 | F8 | Depois de trocar a imagem pela grade, o rodapé diz só "Arquivo não salvo." | Imagens (a grade) | Animando → botão direito na mão → mão fechada | — |
 | F9 | **Em 1280×720 com Detalhes aberto, a Árvore some inteira** (só a barra de botões) | Casca (a altura da coluna) | 1280 → animação → Detalhes → escolher um osso | — |
 | F10 | A lista de Animações tem ~70 px: com 10 animações, vê-se 2 | Casca (a altura da coluna direita) | 1440 → criar 10 animações | — |
+| F11 | Modo Criar vértice numa malha automática: todo clique cai a 4–6 px de um vértice e o escolhe, sem dizer nada | Cena (a ferramenta Malha) | Gerar automática no body → Criar vértice → clicar no meio | — |
 
 ## Achados pequenos que deixei como estão
 
@@ -85,6 +86,10 @@ Relatório em andamento. A versão final fica no fim da noite.
 | Colar a POSE espelhada numa animação em laço grava a mesma chave em 0, no meio e no fim | o resultado na tela é o mesmo do colar comum (chave explícita não guarda o começo, lote 68); são 2 chaves a mais, não um movimento errado |
 | Na Ordem, o clique na cabeça da pasta dobra a pasta; no fim da lista, o duplo clique para renomear pode cair noutra linha | mudar o que o clique na cabeça faz é decisão de desenho (Photoshop dobra pela seta); fica para o Humberto |
 | Seleção por caixa na folha não diz quantas chaves escolheu (o "Selecionar todas" diz) | o número aparece nos losangos acesos |
+
+## Os roteiros
+
+Em `qa-animar-roteiros/`, com um `LEIA-ME.md`. Rodam com o editor na porta 5293.
 
 ## Desvios das regras desta noite
 
