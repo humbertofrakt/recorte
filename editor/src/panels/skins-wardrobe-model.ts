@@ -241,3 +241,52 @@ export class DuplicateSkinNamed implements Command {
   }
 }
 
+
+/**
+ * **As imagens que vieram junto com a skin de fora** — diagnóstico T9.
+ *
+ * Quem escolhe `capacete-skin.bone` E `capacete.png` no mesmo seletor espera
+ * que a imagem entre junto. Ela entrava no mapa de imagens do arquivo aberto e
+ * ficava lá: a skin pedia "capacete", o atlas não tinha, e a cabeça sumia com
+ * dois avisos. Aqui se casa o que a skin pede (o `path` de cada desenho que
+ * nenhum atlas tem) com o nome do arquivo escolhido: `capacete` casa com
+ * `capacete.png`, e `elmos/capacete` também (pelo fim do caminho).
+ *
+ * Devolve os pares `{ path, key }`: `path` é o nome que a skin pede, `key` é a
+ * chave do arquivo escolhido. O que a skin pede e não veio fica de fora —
+ * quem diz isso é o carregador, imagem por imagem (regra 21).
+ */
+export function skinImagesToBring(
+  file: BoneFile, inAtlas: (name: string) => boolean, picked: readonly string[],
+): Array<{ path: string; key: string }> {
+  const pedidas = new Set<string>();
+  for (const skin of file.skins ?? []) {
+    for (const porSlot of Object.values(skin.attachments ?? {})) {
+      for (const [nome, def] of Object.entries(porSlot ?? {})) {
+        const imagem = imageOf(nome, def);
+        if (imagem !== null && !inAtlas(imagem)) pedidas.add(imagem);
+      }
+    }
+  }
+  const semExtensao = (key: string): string => key.replace(/\.[^./\\]+$/, '');
+  const fim = (caminho: string): string => caminho.split('/').pop() ?? caminho;
+  const out: Array<{ path: string; key: string }> = [];
+  for (const path of pedidas) {
+    const key = picked.find((k) => semExtensao(k) === path)
+      ?? picked.find((k) => fim(semExtensao(k)) === fim(path));
+    if (key !== undefined) out.push({ path, key });
+  }
+  return out;
+}
+
+/** A frase de quanto veio junto. Vazia quando não veio nada. */
+export function broughtImagesNotice(made: readonly string[], missing: readonly string[]): string {
+  const partes: string[] = [];
+  if (made.length > 0) {
+    partes.push(made.length === 1 ? `A imagem "${made[0]!}" entrou junto` : `${made.length} imagens entraram junto (${made.join(', ')})`);
+  }
+  if (missing.length > 0) {
+    partes.push(`${missing.length === 1 ? 'uma imagem não abriu' : `${missing.length} imagens não abriram`}: ${missing.join(', ')}`);
+  }
+  return partes.join('; ');
+}

@@ -23,7 +23,10 @@ import {
 import {
   ImportSkinCopy, buildSkinFile, importSkinCopyNotice, looseImagesIn, putBoneFile, skinFileNotice, unmetRig,
 } from '../io/export-skin.js';
-import { provisionalNames } from '../io/folder-atlas.js';
+import { ensureProvisionalMany, provisionalNames } from '../io/folder-atlas.js';
+import { addLooseFiles } from '../io/project-folder.js';
+import { findAtlasRegion } from '../../../runtime/src/index.js';
+import { broughtImagesNotice, skinImagesToBring } from './skins-wardrobe-model.js';
 import { askForm, askPick } from '../ui/dialog.js';
 import { skinsPanel } from './skins.js';
 import { RestoreBoneInSkin } from './skins-delete.js';
@@ -341,6 +344,43 @@ export async function importSkin(
   return escolhido.uri;
 }
 
+/**
+ * **As imagens que vieram junto** — diagnóstico T9. Cada uma vira imagem solta
+ * (como um PNG solto na janela: aparece na aba Imagens e o Salvar a grava na
+ * pasta) e ganha região, para a skin que a pede desenhar.
+ */
+async function bringSkinImages(
+  doc: EditorDoc, file: BoneFile, images: ReadonlyMap<string, CanvasImageSource>,
+): Promise<void> {
+  if (typeof document === 'undefined') return;
+  const pares = skinImagesToBring(file, (name) => findAtlasRegion(doc.atlases, name) !== null, [...images.keys()]);
+  if (pares.length === 0) return;
+  const arquivos: File[] = [];
+  for (const { path, key } of pares) {
+    const feito = await imageToFile(images.get(key)!, `${path}.png`);
+    if (feito !== null) arquivos.push(feito);
+  }
+  addLooseFiles(doc, arquivos);
+  const { made, missing } = await ensureProvisionalMany(doc, pares.map((p) => p.path));
+  const frase = broughtImagesNotice(made, missing);
+  if (frase !== '') doc.notice(`${frase}. A skin já desenha com ${made.length === 1 ? 'ela' : 'elas'}`);
+}
+
+/** Os pixels de volta num arquivo PNG, com o nome que a skin pede. */
+async function imageToFile(image: CanvasImageSource, name: string): Promise<File | null> {
+  const w = (image as { width?: number }).width ?? 0;
+  const h = (image as { height?: number }).height ?? 0;
+  if (!(w > 0) || !(h > 0)) return null;
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  if (ctx === null) return null;
+  ctx.drawImage(image, 0, 0);
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+  return blob === null ? null : new File([blob], name, { type: 'image/png' });
+}
+
 /** O que o rodapé diz ANTES do seletor abrir — M11 (P-decisão do Planejador). */
 export const IMPORT_SKIN_ASK = 'Escolha o arquivo da skin. Ela entra com os ossos dela';
 
@@ -360,14 +400,19 @@ export async function importSkinFromDisk(
 ): Promise<string | null> {
   doc.notice(IMPORT_SKIN_ASK);
   let escolheu = false;
+  let veio: { file: BoneFile; images: ReadonlyMap<string, CanvasImageSource> } | null = null;
   try {
     const uri = await importSkin(doc, async () => {
       const aberto = await open();
       if (aberto === null) return null;
       escolheu = true;
+      veio = { file: aberto.file, images: aberto.images ?? new Map() };
       return { uri: aberto.path, file: aberto.file };
     });
     if (!escolheu) doc.notice('Nenhum arquivo escolhido. Nada mudou');
+    // Noite de 04/11 (T9): as imagens escolhidas junto com o .bone entram.
+    const junto = veio as { file: BoneFile; images: ReadonlyMap<string, CanvasImageSource> } | null;
+    if (uri !== null && junto !== null && junto.images.size > 0) await bringSkinImages(doc, junto.file, junto.images);
     return uri;
   } catch (erro) {
     doc.notice(`Importar skin parou: ${erro instanceof Error ? erro.message : String(erro)}`);

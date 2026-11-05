@@ -2945,3 +2945,31 @@ describe('Guarda-roupa: a grade peça × skin', () => {
 });
 
 import { addSkinNamed as addSkinNamedGR } from '../src/panels/skins-actions.js';
+import { broughtImagesNotice, skinImagesToBring } from '../src/panels/skins-wardrobe-model.js';
+
+describe('Guarda-roupa: a imagem que vem junto com a skin de fora (T9)', () => {
+  const capacete = {
+    skins: [{ name: 'capacete', attachments: {
+      head: { face: { type: 'region', path: 'capacete' } },
+      hair: { hair: null, cabelo: { type: 'region', path: 'hair' } },
+      luz: { luz: { type: 'region', path: 'elmos/luz' } },
+    } }],
+  } as unknown as BoneFile;
+  const atlas = (name: string): boolean => name === 'hair';
+
+  it('casa o que a skin pede com o arquivo escolhido: pelo nome, e pelo fim do caminho', () => {
+    expect(skinImagesToBring(capacete, atlas, ['capacete.png', 'luz.png', 'outra.png']))
+      .toEqual([{ path: 'capacete', key: 'capacete.png' }, { path: 'elmos/luz', key: 'luz.png' }]);
+  });
+
+  it('o que o atlas já tem não se traz; o que não veio fica de fora (o carregador avisa)', () => {
+    expect(skinImagesToBring(capacete, atlas, ['hair.png'])).toEqual([]);
+    expect(skinImagesToBring(capacete, () => true, ['capacete.png'])).toEqual([]);
+  });
+
+  it('a frase diz o que entrou e o que não abriu', () => {
+    expect(broughtImagesNotice(['capacete'], [])).toBe('A imagem "capacete" entrou junto');
+    expect(broughtImagesNotice(['a', 'b'], ['c'])).toBe('2 imagens entraram junto (a, b); uma imagem não abriu: c');
+    expect(broughtImagesNotice([], [])).toBe('');
+  });
+});
