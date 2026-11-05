@@ -28,7 +28,7 @@ import {
   toggleRowInSelection,
 } from './tree-rows.js';
 // Lote 1 do chat D (28/09): o grupo do fim, com os eventos e os parâmetros.
-import { EVENTS_GROUP_ID, eventParameterRows, eyeNotice, foldable, newKeyItemRow, selectionKey } from './tree-rows.js';
+import { EVENTS_GROUP_ID, eventParameterRows, eyeNotice, foldable, lockNotice, newKeyItemRow, selectionKey } from './tree-rows.js';
 import { DeleteParameter } from './tree-commands.js';
 import { chooseEvent, currentEventChoice, focusEvent } from './event-key-editor.js';
 import { registerAction, runAction } from '../ui/actions.js';
@@ -1181,6 +1181,8 @@ class TreePanel implements Panel {
       const doc = this.doc;
       if (row.kind === 'bone') setBoneLocked(row.name, !own, doc);
       else setSlotLocked(row.name, !own, doc);
+      // QA da noite (04/11): o cadeado diz o que fez, como o olho.
+      doc?.notice(lockNotice(row.kind === 'bone' ? 'bone' : 'slot', row.name, !own));
     });
     return node;
   }

@@ -546,6 +546,18 @@ export function selectionKey(selection: Selection): string {
  * O rodapé do olho — I-O1 (chat I, 29/09): esconder calava, e o rodapé ficava
  * com a frase velha. **Escondido é diferente de travado**, e a frase diz isso.
  */
+/**
+ * O rodapé do cadeado — QA da noite de 04/11/2026. Travar dizia só "Arquivo
+ * não salvo.", e o olho ao lado sempre disse o que fez. **Travado é diferente
+ * de escondido**: aparece, e o clique passa.
+ */
+export function lockNotice(kind: 'bone' | 'slot', name: string, locked: boolean): string {
+  const o = kind === 'bone' ? 'O osso' : 'O desenho';
+  return locked
+    ? `${o} "${name}" está travado: aparece, mas o clique passa por ele. O cadeado de novo destrava`
+    : `${o} "${name}" está destravado: o clique pega de novo`;
+}
+
 export function eyeNotice(kind: 'bone' | 'slot', name: string, hidden: boolean): string {
   const o = kind === 'bone' ? 'O osso' : 'O desenho';
   return hidden

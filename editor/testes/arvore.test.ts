@@ -3141,3 +3141,19 @@ describe('o recuo da Árvore encolhe no fundo (QA da noite)', () => {
     expect(TR43.treeIndent(5)).toBeLessThanOrEqual(6 + 5 * 16 - 18);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): o cadeado da linha travava e o
+// rodapé dizia só "Arquivo não salvo." — o olho, ao lado, sempre disse o que
+// fez (`eyeNotice`). O cadeado ganha a frase dele, com a mesma forma.
+describe('o cadeado da Árvore diz o que fez (QA da noite)', () => {
+  it('travar diz o que muda; destravar diz que voltou', () => {
+    expect(TR43.lockNotice('slot', 'leg_front', true))
+      .toBe('O desenho "leg_front" está travado: aparece, mas o clique passa por ele. O cadeado de novo destrava');
+    expect(TR43.lockNotice('bone', 'coxa_e', false)).toBe('O osso "coxa_e" está destravado: o clique pega de novo');
+  });
+  it('a Árvore chama a frase no clique do cadeado', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const trava = fonte.slice(fonte.indexOf('private renderLock('), fonte.indexOf('private renderLock(') + 2000);
+    expect(trava).toMatch(/notice\(lockNotice\(row\.kind === 'bone' \? 'bone' : 'slot', row\.name, !own\)\)/);
+  });
+});
