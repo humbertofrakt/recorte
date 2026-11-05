@@ -40,6 +40,8 @@ Executor: `EXECUTANDO · QA arquivo`. Quem coordena: o DIRETOR.
 | D21 | A janela "Imagem exportada" mostra avisos do desenhador em inglês (`attachment "…" has no atlas region; not drawn`) | `io/export-image.ts` | a mesma exportação | sim |
 | D22 | Salvar o projeto do Spriter (91 imagens, 3 páginas de atlas): 8 s de página parada e o rodapé mudo. Agora: "Salvando: lendo as imagens do atlas, 56 de 91…", e a página responde em até 0,4 s | `io/folder-save.ts`, `io/open-save.ts`, `ui/shell-file.ts` | `exemplo/game` → bcp → Ctrl+S | sim |
 | D23 | Soltar só o `bcp.scml` (sem as imagens): 184 avisos, e o rodapé só "Importado do Spriter: bcp.bone." — sem imagem nenhuma junto, a frase das imagens nem existia; com algumas faltando, vinha depois e era cortada. Agora: "0 de 92 imagens do boneco estão na cena." primeiro | `io/import-foreign.ts`, `ui/shell-*.ts` | soltar `exemplo/game/bcp.scml` sozinho | sim |
+| D24 | DragonBones (e Spine) importado pela pasta: "0 de 1 imagens do boneco estão na cena" com corpo e mão desenhados pelo atlas; o Ctrl+S perguntava a pasta de novo; e o atlas caía também em Downloads | `io/import-foreign.ts`, `io/open-save.ts` | Importar → De outro programa → pasta com `_ske.json`, `_tex.json`, `_tex.png` → Ctrl+S | sim |
+| — | Ctrl+O com vários arquivos abria inteiro, e o rodapé dizia só "Sem mudanças por salvar."; agora diz o que abriu | `io/open-save.ts`, `ui/shell-file.ts` | Ctrl+O → `heroi.bone` + atlas + png + espada | sim |
 | — | A mesma forma, achada na varredura: abrir um projeto com manifesto e aviso punha o aviso depois da notícia | `ui/shell-file.ts` | — | sim |
 | — | Linha de comando: opção errada saía com 1 em `empacotar`, `exportar`, `exportar-imagem`, `fatiar`, `render-png` (os outros com 2); `fatiar --animacoes X` não dizia quais há | `ferramentas/*.mjs` | `npm run fatiar -- a.bone x --bobagem` | sim |
 | — | Importar PSD: com a janela de avisos aberta, o rodapé dizia "Importar PSD." | `ui/shell-file.ts`, `ui/shell-drop.ts` | Importar → PSD… | sim |
@@ -68,6 +70,10 @@ Cada conserto: um commit, com teste no arquivo da parte, visto **vermelho antes*
 | Biblioteca | exportar as 3 animações → importar noutra base (PSD com ossos): a janela lista os 14 nomes que não batem; a biblioteca de fábrica abre |
 | Soltar pasta na cena | `mao` abre como projeto ("pelo arrasto: 13 imagens"); `game` reabre o `.bone` dela (e, depois do D14, desenha) |
 | Spine pela tela | a pasta com `.json` + `.atlas` + `.png`: entra inteiro, "Nada se perdeu" |
+| DragonBones pela tela | a pasta com `_ske.json` + `_tex.json` + `_tex.png` (montada da amostra dos testes): entra; Salvar grava na pasta; valida e desenha |
+| Folha do Aseprite | `fogo.png` + `fogo.json` soltos na cena: 4 quadros, a etiqueta vira a animação "queimar"; os quadros trocam a cada 100 ms no `render-png` |
+| Soltar arquivos na cena | `.psd`, `.bonez`, `.boneb`, `.scml` — cada um pela sua porta, perguntando antes de trocar o que está aberto |
+| Configurações do projeto | `fps` 24 grava no arquivo, que valida |
 | Repetir a última exportação | `Ctrl+Shift+E` repete o GIF sem perguntar |
 | Fazer a skin de uma pasta | a subpasta `inverno/` vira a skin "inverno" (2 desenhos); Salvar + `validar` OK; `fatiar --peles inverno` OK |
 | glTF | `heroi.glb`, 77.640 bytes, e a lista do que o glTF não leva |
