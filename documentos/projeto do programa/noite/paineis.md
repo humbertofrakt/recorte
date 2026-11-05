@@ -189,7 +189,7 @@ desenho, e mexem na Linha do tempo (de outro chat esta noite):
 
 Decisão do Humberto ou do Diretor.
 
-## 05/11, 01:40 — as colunas descem até o rodapé (saída a)
+## 05/11, 01:25 — as colunas descem até o rodapé (saída a)
 
 O Diretor escolheu a **saída (a)**: as colunas vão até o rodapé, e a linha do
 tempo fica só debaixo da cena. É como o Spriter e o After Effects fazem.
@@ -202,7 +202,7 @@ tempo fica só debaixo da cena. É como o Spriter e o After Effects fazem.
 | O chão da coluna com os Detalhes abertos (K1b) ficou **desligado**, não apagado: a faixa não tira mais altura da coluna | `COLUNAS_ATE_O_RODAPE` |
 | A linha do tocador, agora na largura da cena, **quebra** em vez de rolar de lado ("Chavear" saía cortado em 1280). Ela continua com as mesmas duas linhas: o que não cabe desce ao lado do Mais e do Detalhes | regra em `shell.css`; a Linha do tempo por dentro não mudou |
 
-**Os números (05/11, 01:35 UTC):**
+**Os números (05/11, 01:20 UTC):**
 
 | Medição | Antes | Depois |
 |:---|:---:|:---:|
