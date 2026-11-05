@@ -103,4 +103,16 @@ A forma: *gravo o foco no arquivo que ABRI, e não no arquivo do FOCO.*
 | Testes desta parte | `editor/testes/reaproveitar.test.ts`: 19 |
 | Prova de pessoa | `prova.cjs`: nenhum passo travou |
 
+## 9. A prova final achou (05/11, 03:40), e foi consertado
+
+**O caso:** na Oficina, cavaleiro → Animações de outro boneco… → heroi → Usar: **82 avisos (47 iguais)**, e as que entravam não ficavam à vista.
+
+| Causa (pela forma) | Conserto |
+|:---|:---|
+| **Liguei a um boneco INTEIRO como se fosse um arquivo de animações.** A janela começava em Ligadas; ligar ao herói renomeava `quadril` → `hips` (o andar do Esqueleto padrão, que o cavaleiro já tocava, parava) e trazia as linhas dos slots, regras e eventos do herói que o cavaleiro não tem — uma por aviso | um arquivo solto começa em **Cópia**; e Ligadas é **recusada**, dizendo por quê, quando pararia o que o boneco já toca |
+| As linhas sem onde cair viravam um aviso cada | saem da composição, e viram **uma frase por arquivo**: *"heroi.bone: 36 linhas… ficam de fora — este boneco não tem slot "head", …"* |
+| A que entrava não ficava à vista | a primeira que entrou fica **aberta e escolhida** na lista, e rola até ela |
+
+Teste visto vermelho antes (82 avisos a mais → 1). Prova da oficina: passo (5), só clicando, os avisos não mudam e a animação nova fica escolhida e à vista.
+
 FIM

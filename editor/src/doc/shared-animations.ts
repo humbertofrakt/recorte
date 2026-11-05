@@ -73,6 +73,8 @@ export interface SharedComposition {
   origins: Map<string, string>;
   /** Os uris citados que não se achou. */
   missing: string[];
+  /** Por arquivo: as linhas que não têm onde cair neste boneco e saíram. */
+  dropped: Map<string, string[]>;
   /** Os avisos da composição (§2.8), com o código na frente. */
   warnings: string[];
 }
@@ -84,7 +86,7 @@ export interface SharedComposition {
 export function composeShared(file: BoneFile): SharedComposition {
   const locais = (file.animations ?? []) as unknown[];
   const uris = sharedUrisOf(file);
-  const vazio: SharedComposition = { animations: locais, origins: new Map(), missing: [], warnings: [] };
+  const vazio: SharedComposition = { animations: locais, origins: new Map(), missing: [], warnings: [], dropped: new Map() };
   if (uris.length === 0) return vazio;
   const host = JSON.parse(JSON.stringify(file)) as Record<string, unknown>;
   const assets = { ...((host['assets'] as Record<string, unknown> | undefined) ?? {}) };
@@ -101,17 +103,110 @@ export function composeShared(file: BoneFile): SharedComposition {
     for (const a of (copia['animations'] as unknown[] | undefined) ?? []) porArquivo.set(a, entry);
     return copia;
   });
-  const animations = ((composed.tree as Record<string, unknown>)['animations'] as unknown[] | undefined) ?? [];
+  const todas = ((composed.tree as Record<string, unknown>)['animations'] as unknown[] | undefined) ?? [];
   const origins = new Map<string, string>();
   const nomesLocais = new Set(locais.map((a) => (a as { name?: unknown }).name));
-  for (const a of animations) {
+  for (const a of todas) {
     const nome = (a as { name?: unknown }).name;
     if (typeof nome !== 'string' || nomesLocais.has(nome)) continue;
     // A composição pode ter copiado o objeto (o ajuste de tamanho): o uri vem
     // pelo objeto quando dá, e pela ordem dos arquivos quando não.
     origins.set(nome, porArquivo.get(a) ?? originByName(nome, uris));
   }
-  return { animations, origins, missing, warnings: [...composed.warnings] };
+  // A prova final (05/11): o cavaleiro ligado ao herói INTEIRO ganhava 82
+  // avisos — uma linha por slot, regra e evento do herói que o cavaleiro não
+  // tem. O leitor ignora essas linhas (§4.7, timeline órfã); aqui elas saem
+  // antes, e o porquê vira UMA frase por arquivo (`dropped`).
+  const alvos = hostTargets(composed.tree as Record<string, unknown>);
+  const dropped = new Map<string, string[]>();
+  const animations = todas.map((a) => {
+    const nome = (a as { name?: unknown }).name;
+    const uri = typeof nome === 'string' ? origins.get(nome) : undefined;
+    if (uri === undefined) return a;
+    const fora = dropped.get(uri) ?? [];
+    dropped.set(uri, fora);
+    return keepWhatLands(a, alvos, fora);
+  });
+  return { animations, origins, missing, warnings: [...composed.warnings], dropped };
+}
+
+/** Os nomes que este boneco tem, por tipo: onde uma linha de fora pode cair. */
+interface HostTargets { bones: Set<string>; slots: Set<string>; constraints: Set<string>; events: Set<string>; named: Set<string> }
+
+function namesOf(list: unknown): Set<string> {
+  const out = new Set<string>();
+  if (!Array.isArray(list)) return out;
+  for (const item of list) {
+    const n = typeof item === 'string' ? item : (item as { name?: unknown })?.name;
+    if (typeof n === 'string') out.add(n);
+  }
+  return out;
+}
+
+function hostTargets(tree: Record<string, unknown>): HostTargets {
+  return {
+    bones: namesOf(tree['bones']), slots: namesOf(tree['slots']), constraints: namesOf(tree['constraints']),
+    events: namesOf(tree['events']),
+    named: new Set([...namesOf(tree['parameters']), ...namesOf(tree['morphs']), ...namesOf(tree['variables'])]),
+  };
+}
+
+const SLOT_TYPES = new Set(['slot', 'deform', 'weights', 'sequence', 'nested']);
+const PALAVRA: Record<string, string> = { constraint: 'regra', parameter: 'parâmetro', morph: 'forma', variable: 'variável' };
+
+/** A animação só com as linhas que têm onde cair neste boneco; o resto vai para `fora`. */
+function keepWhatLands(animation: unknown, h: HostTargets, fora: string[]): unknown {
+  const a = animation as { timelines?: unknown[] };
+  if (!Array.isArray(a.timelines)) return animation;
+  const anota = (t: string): void => { fora.push(t); };
+  const timelines = a.timelines.filter((raw) => {
+    const tl = raw as { type?: unknown; target?: unknown; keys?: unknown[] };
+    const tipo = typeof tl.type === 'string' ? tl.type : '';
+    const alvo = typeof tl.target === 'string' ? tl.target : '';
+    if (tipo === 'bone') { if (h.bones.has(alvo)) return true; anota(`osso "${alvo}"`); return false; }
+    if (SLOT_TYPES.has(tipo)) { if (h.slots.has(alvo)) return true; anota(`slot "${alvo}"`); return false; }
+    if (tipo === 'constraint') { if (h.constraints.has(alvo)) return true; anota(`regra "${alvo}"`); return false; }
+    if (tipo in PALAVRA) { if (h.named.has(alvo)) return true; anota(`${PALAVRA[tipo]} "${alvo}"`); return false; }
+    if (tipo === 'event' && Array.isArray(tl.keys)) {
+      const keys = tl.keys.filter((k) => {
+        const ev = String((k as { event?: unknown }).event);
+        if (h.events.has(ev)) return true;
+        anota(`evento "${ev}"`);
+        return false;
+      });
+      return keys.length > 0;
+    }
+    if (tipo === 'drawOrder' && Array.isArray(tl.keys)) {
+      for (const k of tl.keys) {
+        const v = (k as { value?: unknown }).value;
+        if (!Array.isArray(v)) continue;
+        for (const o of v) if (!h.slots.has(String((o as { slot?: unknown }).slot))) anota(`slot "${String((o as { slot?: unknown }).slot)}"`);
+        (k as { value: unknown[] }).value = v.filter((o) => h.slots.has(String((o as { slot?: unknown }).slot)));
+      }
+      return true;
+    }
+    return true;
+  });
+  return { ...a, timelines };
+}
+
+/**
+ * Os avisos das compartilhadas, **um por arquivo**: quantas linhas ficaram de
+ * fora e de quê. Vai para a barra de avisos no lugar das dezenas de avisos de
+ * linha órfã (regra 21: dizer, uma vez, com o porquê).
+ */
+export function sharedWarnings(file: BoneFile): string[] {
+  if (sharedUrisOf(file).length === 0) return [];
+  let c: SharedComposition;
+  try { c = composeShared(file); } catch { return []; }
+  const out: string[] = [];
+  for (const [uri, fora] of c.dropped) {
+    if (fora.length === 0) continue;
+    const tipos = [...new Set(fora)];
+    out.push(`${uri}: ${fora.length} linhas das animações de fora ficam de fora — este boneco não tem `
+      + `${tipos.slice(0, 4).join(', ')}${tipos.length > 4 ? ` e mais ${tipos.length - 4}` : ''}. O que combina toca`);
+  }
+  return out;
 }
 
 /** O primeiro arquivo da lista que traz uma animação com esse nome. */

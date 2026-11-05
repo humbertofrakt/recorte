@@ -20,7 +20,7 @@ import { chooseBone, matchBones, matchTitle, renamesFor } from '../anim/bone-mat
 import { readEditorState } from '../contract.js';
 import type { BoneMatch } from '../anim/bone-match.js';
 import { el } from '../ui/dom.js';
-import { initialMatch, PADRAO_LABEL } from './reuse-model.js';
+import { initialMatch, linkBreaks, PADRAO_LABEL } from './reuse-model.js';
 import type { ReuseSource } from './reuse-model.js';
 
 /** O que a janela devolve. */
@@ -64,7 +64,13 @@ export function reuseWindow(options: ReuseWindowOptions): Promise<ReuseChoice | 
   let atual = Math.min(Math.max(options.initial ?? 0, 0), Math.max(sources.length - 1, 0));
   let nomes: string[] = [];
   let match: BoneMatch | null = null;
-  let modo: 'ligadas' | 'copia' = 'ligadas';
+  /**
+   * O modo de começo, pela fonte. Um ARQUIVO solto (o herói, um boneco
+   * inteiro) começa em Cópia: ligar a ele renomearia os ossos daqui e
+   * traria as linhas dos desenhos de lá (a prova final, 05/11: 82 avisos).
+   */
+  const modoDe = (s: ReuseSource | undefined): 'ligadas' | 'copia' => (s?.kind === 'arquivo' ? 'copia' : 'ligadas');
+  let modo: 'ligadas' | 'copia' = modoDe(sources[atual]);
   const daqui = (host.bones ?? []).map((b) => b.name);
 
   const box = el('div', 'dialog-box dialog-box-larga reaproveitar');
@@ -139,7 +145,7 @@ export function reuseWindow(options: ReuseWindowOptions): Promise<ReuseChoice | 
         s.kind === 'padrao' ? 'As quatro que vêm com o programa, feitas para o Esqueleto padrão (humanoide-v1)'
           : s.kind === 'base' ? 'As animações de outra base deste projeto. Ligadas, a base de lá vira a dona: mudou lá, muda aqui'
             : `O arquivo ${s.uri}`,
-        () => { atual = i; nomes = [...s.animations]; refazer(); }));
+        () => { atual = i; nomes = [...s.animations]; modo = modoDe(s); refazer(); }));
     });
     const arquivo = el('button', 'reaproveitar-arquivo', 'Um arquivo .bone…') as HTMLButtonElement;
     arquivo.type = 'button';
@@ -150,6 +156,7 @@ export function reuseWindow(options: ReuseWindowOptions): Promise<ReuseChoice | 
         sources.push(s);
         atual = sources.length - 1;
         nomes = [...s.animations];
+        modo = modoDe(s);
         desenharFontes();
         refazer();
       });
@@ -239,7 +246,11 @@ export function reuseWindow(options: ReuseWindowOptions): Promise<ReuseChoice | 
         'As animações entram neste boneco, com os nomes daqui. Mexer nelas não muda o original',
         () => { modo = 'copia'; desenharComo(); }),
     );
-    if (modo === 'ligadas') {
+    const quebra = modo === 'ligadas' ? linkBreaks(host, match) : [];
+    if (quebra.length > 0) {
+      aviso.textContent = `Ligadas não dá aqui: este boneco já toca ligado ${quebra.join(', ')}, e mudar os nomes `
+        + 'dos ossos o pararia. Escolha Cópia.';
+    } else if (modo === 'ligadas') {
       aviso.textContent = conflicts.length > 0
         ? `Ligadas não dá: já há osso chamado ${conflicts.join(', ')} fora da tabela. Combine esse osso, ou escolha Cópia.`
         : mudam;
@@ -247,7 +258,7 @@ export function reuseWindow(options: ReuseWindowOptions): Promise<ReuseChoice | 
       aviso.textContent = `As animações entram em ${options.hostName} com os nomes daqui. `
         + (match.matched < match.total ? `${match.total - match.matched} osso(s) sem par ficam de fora.` : '');
     }
-    go.disabled = nomes.length === 0 || match.matched === 0 || (modo === 'ligadas' && conflicts.length > 0);
+    go.disabled = nomes.length === 0 || match.matched === 0 || (modo === 'ligadas' && (conflicts.length > 0 || quebra.length > 0));
   };
 
   const refazer = (redesenharQuais = true): void => {
@@ -262,6 +273,8 @@ export function reuseWindow(options: ReuseWindowOptions): Promise<ReuseChoice | 
     match = options.onlyBones
       ? matchBones(options.bones ?? [], daqui, readEditorState(host).mapaDeOssos?.[s.uri] ?? {})
       : initialMatch(host, s, nomes);
+    // Fonte nova: se Ligadas pararia o que este boneco já toca, começa em Cópia.
+    if (redesenharQuais && !options.onlyBones && modo === 'ligadas' && linkBreaks(host, match).length > 0) modo = 'copia';
     desenharTabela();
     desenharComo();
   };
