@@ -2024,3 +2024,34 @@ describe('o rodapé fala português quando o arquivo abre com aviso', () => {
     }
   });
 });
+
+describe('o rodapé apertado: o essencial antes dos dois-pontos (prova de pessoa, 05/11/2026)', () => {
+  it('nenhuma frase de rodapé da casca e da cena fica com UMA palavra antes dos dois-pontos', () => {
+    // O rodapé encolhe a frase até caber (`ui/shell-status.ts`): a inteira, a
+    // primeira frase, ou o que vem antes dos dois-pontos. "Malha: escolha um
+    // desenho…" aparecia como só "Malha", e "Recorte: 167 × 283 px…" como só
+    // "Recorte". Esta régua lê o código: a parte de antes dos dois-pontos de
+    // um `notice` escrito ali tem de ter pelo menos duas palavras.
+    const raiz = resolve(__dirname, '../src');
+    const ruins: string[] = [];
+    for (const pasta of ['ui', 'viewport']) {
+      const anda = (d: string): void => {
+        for (const f of lerPasta(d)) {
+          const p = resolve(d, f);
+          if (estado(p).isDirectory()) { anda(p); continue; }
+          if (!p.endsWith('.ts')) continue;
+          const fonte = readFileSync(p, 'utf8');
+          for (const m of fonte.matchAll(/(?:notice|statusState\.textContent\s*=)\s*\(?\s*(['`])((?:(?!\1)[^\\\n]|\\.)*)\1/g)) {
+            const frase = m[2]!;
+            if (!frase.includes(':')) continue;
+            const antes = frase.split(':')[0]!.replace(/\$\{[^}]*\}/g, 'X').trim();
+            if (antes.split(/\s+/).length <= 1) ruins.push(`${p.slice(raiz.length + 1)}: "${frase.slice(0, 60)}"`);
+          }
+        }
+      };
+      anda(resolve(raiz, pasta));
+    }
+    // Os que sobram dizem um título e a mensagem dele; quem chama escolhe o título.
+    expect(ruins.filter((r) => !r.includes('${title}: ${message}'))).toEqual([]);
+  });
+});

@@ -1519,7 +1519,7 @@ export class ViewportPanel implements Panel {
           this.shapeDrag = { shape: forma, handle: alca };
           // Conserto 2: o arrasto não se junta com o que se digitou antes.
           doc.endMerge?.();
-          doc.notice(`${alca.label}: arraste para mudar`);
+          doc.notice(`${alca.label} — arraste para mudar`);
           this.needsDraw = true;
           return;
         }
@@ -1579,10 +1579,10 @@ export class ViewportPanel implements Panel {
         let dica: string | null = null;
         for (const forma of selectedEmitterShapes(this.doc, EMITTER_MARK_PIXELS / this.camera.zoom)) {
           const alca = shapeHandleAt(forma.guide, at.x, at.y, raio);
-          if (alca !== null) { dica = `${alca.label}: arraste para mudar`; break; }
+          if (alca !== null) { dica = `${alca.label} — arraste para mudar`; break; }
         }
         if (dica !== null) this.canvas.title = dica;
-        else if (this.canvas.title.endsWith(': arraste para mudar')) this.canvas.title = '';
+        else if (this.canvas.title.endsWith(' — arraste para mudar')) this.canvas.title = '';
         // Segunda conferência, defeito 3: parado em cima, o RODAPÉ também diz
         // — a dica do navegador demora e às vezes nem vem. Uma vez por alça.
         if (dica !== this.dicaDaAlca) {
@@ -1708,7 +1708,7 @@ export class ViewportPanel implements Panel {
     doc.endMerge?.();
     if (!drag.moved) {
       // Clique parado: nada muda. Fora do retângulo, ensina o traço.
-      if (drag.zone === 'tracar') doc.notice('Recorte: arraste de um canto ao outro para traçar. Enter ou Esc termina');
+      if (drag.zone === 'tracar') doc.notice('Arraste de um canto ao outro para traçar o recorte. Enter ou Esc termina');
       return;
     }
     const box = cropInFile(doc.file, drag.animation);
@@ -1881,7 +1881,7 @@ export class ViewportPanel implements Panel {
         this.cropDrag = null;
         this.cropDragSays = null;
         this.pointerDown = false;
-        doc.notice('Recorte: arrasto desfeito');
+        doc.notice('Arrasto do recorte desfeito');
       } else {
         setCropEditing(false);
         doc.notice(this.cropDoneNotice(doc));

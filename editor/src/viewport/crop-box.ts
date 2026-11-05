@@ -135,5 +135,5 @@ function write(doc: EditorDoc, animation: string, key: keyof CropBox, valor: num
   if (box === null || box[key] === valor) return;
   doc.run(new SetCrop(animation, { ...box, [key]: valor }, `campo:${key}`));
   const campo = CROP_FIELDS.find((c) => c.key === key);
-  doc.notice(`${campo?.nome ?? 'Recorte'}: ${valor} px`);
+  doc.notice(`${campo?.nome ?? 'Recorte'} ${valor} px`);
 }
