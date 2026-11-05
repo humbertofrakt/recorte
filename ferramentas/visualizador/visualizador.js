@@ -6,7 +6,8 @@
  * importa o runtime ja compilado em ./dist (veja o README).
  */
 
-import { loadSkeletonFromText, loadAtlasFromText } from './dist/loader.js';
+import { loadAtlasFromText } from './dist/loader.js';
+import { loadSkeletonFile } from './dist/file.js';
 import { Skeleton } from './dist/skeleton.js';
 import { pose } from './dist/animation.js';
 import { CanvasRenderer } from './dist/render/canvas.js';
@@ -67,7 +68,27 @@ function imagem(url) {
 async function carregar() {
   const [textoAtlas, textoBone] = await Promise.all([texto(ARQUIVO_ATLAS), texto(ARQUIVO_BONE)]);
   const atlas = loadAtlasFromText(textoAtlas);
-  const dados = loadSkeletonFromText(textoBone, { atlases: [atlas] });
+  // As entidades (spec 7.11) moram em arquivos vizinhos — a espada do herói é
+  // o `espada.bone`. Buscam-se ANTES, e o leitor as pede pelo nome.
+  // A folha de imagens também: o arquivo de uma entidade a pede pelo nome.
+  const vizinhos = new Map([[ARQUIVO_ATLAS.pathname.split('/').pop(), new TextEncoder().encode(textoAtlas)]]);
+  const doc = JSON.parse(textoBone.replace(/^\uFEFF/, ''));
+  const uris = new Set();
+  for (const pele of doc.skins ?? []) {
+    for (const porLugar of Object.values(pele.attachments ?? {})) {
+      for (const anexo of Object.values(porLugar ?? {})) {
+        if (anexo !== null && anexo.type === 'skeleton' && typeof anexo.uri === 'string') uris.add(anexo.uri);
+      }
+    }
+  }
+  await Promise.all([...uris].map(async (uri) => {
+    const resposta = await fetch(new URL(uri, ARQUIVO_BONE));
+    if (resposta.ok) vizinhos.set(uri, new Uint8Array(await resposta.arrayBuffer()));
+  }));
+  const { data: dados } = loadSkeletonFile(new TextEncoder().encode(textoBone), {
+    atlases: [atlas],
+    files: (caminho) => vizinhos.get(caminho) ?? null,
+  });
 
   // Cada página vira uma imagem, resolvida em relação ao arquivo do atlas.
   const imagens = new Map();
@@ -86,12 +107,12 @@ async function carregar() {
   estado.renderizador = renderizador;
 
   for (const aviso of dados.warnings) anotarAviso(`${aviso.pointer}: ${aviso.message}`);
-  for (const falta of dados.missingImages) anotarAviso(`imagem "${falta}" não está no atlas`);
+  for (const falta of dados.missingImages) anotarAviso(`imagem "${falta}" não está na folha de imagens`);
 
   montarListaAnimacoes(dados.animations);
   escolherAnimacao(dados.animations[0] ?? null);
   enquadrar();
-  recado.textContent = `${dados.meta.name} · ${dados.bones.length} ossos · ${dados.slots.length} slots · ${dados.animations.length} animações`;
+  recado.textContent = `${dados.meta.name} · ${dados.bones.length} ossos · ${dados.slots.length} desenhos · ${dados.animations.length} animações`;
 }
 
 const avisosVistos = new Set();

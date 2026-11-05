@@ -192,7 +192,7 @@ async function conferir(arquivos) {
     for (const nome of pacote.manifest.atlases ?? []) {
       const bytesAtlas = pacote.read(nome)
       if (bytesAtlas === undefined) {
-        problemas.push({ gravidade: 'aviso', texto: `O pacote lista o atlas "${nome}" e não traz o arquivo.`, ponteiro: '/atlases', regra: '2.9', arquivo: 'manifest.json', linha: null })
+        problemas.push({ gravidade: 'aviso', texto: `O pacote lista a folha de imagens "${nome}" e não traz o arquivo.`, ponteiro: '/atlases', regra: '2.9', arquivo: 'manifest.json', linha: null })
         continue
       }
       const r = comTexto(decodificador.decode(bytesAtlas), 'atlas', nome)
@@ -499,7 +499,7 @@ async function desenharArquivo(principal, atlasesSoltos, imagensSoltas) {
         try { atlases.push(loadAtlas(parseBoneText(decodificador.decode(bytes)))) } catch { /* já avisado */ }
       }
       const bytesMain = pacote.read(pacote.mainName)
-      if (bytesMain === undefined) { pararDesenho('O pacote não traz o esqueleto principal.'); return }
+      if (bytesMain === undefined) { pararDesenho('O pacote não traz o boneco principal.'); return }
       const arvore = bytesMain[0] === 0x89 && bytesMain[1] === 0x42
         ? readBoneb(bytesMain)
         : parseBoneText(decodificador.decode(bytesMain))
@@ -509,7 +509,7 @@ async function desenharArquivo(principal, atlasesSoltos, imagensSoltas) {
     } else if (principal.tipo === 'esqueleto') {
       dados = loadSkeletonData(parseBoneText(decodificador.decode(principal.bytes)), { atlases })
     } else {
-      pararDesenho('Este arquivo não é um esqueleto, então não há nada para desenhar. Solte o .bone junto com ele.')
+      pararDesenho('Este arquivo não é um boneco, então não há nada para desenhar. Solte o .bone junto com ele.')
       return
     }
 
@@ -538,17 +538,17 @@ async function desenharArquivo(principal, atlasesSoltos, imagensSoltas) {
 
     if (imagens.size === 0) {
       avisos.push(atlases.length === 0
-        ? 'Sem atlas: aparecem só os ossos. Solte o .atlas.json e o .png junto para ver o desenho.'
-        : 'Sem as imagens do atlas: aparecem só os ossos. Solte o .png junto.')
+        ? 'Sem a folha de imagens: aparecem só os ossos. Solte o .atlas.json e o .png junto para ver o desenho.'
+        : 'Sem as imagens da folha: aparecem só os ossos. Solte o .png junto.')
     }
-    for (const falta of dados.missingImages.slice(0, 3)) avisos.push(`A região "${falta}" não está no atlas.`)
+    for (const falta of dados.missingImages.slice(0, 3)) avisos.push(`A imagem "${falta}" não está na folha de imagens.`)
     recadoDesenho.textContent = avisos.length > 0
       ? avisos.join(' ')
-      : `${dados.bones.length} ossos, ${dados.slots.length} slots, ${dados.animations.length} animações.`
+      : `${dados.bones.length} ossos, ${dados.slots.length} desenhos, ${dados.animations.length} animações.`
   } catch (erro) {
     // The loader speaks English and speaks to programmers. The page does not
     // repeat it: the reason is already spelled out in the list of problems.
-    pararDesenho('Sem desenho: o leitor não conseguiu montar o esqueleto. Veja a lista de problemas.')
+    pararDesenho('Sem desenho: o leitor não conseguiu montar o boneco. Veja a lista de problemas.')
     console.warn('Recorte:', mensagem(erro))
   }
 }
