@@ -38,6 +38,7 @@ Executor: `EXECUTANDO · QA arquivo`. Quem coordena: o DIRETOR.
 | D19 | Rascunho recuperado (sem imagens) → Salvar → Escolher a pasta → "Faltam 2 imagens", que **estão** na pasta recém-escolhida. E o rodapé do Recuperar não dizia como trazer as imagens | `ui/shell-file.ts`, `main.ts` | mexer, recarregar, Recuperar, Salvar | sim |
 | D20 | Exportar GIF do projeto do Spriter (30 quadros de 2837×1197): a página fica **64 s sem responder**, o Andamento parado. Agora responde em até 1,9 s, o Andamento anda, e o arquivo sai com os mesmos bytes | `ferramentas/src/exportar/quadros.ts`, `io/export-image.ts` | `exemplo/game` → bcp → Exportar → GIF | sim |
 | D21 | A janela "Imagem exportada" mostra avisos do desenhador em inglês (`attachment "…" has no atlas region; not drawn`) | `io/export-image.ts` | a mesma exportação | sim |
+| D22 | Salvar o projeto do Spriter (91 imagens, 3 páginas de atlas): 8 s de página parada e o rodapé mudo. Agora: "Salvando: lendo as imagens do atlas, 56 de 91…", e a página responde em até 0,4 s | `io/folder-save.ts`, `io/open-save.ts`, `ui/shell-file.ts` | `exemplo/game` → bcp → Ctrl+S | sim |
 | — | Linha de comando: opção errada saía com 1 em `empacotar`, `exportar`, `exportar-imagem`, `fatiar`, `render-png` (os outros com 2); `fatiar --animacoes X` não dizia quais há | `ferramentas/*.mjs` | `npm run fatiar -- a.bone x --bobagem` | sim |
 | — | Importar PSD: com a janela de avisos aberta, o rodapé dizia "Importar PSD." | `ui/shell-file.ts`, `ui/shell-drop.ts` | Importar → PSD… | sim |
 
@@ -119,11 +120,11 @@ Do doc `89`, nada disto se prova num Chrome sem janela:
 
 ## Fotos
 
-## A régua, na última medida (05/11, ~01h10 pelo relógio da máquina)
+## A régua, na última medida (05/11, 01h28 pelo relógio da máquina, casa parada)
 
 | Medida | Resultado |
 |:---|:---|
-| `npx vitest run` | 5.819 verdes (eram 5.774 na partida), 1 vermelho: o conhecido do manual (`ajuda.test.ts`) |
+| `npx vitest run` | 5.828 verdes (eram 5.774 na partida), 1 vermelho: o conhecido do manual (`ajuda.test.ts`) |
 | `npx tsc --noEmit -p editor/tsconfig.json` | limpo |
 | `node ferramentas/conformidade.mjs` | 120 de 120 |
 
