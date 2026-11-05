@@ -414,7 +414,7 @@ export async function save(shell: Shell, saveAs: boolean): Promise<void> {
       // Lote 62: o que o Salvar fez com o atlas da pasta, ou por que baixou.
       const nota = lastSaveNote();
       const extra = nota !== null ? ` ${nota}.`
-        : atlasFileText(shell.doc) === null ? '' : ' Atlas e páginas gravados junto.';
+        : atlasFileText(shell.doc) === null ? '' : ' A folha de imagens (atlas e páginas) foi gravada junto.';
       shell.statusState.textContent = `Salvo em ${name}.${extra}`;
     }
   } catch (error) {
@@ -526,7 +526,7 @@ export async function deliverOneBody(shell: Shell): Promise<void> {
     await tellUser({
       title: 'Base entregue',
       lead: result.atlas === null
-        ? `Saiu ${result.name}, sozinho. Não havia imagem da pasta para fatiar: o atlas que ele já citava vale.`
+        ? `Saiu ${result.name}, sozinho. Não havia imagem da pasta para fatiar: vale a folha de imagens (atlas) que ele já citava.`
         : `Saíram ${result.name} e ${result.atlas}, com ${result.images} ${result.images === 1 ? 'imagem' : 'imagens'} — só as que ESTA base usa.`,
       // Rodada 45, lote 4: sem atlas novo, a frase de cima já diz o aviso de baixo.
       lines: result.atlas === null ? result.warnings.filter((aviso) => !aviso.startsWith('As imagens desta base não vieram da pasta')) : result.warnings,

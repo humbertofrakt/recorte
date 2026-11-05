@@ -369,8 +369,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
 /** Quando uma ação de arranque fica cinza. As outras dizem no próprio menu. */
 const GREY_WHEN: Readonly<Record<string, string>> = Object.freeze({
   duplicar: 'sem nada escolhido que se duplique',
-  'novo-ponto-no-slot': 'sem um slot escolhido',
-  'novo-caixa-no-slot': 'sem um slot escolhido',
+  'novo-ponto-no-slot': 'sem um desenho escolhido',
+  'novo-caixa-no-slot': 'sem um desenho escolhido',
   apagar: 'sem nada escolhido, ou só a raiz',
   'limpar-slots-vazios': 'sem nenhum desenho vazio no arquivo',
   'subir-ordem': 'sem desenho escolhido',

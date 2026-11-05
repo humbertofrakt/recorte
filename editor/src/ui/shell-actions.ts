@@ -315,7 +315,7 @@ export function showPanel(shell: Shell, id: string): void {
 export async function replaceNames(shell: Shell): Promise<void> {
   const answer = await askForm({
     title: 'Substituir nomes',
-    lead: 'Troca um pedaço do nome em ossos, slots e regras — e em tudo o que '
+    lead: 'Troca um pedaço do nome em ossos, desenhos (slots) e regras — e em tudo o que '
       + 'os cita, inclusive nas chaves.',
     fields: [
       { id: 'de', label: 'Trocar', hint: 'O pedaço a procurar. Exemplo: _esq' },
@@ -609,7 +609,7 @@ export function selectAll(shell: Shell): void {
  */
 export function newImageInSlot(shell: Shell): void {
   shell.showPanel('imagens');
-  shell.doc.notice('Arraste a imagem do painel Imagens para a cena: o slot nasce no osso escolhido');
+  shell.doc.notice('Arraste a imagem do painel Imagens para a cena: o desenho nasce no osso escolhido');
   queueMicrotask(() => {
     const campo = shell.root?.querySelector('.imagens-busca input');
     if (campo instanceof HTMLInputElement) campo.focus();
@@ -668,7 +668,7 @@ export async function pasteBody(shell: Shell): Promise<void> {
       lead: 'Colar base aqui troca a base da animação dali em diante (o homem vira lobisomem). '
         + 'Para isso o projeto precisa de mais de uma base:',
       lines: [
-        'Abra uma pasta com manifest.json que liste as bases em skeletons (Arquivo → Abrir pasta do projeto…).',
+        'Abra a pasta de um projeto que tenha mais de uma base (Arquivo → Abrir pasta do projeto…). Quem lista as bases é o manifest.json da pasta.',
         'Cada base é um .bone ao lado do outro, na raiz da pasta.',
       ],
     });

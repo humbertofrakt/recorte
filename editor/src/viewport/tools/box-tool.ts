@@ -104,7 +104,7 @@ class BoxTool implements Tool {
     if (target.kind === 'slot') {
       const inSlot = new AddAttachmentToSlot(
         target.slot, editableSkin(corpoDe(doc).file, visibleSkinsOf(doc)), `${target.slot}_caixa`,
-        boxAttachment(boxVertices(a.x, a.y, b.x, b.y)), 'Nova caixa no slot',
+        boxAttachment(boxVertices(a.x, a.y, b.x, b.y)), 'Nova caixa no desenho',
       );
       corpoDe(doc).run(inSlot);
       doc.select({

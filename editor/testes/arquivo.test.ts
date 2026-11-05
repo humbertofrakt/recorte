@@ -2111,7 +2111,7 @@ describe('rodada 45, lote 4: abrir, soltar e voltar falam claro', () => {
       pointer: null, target: null, fix: null,
     });
     const resumo = resumoDasImagens(['hair', 'body', 'face', 'hair'].map(row));
-    expect(resumo).toContain('3 imagens não estão em atlas nenhum');
+    expect(resumo).toContain('3 imagens não estão em folha de imagens nenhuma (atlas)');
     expect(resumo).toContain('hair, body, face.');
     expect(resumoDasImagens([row('hair')])).toBeNull();
   });
@@ -2264,7 +2264,7 @@ describe('rodada 45, lote 6: os quatro da prova final (doc 78)', () => {
   it('(c) as linhas curtas "imagem não encontrada" também entram no resumo', async () => {
     const { resumoDasImagens } = await import('../src/ui/problems-dialog.js');
     const curta = (n: string): { text: string; pointer: null; target: null; fix: null } => ({ text: `imagem não encontrada: ${n}`, pointer: null, target: null, fix: null });
-    expect(resumoDasImagens(['hair', 'body', 'hair'].map(curta))).toContain('2 imagens não estão em atlas nenhum');
+    expect(resumoDasImagens(['hair', 'body', 'hair'].map(curta))).toContain('2 imagens não estão em folha de imagens nenhuma (atlas)');
     const fonte = readFileSync(resolve(__dirname, '../src/ui/problems-dialog.ts'), 'utf8');
     expect(fonte).toContain('/^imagem não encontrada: /.test(row.text)');
   });
