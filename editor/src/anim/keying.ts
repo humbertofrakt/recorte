@@ -996,6 +996,13 @@ export function setKey(
 
   const index = findKeyIndex(keys, t, target, options.event);
   const updating = index >= 0;
+  // QA da noite (04/11/2026): a curva é ABSOLUTA (9.3). Mudar o valor de uma
+  // chave que já existe deixava as alças dos dois trechos vizinhos no valor
+  // velho, e a "Suave" virava "passa do alvo". As alças como frações do
+  // trecho, ANTES de mudar — o mesmo caminho do mover no tempo (rodada 40).
+  const alcas = updating && !info.valueless
+    ? unitsByKey(keys.slice(Math.max(0, index - 1), index + 2))
+    : null;
   // The field order below is the order of the table of 9.2, so the JSON on disk
   // reads the same way the specification does.
   const key: KeyDef = updating ? keys[index] : { time: t };
@@ -1003,6 +1010,11 @@ export function setKey(
   if (info.valueless) delete key.value;
   else key.value = clone(value) as KeyValue;
   writeKeyExtras(key, target, options, updating);
+  if (alcas !== null) {
+    // A curva que o gesto escreveu (`options.curve`) já está no trecho novo.
+    if (options.curve !== undefined) alcas.delete(key);
+    reapplyUnits(keys.slice(Math.max(0, index - 1), index + 2), alcas);
+  }
 
   if (!updating) {
     const at = insertIndexFor(keys, t);
