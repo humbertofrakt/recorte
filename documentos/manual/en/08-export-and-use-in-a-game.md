@@ -107,7 +107,7 @@ The editor saves what is open by itself, every few seconds.
 **"Arquivo → Exportar ▸"** (File → Export). Two blocks: on top what goes **to the
 game**, below what goes **to another character**.
 
-![The File menu open, with the Export submenu](../imagens/07-menu-exportar.png)
+![The File menu open, with the Export submenu](../imagens/08-menu-exportar.png)
 
 *(The picture is from 15/09. The submenu's names have changed: the table is what
 counts.)*

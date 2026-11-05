@@ -4,10 +4,9 @@ Também em inglês: [English](en/04-animate.md)
 
 ## O que você vai conseguir fazer no fim
 
-1. Fazer duas poses e ver o programa desenhar as vinte e oito do meio.
+1. Fazer duas poses e ver o programa desenhar as do meio.
 2. Fechar um ciclo de caminhada que volta ao começo sem dar tranco.
-3. Achar a pose que você quer no meio de sessenta linhas de tempo.
-4. Copiar a perna da frente para a de trás, meia volta depois.
+3. Achar, copiar e colar chaves na linha do tempo.
 
 ---
 
@@ -365,6 +364,8 @@ apagar*.
 | `Shift+Delete` | apaga as **linhas** do escolhido, inteiras |
 | `Ctrl+K` | Chavear tudo |
 | `Ctrl+D` | com chave escolhida, não duplica: o rodapé diz como (copiar, levar a agulha, colar) |
+
+![O submenu Animação → Ir para: Início, Fim, Quadro anterior, Quadro seguinte, Chave anterior, Chave seguinte e as duas do escolhido, cada uma com a tecla](imagens/04-menu-ir-para.png)
 
 Fora da folha, **Animação → Ir para ▸** tem os mesmos de andar, e
 `Shift+↑` `Shift+↓` andam pelas chaves **do escolhido**.

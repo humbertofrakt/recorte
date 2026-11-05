@@ -868,10 +868,11 @@ describe('menu e manual', () => {
     expect(acoes).toContain('novo-caixa-no-slot');
   });
 
-  itManual('o capítulo 2 diz os dois caminhos, nas duas línguas', () => {
+  itManual('o capítulo 1 diz os dois caminhos, nas duas línguas', () => {
     const ler = (...partes: string[]): string =>
       readFileSync(resolve(RAIZ, 'documentos', 'manual', ...partes), 'utf8').replace(/\s+/g, ' ');
-    for (const texto of [ler('02-montar-o-personagem.md'), ler('en', '02-build-the-character.md')]) {
+    // D13: montar o personagem é o capítulo 1 desde a v36.5.
+    for (const texto of [ler('01-montar-um-corpo.md'), ler('en', '01-build-a-body.md')]) {
       expect(texto).toContain('Ponto neste slot');
       expect(texto).toContain('Caixa neste slot');
       expect(texto).toContain('○');

@@ -1,6 +1,6 @@
 # 8. Exportar e usar no jogo
 
-Também em inglês: [English](en/07-export-and-use-in-a-game.md)
+Também em inglês: [English](en/08-export-and-use-in-a-game.md)
 
 *Conferido no código em 07/10/2026, versão v36.5.*
 
@@ -103,7 +103,7 @@ pasta do projeto…**
 **Arquivo → Exportar ▸**. Dois blocos: em cima o que vai **para o jogo**, embaixo
 o que vai **para outro boneco**.
 
-![O menu Arquivo aberto, com o submenu Exportar](imagens/07-menu-exportar.png)
+![O menu Arquivo aberto, com o submenu Exportar](imagens/08-menu-exportar.png)
 
 | Item | O que grava |
 |:---|:---|
@@ -567,6 +567,8 @@ Tem que ser por servidor. Abrir o arquivo direto não funciona.
 
 **Arquivo → Exportar → GIF, PNG, folha, vídeo…** abre a janela *Exportar
 imagem*. A janela mora no topo da tela: trocar o formato não move as caixas.
+
+![A janela Exportar imagem: a animação, o formato, o tempo, a escala, o fundo, e a frase dizendo o arquivo que vai sair](imagens/08-exportar-imagem.png)
 
 | Campo | O que faz |
 |:---|:---|

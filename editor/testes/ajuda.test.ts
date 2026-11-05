@@ -31,6 +31,7 @@ import '../src/viewport/tools/point-tool.js';
 import '../src/viewport/tools/box-tool.js';
 import '../src/viewport/tools/mesh-tool.js';
 import '../src/viewport/tools/weights-tool.js';
+import '../src/viewport/tools/transform-tool.js';
 import { CONTEXT_ACTIONS } from '../src/ui/action-audit.js';
 import '../src/panels/index.js';
 
@@ -123,12 +124,41 @@ const TEXTO_INTEIRO = CAPITULOS.map((c) => c.text).join('\n').replace(/\s+/g, ' 
 // A forma do manual
 // ---------------------------------------------------------------------------
 
-describeManual('o manual tem o fluxo mais oito capítulos, nas duas línguas', () => {
-  it('são dez arquivos de cada lado: o índice, o fluxo e os oito', () => {
+describeManual('o manual tem o índice e os capítulos 00 a 10, nas duas línguas', () => {
+  // D13 (05/11/2026): eram "dez de cada lado" (o índice, o fluxo e oito). Na
+  // v36.5 são o índice e onze capítulos, 00 a 10. O 11 é de outra sessão e
+  // entra quando chegar; este teste exige os onze e o PAR de cada um.
+  const numero = (arquivo: string): string | null => /^(?:en\/)?(\d\d)-/.exec(arquivo)?.[1] ?? null;
+
+  it('os capítulos 00 a 10 existem dos dois lados, e o índice também', () => {
     const pt = CAPITULOS.filter((c) => !c.file.startsWith('en/'));
     const en = CAPITULOS.filter((c) => c.file.startsWith('en/'));
-    expect(pt).toHaveLength(10);
-    expect(en).toHaveLength(10);
+    const esperados = Array.from({ length: 11 }, (_, i) => String(i).padStart(2, '0'));
+    for (const lado of [pt, en]) {
+      const tem = new Set(lado.map((c) => numero(c.file)));
+      expect(esperados.filter((n) => !tem.has(n))).toEqual([]);
+      expect(lado.some((c) => c.file.endsWith('README.md'))).toBe(true);
+    }
+  });
+
+  it('cada capítulo 00 a 10 tem UM arquivo de cada lado', () => {
+    for (let i = 0; i <= 10; i++) {
+      const n = String(i).padStart(2, '0');
+      const pt = CAPITULOS.filter((c) => !c.file.startsWith('en/') && numero(c.file) === n);
+      const en = CAPITULOS.filter((c) => c.file.startsWith('en/') && numero(c.file) === n);
+      expect([n, pt.length, en.length]).toEqual([n, 1, 1]);
+    }
+  });
+
+  it('cada capítulo abre com a promessa em TRÊS linhas', () => {
+    // O pedido do degrau D13: "o que você vai fazer" em três linhas. O Humberto
+    // é disléxico: uma lista de cinco promessas não se lê.
+    const marca = /## (?:O que você vai conseguir fazer no fim|What you will be able to do by the end)\n\n((?:\d+\..*\n(?: {3}.*\n)*)+)/;
+    for (const cap of CAPITULOS) {
+      if (cap.file.endsWith('README.md')) continue;
+      const lista = marca.exec(cap.text)?.[1] ?? '';
+      expect(lista.match(/^\d+\./gm)?.length, cap.file).toBe(3);
+    }
   });
 
   it('cada capítulo abre dizendo o que o leitor vai conseguir fazer', () => {
@@ -197,6 +227,50 @@ describe('as imagens do manual', () => {
 });
 
 // ---------------------------------------------------------------------------
+// 1b. Tabela sem cabeçalho (D13, 05/11/2026)
+// ---------------------------------------------------------------------------
+
+/**
+ * As linhas de tabela que não têm cabeçalho em cima.
+ *
+ * Achado no D13: uma foto posta NO MEIO de uma tabela deixou as linhas de
+ * baixo sem cabeçalho, e o `renderMarkdown` do Ajuda → Manual entrou em laço
+ * — o `npm run manual-pdf` morreu com "Invalid array length". A forma do erro:
+ * **pus a foto depois da linha que eu procurava, sem olhar se a tabela
+ * acabava ali.** O laço é do renderizador (`io/manual.ts`, outra parte, avisado);
+ * aqui fica a régua do lado do texto, que não deixa a forma voltar.
+ */
+function linhasSemCabecalho(texto: string): number[] {
+  const linhas = texto.split('\n');
+  const ruins: number[] = [];
+  let dentroDeCodigo = false;
+  for (let i = 0; i < linhas.length; i++) {
+    const l = linhas[i]!;
+    if (l.startsWith('```')) dentroDeCodigo = !dentroDeCodigo;
+    if (dentroDeCodigo || !l.startsWith('|')) continue;
+    const antes = linhas[i - 1] ?? '';
+    const depois = linhas[i + 1] ?? '';
+    const ehCabecalho = /^\|\s*:?-{3}/.test(depois);
+    if (!antes.startsWith('|') && !ehCabecalho) ruins.push(i + 1);
+  }
+  return ruins;
+}
+
+describeManual('toda tabela do manual tem cabeçalho', () => {
+  it('a régua pega a forma do D13: foto no meio da tabela', () => {
+    const errado = ['| A | B |', '|:---|:---|', '| 1 | 2 |', '', '![foto](x.png)', '| 3 | 4 |'].join('\n');
+    expect(linhasSemCabecalho(errado)).toEqual([6]);
+    const certo = ['| A | B |', '|:---|:---|', '| 1 | 2 |', '| 3 | 4 |', '', '![foto](x.png)'].join('\n');
+    expect(linhasSemCabecalho(certo)).toEqual([]);
+  });
+
+  it('nenhum capítulo, nas duas línguas, tem linha de tabela solta', () => {
+    const soltas = CAPITULOS.flatMap((c) => linhasSemCabecalho(c.text).map((n) => `${c.file}:${n}`));
+    expect(soltas).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // 2. Rótulo citado é rótulo que existe
 // ---------------------------------------------------------------------------
 
@@ -239,48 +313,60 @@ function rotulosDoEditor(): Set<string> {
  * **promete**. Cada um é conferido dos dois lados.
  */
 const ROTULOS: readonly string[] = Object.freeze([
+  // D13 (05/11/2026): a lista refeita pelos nomes da v36.5. Saíram os que o
+  // programa não tem mais: Esqueleto (virou Base), Abrir… (Abrir projeto…),
+  // Importar → Imagens… (as imagens vêm pela pasta), Reempacotar atlas,
+  // Montagem ⇄ Animando e o interruptor Montagem | Animando, e Peles (Skins).
   // Menus
-  'Arquivo', 'Editar', 'Exibir', 'Esqueleto', 'Animação', 'Janela', 'Ajuda',
+  'Arquivo', 'Editar', 'Imagens', 'Base', 'Malha e regras', 'Animação', 'Skins',
+  'Entidades', 'Partículas', 'Exibir', 'Janela', 'Ajuda',
   // Arquivo
-  'Novo', 'Abrir…', 'Salvar', 'Salvar como…', 'Salvar como binário…',
-  'Salvar como pacote…', 'Importar', 'Exportar', 'Reabrir o fechado',
-  'Repetir a última exportação', 'Configurações do projeto…',
-  'De outro programa…', 'PSD…', 'Imagens…', 'glTF…', 'Imagem…', 'Por pele…',
+  'Novo projeto…', 'Abrir projeto…', 'Abrir pasta do projeto…', 'Abrir o herói (exemplo)',
+  'Salvar', 'Salvar como…', 'Salvar como binário…', 'Salvar como pacote…',
+  'Importar', 'Exportar', 'Reabrir o fechado', 'Repetir a última exportação',
+  'Configurações do projeto…', 'De outro programa…', 'PSD…', 'PSD com ossos…',
+  'GIF, PNG, folha, vídeo…', 'glTF, para programa 3D…', 'Uma imagem por skin…',
+  'Entregar uma base…',
   // Editar
-  'Substituir nomes…', 'Inverter a seleção',
-  'Copiar posição no osso', 'Colar posição no osso',
-  // Exibir
-  'Réguas', 'Tema', 'Casca de cebola', 'Imagem de referência…',
-  'Mostrar nome das ferramentas', 'Nome ao passar o mouse',
-  'Ver só o resultado', 'Enquadrar seleção', 'Ajustar à tela',
-  'Tamanho real (100%)',
-  // Esqueleto
-  'Virar filho de…', 'Reempacotar atlas', 'Trazer para a frente',
+  'Substituir nomes…', 'Inverter a seleção', 'Os filhos', 'Os pais',
+  'Copiar posição no osso', 'Colar posição no osso', 'Preferências…',
+  // Imagens
+  'Recarregar a pasta', 'Pôr imagem na cena…', 'Definir pivô…', 'Carimbar pivôs',
+  // Base
+  'Abrir a base', 'Salvar como base nova…', 'Virar filho de…', 'Trazer para a frente',
   'Mandar para trás', 'Voltar à pose de repouso', 'Compensar',
   'Não mexer nos filhos', 'Não mexer nos desenhos', 'Não mexer nas caixas',
-  'Travar o escolhido', 'Travar o resto', 'Destravar tudo',
+  'Ponto neste slot', 'Caixa neste slot',
+  // Malha e regras
+  'Virar malha', 'Gerar automática', 'Pesos automáticos', 'Nova regra…', 'Simular a física',
   // Animação
   // 'Gravar sozinho' saiu no degrau 4a (M6, 17/09/2026): editar sempre grava.
-  'Nova animação', 'Mudar duração…', 'Repetir', 'Chavear', 'Chavear tudo',
-  'Curva da chave', 'Marcas', 'Trecho de laço',
+  'Nova animação', 'Biblioteca de animações…', 'Mudar duração…', 'Repetir', 'Chavear',
+  'Chavear tudo', 'Curva da chave', 'Marcas', 'Trecho de laço', 'Chave seguinte',
   'Esticar seleção…', 'Espelhar no tempo', 'Fechar ciclo',
-  'Espelhar esquerda e direita…', 'Limpar a animação inteira…',
-  'Montagem ⇄ Animando',
+  'Espelhar esquerda e direita…', 'Limpar a animação inteira…', 'Colar outra base aqui',
+  // Skins, Entidades, Partículas
+  'Nova skin', 'Trocar imagem nas skins…', 'Promover skin a base…',
+  'Trazer entidade de fora…', 'Pôr entidade na cena…', 'Este boneco…',
+  'Novo emissor vazio', 'Fogo', 'Prender ao osso escolhido',
+  // Exibir
+  'Réguas', 'Tema', 'Casca de cebola', 'Imagem de referência…', 'Travar guias', 'Limpar guias',
+  'Mostrar nome das ferramentas', 'Nome ao passar o mouse',
+  'Ver só o resultado', 'Enquadrar seleção', 'Ajustar à tela',
+  'Tamanho real (100%)', 'Travar o escolhido', 'Travar o resto', 'Destravar tudo',
   // Janela e Ajuda
-  'Esconder painéis', 'Voltar ao padrão', 'Detalhes da linha do tempo',
-  'Manual', 'Atalhos do teclado', 'Paleta de comandos',
+  'Esconder painéis', 'Voltar ao padrão', 'Detalhes da linha do tempo', 'Guardar este arranjo…',
+  'Manual', 'Atalhos do teclado', 'Paleta de comandos', 'Problemas do arquivo…',
   // Ferramentas
-  'Selecionar', 'Mover', 'Girar', 'Escalar', 'Inclinar', 'Posar',
+  'Transformar', 'Selecionar', 'Mover', 'Girar', 'Escalar', 'Inclinar', 'Posar',
   'Criar osso', 'Ponto', 'Caixa', 'Malha', 'Pesos',
   // Barra de ações
   'Desfazer', 'Refazer', 'Copiar', 'Colar', 'Apagar', 'Recortar chaves',
   'Ver ossos', 'Travar ossos', 'Ver desenhos', 'Travar desenhos',
   // Painéis
-  'Árvore', 'Ordem', 'Propriedades', 'Animações', 'Peles', 'Regras',
-  'Histórico', 'Imagens', 'Exibição', 'Prévia', 'Malha e pesos',
+  'Árvore', 'Ordem', 'Propriedades', 'Animações', 'Regras', 'Pivôs',
+  'Histórico', 'Exibição', 'Prévia', 'Malha e pesos',
   'Linha do tempo', 'Curvas',
-  // As duas metades do interruptor
-  'Montagem', 'Animando',
 ]);
 
 describeManual('todo rótulo que o manual cita existe no editor', () => {

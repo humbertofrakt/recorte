@@ -635,13 +635,14 @@ describeManual('o manual acompanha', () => {
     readFileSync(resolve(RAIZ, 'documentos', 'manual', ...partes), 'utf8').replace(/\s+/g, ' ');
   const pendencias = (texto: string, marca: string): string => texto.slice(texto.indexOf(marca));
 
+  // D13 (05/11/2026): exportar é o capítulo 8 desde a v36.5.
   it('as três linhas saíram de "O que ainda não funciona"', () => {
-    const cap7 = pendencias(ler('07-exportar-e-usar-no-jogo.md'), '## O que ainda não funciona');
+    const cap7 = pendencias(ler('08-exportar-e-usar-no-jogo.md'), '## O que ainda não funciona');
     expect(cap7).not.toContain('não tem trecho');
     expect(cap7).not.toContain('não lê `.bonez`');
     const cap3 = pendencias(ler('03-peles.md'), '## O que ainda não funciona');
     expect(cap3).not.toContain('grava só o `.bone`');
-    const ch7 = pendencias(ler('en', '07-export-and-use-in-a-game.md'), '## What does not work yet');
+    const ch7 = pendencias(ler('en', '08-export-and-use-in-a-game.md'), '## What does not work yet');
     expect(ch7).not.toContain('no range');
     expect(ch7).not.toContain('does not read `.bonez`');
     const ch3 = pendencias(ler('en', '03-skins.md'), '## What does not work yet');
@@ -649,7 +650,7 @@ describeManual('o manual acompanha', () => {
   });
 
   it('os campos novos estão escritos, nas duas línguas', () => {
-    for (const texto of [ler('07-exportar-e-usar-no-jogo.md'), ler('en', '07-export-and-use-in-a-game.md')]) {
+    for (const texto of [ler('08-exportar-e-usar-no-jogo.md'), ler('en', '08-export-and-use-in-a-game.md')]) {
       expect(texto).toContain('Todas as animações');
       expect(texto).toContain('Pacote .bonez com o atlas');
       expect(texto).toContain('heroi.bonez');

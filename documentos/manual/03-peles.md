@@ -1,7 +1,6 @@
 # 3. Skins
 
-Também em inglês: [English](en/03-skins.md) *(a versão inglesa ainda é a de
-15/09)*.
+Também em inglês: [English](en/03-skins.md)
 
 Atualizado em 07/10/2026, na v36.5. A "pele" agora se chama **skin**, no menu
 e na aba (decisão de 04/10).
@@ -9,9 +8,8 @@ e na aba (decisão de 04/10).
 ## O que você vai conseguir fazer no fim
 
 1. Vestir a mesma base com outra roupa, sem refazer o rig nem as animações.
-2. Empilhar duas skins ao mesmo tempo — armadura **e** capa.
-3. Esconder ou ignorar uma imagem numa skin, e apagar um osso só nela.
-4. Trocar a roupa dentro do jogo, com uma linha de código.
+2. Empilhar duas skins, e esconder ou ignorar uma imagem numa delas.
+3. Trocar a roupa dentro do jogo, com uma linha de código.
 
 ---
 
@@ -42,7 +40,7 @@ Serve para:
 
 **Janela → Skins.** Coluna da direita, junto de Animações e Regras.
 
-![A aba Skins do herói: a barra de sete ícones, Feitas com três skins, Ativas com a default](imagens/03-peles.png)
+![A aba Skins do herói: a barra de sete ícones, Feitas com três skins, Ativas com a default](imagens/03-skins.png)
 
 *No herói: `armadura` e `armadura_capa` estão desligadas (têm o olho). Só a
 `default` está em Ativas.*
@@ -322,6 +320,14 @@ sempre. Um arquivo por skin de uma vez: `--um-arquivo-por-pele`.
 
 Osso só sai quando ninguém que ficou lê ele. O
 [capítulo 8](08-exportar-e-usar-no-jogo.md) trata disso por inteiro.
+
+---
+
+## O que ainda não funciona
+
+| O quê | Como é hoje |
+|:---|:---|
+| Entregar só uma skin, com o nome certo no menu | o item chama **Arquivo → Exportar → Uma imagem por skin…**: o nome diz imagem, mas a janela fatia o arquivo |
 
 ---
 

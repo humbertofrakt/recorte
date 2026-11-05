@@ -38,7 +38,7 @@ The order keys work with **one drawing selected**, in the scene or in the
 The first four are also in **"Exibir → O boneco"** (View → The character) and
 **"Exibir → Travar"** (View → Lock), and in the **"Exibição"** (Display) tab.
 
-![The four show and lock buttons](../imagens/08-ver-e-travar.png)
+![The see and lock buttons for bones, as words, on the action bar](../imagens/00-ver-e-travar.png)
 
 *(The picture is from 15/09.)*
 

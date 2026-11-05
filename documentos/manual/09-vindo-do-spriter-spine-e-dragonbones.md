@@ -1,6 +1,6 @@
 # 9. Vindo do Spriter, Spine e DragonBones
 
-Também em inglês: [English](en/08-coming-from-spriter.md)
+Também em inglês: [English](en/09-coming-from-spriter-spine-and-dragonbones.md)
 
 *Conferido no código em 07/10/2026, versão v36.5.*
 
@@ -35,7 +35,7 @@ As teclas de ordem valem com **um desenho escolhido**, na cena ou na aba
 Os quatro primeiros estão também em **Exibir → O boneco** e **Exibir → Travar**,
 e na aba **Exibição**.
 
-![Os quatro botões de ver e travar](imagens/08-ver-e-travar.png)
+![Os botões de ver e travar dos ossos, em palavra, na barra de ações](imagens/00-ver-e-travar.png)
 
 
 ---
@@ -204,6 +204,8 @@ programa parar — e o DragonBones parou em 2020 —, o trabalho fica preso.
 ### Pelo editor
 
 **Arquivo → Importar → De outro programa…**
+
+![O submenu Arquivo → Importar: De outro programa…, PSD…, PSD com ossos…, e as animações e a skin de outro boneco](imagens/09-menu-importar.png)
 
 1. O programa pede **a pasta** do projeto do Spriter, do Spine ou do DragonBones.
 2. A pasta tem mais de um projeto: a janela *"Qual projeto abrir?"* pergunta.
