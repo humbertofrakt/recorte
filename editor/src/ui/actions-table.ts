@@ -183,6 +183,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
     owner: 'animacoes', where: 'arranque', ids: [
       'abrir-a-base', 'nova-animacao', 'exportar-animacao', 'importar-animacao',
       'biblioteca-animacoes',
+      // Reaproveitar (04/11/2026): muitos bonecos, as mesmas animações.
+      'usar-animacoes', 'seguir-esqueleto-padrao',
     ],
   },
   // Colar corpo aqui pergunta qual corpo numa janela: é da casca (degrau 4b).

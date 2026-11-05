@@ -170,7 +170,8 @@ describe('a tabela das ações', () => {
     // 304 (rodada 40, lote 4): +1, `deslocar-em-laco` (Animação → Chaves).
     // 305 (rodada 41, lote 4): +1, `criar-aresta` (Malha e regras → Malha).
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    expect(tabela.length).toBe(306);
+    // Reaproveitar (04/11/2026): + 'usar-animacoes', 'seguir-esqueleto-padrao'.
+    expect(tabela.length).toBe(308);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');
@@ -257,7 +258,8 @@ describe('as ações de arranque, sem painel montado', () => {
     // +3 (rodada 39b, lote 6): `anima-do-teste`, `skins-do-teste`, `teste-nas-iguais`. 129.
     // +1 (rodada 41, lote 4): `criar-aresta`. 130.
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    expect(arranque().length).toBe(131);
+    // Reaproveitar (04/11/2026): + 'usar-animacoes', 'seguir-esqueleto-padrao'.
+    expect(arranque().length).toBe(133);
   });
 
   it('a função que ela devolve tira todas', () => {
@@ -428,6 +430,7 @@ function telaDeMentira(): { pedida: () => boolean; tirar: () => void } {
 const ESPERAM_JANELA: readonly string[] = [
   'nova-regra-guiada',      // a janela guiada da regra, em duas telas
   'biblioteca-animacoes',   // a janela da biblioteca (degrau 12, parte `B`)
+  'usar-animacoes', 'seguir-esqueleto-padrao', // reaproveitar (04/11/2026): a janela da tabela dos ossos
   'exportar-animacao', 'importar-animacao',
   'exportar-pele-arquivo', 'promover-pele-base',
   // Os tres efeitos (22/09/2026): a janela pergunta os numeros e mostra a

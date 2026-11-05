@@ -70,6 +70,19 @@ export interface EditorState {
    * have to depend on a viewport module.
    */
   view?: Record<string, unknown>;
+  /**
+   * **Reaproveitar animação** (noite de 04/11/2026): esta base é a DONA de
+   * animações que outras bases tocam ligadas. `arquivo` é o `.bone` que o
+   * Salvar grava ao lado (o uri que as outras citam em `assets.animations`);
+   * `animacoes`, os nomes que vão nele. `panels/reuse-model.ts`.
+   */
+  compartilha?: { arquivo: string; animacoes: string[] };
+  /**
+   * **Combinar os ossos, lembrado** — pelo uri de onde as animações vieram:
+   * `{ "osso de lá": "osso daqui" }`, só os que mudam de nome. A janela "Usar
+   * animações de outro boneco…" abre já preenchida da segunda vez.
+   */
+  mapaDeOssos?: Record<string, Record<string, string>>;
 }
 
 /** What is selected. Empty arrays mean nothing of that kind is selected. */

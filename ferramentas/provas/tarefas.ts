@@ -284,6 +284,9 @@ export const TAREFAS: readonly TarefaDef[] = Object.freeze([
   { action: 'apagar-animacao', grupo: 'Corpos, animações e entidades', tarefa: 'Apagar uma animação' },
   { action: 'mandar-para-o-topo', grupo: 'Corpos, animações e entidades', tarefa: 'Escolher qual animação o jogo toca primeiro' },
   { action: 'biblioteca-animacoes', grupo: 'Corpos, animações e entidades', tarefa: 'Pegar animações prontas — parado, andar, correr, pular' },
+  // Reaproveitar (04/11/2026): muitos bonecos, as mesmas animações.
+  { action: 'usar-animacoes', grupo: 'Corpos, animações e entidades', tarefa: 'Usar as animações de outro boneco — ligadas ou em cópia' },
+  { action: 'seguir-esqueleto-padrao', grupo: 'Corpos, animações e entidades', tarefa: 'Dar a um boneco os nomes de ossos do Esqueleto padrão' },
   { action: 'exportar-animacao', grupo: 'Corpos, animações e entidades', tarefa: 'Levar uma animação deste boneco para outro boneco' },
   { action: 'importar-animacao', grupo: 'Corpos, animações e entidades', tarefa: 'Trazer para este boneco uma animação feita noutro' },
   { action: 'colar-corpo', grupo: 'Corpos, animações e entidades', tarefa: 'Trocar o boneco inteiro no meio da animação — o homem vira lobisomem' },

@@ -38,6 +38,7 @@ import { applyHandPivots } from './hand-pivots.js';
 import type { UndoView } from '../contract.js';
 import { aroundWarnings } from './around-warnings.js';
 import { createEmptyFile } from './new-file.js';
+import { composeShared, sharedUrisOf, withSharedAnimations } from './shared-animations.js';
 
 /** Camera the viewport owns; the document only stores it between sessions. */
 export interface CameraState {
@@ -532,7 +533,9 @@ export class Doc implements EditorDoc {
     try {
       // The loader keeps references into what it is given, so it reads a copy:
       // the document must never be changed behind the commands' back.
-      const copy = JSON.parse(JSON.stringify(this.currentFile)) as unknown;
+      // Reaproveitar (04/11/2026): as animações de `assets.animations` entram
+      // na cópia, pela conta do runtime — senão a compartilhada não tocava.
+      const copy = withSharedAnimations(JSON.parse(JSON.stringify(this.currentFile)) as unknown);
       const data = loadSkeletonData(copy, {
         atlases: this.loadedAtlases, skeletons: this.nestedSkeletons,
       });
@@ -587,7 +590,9 @@ export class Doc implements EditorDoc {
     }
     try {
       const copy = JSON.parse(JSON.stringify({
-        animations: this.currentFile.animations ?? [],
+        animations: sharedUrisOf(this.currentFile).length === 0
+          ? this.currentFile.animations ?? []
+          : composeShared(this.currentFile).animations,
       })) as unknown;
       const loaded = loadAnimationsFor(data, copy);
       data.replaceAnimations(loaded.animations);

@@ -279,6 +279,32 @@
   border-top: 1px solid var(--painel-linha);
 }
 
+/* Reaproveitar (04/11/2026): a compartilhada tem clique (toca para ver). */
+button.anim-item-fora {
+  cursor: pointer;
+}
+
+button.anim-item-fora:hover {
+  background: var(--painel-campo);
+}
+
+.anim-original {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--painel-realce);
+  background: transparent;
+  border: 1px solid var(--painel-linha);
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.anim-original:hover {
+  border-color: var(--painel-realce);
+}
+
 /* ------------------------------------------------------------------ */
 /* A fila do arroz — chat G, lote 3 (29/09/2026), Q1/K1 e P33          */
 /* ------------------------------------------------------------------ */
