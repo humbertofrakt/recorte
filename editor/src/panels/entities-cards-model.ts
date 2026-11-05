@@ -489,23 +489,23 @@ export function cardHint(card: EntityCard, pai: string | null, slot: string | nu
     return `${card.nome}: a base de onde você abriu a entidade por dentro. Ela fica à vista, parada. `
       + `Para voltar: clique numa animação de ${card.nome} na janela Animação`;
   }
-  const onde = pai === null || slot === null ? '' : ` no slot ${slot} de ${pai}`;
+  const onde = pai === null || slot === null ? '' : ` na tomada ${slot} de ${pai}`;
   const falta = card.carregada ? '' : '. O esqueleto dela não está carregado: não dá para ver o que tem dentro';
   if (card.papel === 'teste' && card.acima !== null) {
     const dentro = entityShortName(card.acima.base);
-    return `${card.nome}: TESTE, em volta de ${dentro} (${dentro} no slot ${card.acima.slot}). Com Na cena ligado, `
+    return `${card.nome}: TESTE, em volta de ${dentro} (${dentro} na tomada ${card.acima.slot}). Com Na cena ligado, `
       + `a cena desenha ${card.nome} em volta, parado. ${cap(dentro)} não leva ${card.nome}: nada entra no arquivo. `
       + `Botão direito: Tirar de volta${falta}`;
   }
   if (card.papel === 'teste') {
     return `${card.nome}${onde}: TESTE (borda tracejada). Vale só na Prévia e não entra no arquivo: `
-      + 'a animação não muda. Arraste para outro slot para mudar, ou para a prateleira para desligar. '
+      + 'a animação não muda. Arraste para outra tomada para mudar, ou para a lista Peças para desligar. '
       + `Botão direito: Desligar${falta}`;
   }
   const anima = card.anima === null ? 'Ninguém escolheu a animação dela: o jogo escolhe'
     : card.anima === '' ? 'Ela toca a animação de mesmo nome de quem a recebe'
       : `Ela toca ${card.anima}`;
-  const volta = card.emVolta === null ? '' : `. Fica em volta de ${pai ?? 'quem a recebe'} ("Este boneco"): o meio é o slot ${card.emVolta}`;
+  const volta = card.emVolta === null ? '' : `. Fica em volta de ${pai ?? 'quem a recebe'} ("Este boneco"): o meio é a imagem ${card.emVolta}`;
   const corte = card.corte === 'volta' ? `. ${card.nome} já está mais acima nesta árvore: a árvore para aqui, para não dar uma volta sem fim`
     : card.corte === 'fundo' ? `. Mais de ${MAX_NIVEIS} níveis: a árvore para aqui` : '';
   return `${card.nome}: entidade${onde}, gravada no arquivo (borda cheia, a palavra projeto). ${anima}${volta}${falta}${corte}`;
@@ -522,19 +522,19 @@ export function emptyLineText(line: SlotLine): string {
 export function lineHint(line: SlotLine): string {
   if (line.semLugar) {
     const onde = line.host === null ? 'o arquivo' : entityShortName(line.host);
-    return `${line.slot}: este slot não existe mais em ${onde}. A peça de teste ficou sem lugar: `
-      + 'arraste-a até a linha de outro slot, ou botão direito → Desligar';
+    return `${line.slot}: esta tomada não existe mais em ${onde}. A peça de teste ficou sem lugar: `
+      + 'arraste-a até a linha de outra tomada, ou botão direito → Desligar';
   }
-  const tipo = line.marcado ? `${line.slot}: slot marcado. Ele virou uma base, com nome e animações próprias`
-    : line.cartoes.length > 0 ? `${line.slot}: slot com entidade` : `${line.slot}: slot`;
-  if (line.vazio) return `${tipo}. Ele não mostra nada na pose de repouso: não há imagem para a peça tomar o lugar`;
+  const tipo = line.marcado ? `${line.slot}: imagem-base. Ela virou uma base, com nome e animações próprias`
+    : line.cartoes.length > 0 ? `${line.slot}: tomada com peça` : `${line.slot}: tomada`;
+  if (line.vazio) return `${tipo}. Ela não mostra nada na pose de repouso: não há imagem para a peça tomar o lugar`;
   const solte = line.host === null ? ''
-    : '. Arraste uma entidade da prateleira até aqui para pô-la neste slot em teste: vale só na Prévia, o arquivo não muda';
+    : '. Arraste uma peça da lista Peças até aqui para pô-la nesta tomada em teste: vale só na Prévia, o arquivo não muda';
   if (line.semArquivo) {
-    return `${tipo}. O editor não carregou a base deste slot: não dá para ver o que tem dentro${solte}`;
+    return `${tipo}. O editor não carregou a peça desta tomada: não dá para ver o que tem dentro${solte}`;
   }
-  if (line.cartoes.length === 0) return `${tipo}. Por enquanto mostra só a imagem dele${solte}`;
-  return `${tipo}. O cartão dentro da linha é o que está neste slot${solte}`;
+  if (line.cartoes.length === 0) return `${tipo}. Por enquanto mostra só a imagem dela${solte}`;
+  return `${tipo}. O cartão dentro da linha é o que está nesta tomada${solte}`;
 }
 
 /** O texto da linha dos outros slots. */
@@ -553,11 +553,11 @@ export const OTHER_LINES_HINT =
 
 /** A dica do título Montagem. */
 export const MONTAGEM_HINT =
-  'Quem está dentro de quem, de cima para baixo. O cartão dentro de uma linha está no slot daquela linha';
+  'Quem está dentro de quem, de cima para baixo. O cartão dentro de uma linha está na tomada daquela linha';
 
 /** A dica do título Prateleira. */
 export const PRATELEIRA_HINT =
-  'As entidades do projeto. Arraste uma até a linha de um slot, na Montagem, para pô-la ali em teste; '
+  'As peças do projeto. Arraste uma até a linha de uma tomada, nos Encaixes, para pô-la ali em teste; '
   + 'ou para a cena, para pendurá-la no osso em que ela cair. Solte aqui uma peça de teste para desligá-la';
 
 /** O que a árvore mostra, em texto: o painel só se refaz quando isto muda. */
@@ -603,7 +603,7 @@ export function drawingOfSlot(file: BoneFile, slot: string): string | null {
 
 /** Por que a linha de um cartão de DENTRO não recebe teste. */
 export function innerLineRefusal(pai: string): string {
-  return `O teste vale só nos slots do projeto aberto (o cartão AQUI). Esta linha é de dentro de ${pai}: `
+  return `O teste vale só nas tomadas do projeto aberto (o cartão AQUI). Esta linha é de dentro de ${pai}: `
     + `para pôr uma peça ali, anime ${pai} por dentro`;
 }
 
@@ -618,10 +618,10 @@ export function whyCannotTest(doc: EditorDoc, host: string, slot: string, uri: s
   const nome = entityShortName(uri);
   // Nota b do doc 34: soltar a peça onde ela JÁ está não fazia nada, calado.
   if (ligacaoEm(montagemDe(doc), host, slot)?.uri === uri) {
-    return `${cap(nome)} já está no slot ${slot}, em teste: arraste outra entidade`;
+    return `${cap(nome)} já está na tomada ${slot}, em teste: arraste outra peça`;
   }
   if (host === openProject(doc).uri && placedInFile(doc, corpoDe(doc).file).some((p) => p.slot === slot && p.uri === uri)) {
-    return `${cap(nome)} já está no slot ${slot}, gravada no arquivo: arraste outra entidade`;
+    return `${cap(nome)} já está na tomada ${slot}, gravada no arquivo: arraste outra peça`;
   }
   return null;
 }
@@ -637,9 +637,9 @@ export function whyCannotHold(doc: EditorDoc, host: string, slot: string, uri: s
   const hostNome = entityShortName(host);
   const file = corpoDe(doc).file;
   const def = (file.slots ?? []).find((s) => s.name === slot);
-  if (def === undefined) return `${hostNome} não tem o slot ${slot}`;
+  if (def === undefined) return `${hostNome} não tem a tomada ${slot}`;
   if (drawingOfSlot(file, slot) === null) {
-    return `O slot ${slot} não tem desenho nenhum: não há imagem para ${nome} tomar o lugar`;
+    return `A tomada ${slot} não tem desenho nenhum: não há imagem para ${nome} tomar o lugar`;
   }
   if (uri === host) return `${nome} não pode entrar nela mesma: seria uma volta sem fim`;
   if (descendants(doc, uri).has(host)) {
@@ -656,7 +656,7 @@ export function whyCannotHold(doc: EditorDoc, host: string, slot: string, uri: s
  */
 export function whyCannotDrop(doc: EditorDoc, host: string, slot: string, uri: string, de: string | null): string | null {
   if (de === slot) {
-    return `A peça de teste já está no slot ${slot}: arraste-a até a linha de outro slot, ou para a prateleira`;
+    return `A peça de teste já está na tomada ${slot}: arraste-a até a linha de outra tomada, ou para a lista Peças`;
   }
   return whyCannotTest(doc, host, slot, uri);
 }
@@ -684,7 +684,7 @@ export function dropOnSlot(doc: EditorDoc, host: string, slot: string, uri: stri
   if (antes !== null) {
     return {
       command: new SetMontagem('Trocar a peça de teste', depois),
-      frase: `${nome} no lugar de ${entityShortName(antes.uri)}, no slot ${slot}: teste. A animação não muda.`,
+      frase: `${nome} no lugar de ${entityShortName(antes.uri)}, na tomada ${slot}: teste. A animação não muda.`,
     };
   }
   // Nota b do doc 34: o mecha sobre o weapon cobre a espada gravada ali; o rodapé diz qual.
@@ -696,7 +696,7 @@ export function dropOnSlot(doc: EditorDoc, host: string, slot: string, uri: stri
   const separadas = copias > 1 ? ` Agora há ${copias} cópias de ${entityShortName(uri)}, separadas.` : '';
   return {
     command: new SetMontagem('Ligar em teste', depois),
-    frase: `${nome} no slot ${slot}${cobre}: teste.${separadas} A animação não muda.`,
+    frase: `${nome} na tomada ${slot}${cobre}: teste.${separadas} A animação não muda.`,
   };
 }
 
@@ -707,7 +707,7 @@ export function unplug(doc: EditorDoc, host: string, slot: string): TestGesture 
   if (antes === null) return null;
   return {
     command: new SetMontagem('Desligar o teste', semLigacao(montagem, host, slot)),
-    frase: `${cap(entityShortName(antes.uri))} saiu do slot ${slot} (era teste).`,
+    frase: `${cap(entityShortName(antes.uri))} saiu da tomada ${slot} (era teste).`,
   };
 }
 
@@ -719,10 +719,10 @@ export function moveTest(doc: EditorDoc, host: string, de: string, para: string)
   const saiu = ligacaoEm(montagem, host, para);
   const nome = cap(entityShortName(antes.uri));
   return {
-    command: new SetMontagem('Mudar o teste de slot', ligacaoMovida(montagem, host, de, para)),
+    command: new SetMontagem('Mudar o teste de tomada', ligacaoMovida(montagem, host, de, para)),
     frase: saiu === null
-      ? `${nome} passou do slot ${de} para o ${para}: teste.`
-      : `${nome} passou do slot ${de} para o ${para}, no lugar de ${entityShortName(saiu.uri)}: teste.`,
+      ? `${nome} passou da tomada ${de} para a ${para}: teste.`
+      : `${nome} passou da tomada ${de} para a ${para}, no lugar de ${entityShortName(saiu.uri)}: teste.`,
   };
 }
 
@@ -808,7 +808,7 @@ export function testSlotHere(doc: EditorDoc): { host: string; slot: string } | n
 export function whyNoTestHere(doc: EditorDoc): string | null {
   if (projetoDe(doc) === null) return 'A montagem de teste precisa de um projeto aberto (Arquivo → Abrir pasta do projeto…)';
   if (testSlotHere(doc) === null) {
-    return 'Escolha uma imagem na cena primeiro (clique nela), ou arraste a entidade da aba Entidades até a linha do slot';
+    return 'Escolha uma imagem na cena primeiro (clique nela), ou arraste a peça da aba Tomadas até a linha da tomada';
   }
   return null;
 }
@@ -816,8 +816,8 @@ export function whyNoTestHere(doc: EditorDoc): string | null {
 /** Por que "Desligar o teste deste slot" não age agora, ou `null`. */
 export function whyNoUnplugHere(doc: EditorDoc): string | null {
   const aqui = testSlotHere(doc);
-  if (aqui === null) return 'Escolha na cena a imagem do slot que tem a peça de teste';
-  return ligacaoEm(montagemDe(doc), aqui.host, aqui.slot) === null ? `O slot ${aqui.slot} não tem peça de teste` : null;
+  if (aqui === null) return 'Escolha na cena a imagem da tomada que tem a peça de teste';
+  return ligacaoEm(montagemDe(doc), aqui.host, aqui.slot) === null ? `A tomada ${aqui.slot} não tem peça de teste` : null;
 }
 
 // ---------------------------------------------------------------------------
@@ -945,10 +945,10 @@ export function whyCannotGoUp(doc: EditorDoc, uri: string, slot: string | null):
   if (cadeia.length + 2 > MAX_NIVEIS) return `Fundo demais: a montagem passaria de ${MAX_NIVEIS} níveis (spec 7.11)`;
   const file = outerFile(doc, uri);
   if (file === null) {
-    return `O editor não abriu o arquivo ${uri}: não dá para ver os slots dele. Abra a pasta do projeto`;
+    return `O editor não abriu o arquivo ${uri}: não dá para ver as tomadas dele. Abra a pasta do projeto`;
   }
-  if (slot === null) return slotsForUp(doc, uri).length === 0 ? `${nome} não tem slot com desenho para receber ${topoNome}` : null;
-  if (drawingOfSlot(file, slot) === null) return `O slot ${slot} de ${nome} não tem desenho: não há lugar para ${topoNome}`;
+  if (slot === null) return slotsForUp(doc, uri).length === 0 ? `${nome} não tem tomada com desenho para receber ${topoNome}` : null;
+  if (drawingOfSlot(file, slot) === null) return `A tomada ${slot} de ${nome} não tem desenho: não há lugar para ${topoNome}`;
   return null;
 }
 
@@ -960,7 +960,7 @@ export function goUp(doc: EditorDoc, uri: string, slot: string): TestGesture {
   const leva = topo === aberto ? '' : ` ${cap(entityShortName(aberto))} continua sendo o que você anima.`;
   return {
     command: new SetMontagem('Pôr dentro de, em teste', comAcima(montagemDe(doc), { base: topo, uri, slot })),
-    frase: `${cap(entityShortName(topo))} entrou em ${nome}, no slot ${slot}: teste. `
+    frase: `${cap(entityShortName(topo))} entrou em ${nome}, na tomada ${slot}: teste. `
       + `${cap(entityShortName(aberto))} não leva ${nome}.${leva}`,
   };
 }
@@ -1102,7 +1102,7 @@ export function testLinks(doc: EditorDoc): TestLink[] {
 /** O nome que a lista do Pôr no projeto mostra para uma ligação. */
 export function testLinkLabel(link: TestLink): string {
   return link.kind === 'baixo'
-    ? `${entityShortName(link.ligacao.uri)} no slot ${link.ligacao.slot}`
+    ? `${entityShortName(link.ligacao.uri)} na tomada ${link.ligacao.slot}`
     : `${entityShortName(link.elo.base)} dentro de ${entityShortName(link.elo.uri)} (${link.elo.slot})`;
 }
 
@@ -1123,7 +1123,7 @@ export function whyNotIntoProject(doc: EditorDoc, link: TestLink): string | null
         + 'Traga o arquivo de volta para a pasta, ou desligue a peça';
     }
     return drawingOfSlot(corpoDe(doc).file, link.ligacao.slot) === null
-      ? `O slot ${link.ligacao.slot} não tem desenho para a peça tomar o lugar` : null;
+      ? `A tomada ${link.ligacao.slot} não tem desenho para a peça tomar o lugar` : null;
   }
   if (link.elo.base !== aberto) {
     return `${cap(entityShortName(link.elo.uri))} leva ${entityShortName(link.elo.base)}, e nenhum dos dois é o arquivo aberto. `
@@ -1133,7 +1133,7 @@ export function whyNotIntoProject(doc: EditorDoc, link: TestLink): string | null
     return `Falta o arquivo ${link.elo.uri}: gravar faria o projeto apontar para um arquivo que não existe. `
       + 'Traga o arquivo de volta para a pasta, ou tire de volta';
   }
-  if (outerSlotMatrix(doc, link.elo) === null) return `O editor não conseguiu montar ${link.elo.uri} para achar o lugar do slot ${link.elo.slot}`;
+  if (outerSlotMatrix(doc, link.elo) === null) return `O editor não conseguiu montar ${link.elo.uri} para achar o lugar da tomada ${link.elo.slot}`;
   return null;
 }
 
@@ -1197,10 +1197,10 @@ export function putIntoProject(doc: EditorDoc, link: TestLink): TestGesture | nu
       new KeepTestChoice(skin.name, slot, desenho, escolha),
       new SetMontagem('Tirar o teste', semLigacao(montagem, link.ligacao.host, slot)),
     ];
-    const saiu = antes === null || antes === uri ? '' : ` ${cap(entityShortName(antes))} saiu do slot.`;
+    const saiu = antes === null || antes === uri ? '' : ` ${cap(entityShortName(antes))} saiu da tomada.`;
     return {
       command: new PutIntoProject('Pôr no projeto', passos),
-      frase: `${cap(entityShortName(uri))} gravada no slot ${slot}: agora é do projeto${base}.${saiu}${keptChoiceSays(uri, escolha)} Ctrl+Z volta a teste.`,
+      frase: `${cap(entityShortName(uri))} gravada na tomada ${slot}: agora é do projeto${base}.${saiu}${keptChoiceSays(uri, escolha)} Ctrl+Z volta a teste.`,
     };
   }
   const { elo } = link;
@@ -1256,7 +1256,7 @@ export function testCards(doc: EditorDoc): EntityCard[] {
 export function testCardLabel(card: EntityCard): string {
   const alvo = card.alvo;
   if (alvo === null || alvo.kind === 'projeto') return cardTitle(card);
-  return alvo.kind === 'baixo' ? `${cardTitle(card)} no slot ${alvo.slot}` : `${card.nome} em volta`;
+  return alvo.kind === 'baixo' ? `${cardTitle(card)} na tomada ${alvo.slot}` : `${card.nome} em volta`;
 }
 
 // ---------------------------------------------------------------------------
@@ -1275,11 +1275,11 @@ export function montagemWarnings(doc: EditorDoc): string[] {
   const file = corpoDe(doc).file;
   for (const l of ligacoesDe(montagem, aberto)) {
     if (!(file.slots ?? []).some((s) => s.name === l.slot)) {
-      out.push(`Montagem de teste: o slot ${l.slot} não existe mais em ${entityShortName(aberto)}. `
-        + `A peça ${entityShortName(l.uri)} ficou sem lugar: arraste-a para outro slot, ou Desligar`);
+      out.push(`Encaixe de teste: a tomada ${l.slot} não existe mais em ${entityShortName(aberto)}. `
+        + `A peça ${entityShortName(l.uri)} ficou sem lugar: arraste-a para outra tomada, ou Desligar`);
     }
     if (dataOf(doc, l.uri) === null) {
-      out.push(`Montagem de teste: falta o arquivo ${l.uri} (a peça de teste do slot ${l.slot}). A ligação fica, e nada é desenhado no lugar`);
+      out.push(`Encaixe de teste: falta o arquivo ${l.uri} (a peça de teste da tomada ${l.slot}). A ligação fica, e nada é desenhado no lugar`);
     }
   }
   for (const a of cadeiaAcima(montagem, aberto)) {
@@ -1287,7 +1287,7 @@ export function montagemWarnings(doc: EditorDoc): string[] {
     if (fora === null) {
       out.push(`Montagem de teste: falta o arquivo ${a.uri} (em volta de ${entityShortName(a.base)}). A ligação fica, e nada é desenhado em volta`);
     } else if (!(fora.slots ?? []).some((s) => s.name === a.slot)) {
-      out.push(`Montagem de teste: o slot ${a.slot} não existe mais em ${entityShortName(a.uri)}. `
+      out.push(`Encaixe de teste: a tomada ${a.slot} não existe mais em ${entityShortName(a.uri)}. `
         + `${cap(entityShortName(a.base))} ficou sem lugar dentro dele: botão direito no cartão → Tirar de volta`);
     }
   }
@@ -1302,7 +1302,7 @@ export function montagemWarnings(doc: EditorDoc): string[] {
  */
 export function upSlotHint(doc: EditorDoc, fora: string, slot: string): string {
   // Quem entra é o de fora da cadeia: com o mecha já em volta, é o mecha que entra no capacete.
-  return `${cap(entityShortName(topOfChain(doc)))} entra no slot ${slot} de ${entityShortName(fora)}, no lugar da imagem que está lá`;
+  return `${cap(entityShortName(topOfChain(doc)))} entra na tomada ${slot} de ${entityShortName(fora)}, no lugar da imagem que está lá`;
 }
 
 /**

@@ -496,9 +496,9 @@ describe('as duas portas do slot marcado', () => {
     expect(runAction('marcar-como-slot')).toBe(false);
     expect(runAction('desmarcar-slot')).toBe(false);
     expect(actionState('marcar-como-slot').why ?? '').toMatch(/projeto aberto|Escolha uma imagem/);
-    expect(actionState('desmarcar-slot').why ?? '').toMatch(/Escolha o slot marcado/);
+    expect(actionState('desmarcar-slot').why ?? '').toMatch(/Escolha a imagem-base/);
     doc.select({ ...emptySelection(), slots: ['weapon'] });
-    expect(actionState('desmarcar-slot').why ?? '').toMatch(/não é um slot marcado/);
+    expect(actionState('desmarcar-slot').why ?? '').toMatch(/não é uma imagem-base/);
   });
 });
 

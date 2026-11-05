@@ -224,7 +224,7 @@ class EntitiesPanel implements Panel {
         event.stopPropagation();
         openFloatingMenu(event.clientX, event.clientY, [{
           label: 'Desligar',
-          hint: 'Tira a peça de teste deste slot. O arquivo não muda: ela nunca entrou nele',
+          hint: 'Tira a peça de teste desta tomada. O arquivo não muda: ela nunca entrou nela',
           run: () => this.runGesture(doc, unplug(doc, ligacao.host, ligacao.slot)),
         }, intoProjectItem(doc, { kind: 'baixo', ligacao })], 'imagens-menu');
       });
@@ -272,7 +272,7 @@ class EntitiesPanel implements Panel {
       const ligacao = card.ligacao;
       const iguais = el('button', 'entidades-cartao-escolha entidades-cartao-iguais', `Trocar todas as iguais (${card.iguais})`) as HTMLButtonElement;
       iguais.type = 'button';
-      iguais.title = `Trocar todas as iguais: põe ${card.nome} em teste nos ${card.iguais} slots que mostram a mesma imagem que ${ligacao.slot}, `
+      iguais.title = `Trocar todas as iguais: põe ${card.nome} em teste nas ${card.iguais} tomadas que mostram a mesma imagem que ${ligacao.slot}, `
         + 'num passo só. Desligado até você clicar. O arquivo não muda';
       iguais.addEventListener('click', (event) => {
         event.stopPropagation();
@@ -311,7 +311,7 @@ class EntitiesPanel implements Panel {
       const texto = this.todas ? HIDE_OTHERS_TEXT : otherLinesText(card.outras);
       const outras = el('button', 'entidades-linha entidades-linha-outras', texto) as HTMLButtonElement;
       outras.type = 'button';
-      outras.title = this.todas ? 'Mostra de novo só os slots com entidade, com teste, ou marcados' : OTHER_LINES_HINT;
+      outras.title = this.todas ? 'Mostra de novo só as tomadas com peça, com teste, e as imagens-base' : OTHER_LINES_HINT;
       outras.setAttribute('aria-expanded', String(this.todas));
       outras.addEventListener('click', () => {
         this.todas = !this.todas;
@@ -470,7 +470,7 @@ class EntitiesPanel implements Panel {
           return;
         }
         if (de.slot === slot) {
-          doc.notice(`A peça de teste já está no slot ${slot}: arraste-a até a linha de outro slot, ou para a prateleira`);
+          doc.notice(`A peça de teste já está na tomada ${slot}: arraste-a até a linha de outra tomada, ou para a lista Peças`);
           return;
         }
         this.runGesture(doc, moveTest(doc, host, de.slot, slot));
@@ -705,7 +705,7 @@ export function setCardAnima(doc: EditorDoc, card: EntityCard, valor: string | n
   }
   const entidade = entitySlots(corpoDe(doc).file).find((e) => e.slot === alvo.slot && e.uri === alvo.uri) ?? null;
   if (entidade === null) {
-    doc.notice(`${card.nome} não está gravada no slot ${alvo.slot} deste arquivo`);
+    doc.notice(`${card.nome} não está gravada na tomada ${alvo.slot} deste arquivo`);
     return false;
   }
   // 05/11/2026: "a de quem recebe" é do anexo (inheritAnimation), não da faixa.
@@ -743,7 +743,7 @@ export async function putProjectInside(
   const slots = slotsForUp(doc, uri);
   const slot = slots.length === 1 ? slots[0]! : await ask(slots, uri);
   if (slot === null) {
-    doc.notice(`Nada mudou: nenhum slot de ${uri} foi escolhido`);
+    doc.notice(`Nada mudou: nenhuma tomada de ${uri} foi escolhida`);
     return false;
   }
   const recusa = whyCannotGoUp(doc, uri, slot);
@@ -760,8 +760,8 @@ export async function putProjectInside(
 /** A janela de escolher o slot, como a do "Este boneco". */
 function askUpSlot(doc: EditorDoc, slots: string[], uri: string): Promise<string | null> {
   return askPick({
-    title: `Em que slot de ${uri.replace(/\.bone$/i, '')} entra?`,
-    placeholder: 'Qual slot?',
+    title: `Em que tomada de ${uri.replace(/\.bone$/i, '')} entra?`,
+    placeholder: 'Qual tomada?',
     search: (text) => slots
       .filter((nome) => nome.toLowerCase().includes(String(text).trim().toLowerCase()))
       .map((nome) => ({ id: nome, label: nome, hint: upSlotHint(doc, uri, nome) })),
@@ -804,7 +804,7 @@ export async function chooseIntoProject(
 ): Promise<boolean> {
   const links = testLinks(doc);
   if (links.length === 0) {
-    doc.notice('Não há ligação de teste para pôr no projeto. Arraste uma entidade da prateleira até a linha de um slot');
+    doc.notice('Não há ligação de teste para pôr no projeto. Arraste uma peça da lista Peças até a linha de uma tomada');
     return false;
   }
   const i = links.length === 1 ? 0 : await ask(links);

@@ -140,6 +140,6 @@ export function shelfData(doc: EditorDoc, uri: string): SkeletonData | null {
 
 /** A dica de uma linha da prateleira que é uma base do projeto. */
 export function shelfBaseHint(row: EntityRow): string {
-  return `${row.name}: base do projeto. Arraste até a linha de um slot, na Montagem, para pô-la ali em teste, `
+  return `${row.name}: base do projeto. Arraste até a linha de uma tomada, nos Encaixes, para pô-la ali em teste, `
     + 'ou para a cena, para pendurá-la no osso em que ela cair';
 }
