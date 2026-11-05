@@ -1817,3 +1817,14 @@ describe('QA 04/11/2026 — D4: o rascunho recuperado não está salvo', () => {
     expect(fonte).toMatch(/doc\.setFile\(file, \{ path: rascunho\.path, atlases: \[\], images: new Map\(\), unsaved: true \}\)/);
   });
 });
+
+describe('QA 04/11/2026 — D18: Reabrir o fechado também nasce "não salvo"', () => {
+  // A mesma forma do D4, na outra porta do rascunho: Arquivo → Reabrir o
+  // fechado abria o guardado com setFile limpo — "Sem mudanças por salvar." de
+  // um trabalho que não está no disco.
+  it('o setFile do reabrir leva unsaved', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('export async function reopenClosed('), fonte.indexOf("Reaberto o de ${quando}"));
+    expect(corpo).toContain('shell.doc.setFile(file, { path: draft.path, atlases: [], images: new Map(), unsaved: true });');
+  });
+});

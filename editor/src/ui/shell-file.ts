@@ -785,7 +785,8 @@ export async function reopenClosed(shell: Shell): Promise<void> {
   try {
     const file = JSON.parse(draft.json) as BoneFile;
     forgetImportedImages(shell.doc);
-    shell.doc.setFile(file, { path: draft.path, atlases: [], images: new Map() });
+    // QA 04/11/2026 (D18): o guardado não está no disco — nasce "não salvo", como no D4.
+    shell.doc.setFile(file, { path: draft.path, atlases: [], images: new Map(), unsaved: true });
     // As imagens NÃO voltam: o rascunho guarda o `.bone`, e não os PNG. Com o
     // arquivo já salvo em disco, abrir por Arquivo → Abrir traz tudo.
     // Rodada 50, lote 4 (doc 100): a frase dizia o porquê e não o remédio.
