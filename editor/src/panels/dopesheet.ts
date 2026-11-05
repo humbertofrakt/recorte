@@ -63,7 +63,7 @@ import { askForm } from '../ui/dialog.js';
 import { renderEventKeyEditor } from './event-key-editor.js';
 import { registerAction, runAction } from '../ui/actions.js';
 import { actionsFor, isTyping, keyOf } from '../ui/keys.js';
-import { BASE_SHEET_NOTE, KEY_HINT, dragReadout, keyTitle, popupPlacement, segmentPath, shouldAnnounceNewKeys, entityStartValue, formatSeconds, bandLimitNotice, deleteKeyGoesTo, DUPLICATE_IN_TIMELINE_NOTICE, keyMenuPlan } from './dopesheet-model.js';
+import { BASE_SHEET_NOTE, KEY_HINT, dragReadout, keyTitle, popupPlacement, segmentPath, shouldAnnounceNewKeys, entityStartValue, formatSeconds, bandLimitNotice, deleteKeyGoesTo, DUPLICATE_IN_TIMELINE_NOTICE, keyMenuPlan, curveAppliedNotice } from './dopesheet-model.js';
 import { removeKeyRef } from '../anim/body.js';
 
 import { hasKeysCopied, setEntityAnimationAt } from './dopesheet-actions.js';
@@ -1585,9 +1585,7 @@ export class DopesheetPanel implements Panel {
       written = setKeyCurve(file, animationName, refs, kind);
     }));
     const rotulo = CURVE_KINDS.find((item) => item.id === kind)?.label ?? kind;
-    doc.notice(written === 0
-      ? 'Nenhuma chave mudou: a última de cada linha não tem para onde curvar'
-      : `${written} chave(s) agora ${rotulo === 'Parada' ? 'paradas' : `em ${rotulo}`}`);
+    doc.notice(curveAppliedNotice(written, refs.length, rotulo));
   }
 
   /** Apaga uma chave só, pelo duplo clique nela — item 90. */

@@ -893,3 +893,29 @@ export function pasteDoneNotice(refs: ReadonlyArray<KeyRef>, before: number, aft
     ? `${resumo}. A animação cresceu de ${formatSeconds(before)} para ${formatSeconds(after)}`
     : resumo;
 }
+
+/**
+ * **O rodapé da curva** — QA da noite de 04/11/2026. Dizia "4 chave(s) agora
+ * em Suave" com 6 escolhidas: o "(s)" de formulário, e as 2 que ficaram de
+ * fora sem razão. A única que não muda é a última da linha (`setKeyCurve`).
+ */
+export function curveAppliedNotice(written: number, chosen: number, label: string): string {
+  if (written === 0) return 'Nenhuma chave mudou: a última de cada linha não tem para onde curvar';
+  const parada = label === 'Parada';
+  const frase = written === 1
+    ? `1 chave agora ${parada ? 'parada' : `em ${label}`}`
+    : `${written} chaves agora ${parada ? 'paradas' : `em ${label}`}`;
+  const fora = chosen - written;
+  if (fora <= 0) return frase;
+  return fora === 1
+    ? `${frase}. A outra é a última da linha: não tem para onde curvar`
+    : `${frase}. As outras ${fora} são a última da linha: não têm para onde curvar`;
+}
+
+/** O rodapé de mudar a duração, com as chaves que sobraram depois do fim contadas direito. */
+export function keysAfterEndNotice(duration: string, after: number): string {
+  if (after <= 0) return `Duração: ${duration}`;
+  return after === 1
+    ? `Duração: ${duration}. 1 chave ficou depois do fim`
+    : `Duração: ${duration}. ${after} chaves ficaram depois do fim`;
+}
