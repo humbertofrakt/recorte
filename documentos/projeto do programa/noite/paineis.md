@@ -106,4 +106,20 @@ ganhou um argumento; o teste procura a nova, e mais a linha que dobra.
 | A régua da ferramenta | só vale até 800 px de altura | Em 1440 a Malha com Transformar cabe sem ela |
 | Dois arquivos de lógica tocados | `mesh-panel.ts` (1 linha: a marca) · `view-panel-actions.ts` e `properties-model.ts` (o que nasce dobrado na tela baixa) | Mudança mínima, só arranjo. A lógica da Malha não mudou |
 
+## Depois de juntar o ramo da noite (00:55 UTC)
+
+`git merge origin/obra/noite-2026-11-04` (afbdfc0), sem conflito. Remedido tudo:
+
+| Régua | Resultado |
+|:---|:---|
+| `npm run medir` | 92 de 92 de lado · **90 de 92** de altura (o mesmo: só a Malha com Pesos rola) |
+| `npx vitest run` | 5.898 passam · 1 vermelho, o conhecido do manual |
+| `tsc` | limpo |
+| Conformidade | 132 de 132 |
+| Roteiro | 14 de 14 |
+
+O aviso do Diretor (00:23): não mexi no CSS de Entidades, Skins nem Animações.
+Toda dobra que fiz deixa o título à vista e diz o que tem dentro ("A cena",
+"Desenho", "Tamanho da imagem").
+
 FIM
