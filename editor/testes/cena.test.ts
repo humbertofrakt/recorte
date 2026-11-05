@@ -2014,3 +2014,16 @@ describe('prova de pessoa final: trocar de base ajusta a vista', () => {
     expect(ramo).toContain('if (antes !== null && foco !== null) this.fitToScreen();');
   });
 });
+
+describe('prova de pessoa final: as frases da Oficina e da troca de base chegam ao rodapé', () => {
+  it('a Oficina diz o primeiro passo antes dos dois-pontos (o rodapé apertado mostra só isso)', async () => {
+    const { OFICINA_PRIMEIRO_PASSO } = await import('../src/io/oficina.js');
+    expect(versoesDaFraseCena(OFICINA_PRIMEIRO_PASSO).at(-1)).toBe('Abra walk e aperte ▶');
+  });
+
+  it('o rebuild das compartilhadas, depois da troca de base, repete a última frase', () => {
+    const fonte = readFileSyncCena(resolveCena(import.meta.dirname, '../src/panels/reuse-actions.ts'), 'utf8');
+    expect(fonte).toContain('const fala = ultimaFala;\n        doc.rebuild();\n        if (fala !== null) doc.notice(fala);');
+    expect(fonte).toContain('    lembra,\n');
+  });
+});
