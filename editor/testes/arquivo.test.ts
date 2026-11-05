@@ -2470,3 +2470,12 @@ describe('QA 04/11/2026 — D19: a pasta escolhida no Salvar liga as imagens que
     expect(liga).toBeLessThan(corpo.indexOf("return 'pasta';"));
   });
 });
+
+describe('QA 04/11/2026 — o projeto com manifesto aberto com aviso: o aviso primeiro', () => {
+  // A mesma forma do D3 e do D23: "Projeto X aberto: …. <aviso>" — o rodapé
+  // corta na primeira frase, e o aviso some. Achado na varredura da forma.
+  it('o aviso vem antes da notícia', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(fonte).toContain('? `${lido.warnings[0]}. ${projectOpenedNotice(folder.name, lido.lists)}`');
+  });
+});

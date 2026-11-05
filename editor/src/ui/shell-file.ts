@@ -310,7 +310,8 @@ async function abrirNaPasta(shell: Shell, folder: ProjectFolder, boneEscolhido?:
         if (lido.mainHandle !== null) useOpenHandle(lido.mainHandle);
         await adoptFolderAtlases(shell.doc);
         shell.statusState.textContent = lido.warnings.length > 0
-          ? `${projectOpenedNotice(folder.name, lido.lists)}. ${lido.warnings[0]}`
+          // QA 04/11/2026: o aviso primeiro — o rodapé corta na 1ª frase.
+          ? `${lido.warnings[0]}. ${projectOpenedNotice(folder.name, lido.lists)}`
           : projectOpenedNotice(folder.name, lido.lists);
         return;
       }
