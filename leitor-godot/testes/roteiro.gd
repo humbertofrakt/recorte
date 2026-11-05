@@ -126,7 +126,7 @@ func _passo_1_abre() -> void:
 	# O único aviso que o LEIA-ME espera: a cor escura do cabelo (falta shader).
 	var outros: Array = heroi.avisos.filter(func(t): return not t.contains("cor escura"))
 	_ok("1: o nó Heroi carrega o heroi-fogo.bone, sem aviso além da cor escura",
-		heroi.esqueleto != null and outros.is_empty(), "\n".join(outros))
+		heroi.esqueleto != null and outros.is_empty(), "\n".join(PackedStringArray(outros)))
 
 
 # 2 — o Inspetor (o "parado no editor" é o `Engine.is_editor_hint`: só a janela)

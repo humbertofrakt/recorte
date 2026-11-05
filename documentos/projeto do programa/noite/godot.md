@@ -32,9 +32,17 @@ Deu FALHOU? Tire a foto e mande. O roteiro nunca rodou: o erro pode ser dele.
 | O que fiz | Como provei | O que ficou |
 |:---|:---|:---|
 | **C-326**: copiei o conserto do Python para `addons/recorte/ator.gd`. A chave `reset` da animação da peça agora dispara, no relógio da peça, antes da física do quadro | Linha a linha contra `runtime-python/recorte/actor.py`. O Python passa o C-326 (diferença 3,3e-7) | Rodar no Godot. Primeiro com o `ator.gd` velho (tem de dar 119, o C-326 com 1,180874), depois com o novo (120) |
-| **`testes/roteiro.gd`**: os passos 1 a 14 do `LEIA-ME.md` por código, na cena do exemplo, com as teclas apertadas à mão | Não rodou | Rodar. Pode cair por erro do próprio roteiro: ele nunca rodou |
+| **`testes/roteiro.gd`**: os passos 1 a 14 do `LEIA-ME.md` por código, na cena do exemplo, com as teclas apertadas à mão | Não rodou | Rodar. Pode cair por erro do próprio roteiro: ele nunca rodou. O passo 8 ficou forte depois (ver abaixo) |
 | Uma linha nova no `LEIA-ME.md`: como rodar o roteiro | — | — |
 | Passo 15, exportar para Web | Não tentei: sem Godot rodando, não há o que exportar | Fica para a mão |
+
+## Depois do primeiro relatório (pedido do Diretor, 00h10)
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| Comparei o GDScript com o Python, linha a linha, onde os C-3xx mexem (C-300, C-310 a C-326): `actor.py` × `ator.gd`, `fire_physics_resets`, `physics_reset` e `reset_state` (`constraints.py` × `regras.gd`), e o relógio da física no dump (`pose_dump.py` × `dump.gd`) | Leitura. Só o que não está no Python é diferente: as ordens do jogo (`animar_peca`), o `liberar()` e o `topo` das skins | **Nenhuma outra diferença como a do C-326.** O resto dos C-3xx (a ordem do desenho, as máscaras) é do desenhador, que já passava |
+| O passo 8 do roteiro, de verdade: a mão anda 100 depois da pose; no mundo a faísca fica; em `local` ela segue (o controle, regra 26) | Leitura do `particulas.gd`: no mundo a faísca usa a pose do nascimento; em `local`, a do quadro | Rodar |
+| Revisão de sintaxe à mão: `ator.gd` (a parte nova) e `roteiro.gd` inteiro | Nomes repetidos no mesmo escopo: nenhum. Tipos: um `join` recebia `Array`; agora recebe `PackedStringArray`. O projeto não transforma aviso em erro | O Godot é quem diz a última palavra |
 
 ## O que o roteiro confere em cada passo
 
@@ -47,7 +55,7 @@ Deu FALHOU? Tire a foto e mande. O roteiro nunca rodou: o erro pode ser dele.
 | 5 | Espaço toca attack; o braço estica; no fim volta a walk | |
 | 6 | A: o cabelo some; S: volta | |
 | 7 | F: faíscas laranja, que somam a luz, fortes e fracas juntas; F de novo apaga | o brilho na tela |
-| 8 | o emissor está no espaço do **mundo** | **fraco**: não prova que a faísca fica no ar ao apertar W |
+| 8 | W com faíscas; o emissor está no **mundo**; a mão anda 100 depois da pose e **nenhuma faísca se move**. Controle: o mesmo emissor em `local` segue a mão | o olho no ar |
 | 9 | I: a cabeça respira; P: nada anda em 30 quadros; C: anda 1 quadro só | |
 | 10–12 | E: capacete; o texto diz "Na mão: capacete.bone"; a luz troca de cor; o golpe não o tira; E volta a espada | |
 | 13–14 | Q: aura; a primeira peça desenhada é a bola de trás, a última a da frente; ela gira; Q tira | a cor rosa |
