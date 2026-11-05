@@ -348,7 +348,7 @@ passo('00-a-tela.png', async () => {
 const MENUS = [
   ['Arquivo', '00-menu-arquivo.png'], ['Editar', '00-menu-editar.png'], ['Imagens', '00-menu-imagens.png'],
   ['Base', '00-menu-base.png'], ['Malha e regras', '00-menu-malha-e-regras.png'], ['Animação', '00-menu-animacao.png'],
-  ['Skins', '00-menu-skins.png'], ['Entidades', '00-menu-entidades.png'], ['Partículas', '00-menu-particulas.png'],
+  ['Skins', '00-menu-skins.png'], ['Tomadas', '00-menu-tomadas.png'], ['Partículas', '00-menu-particulas.png'],
   ['Exibir', '00-menu-exibir.png'], ['Janela', '00-menu-janela.png'], ['Ajuda', '00-menu-ajuda.png'],
 ];
 passo('00-menu-', async () => {
@@ -591,7 +591,7 @@ passo('04-', async () => {
 
 passo('05-entidades.png', async () => {
   await heroi();
-  await aba('Entidades');
+  await aba('Tomadas');
   await foto('05-entidades.png', DIREITA);
 });
 

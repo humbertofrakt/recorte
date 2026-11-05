@@ -144,7 +144,7 @@ posição e giro desse osso (`ferramentas/src/importar/spriter.ts:535-545` e
 | No Spriter | No Recorte |
 |:---|:---|
 | *entity* | **base**. Um projeto tem várias bases: o Salvar grava um `.bone` por base e um `manifest.json` |
-| *sub-entity* | **entidade**: um `.bone` pendurado num slot de outro. Menu **Entidades**. Ver o [capítulo 5](05-entidades.md) |
+| *sub-entity* | **entidade**: um `.bone` pendurado num slot de outro. Menu **Tomadas** (era Entidades). Ver o [capítulo 5](05-entidades.md) |
 | *character map* | **skin** |
 | *sprite* | **slot** mais **anexo** |
 | *bone* | **osso** |
@@ -357,7 +357,7 @@ Conferido no código em 07/10/2026.
 | Skins em Feitas e Ativas, arrastar | existe | `panels/skins-model.ts` |
 | Variáveis, etiquetas, eventos com áudio | existe | menu Animação |
 | Várias bases num projeto (*entities*) | existe | Salvar com `manifest.json` |
-| Sub-entidade (entidade num slot) | existe | menu Entidades, [capítulo 5](05-entidades.md) |
+| Sub-entidade (entidade num slot) | existe | menu Tomadas, [capítulo 5](05-entidades.md) |
 | Importar pela pasta, no editor | existe | **Arquivo → Importar → De outro programa…** |
 | Importar o `.scml` inteiro como projeto | existe diferente | só na linha de comando; o editor traz a primeira *entity* |
 | Lip sync, marca d'água, paleta indexada, `M` + arrastar | falta | — |

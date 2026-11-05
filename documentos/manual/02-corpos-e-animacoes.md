@@ -96,7 +96,7 @@ Animações
 | Botão | Faz | Também em |
 |:---|:---|:---|
 | Salvar como base nova | o quadro de agora vira uma base nova, com o nome que você der. A animação não muda | Base → Salvar como base nova… |
-| Rebaixar a entidade | a base escolhida sai da lista Bases e vai para o painel Entidades. A base em foco não se rebaixa | Entidades → Rebaixar a entidade |
+| Rebaixar a entidade | a base escolhida sai da lista Bases e vai para a aba Tomadas. A base em foco não se rebaixa | Tomadas → Rebaixar a entidade |
 
 **Nada disto trava a edição.** Osso novo, malha nova, imagem nova: tudo
 funciona no meio de uma animação. O que não é animável vai para a base, e o
@@ -268,7 +268,7 @@ Projeto: "mecha"
 | Várias bases, cada uma com as animações dela | existe | tira **Bases**, na janela Animações |
 | Base nova a partir de um quadro | existe | Base → Salvar como base nova… |
 | Trazer uma base de fora | existe | Base → Trazer uma base de fora… |
-| Rebaixar uma base a entidade | existe | Entidades → Rebaixar a entidade · botão na tira Bases |
+| Rebaixar uma base a entidade | existe | Tomadas → Rebaixar a entidade · botão na tira Bases |
 | Clonar uma base com as animações | falta | não achei porta |
 | O tocador nunca some | existe | linha do tempo, com a base aberta |
 | Chaves guardadas da peça tirada | existe | Base → Chaves guardadas… |

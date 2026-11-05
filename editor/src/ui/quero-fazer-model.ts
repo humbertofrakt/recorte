@@ -118,25 +118,28 @@ export const TAREFAS: readonly Tarefa[] = Object.freeze([
     capitulo: '4. Animar',
   },
   {
+    // 05/11: as TOMADAS (obra/entidades). Um gesto só: a tomada recebe um projeto.
     id: 'arma', titulo: 'Pôr uma arma na mão',
-    palavras: ['arma', 'espada', 'segurar', 'mão', 'motosserra', 'objeto', 'entidade'],
+    palavras: ['arma', 'espada', 'segurar', 'mão', 'motosserra', 'objeto', 'tomada', 'encaixar'],
     passos: [
-      P('abrir-entidade', 'Traga a arma, feita noutro projeto: {menu}.'),
-      G('Escolha o osso da mão, na Árvore.'),
-      P('por-entidade', 'Ponha a arma na mão: {menu}.'),
-      P('escolher-animacao-entidade', 'Para a arma tocar uma animação dela: {menu}.'),
+      G('Abra o boneco que vai segurar.'),
+      G('Botão direito no osso da mão, na cena ou na Árvore.'),
+      P('encaixar-projeto', 'Escolha "Encaixar um projeto…" ({menu}) e o arquivo .bone da arma.'),
+      G('A arma entra na tomada da mão. O ícone de dois pinos mostra a tomada.'),
     ],
-    capitulo: '11. A espada de um, o boneco de outro',
+    capitulo: '5. Tomadas',
   },
   {
     id: 'veiculo', titulo: 'Pôr o boneco dentro de um veículo (o mecha)',
-    palavras: ['veículo', 'veiculo', 'mecha', 'carro', 'dentro', 'montar', 'robô'],
+    palavras: ['veículo', 'veiculo', 'mecha', 'carro', 'dentro', 'cabine', 'robô', 'tomada'],
     passos: [
-      P('abrir-entidade', 'Traga o veículo, feito noutro projeto: {menu}.'),
-      P('por-dentro-de', 'Veja o boneco dentro dele, só de teste: {menu}.'),
-      P('por-no-projeto', 'Ficou bom? Grave: {menu}.'),
+      P('abrir', 'Abra o veículo: {menu}.'),
+      G('Botão direito no osso da cabine, na cena ou na Árvore.'),
+      P('encaixar-projeto', 'Escolha "Encaixar um projeto…" ({menu}) e o arquivo .bone do boneco.'),
+      G('A aba Tomadas mostra a cadeia: veículo › cabine › boneco.'),
+      P('por-dentro-de', 'Só para testar, sem gravar: {menu}.'),
     ],
-    capitulo: '5. Entidades',
+    capitulo: '5. Tomadas',
   },
   {
     // Noite de 04/11: o Guarda-roupa (obra/skins) é a porta da roupa.
@@ -173,8 +176,16 @@ export const TAREFAS: readonly Tarefa[] = Object.freeze([
     ],
     capitulo: '2. Bases e animações',
   },
-  // Pronto para acrescentar: "Ver tudo funcionando" → o cartão "Abrir a
-  // oficina", quando a sessão Reaproveitar der a ele um id de ação.
+  {
+    id: 'oficina', titulo: 'Ver tudo funcionando (a oficina de exemplo)',
+    palavras: ['exemplo', 'oficina', 'ver', 'aprender', 'pronto', 'tudo', 'demonstração'],
+    passos: [
+      P('abrir-oficina', 'Abra {menu}.'),
+      G('Lá estão a motosserra, o mecha com o herói dentro, três bonecos com as mesmas animações e duas roupas.'),
+      G('Clique numa animação, na aba Animações, e aperte ▶.'),
+    ],
+    capitulo: '0. Abrir o Recorte',
+  },
   {
     id: 'dobrar', titulo: 'Fazer uma imagem dobrar (malha)',
     palavras: ['malha', 'dobrar', 'curvar', 'mesh', 'peso', 'capa'],

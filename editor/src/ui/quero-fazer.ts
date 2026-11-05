@@ -129,13 +129,15 @@ export function mostrarOnde(tarefa: Tarefa, avisar: (texto: string) => void): vo
   const acao = primeiroComando(tarefa);
   const caminho = acao === null ? null : caminhoDe(acao);
   if (caminho === null) {
-    avisar(`"${tarefa.titulo}": siga os passos na janela Quero fazer…`);
+    // O rodapé apertado mostra só o que vem ANTES dos dois-pontos: o
+    // essencial vai primeiro (regra achada pela Cena, 05/11).
+    avisar(`Siga os passos da janela Quero fazer… (${tarefa.titulo})`);
     return;
   }
   const [menu, ...resto] = caminho.rotulos;
   const botao = [...document.querySelectorAll<HTMLButtonElement>('.menu-button')].find((b) => b.textContent?.trim() === menu);
   if (botao === undefined) {
-    avisar(`Aqui: ${caminhoEscrito(caminho)}`);
+    avisar(`${caminhoEscrito(caminho)} — é aqui`);
     return;
   }
   if (botao.getAttribute('aria-expanded') !== 'true') botao.click();
@@ -158,5 +160,5 @@ export function mostrarOnde(tarefa: Tarefa, avisar: (texto: string) => void): vo
     alvo.style.outlineOffset = '-3px';
     alvo.scrollIntoView({ block: 'nearest' });
   }
-  avisar(`Aceso em laranja: ${caminhoEscrito(caminho)}`);
+  avisar(`${caminhoEscrito(caminho)} — aceso em laranja`);
 }
