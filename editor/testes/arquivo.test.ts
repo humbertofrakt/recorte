@@ -2427,3 +2427,29 @@ describe('QA 04/11/2026 — D8: o .boneb aberto sozinho fala português', () => 
     expect(aberto!.warnings[0]).toMatch(/^Esta base usa heroi\.atlas\.json, que mora na pasta do projeto, e ela veio sozinha/);
   });
 });
+
+describe('QA 04/11/2026 — D17: Entregar uma base leva o atlas que ela cita', () => {
+  // A prova (Chromium sem janela): Importar → De outro programa… → a pasta do
+  // Spine (heroi-spine.json, heroi.atlas, heroi.png) → Exportar → Entregar uma
+  // base… Saiu SÓ entregue.bone, citando heroi-spine.atlas.json — um arquivo
+  // que não existe em lugar nenhum (o atlas importado mora na memória). A
+  // janela dizia "o atlas que ele já citava vale". No jogo, nenhuma imagem.
+  it('sem imagem da pasta para fatiar, os atlas citados e as páginas deles vão junto', async () => {
+    const { deliveryAtlasPlan } = await import('../src/io/open-save.js');
+    const plano = deliveryAtlasPlan(
+      [{ name: 'heroi-spine.atlas.json', text: '{}' }],
+      [{ pages: [{ image: 'heroi.png' }, { image: 'heroi2.png' }] }],
+    );
+    expect(plano.atlas).toEqual(['heroi-spine.atlas.json']);
+    expect(plano.paginas).toEqual(['heroi.png', 'heroi2.png']);
+  });
+
+  it('a entrega usa o plano quando não há pack, e a janela não diz mais "vale"', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/open-save.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('export async function deliverBody('), fonte.indexOf('/** Uma linha de rodapé para o que a entrega gravou. */'));
+    expect(corpo).toContain('deliveryAtlasPlan(');
+    expect(corpo).not.toContain('o atlas que ela já citava vai como está, sem fatiar.');
+    const casca = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(casca).not.toContain('o atlas que ele já citava vale');
+  });
+});

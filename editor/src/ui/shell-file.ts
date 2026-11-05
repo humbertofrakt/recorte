@@ -531,8 +531,11 @@ export async function deliverOneBody(shell: Shell): Promise<void> {
     shell.statusState.textContent = deliveredLine(result);
     await tellUser({
       title: 'Base entregue',
-      lead: result.atlas === null
-        ? `Saiu ${result.name}, sozinho. Não havia imagem da pasta para fatiar: o atlas que ele já citava vale.`
+      // QA 04/11/2026 (D17): sem imagem da pasta, o atlas citado vai junto, inteiro.
+      lead: result.atlas === null && (result.carried ?? []).length > 0
+        ? `Saiu ${result.name} com ${(result.carried ?? []).join(', ')} e as páginas, inteiros: não havia imagem da pasta para fatiar.`
+        : result.atlas === null
+        ? `Saiu ${result.name}, sozinho: esta base não cita atlas nenhum.`
         : `Saíram ${result.name} e ${result.atlas}, com ${result.images} ${result.images === 1 ? 'imagem' : 'imagens'} — só as que ESTA base usa.`,
       // Rodada 45, lote 4: sem atlas novo, a frase de cima já diz o aviso de baixo.
       lines: result.atlas === null ? result.warnings.filter((aviso) => !aviso.startsWith('As imagens desta base não vieram da pasta')) : result.warnings,

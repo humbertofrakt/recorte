@@ -772,6 +772,8 @@ export interface DeliveredBody {
   images: number;
   /** Para onde foram: a pasta escolhida, ou a pasta de downloads. */
   where: 'pasta' | 'baixado';
+  /** Os atlas que foram junto como estavam, sem fatiar — D17. */
+  carried?: string[];
   warnings: string[];
 }
 
@@ -806,19 +808,45 @@ export async function deliverBody(doc: Doc): Promise<DeliveredBody | null> {
   // O atlas fatiado nasce aqui, e o `.bone` que sai já o cita — por isso antes
   // do `serialize`, como no Salvar.
   const pack = await buildFolderPack(doc, stemOfName(name));
-  if (pack === null) {
-    warnings.push('As imagens desta base não vieram da pasta do projeto: o atlas que ela já citava vai como está, sem fatiar.');
-  }
   const check = checkBeforeSaving(doc.serialize(), doc.atlases, doc.skeletons);
-  for (const problem of check.problems) warnings.push(problem);
 
   const out: Array<{ name: string; blob: Blob }> = [];
+  const levados: string[] = [];
   if (pack !== null) {
     out.push({ name: pack.atlasName, blob: new Blob([pack.text], { type: 'application/json' }) });
     for (const page of pack.pages) {
       out.push({ name: page.name, blob: new Blob([page.bytes.slice().buffer as ArrayBuffer], { type: 'image/png' }) });
     }
+  } else {
+    // QA 04/11/2026 (D17): sem imagem da pasta para fatiar, a entrega saía SÓ
+    // com o .bone — e ele cita um atlas que pode não existir em disco (o do
+    // Spine importado mora na memória). Entregar ao jogo é entregar inteiro:
+    // os atlas que a base cita e as páginas deles vão junto, como estão.
+    const disk = atlasFilesForDisk(doc);
+    const atlases = doc.atlases.filter((atlas) => !isProvisionalAtlas(atlas));
+    const plano = deliveryAtlasPlan(disk.files, atlases);
+    levados.push(...plano.atlas);
+    for (const file of disk.files) {
+      const nome = file.name.split(/[\\/]/).pop() || file.name;
+      if (plano.atlas.includes(nome)) out.push({ name: nome, blob: new Blob([file.text], { type: 'application/json' }) });
+    }
+    const feitas = new Set<string>();
+    for (const atlas of atlases) {
+      for (const page of atlas.pages) {
+        const nome = page.image.split(/[\\/]/).pop() || page.image;
+        if (feitas.has(nome)) continue;
+        feitas.add(nome);
+        const source = doc.imageFor(page);
+        const blob = source === null ? null : await paginaComoPng(source, page.width, page.height);
+        if (blob === null) warnings.push(`A página ${nome} não tem imagem aberta: ela não foi junto.`);
+        else out.push({ name: nome, blob });
+      }
+    }
+    if (plano.atlas.length > 0) {
+      warnings.push(`As imagens desta base não vieram da pasta do projeto: ${plano.atlas.join(', ')} e as páginas dele saem junto, como estão, sem fatiar.`);
+    }
   }
+  for (const problem of check.problems) warnings.push(problem);
   const text = doc.serialize();
 
   if (handle !== null) {
@@ -828,24 +856,39 @@ export async function deliverBody(doc: Doc): Promise<DeliveredBody | null> {
     const directory = await directoryOf(handle);
     if (directory !== null) {
       for (const file of out) await writeInto(directory, file.name, file.blob);
-      return { name, atlas: pack?.atlasName ?? null, images: pack?.count ?? 0, where: 'pasta', warnings };
+      return { name, atlas: pack?.atlasName ?? null, images: pack?.count ?? 0, where: 'pasta', warnings, carried: levados };
     }
     for (const file of out) downloadBlob(file.name, file.blob);
     return {
-      name, atlas: pack?.atlasName ?? null, images: pack?.count ?? 0, where: 'pasta',
+      name, atlas: pack?.atlasName ?? null, images: pack?.count ?? 0, where: 'pasta', carried: levados,
       warnings: out.length === 0 ? warnings
         : [...warnings, 'O navegador não entregou a pasta do arquivo: o atlas e as páginas foram baixados. Ponha-os ao lado do .bone.'],
     };
   }
   downloadText(name, text);
   for (const file of out) downloadBlob(file.name, file.blob);
-  return { name, atlas: pack?.atlasName ?? null, images: pack?.count ?? 0, where: 'baixado', warnings };
+  return { name, atlas: pack?.atlasName ?? null, images: pack?.count ?? 0, where: 'baixado', warnings, carried: levados };
+}
+
+/**
+ * Os arquivos de atlas que a entrega leva quando não há imagem da pasta para
+ * fatiar — D17. Pura: o nome de cada atlas (sem pasta) e o de cada página.
+ */
+export function deliveryAtlasPlan(
+  files: ReadonlyArray<{ name: string; text: string }>,
+  atlases: ReadonlyArray<{ pages: ReadonlyArray<{ image: string }> }>,
+): { atlas: string[]; paginas: string[] } {
+  const nomeDe = (nome: string): string => nome.split(/[\\/]/).pop() || nome;
+  const atlas = [...new Set(files.map((file) => nomeDe(file.name)))];
+  const paginas = [...new Set(atlases.flatMap((a) => a.pages.map((page) => nomeDe(page.image))))];
+  return { atlas, paginas };
 }
 
 /** Uma linha de rodapé para o que a entrega gravou. */
 export function deliveredLine(result: DeliveredBody): string {
+  const levados = result.carried ?? [];
   const atlas = result.atlas === null
-    ? 'sem atlas novo'
+    ? (levados.length > 0 ? `com ${levados.join(', ')} inteiro` : 'sem atlas')
     : `${result.atlas} com ${result.images} ${result.images === 1 ? 'imagem' : 'imagens'}`;
   return `Base entregue em ${result.name} (${atlas})`;
 }
