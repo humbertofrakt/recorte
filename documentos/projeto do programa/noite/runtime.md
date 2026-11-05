@@ -7,11 +7,11 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 
 | Medida | Antes | Agora |
 |:---|:---:|:---:|
-| Casos em `conformidade/casos/` | 120 | **132** |
+| Casos em `conformidade/casos/` | 120 | **135** |
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
-| TS × Python, campo a campo | 120 de 120 | **132 de 132** |
-| Pacote do Construct | 120 de 120 | **132 de 132** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.850**, o mesmo 1 vermelho |
+| TS × Python, campo a campo | 120 de 120 | **135 de 135** |
+| Pacote do Construct | 120 de 120 | **135 de 135** |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.853**, o mesmo 1 vermelho |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
@@ -60,6 +60,9 @@ conta **antes** de rodar runtime):
 | **C-331** driver contínuo e `source` | Smart Bone com clamp; `timeTo` padrão = duração; alvo `slot/color` | verde | verde | sim (3 de 3) |
 | **C-332** driver em parâmetro, variável e constraint | `int` escrito por driver trunca; o `mix` de uma constraint posterior | verde | verde | sim (4 de 4) |
 | **X-309** BOM na leitura | §2.1: o leitor DEVE aceitar BOM | **vermelho (o executor) → consertado** | verde | — |
+| **X-310** fallbacks de driver e parâmetro | §2.5: alvo de tipo desconhecido cai **sozinho**; modo desconhecido vira `replace`; `source` desconhecido → `default`; propriedade de timeline desconhecida | verde | verde | sim (5 de 5) |
+| **X-311** `sequence.mode` desconhecido | §2.5: vira `hold` | verde | verde | sim |
+| **X-312** atlas com `rotation: 45` | §2.5: vira `0` (o esperado é o do B-102) | verde | verde | sim |
 | **ZIP-502** `main` numa subpasta | §2.8: a base é a pasta do `main`; uma **isca** com o mesmo nome na raiz | verde | verde | sim (a isca no lugar dá `−15` em vez de `−40`) |
 | **P-032** `space`/`sortMode` desconhecidos | §7.4 da extensão: caem em `local` e `youngestInFront` (o aviso **não** é medido) | verde | verde | sim (2 de 2) |
 | **P-030** rampa com torneira | ver acima | verde (consertado) | verde | — |
@@ -80,6 +83,14 @@ conta **antes** de rodar runtime):
 
 **O que ainda não tem caso** (está na §12.4): `blend` (o dump não tem canal
 para ele), e os alvos de `driver` do tipo `deform`, `morph`, `nested` e `drawOrder`.
+
+**Achado sobre a régua (regra 28):** o comparador só olha as chaves que o
+esperado cita (a §12.4 manda assim). Então **"o leitor ignorou"** só se prova
+por um efeito positivo: uma `boundingbox` de forma desconhecida, ou uma
+variável de tipo desconhecido, que o leitor **não** ignorasse apareceria como
+chave a mais, e passaria. Proposta, para decidir: `null` no esperado querendo
+dizer "esta chave **não** pode existir". Não fiz, porque muda o contrato da
+suíte para todo leitor.
 
 **Pergunta para o Humberto (não decidi):** a §2.1 chama de **L0** um número que
 não cabe em float64 (`1e400`) e chaves duplicadas no mesmo objeto. A §12.2 diz

@@ -3195,7 +3195,9 @@ caso exercita, hoje: `blend`, nem os alvos de `driver` do tipo `deform`,
 `variable` e o canal `variables`, C-330 `parameter`, o canal `parameters` e o
 `driver` em modo alvos, C-331 o `driver` em modo contínuo, o `source` (Smart
 Bone) e o alvo `slot`, C-332 os alvos `parameter`, `variable` e `constraint`,
-X-309 o BOM na leitura (2.1). `boundingbox` e o canal `boundingBoxes` já tinham caso;
+X-309 o BOM na leitura (2.1), X-310 cinco linhas de driver e parâmetro da
+tabela de 2.5, X-311 `sequence.mode` e X-312 `atlas.region.rotation` da mesma
+tabela. `boundingbox` e o canal `boundingBoxes` já tinham caso;
 `clipping` aparece em quatro casos de `drawList`. Até esta data a lista dizia
 "nenhum caso exercita `boundingbox`, `clipping`, `tag`, `variable`,
 `parameter`, `driver`, `darkColor` nem `blend`".)* (O `skeleton` aninhado, os dois canais de animação do
