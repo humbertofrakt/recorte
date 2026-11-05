@@ -152,7 +152,8 @@ function carregarEsqueleto(core, caso) {
   // Só o `.bone` de texto tem atlas soltos ao lado. O `.boneb` não é JSON, e
   // o `.bonez` já traz os atlas dentro do pacote.
   if (caso.entrada.endsWith('.bone')) {
-    const doc = JSON.parse(readFileSync(caso.entrada, 'utf8'));
+    // §2.1: o leitor DEVE aceitar BOM. `parseBoneText` o tira (caso X-309).
+    const doc = core.parseBoneText(readFileSync(caso.entrada, 'utf8'));
     for (const uri of doc.assets?.atlases ?? []) {
       const caminho = resolve(caso.dir, uri);
       if (!existsSync(caminho)) continue;

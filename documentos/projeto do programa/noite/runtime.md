@@ -7,15 +7,15 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 
 | Medida | Antes | Agora |
 |:---|:---:|:---:|
-| Casos em `conformidade/casos/` | 120 | **127** |
+| Casos em `conformidade/casos/` | 120 | **129** |
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
-| TS × Python, campo a campo | 120 de 120 | **127 de 127** |
-| Pacote do Construct | 120 de 120 | **127 de 127** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.837**, o mesmo 1 vermelho |
+| TS × Python, campo a campo | 120 de 120 | **129 de 129** |
+| Pacote do Construct | 120 de 120 | **129 de 129** |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.839**, o mesmo 1 vermelho |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
-Medido às 00h30 UTC de 05/11, com a casa só minha.
+Medido à 01h UTC de 05/11, com a casa só minha.
 
 ## 1. O P-002 (taxa em rampa) entrou em `casos/`
 
@@ -36,6 +36,7 @@ Medido às 00h30 UTC de 05/11, com a casa só minha.
 | Timeline `BONE_particle` sem `property`, `skin` e `attachment` na identidade | **projetei a identidade da §9.1 só nos tipos que eu conhecia**; o tipo novo perdeu três campos | **TS**, desde a 1ª fase | **P-031**: dois emissores no mesmo slot. O TS antigo dava **9** vivas em vez de **5** |
 | O mesmo defeito, visto pela 2ª fase | `rate` e `emitting` do mesmo emissor viravam "repetidas" | TS | **P-030**: rampa cortada pela torneira |
 | Tags antes da primeira chave | **usei a borda geral (§9.10) onde a regra específica (§8.5) manda** | **Python** | **B-120** |
+| Arquivo com BOM não abria **na suíte** | **o executor leu o arquivo antes do leitor**, com `JSON.parse` cru, para achar os atlas | o executor (`ferramentas/conformidade.mjs`), o adaptador de referência, o do Construct e o teste da suíte. O runtime já tirava o BOM | **X-309** |
 
 ## 3. Leitura de fora: spec × schema × runtime
 
@@ -56,6 +57,8 @@ conta **antes** de rodar runtime):
 | **B-120** tags ativas | só `animation.tags` antes da 1ª chave; a ordem da união | verde | **vermelho → consertado** | — |
 | **B-121** variáveis | `int` trunca em direção a zero; padrão; antes da 1ª chave | verde | verde | sim (3 de 3) |
 | **C-330** parâmetro e driver | clamp; envolver (`360 → 0`); `add` soma o **desvio** do setup | verde | verde | sim (3 de 3) |
+| **C-331** driver contínuo e `source` | Smart Bone com clamp; `timeTo` padrão = duração; alvo `slot/color` | verde | verde | sim (3 de 3) |
+| **X-309** BOM na leitura | §2.1: o leitor DEVE aceitar BOM | **vermelho (o executor) → consertado** | verde | — |
 | **P-030** rampa com torneira | ver acima | verde (consertado) | verde | — |
 | **P-031** dois emissores no slot | ver acima | verde (consertado) | verde | — |
 
@@ -70,9 +73,15 @@ conta **antes** de rodar runtime):
 | Spec §8.5 | a regra das tags ganha da borda da §9.10; a ordem da união |
 | Spec §12.4 | a lista "o que a suíte ainda não cobre" atualizada |
 
-**O que ainda não tem caso** (está na §12.4): `blend`, o `driver` em modo
-contínuo (`animation`), o `source` de parâmetro (Smart Bone), e alvos de
-`driver` fora de `bone`.
+**O que ainda não tem caso** (está na §12.4): `blend` (o dump não tem canal
+para ele), e os alvos de `driver` do tipo `deform`, `morph`, `constraint`,
+`parameter`, `variable`, `nested` e `drawOrder`.
+
+**Pergunta para o Humberto (não decidi):** a §2.1 chama de **L0** um número que
+não cabe em float64 (`1e400`) e chaves duplicadas no mesmo objeto. A §12.2 diz
+que o leitor só recusa "nos casos em que 2.4 e 2.7 permitem". Então um **leitor**
+recusa um arquivo L0, ou abre? Hoje o runtime TS recusa chave duplicada e o
+JavaScript lê `1e400` como `Infinity`. Sem a resposta, não escrevi caso.
 
 ## 4. Desempenho do runtime TS
 
@@ -92,7 +101,7 @@ no rascunho da sessão.
 
 | Parte | O que precisa |
 |:---|:---|
-| `leitor-godot/` | **Vai reprovar P-002, P-030 e B-120** até copiar dois consertos do Python: (1) `particulas.gd`, os trechos com rampa — o `Trechos` de `runtime-python/recorte/particles.py`; (2) `carregador.gd` linha ~1226, aceitar a timeline de `rate` em vez de avisar "2a fase"; (3) as tags antes da 1ª chave, como em `runtime-python/recorte/animation.py` (`kind == "tag"`). Conferir também se a identidade de timeline leva `attachment` (P-031) |
+| `leitor-godot/` | Conferir o **X-309** (BOM): o `adaptador.mjs` dele entrega o caminho ao Godot, e não sei se o carregador `.gd` tira o BOM. **Vai reprovar P-002, P-030 e B-120** até copiar dois consertos do Python: (1) `particulas.gd`, os trechos com rampa — o `Trechos` de `runtime-python/recorte/particles.py`; (2) `carregador.gd` linha ~1226, aceitar a timeline de `rate` em vez de avisar "2a fase"; (3) as tags antes da 1ª chave, como em `runtime-python/recorte/animation.py` (`kind == "tag"`). Conferir também se a identidade de timeline leva `attachment` (P-031) |
 | editor | O editor ganha `rate` animado de graça pelo runtime. Se o painel recusa animar `rate`, isso agora é escolha, não limite |
 | `programa/` | não remontei; o Diretor monta no fecho |
 
