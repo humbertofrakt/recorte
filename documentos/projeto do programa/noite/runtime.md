@@ -7,11 +7,11 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 
 | Medida | Antes | Agora |
 |:---|:---:|:---:|
-| Casos em `conformidade/casos/` | 120 | **130** |
+| Casos em `conformidade/casos/` | 120 | **131** |
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
-| TS × Python, campo a campo | 120 de 120 | **130 de 130** |
-| Pacote do Construct | 120 de 120 | **130 de 130** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.840**, o mesmo 1 vermelho |
+| TS × Python, campo a campo | 120 de 120 | **131 de 131** |
+| Pacote do Construct | 120 de 120 | **131 de 131** |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.841**, o mesmo 1 vermelho |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
@@ -60,6 +60,7 @@ conta **antes** de rodar runtime):
 | **C-331** driver contínuo e `source` | Smart Bone com clamp; `timeTo` padrão = duração; alvo `slot/color` | verde | verde | sim (3 de 3) |
 | **C-332** driver em parâmetro, variável e constraint | `int` escrito por driver trunca; o `mix` de uma constraint posterior | verde | verde | sim (4 de 4) |
 | **X-309** BOM na leitura | §2.1: o leitor DEVE aceitar BOM | **vermelho (o executor) → consertado** | verde | — |
+| **ZIP-502** `main` numa subpasta | §2.8: a base é a pasta do `main`; uma **isca** com o mesmo nome na raiz | verde | verde | sim (a isca no lugar dá `−15` em vez de `−40`) |
 | **P-030** rampa com torneira | ver acima | verde (consertado) | verde | — |
 | **P-031** dois emissores no slot | ver acima | verde (consertado) | verde | — |
 
@@ -73,6 +74,8 @@ conta **antes** de rodar runtime):
 | Spec §8.2, tabela `DriverTarget` | `add` = soma o **desvio** em relação ao setup, como o pseudocódigo (a tabela dizia "soma o valor") |
 | Spec §8.5 | a regra das tags ganha da borda da §9.10; a ordem da união |
 | Spec §12.4 | a lista "o que a suíte ainda não cobre" atualizada |
+| Spec §2.9 | as uris do **manifesto** são nomes de entrada, relativas à raiz do ZIP; só as de dentro do esqueleto usam a pasta do `main` |
+| ZIP-501 `leiame` | dizia `application/bone-package`; o pacote e a spec dizem `application/vnd.bone+zip`. Corrigido o texto |
 
 **O que ainda não tem caso** (está na §12.4): `blend` (o dump não tem canal
 para ele), e os alvos de `driver` do tipo `deform`, `morph`, `nested` e `drawOrder`.
