@@ -614,7 +614,7 @@ class AnimationsPanel implements Panel {
     if (rows.length === 0) {
       // Reaproveitar: com compartilhadas, "nenhuma animação" era mentira (regra 21).
       list.append(el('li', 'painel-aviso', listShared(doc.file).length > 0
-        ? 'Nenhuma animação própria. As que este boneco toca estão em "Compartilhadas", abaixo.'
+        ? 'Nenhuma própria: as que ele toca estão em "Compartilhadas".'
         : 'Nenhuma animação ainda. Clique no + ao lado de "Animações".'));
     }
     // A que está aberta, para rolar a lista até ela no fim do desenho. Antes

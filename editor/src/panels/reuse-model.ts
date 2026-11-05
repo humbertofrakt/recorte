@@ -219,7 +219,11 @@ export function copyCommand(
 ): { command: Command; report: ReuseReport; copy: ImportAnimationCopy } {
   const escolhidas = (source.file.animations ?? []).filter((a) => names.includes(a.name));
   const { animations, dropped } = translateAnimations(
-    escolhidas, match, (host.slots ?? []).map((s) => s.name),
+    escolhidas, match, (host.slots ?? []).map((s) => s.name), {
+      events: (host.events ?? []).map((e) => e.name),
+      tags: ((host as unknown as { tags?: unknown[] }).tags ?? [])
+        .map((t) => (typeof t === 'string' ? t : String((t as { name?: unknown }).name))),
+    },
   );
   const para = new Map(match.rows.filter((r) => r.to !== null).map((r) => [r.from, r.to!]));
   const rig = (source.file as unknown as { rig?: { reference?: { bone?: string; length?: number } } }).rig;

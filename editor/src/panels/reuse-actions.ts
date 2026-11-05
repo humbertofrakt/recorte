@@ -217,6 +217,10 @@ export function registerReuseActions(doc: EditorDoc): Array<() => void> {
   const tentados = new Set<string>();
   const stop = doc.on((change) => {
     if (change.kind !== 'file') return;
+    // Trocou de base (ou abriu): a dona pode ter mudado o andar enquanto esta
+    // base estava fora do foco. Remonta com o arquivo de agora — sem isto o
+    // goblin mostrava o andar de antes até alguém mexer nele (a prova achou).
+    if (sharedUrisOf(doc.file).length > 0) queueMicrotask(() => doc.rebuild());
     if (projetoDe(doc) === null || projectDocs(doc).length <= 1) forgetSharedFilesSoft(tentados);
     const faltam = new Set<string>();
     for (const d of projectDocs(doc)) {

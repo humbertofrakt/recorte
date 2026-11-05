@@ -278,3 +278,30 @@ describe('a base dona: mudar num lugar, os outros mudam', () => {
     expect(listShared(f)).toEqual([{ name: null, uri: 'sumiu.bone', duration: 0, loop: false, owner: null }]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// A prova de pessoa achou (05/11): a Cópia do "walk" deixava o cavaleiro
+// INVÁLIDO — a ordem citava o slot "arm" e o evento "step", que ele não tem.
+// ---------------------------------------------------------------------------
+
+// O mesmo núcleo do validador de linha de comando e do site.
+import { checarSemantica } from '../../site/validador/nucleo.js';
+
+describe('a Cópia não deixa o boneco inválido', () => {
+  it('a ordem, o evento e a etiqueta que citam nomes que este boneco não tem saem, ditos', () => {
+    const host = JSON.parse(JSON.stringify(PADRAO)) as BoneFile;
+    host.animations = [];
+    const doc = new Doc(host);
+    const src: ReuseSource = { kind: 'arquivo', label: 'heroi.bone', uri: 'heroi.bone', file: HEROI, animations: ['walk'] };
+    const r = copyCommand(doc.file, src, ['walk'], initialMatch(doc.file, src, ['walk']));
+    doc.run(r.command);
+    const walk = (doc.file.animations ?? []).find((a) => a.name === 'walk')!;
+    const json = JSON.stringify(walk);
+    expect(json).not.toContain('"slot":"arm"');
+    expect(json).not.toContain('"event":"step"');
+    expect(r.report.dropped).toContain('walk: evento "step"');
+    expect(r.report.dropped).toContain('walk: ordem do slot "arm"');
+    const problemas = checarSemantica(JSON.parse(doc.serialize())) as Array<{ gravidade: string; codigo: string }>;
+    expect(problemas.filter((x) => x.gravidade === 'erro').map((x) => x.codigo)).toEqual([]);
+  });
+});

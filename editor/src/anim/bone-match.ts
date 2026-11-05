@@ -243,7 +243,10 @@ export function translateAnimations(
   animations: readonly unknown[],
   match: BoneMatch,
   hostSlots: readonly string[],
+  host: { events?: readonly string[]; tags?: readonly string[] } = {},
 ): { animations: unknown[]; dropped: string[] } {
+  const eventos = new Set(host.events ?? []);
+  const etiquetas = new Set(host.tags ?? []);
   const para = new Map<string, string>();
   for (const r of match.rows) if (r.to !== null) para.set(r.from, r.to);
   const slots = new Set(hostSlots);
@@ -256,6 +259,32 @@ export function translateAnimations(
       const tl = raw as TimelineLike;
       const tipo = typeof tl.type === 'string' ? tl.type : '';
       const alvo = typeof tl.target === 'string' ? tl.target : '';
+      // As de sem alvo citam nomes DENTRO das chaves: a ordem cita slots, o
+      // evento cita o evento, a etiqueta cita etiquetas. Um nome que este
+      // boneco não tem tornaria o arquivo inválido (L1 REF_*): a chave sai, dita.
+      if (tipo === 'drawOrder') return filtraChaves(tl, nome, dropped, (k) => {
+        const v = (k as { value?: unknown }).value;
+        if (!Array.isArray(v)) return true;
+        const fora = v.filter((o) => !slots.has(String((o as { slot?: unknown }).slot)));
+        for (const o of fora) anota(dropped, `${nome}: ordem do slot "${String((o as { slot?: unknown }).slot)}"`);
+        (k as { value: unknown[] }).value = v.filter((o) => slots.has(String((o as { slot?: unknown }).slot)));
+        return true;
+      });
+      if (tipo === 'event') return filtraChaves(tl, nome, dropped, (k) => {
+        const ev = String((k as { event?: unknown }).event);
+        if (eventos.has(ev)) return true;
+        anota(dropped, `${nome}: evento "${ev}"`);
+        return false;
+      });
+      if (tipo === 'tag') return filtraChaves(tl, nome, dropped, (k) => {
+        const v = (k as { value?: unknown }).value;
+        const lista = Array.isArray(v) ? v.map(String) : [];
+        const fora = lista.filter((t) => !etiquetas.has(t));
+        for (const t of fora) anota(dropped, `${nome}: etiqueta "${t}"`);
+        (k as { value: string[] }).value = lista.filter((t) => etiquetas.has(t));
+        return true;
+      });
+      if (tipo === 'body') { anota(dropped, `${nome}: troca de base`); return false; }
       if (SEM_ALVO.has(tipo)) return true;
       if (tipo === 'bone') {
         const novo = para.get(alvo);
@@ -274,6 +303,16 @@ export function translateAnimations(
     return copia;
   });
   return { animations: out, dropped };
+}
+
+/** Filtra as chaves de uma timeline; sem chave nenhuma, a timeline sai. */
+function filtraChaves(
+  tl: TimelineLike, _nome: string, _dropped: string[], fica: (k: unknown) => boolean,
+): boolean {
+  const t = tl as { keys?: unknown[] };
+  if (!Array.isArray(t.keys)) return true;
+  t.keys = t.keys.filter(fica);
+  return t.keys.length > 0;
 }
 
 function anota(lista: string[], item: string): void {
