@@ -857,7 +857,7 @@ class AnimationsPanel implements Panel {
         if (row.loop) botao.append(el('span', 'anim-repete', 'repete'));
         botao.addEventListener('click', () => {
           openAnimation(doc, nome);
-          doc.notice(`"${nome}" ${de}: compartilhada, só para ver aqui; para mudar, Abrir o original`);
+          doc.notice(`"${nome}" ${de} é compartilhada, só para ver aqui — para mudar, Abrir o original`);
         });
         item.append(botao);
         lista.append(item);

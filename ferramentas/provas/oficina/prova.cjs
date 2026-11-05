@@ -63,6 +63,15 @@ const passo = (ok, t) => { console.log(`${ok ? 'passou' : 'TRAVOU'}  ${t}`); if 
   await base('mecha');
   const arvore = (await p.locator('.arvore-item').allInnerTexts()).join(' ');
   passo(/piloto/.test(arvore), '(2) na Árvore do mecha, a cabine tem o "piloto" (o herói)');
+  // As Tomadas (a tela de encaixe da sessão das Tomadas): a cabine é uma tomada.
+  const abaTomadas = p.locator('button, [role=tab]').filter({ hasText: /^Tomadas$/ }).first();
+  if (await abaTomadas.isVisible().catch(() => false)) {
+    await abaTomadas.click();
+    await p.waitForTimeout(400);
+    const tomadas = (await p.locator('body').innerText());
+    passo(/cabine/.test(tomadas), '(2) a aba Tomadas mostra a cabine do mecha');
+    await p.locator('button, [role=tab]').filter({ hasText: /^Imagens$/ }).first().click().catch(() => {});
+  }
   await p.locator('button.anim-item-fora').filter({ hasText: 'andar' }).click();
   await p.getByRole('button', { name: 'Ajustar' }).last().click();
   const m1 = await cena.screenshot();
