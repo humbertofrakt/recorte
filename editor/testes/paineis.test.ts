@@ -1201,9 +1201,10 @@ describe('a Malha em 1280×720 rola com régua própria, e a régua não isenta'
   it('a marca TROCA a régua: a seção aberta inteira e uma linha depois, senão falha', () => {
     expect(prova).toContain('const medirFerramenta = (caixa) =>');
     expect(prova).toContain('a seção da ferramenta não cabe');
-    expect(prova).toContain('nenhuma seção aberta: a régua da ferramenta não tem o que mostrar');
-    // Só na tela pequena: na grande, a régua de sempre.
-    expect(prova).toContain("el.dataset?.rolagem === 'ferramenta' && window.innerHeight <= 800");
+    expect(prova).toContain('nenhuma seção aberta à vista: a régua da ferramenta não tem o que mostrar');
+    // 05/11: medida como a aba se apresenta, e a seção cortada em cima falha.
+    expect(prova).toContain('a aba abre no meio de uma seção aberta');
+    expect(prova).toContain("const ferramenta = (el) => el.dataset?.rolagem === 'ferramenta';");
   });
 
   it('a prova mede também o caso ALTO: a Malha com a ferramenta Pesos, e conta no total', () => {
@@ -1215,8 +1216,13 @@ describe('a Malha em 1280×720 rola com régua própria, e a régua não isenta'
     expect(passada.slice(0, 3000)).toContain('altas += 1;');
   });
 
+  it("'--detalhes' mede o painel cheio (linha do tempo aberta) como rodada à parte, com nome", () => {
+    expect(prova).toContain("const DETALHES = process.argv.includes('--detalhes');");
+    expect(prova).toContain('rodada à parte, não é o número de fecho');
+  });
+
   it('os botões da Forma vão dois por linha, com o nome inteiro (quebra entre palavras)', () => {
-    const bloco = css.slice(css.lastIndexOf('@media (max-height: 800px)'));
+    const bloco = css.slice(css.indexOf('a Malha em 1280×720'));
     expect(bloco).toContain('grid-template-columns: 1fr 1fr');
     expect(bloco).toContain('white-space: normal');
     expect(bloco).toContain('overflow-wrap: normal');

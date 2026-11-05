@@ -122,4 +122,71 @@ O aviso do Diretor (00:23): não mexi no CSS de Entidades, Skins nem Animações
 Toda dobra que fiz deixa o título à vista e diz o que tem dentro ("A cena",
 "Desenho", "Tamanho da imagem").
 
+## 05/11, 01:00 — a Malha com Pesos, pela decisão do Diretor
+
+O Diretor decidiu, no lugar do Humberto: **a Malha com a ferramenta Pesos
+segue a mesma saída 3.** A aba rola com a régua da ferramenta, e nada some.
+
+| O que mudou | Como |
+|:---|:---|
+| A régua da ferramenta | Agora mede a aba **como ela se apresenta**: (1) nenhuma seção aberta cortada em cima; (2) a primeira seção aberta à vista aparece inteira, e mais uma linha. Vale nas duas telas |
+| Para caber em 1280 | A linha de cada osso caiu de 41 para 25 px. O ícone da lixeira herdava o recheio do botão (5 px em cima e embaixo). E o vão do aviso azul e das seções |
+| Prova de que pega (regra 26) | Sem o aperto: *pede 321 px num painel de 272*. Com a aba rolada para o meio de Ossos: *a aba abre no meio de uma seção aberta* |
+
+**O número: 92 de 92** na altura, 92 de 92 de lado (01:05 UTC).
+
+O que esta régua NÃO garante, para ninguém supor que garante:
+
+| Item | Por quê |
+|:---|:---|
+| Pesos e Pincel ficam abaixo, rolando | É a saída 3. Ossos (onde se escolhe o osso) aparece inteira |
+| Muitos ossos | A lista de Ossos cresce com o arquivo. Medido com o desenho `face`, 2 ossos |
+| O recado do fim da aba (depois de um gesto) | Fica no fim, e pode estar abaixo da vista |
+
+## 05/11, 01:10 — o painel cheio: a linha do tempo de Detalhes aberta
+
+O Diretor pediu: medir com o herói e uma animação abertos, o painel cheio.
+**A prova já fazia isso**: abre o herói e a animação `idle` antes de medir.
+O que ela não fazia: abrir os **Detalhes** da linha do tempo. Aberta, a faixa
+de baixo cresce e a coluna encolhe.
+
+Nova opção: `npm run medir -- --detalhes`. É uma rodada à parte, com nome. Não
+é o número de fecho.
+
+| Tela | Altura de uma aba no grupo de cima à direita | Cabem |
+|:---|:---:|:---:|
+| 1440×900 | ~172 px (era 441) | |
+| 1280×720 | ~123 px (era 272) | |
+| **Total** | | **79 de 92** |
+
+Os que rolam com os Detalhes abertos:
+
+| Tela | Aba | Quanto |
+|:---|:---|:---|
+| 1440 | Propriedades (desenho) | 56 px |
+| 1440 | Malha (Forma) | pede 339 em 172 |
+| 1440 | Malha (Pesos) | pede 329 em 301 |
+| 1440 | Exibição | 155 px |
+| 1440 | Prévia | o palco (160) não cabe em 112 |
+| 1280 | Árvore | 31 px (a barra da Árvore) |
+| 1280 | Propriedades (desenho) | 6 px |
+| 1280 | Malha (Forma) | pede 252 em 123 |
+| 1280 | Malha (Pesos) | pede 267 em 202 |
+| 1280 | Exibição | 94 px |
+| 1280 | Prévia | o palco (136) não cabe em 63 |
+| 1280 | Regra Comando | 19 px |
+| 1280 | Imagens | VAZIO: a grade ficou tão baixa que a prova a viu como "Nenhuma pasta aberta" e não mediu |
+
+**Não consertei, e o porquê.** Não é CSS de painel: é a casca. Com os
+Detalhes abertos, 123 px não guardam nem o palco da Prévia. As saídas são de
+desenho, e mexem na Linha do tempo (de outro chat esta noite):
+
+| Saída | O que custa |
+|:---|:---|
+| As colunas vão até o rodapé; a linha do tempo fica só debaixo da cena | A linha do tempo perde ~520 px de largura |
+| Abrir os Detalhes recolhe o grupo de baixo da coluna | Um gesto troca dois lugares da tela |
+| Aceitar: com os Detalhes abertos, as abas rolam | É o que acontece hoje, agora medido e escrito |
+
+Decisão do Humberto ou do Diretor.
+
 FIM

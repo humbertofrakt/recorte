@@ -167,6 +167,14 @@ const SO = (() => {
   return i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : null;
 })();
 
+/**
+ * '--detalhes': as abas medidas com a linha do tempo de DETALHES ABERTOS — o
+ * painel cheio, como o Humberto usa (05/11/2026, pedido do Diretor). A faixa
+ * de baixo cresce e a coluna encolhe. É uma rodada à parte: o número dela sai
+ * com nome próprio, e não se mistura com o de fecho.
+ */
+const DETALHES = process.argv.includes('--detalhes');
+
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // ---------------------------------------------------------------------------
@@ -231,38 +239,52 @@ window.__m = (() => {
       return [];
     };
     // A QUARTA espécie, 04/11/2026: o painel com FERRAMENTA (a Malha). Ver
-    // 'medirFerramenta'. Só na tela pequena (até 800 px de altura): na
-    // grande a régua é a de sempre, e a marca não muda nada.
-    const ferramenta = (el) => el.dataset?.rolagem === 'ferramenta' && window.innerHeight <= 800;
+    // 'medirFerramenta'. Vale nas duas telas desde 05/11 (a Malha com os
+    // Pesos na mão também rola em 1440×900, e a decisão foi a mesma).
+    const ferramenta = (el) => el.dataset?.rolagem === 'ferramenta';
     /**
-     * A régua do painel com ferramenta — a escolha da Malha em 1280×720 (doc
-     * 'noite/paineis.md'). O painel tem seções que dobram, e abre a da
-     * ferramenta na mão. A régua: **tudo do topo até o fim da ÚLTIMA seção
-     * aberta, inteiro, e mais uma linha do que vem depois, à vista sem
-     * rolar.** O que rola são só as seções dobradas abaixo dela (o título de
-     * cada uma). Uma seção aberta que fica cortada, ou um texto fixo depois
-     * da última seção aberta (o recado do fim), fazem a régua falhar — a
-     * marca troca a régua, NUNCA isenta, como a do palco.
+     * A régua do painel com ferramenta — a escolha da Malha (doc
+     * 'noite/paineis.md'; o Diretor estendeu ao caso dos Pesos em 05/11).
      *
-     * Seção dobrada: '<details>' fechado, ou um filho cujo título direto diz
-     * 'aria-expanded="false"'. Qualquer outro filho conta como aberto.
+     * O painel tem seções que dobram, e abre as da ferramenta na mão (com o
+     * Transformar, Forma; com os Pesos, Ossos, Pesos e Pincel). A régua, medida
+     * **como a aba se apresenta** (com a rolagem que ela tem agora, e não a
+     * de um painel imaginário rolado para o lugar certo):
+     *
+     *   1. nenhuma seção aberta começa ACIMA da vista e termina dentro dela
+     *      (cortada em cima);
+     *   2. a PRIMEIRA seção aberta que começa na vista aparece INTEIRA, e
+     *      mais uma linha do que vem depois dela.
+     *
+     * O que rola é o resto: as outras seções abertas e os títulos dobrados.
+     * A marca troca a régua, NUNCA isenta, como a do palco: sem seção aberta,
+     * ou com a primeira cortada, a medida falha.
+     *
+     * Seção: um filho com um título direto que dobra ('aria-expanded'), ou um
+     * '<details>'. Os outros filhos (o aviso, o nome do desenho) são texto
+     * fixo: estão antes da seção, e ficam à vista junto com ela.
      */
     const medirFerramenta = (caixa) => {
       const filhos = [...caixa.children].filter((f) => f.getBoundingClientRect().height > 0);
       if (filhos.length === 0) return [];
-      const dobrado = (f) => (f.tagName === 'DETAILS' && !f.open)
-        || f.querySelector(':scope > [aria-expanded="false"]') !== null;
-      let ultimo = -1;
-      filhos.forEach((f, i) => { if (!dobrado(f)) ultimo = i; });
-      if (ultimo < 0) return ['nenhuma seção aberta: a régua da ferramenta não tem o que mostrar'];
+      const ehSecao = (f) => f.tagName === 'DETAILS' || f.querySelector(':scope > [aria-expanded]') !== null;
+      const aberta = (f) => (f.tagName === 'DETAILS' ? f.open
+        : f.querySelector(':scope > [aria-expanded="true"]') !== null);
       const topo = caixa.getBoundingClientRect().top - caixa.scrollTop;
-      const fim = Math.ceil(filhos[ultimo].getBoundingClientRect().bottom - topo);
-      const visivel = caixa.clientHeight;
-      const pede = fim + (ultimo < filhos.length - 1 ? LINHA : 0);
-      if (pede > visivel) {
-        return ['a seção da ferramenta não cabe: do topo até o fim de '
-          + descrever(filhos[ultimo]) + (ultimo < filhos.length - 1 ? ', e uma linha depois,' : '')
-          + ' pede ' + pede + ' px num painel de ' + visivel];
+      const de = (f) => Math.floor(f.getBoundingClientRect().top - topo);
+      const ate = (f) => Math.ceil(f.getBoundingClientRect().bottom - topo);
+      const cima = caixa.scrollTop;
+      const cortada = filhos.find((f) => ehSecao(f) && aberta(f) && de(f) < cima - 1 && ate(f) > cima + 1);
+      if (cortada !== undefined) {
+        return ['a aba abre no meio de uma seção aberta: ' + descrever(cortada) + ' começa ' + (cima - de(cortada)) + ' px acima da vista'];
+      }
+      const i = filhos.findIndex((f) => ehSecao(f) && aberta(f) && de(f) >= cima - 1);
+      if (i < 0) return ['nenhuma seção aberta à vista: a régua da ferramenta não tem o que mostrar'];
+      const pede = ate(filhos[i]) + (i < filhos.length - 1 ? LINHA : 0) - cima;
+      if (pede > caixa.clientHeight) {
+        return ['a seção da ferramenta não cabe: do alto da vista até o fim de '
+          + descrever(filhos[i]) + (i < filhos.length - 1 ? ', e uma linha depois,' : '')
+          + ' pede ' + pede + ' px num painel de ' + caixa.clientHeight];
       }
       return [];
     };
@@ -805,6 +827,11 @@ try {
         try {
           // A seleção de novo, antes de cada aba: ver `SELECIONAR`.
           await ava(SELECIONAR);
+          if (DETALHES) {
+            await ava(`(() => { const b = [...document.querySelectorAll('button')].find((e) => /Detalhes/.test(e.textContent ?? '')); `
+              + `if (b && /▴/.test(b.textContent)) b.click(); return true; })()`);
+            await esperar(150);
+          }
           await ava(`[...document.querySelectorAll('.panel-column .panel-tab')].find((t) => t.textContent.trim() === ${JSON.stringify(aba)})?.click()`);
           await esperar(250);
           r = await ava(`__m.medir(${JSON.stringify(aba)})`);
@@ -878,7 +905,7 @@ try {
           await esperar(300);
           rp = await ava('__m.medir("Malha e pesos")');
           const d = await ava('__m.detalhar("Malha e pesos")');
-          if (rp !== null && d !== null) rp.numero = ` — pede ${d.conteudo} px, o painel tem ${d.cabe} px`;
+          if (rp !== null && d !== null) rp.numero = ` — conteúdo de ${d.conteudo} px numa vista de ${d.cabe} (a régua é a da ferramenta)`;
         } catch {
           rp = null;
         }
@@ -1056,6 +1083,7 @@ try {
     }
   }
 
+  if (DETALHES) console.log('\nCOM OS DETALHES DA LINHA DO TEMPO ABERTOS (--detalhes): rodada à parte, não é o número de fecho.');
   console.log(`\n${medicoes - ruins} de ${medicoes} medições sem nada passando da coluna.`);
   if (vazios.length > 0) {
     console.log(`\n${vazios.length} medição(ões) NÃO FEITAS, porque o painel estava vazio:`);
