@@ -1198,27 +1198,27 @@ export function entitiesMenu(): MenuItem[] {
     // Rodada 9 (05/10/2026): a imagem escolhida vira uma base, com nome e
     // animações próprias (decisões, seção 2, regra 2). Também no botão direito.
     {
-      label: 'Marcar como slot…', action: 'marcar-como-slot', enabled: true,
+      label: 'Fazer da imagem uma base…', action: 'marcar-como-slot', enabled: true,
       hint: 'Com uma imagem escolhida: ela vira uma base do projeto, com o nome que você der e animações próprias. '
         + 'No boneco nada muda no desenho. Também no botão direito da imagem',
     },
     {
-      label: 'Desmarcar o slot', action: 'desmarcar-slot', enabled: true,
-      hint: 'Com o slot marcado escolhido: a imagem de antes volta, como era, e a base sai do projeto',
+      label: 'Desfazer a base da imagem', action: 'desmarcar-slot', enabled: true,
+      hint: 'Com a imagem-base escolhida: a imagem de antes volta, como era, e a base sai do projeto (era Desmarcar o slot)',
     },
     // Rodada 39, lote 2: a montagem de teste. O mesmo que arrastar da
     // prateleira da aba Entidades até a linha do slot. O separador entra
     // porque o menu passou de 12 itens (`menu-audit.ts`: grupo de até 6).
     SEP,
     {
-      label: 'Pôr em teste neste slot…', action: 'por-em-teste', enabled: true,
+      label: 'Pôr em teste nesta tomada…', action: 'por-em-teste', enabled: true,
       hint: 'Com uma imagem ou uma entidade escolhida na cena: a entidade que você pegar entra no lugar dela '
         + 'EM TESTE. Vale na Prévia e, com Na cena ligado, na cena; a animação não muda e o arquivo também não. '
         + 'Na aba Entidades, o cartão fica tracejado',
     },
     {
-      label: 'Desligar o teste deste slot', action: 'desligar-teste', enabled: true,
-      hint: 'Com a imagem ou a entidade escolhida na cena: a peça de teste sai do slot. O arquivo não muda: ela nunca entrou nele',
+      label: 'Desligar o teste da tomada', action: 'desligar-teste', enabled: true,
+      hint: 'Com a imagem ou a entidade escolhida na cena: a peça de teste sai da tomada. O arquivo não muda: ela nunca entrou nele',
     },
     // Lote 4: para cima. O mesmo que arrastar o cartão AQUI até a entidade.
     {
@@ -1235,7 +1235,7 @@ export function entitiesMenu(): MenuItem[] {
     {
       label: 'Pôr no projeto…', action: 'por-no-projeto', enabled: true,
       hint: 'Grava uma ligação de teste no arquivo aberto (pergunta qual, se há mais de uma): para baixo, a peça '
-        + 'no slot, como a grade; para cima, o de fora entra no boneco com Este boneco. Vai para a base. '
+        + 'na tomada, como a grade; para cima, o de fora entra no boneco com Este boneco. Vai para a base. '
         + 'Ctrl+Z volta a teste',
     },
     SEP,
@@ -1252,7 +1252,7 @@ export function entitiesMenu(): MenuItem[] {
     },
     {
       label: 'Teste em todas as iguais', action: 'teste-nas-iguais', enabled: true,
-      hint: 'A peça de teste entra, em teste, em todos os slots que mostram a mesma imagem que o dela, '
+      hint: 'A peça de teste entra, em teste, em todas as tomadas que mostram a mesma imagem que o dela, '
         + 'como as quatro rodas. Um passo de desfazer. O mesmo que o botão "Trocar todas as iguais" do cartão',
     },
     SEP,

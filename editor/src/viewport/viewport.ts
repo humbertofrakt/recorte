@@ -1344,9 +1344,9 @@ export class ViewportPanel implements Panel {
       })),
       // Rodada 9: a imagem vira base; o slot marcado tem a volta.
       ...(marca !== null
-        ? [opcao('Desmarcar o slot', `A imagem de antes volta, como era, no slot ${marca.slotDeAntes}; `
+        ? [opcao('Desfazer a base da imagem', `A imagem de antes volta, como era, no lugar ${marca.slotDeAntes}; `
           + `a base ${marca.nome} sai do projeto`, 'desmarcar-slot')]
-        : soImagem ? [opcao('Marcar como slot…', 'Esta imagem vira uma base do projeto, com o nome que você der e '
+        : soImagem ? [opcao('Fazer da imagem uma base…', 'Esta imagem vira uma base do projeto, com o nome que você der e '
           + 'animações próprias. Nada muda no desenho', 'marcar-como-slot')] : []),
       ...(entidade === null || marca !== null ? [] : [opcao('Tirar a entidade',
         `Sai a entidade, e a imagem de antes ("${entidade.image}") volta, como era`, 'tirar-entidade')]),

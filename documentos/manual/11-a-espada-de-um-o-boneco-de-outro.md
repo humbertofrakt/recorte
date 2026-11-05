@@ -252,6 +252,19 @@ com a espada.
 
 ![O runtime: o mecha com o herói dentro, e a espada](imagens/11-16-runtime-mecha.png)
 
+### O menu Tomadas, item por item
+
+| Item | Faz |
+|:---|:---|
+| **Encaixar um projeto…** | escolhe um `.bone` e o encaixa na tomada do osso escolhido |
+| **Pôr uma tomada aqui…** | um lugar vazio no osso escolhido |
+| **Tirar a peça** | a tomada escolhida fica vazia |
+| **Pôr em teste nesta tomada…** | a peça entra só em teste: vale na tela e na Prévia, o arquivo não muda |
+| **Desligar o teste da tomada** | a peça de teste sai |
+| **Este boneco entra em…** | o projeto aberto entra, em teste, na tomada de outra peça |
+| **Fazer da imagem uma base…** | a imagem escolhida vira uma base do projeto, com nome e animações próprias. Não é tomada |
+| **Desfazer a base da imagem** | a imagem de antes volta, como era |
+
 | Palavra na tela | No arquivo |
 |:---|:---|
 | Tomada | slot |

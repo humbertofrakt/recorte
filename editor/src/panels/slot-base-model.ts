@@ -275,7 +275,7 @@ export class MarkAsSlot implements Command {
  * nome de antes, e a base sai do projeto (fica guardada para o refazer).
  */
 export class UnmarkSlot implements Command {
-  readonly label = 'Desmarcar o slot';
+  readonly label = 'Desfazer a base da imagem';
   readonly kind: ChangeKind = 'structure';
   private takeOut: TakeOutEntity | null = null;
   private child: Doc | null = null;

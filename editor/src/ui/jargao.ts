@@ -91,23 +91,7 @@ export function jargaoNaFrase(frase: string): string[] {
  * jargão, e o que está nela **ainda tem** (consertou? tire a linha).
  */
 export const ESPERANDO: ReadonlyArray<{ texto: string; dono: string; porque: string }> = Object.freeze([
-  ...[
-    'Marcar como slot…',
-    'Desmarcar o slot',
-    'Com o slot marcado escolhido: a imagem de antes volta, como era, e a base sai do projeto',
-    'Pôr em teste neste slot…',
-    'Desligar o teste deste slot',
-    'Com a imagem ou a entidade escolhida na cena: a peça de teste sai do slot.',
-    'Pergunta a entidade e o slot dela:',
-    'no slot, como a grade;',
-    'em todos os slots que mostram a mesma imagem',
-    'A imagem de antes volta, como era, no slot',
-  ].map((texto) => ({
-    texto,
-    dono: 'a sessão das tomadas (Entidades)',
-    porque: 'o slot que recebe uma entidade é a TOMADA (spec §1.6), e a peça é a "peça encaixada": '
-      + 'as palavras e os nomes desses itens vêm da obra das tomadas, nesta mesma noite',
-  })),
+  // 05/11/2026: os dez das tomadas foram trocados pela sessão das tomadas.
   {
     texto: 'A malha volta a seguir só o osso do slot',
     dono: 'Malha e pivô (aba Malha e pesos)',
