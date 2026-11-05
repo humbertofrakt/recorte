@@ -161,6 +161,13 @@ Em `fotos-qa-arquivo/`:
 
 Decisão no lugar do Humberto: **um arquivo só** (`.bonez`), e não três soltos — é o mais simples de achar e de reabrir, e o Spine e o Spriter também salvam o projeto num arquivo.
 
-Não fiz, por falta de tempo e por ordem do Diretor (uma tarefa só): o nome `heroi-aceno.gif` (4c), o `openHandle` que não segue o foco (reaproveitar §6), a régua do ":" em `io/`, e a palavra "objeto" da grade.
+Depois, ainda antes das 05:00:
+
+| O que fiz | Como provei |
+|:---|:---|
+| **Salvar com o foco noutra base** (reaproveitar §6): a raiz no `io/open-save.ts` — o Salvar grava com a base principal em foco (cada base no SEU arquivo) e volta ao foco de antes, para todo chamador | teste com a pasta do lobisomem, foco no lobisomem: `entrada.bone` fica o homem, `lobisomem.bone` o lobisomem, o manifesto inteiro; visto vermelho antes |
+| **(4c) o arquivo exportado leva o nome da animação**: `heroi-walk.gif`, `heroi-attack.gif` (era `heroi.gif` para todas, e uma pisava a outra). A pose de repouso continua `heroi` | só cliques: exportar walk e attack → Downloads com os dois nomes; teste visto vermelho antes |
+
+Ficou: a régua do ":" em `io/`, e a palavra "objeto" da grade.
 
 FIM
