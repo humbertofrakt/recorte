@@ -189,4 +189,50 @@ desenho, e mexem na Linha do tempo (de outro chat esta noite):
 
 Decisão do Humberto ou do Diretor.
 
+## 05/11, 01:40 — as colunas descem até o rodapé (saída a)
+
+O Diretor escolheu a **saída (a)**: as colunas vão até o rodapé, e a linha do
+tempo fica só debaixo da cena. É como o Spriter e o After Effects fazem.
+
+| O que mudou | Onde |
+|:---|:---|
+| A cena, a alça e a faixa de baixo moram numa caixa só, **entre** as colunas (`shell-palco-e-faixa`) | `ui/shell.ts`, `ui/shell.css` |
+| A conta da altura da faixa usa essa caixa | `fitToWindow` |
+| O chão de 55% da cena saiu do meio da janela e foi para a cena, dentro da caixa nova | `shell.css` |
+| O chão da coluna com os Detalhes abertos (K1b) ficou **desligado**, não apagado: a faixa não tira mais altura da coluna | `COLUNAS_ATE_O_RODAPE` |
+| A linha do tocador, agora na largura da cena, **quebra** em vez de rolar de lado ("Chavear" saía cortado em 1280). Ela continua com as mesmas duas linhas: o que não cabe desce ao lado do Mais e do Detalhes | regra em `shell.css`; a Linha do tempo por dentro não mudou |
+
+**Os números (05/11, 01:35 UTC):**
+
+| Medição | Antes | Depois |
+|:---|:---:|:---:|
+| `npm run medir` | 92 de 92 | **92 de 92** |
+| `npm run medir -- --detalhes` (painel cheio) | 79 de 92 | **92 de 92** |
+| Coluna em 1280×720 | 412 px | **578 px** |
+| Uma aba no grupo de cima à direita, 1280, Detalhes aberto | 123 px | 438 px |
+| Cena em 1280, Detalhes fechado | 1280 de largura · 412 de altura | 744 · 447 |
+| Faixa de baixo | a janela inteira | 744 px em 1280 · 904 em 1440 · 1384 em 1920 |
+
+**O que custa, dito como custo:** a linha do tempo perdeu largura. Em 1280 ela
+tem 744 px em vez de 1280. O tocador ocupa duas linhas em 1280 e em 1440 (em
+1920, uma). Com os Detalhes abertos em 1280 aparecem o Resumo e o começo do
+primeiro osso.
+
+**Conferido:**
+
+| O quê | Como | Resultado |
+|:---|:---|:---|
+| Arranjo guardado | Detalhes aberto, faixa puxada 500 px para cima, recarregar | volta igual; a cena fica com o chão (55%) e a faixa cede |
+| Janela → Voltar ao padrão (`layout-padrao`) | depois do arranjo puxado | volta à faixa fechada de fábrica |
+| Fotos em 1920, 1440 e 1280, Detalhes aberto e fechado | olhadas | nada cortado; colunas inteiras |
+| Erros na página | escuta do navegador | nenhum |
+| `npm run roteiro` | | 14 de 14 |
+| `npx vitest run` | | 5.956 passam, 0 vermelho |
+| Conformidade | | 138 de 138 |
+
+Um teste velho foi **reescrito**, não afrouxado: `paineis-do-photoshop.test.ts`
+("a casca liga… só com a Imagens à frente") procurava o chão K1b ligado. Agora
+ele procura o chão desligado de propósito, e a prova disso é a medição
+`--detalhes` (79 → 92).
+
 FIM

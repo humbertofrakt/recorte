@@ -1645,8 +1645,23 @@ describe('a tela que não pula (chat P, lote 2)', () => {
     expect(regraDoCss(css, '.status-warn')).toContain('flex: 0 0 auto;');
   });
 
+  it('05/11/2026: as colunas descem até o rodapé; a faixa mora só debaixo da cena', () => {
+    const casca = readFileSync(resolve(__dirname, '../src/ui/shell.ts'), 'utf8');
+    // A faixa e a alça dela moram na caixa da cena, entre as colunas…
+    expect(casca).toContain("this.stageColumn = el('div', { class: 'shell-palco-e-faixa' }, [\n      stageRow, this.dockGrip, this.dock,");
+    // …e não mais no corpo da janela, por baixo das colunas.
+    expect(casca).toContain("this.center = el('div', { class: 'shell-body' }, [\n      this.actionBarHost, middle,\n    ]);");
+    // A altura que a cena e a faixa dividem é a da caixa delas.
+    expect(casca).toContain('const room = this.stageColumn.clientHeight;');
+    // O tocador, na largura da cena, quebra em vez de rolar de lado.
+    expect(regraDoCss(css, '.shell-palco-e-faixa .dope-linha1 > .dope-tocador')).toContain('display: contents;');
+  });
+
   it('K13: a cena tem chão, e quem cede é a faixa de baixo', () => {
-    expect(regraDoCss(css, '.shell-middle')).toContain('min-height: 55%;');
+    // 05/11/2026: as colunas descem até o rodapé; o chão é da cena, dentro da
+    // caixa que ela divide com a faixa.
+    expect(regraDoCss(css, '.shell-palco-e-faixa > .shell-center')).toContain('min-height: 55%;');
+    expect(regraDoCss(css, '.shell-middle')).not.toContain('min-height: 55%;');
     expect(regraDoCss(css, '.dock')).toContain('flex: 0 1 auto;');
     // A faixa encolhida rola por dentro, e não esconde calada.
     expect(regraDoCss(css, '.dock-panel')).toContain('overflow-y: auto;');
