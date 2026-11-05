@@ -919,3 +919,12 @@ export function keysAfterEndNotice(duration: string, after: number): string {
     ? `Duração: ${duration}. 1 chave ficou depois do fim`
     : `Duração: ${duration}. ${after} chaves ficaram depois do fim`;
 }
+
+/**
+ * A tecla que fecha um menu da folha (o do losango, o da faixa da entidade)
+ * — QA da noite de 04/11/2026: Esc não fechava nada, como fecha no Spine e
+ * no Spriter. Só o Esc: Enter e as setas são do item com o foco.
+ */
+export function closesPopup(key: string): boolean {
+  return key === 'Escape';
+}
