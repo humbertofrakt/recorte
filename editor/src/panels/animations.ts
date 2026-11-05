@@ -32,7 +32,7 @@ import { registerPanel } from '../contract.js';
 import { clear, el, ensureStylesheet, separador, iconButton} from './dom.js';
 import {
   DeleteAnimation, DuplicateAnimation, MoveAnimationToTop,
-  animationRowMenu, baseLineLabel, renameAfter, renameAnswer, renamedNotice, showBodiesList,
+  animationRowMenu, baseLineLabel, renameAfter, renameAnswer, renamedNotice, deletedNotice, showBodiesList,
   externalCount, externalHint, formatTime, listAnimations, listBodies, listExternalAnimations,
   entityBaseHint, hostOfEntityView, listEntityBases,
 } from './animations-model.js';
@@ -423,8 +423,11 @@ class AnimationsPanel implements Panel {
     const doc = this.doc;
     if (!doc || doc.animation === null) return;
     transport.forget();
+    const apagada = doc.animation;
     doc.run(new DeleteAnimation(doc.animation));
     doc.animation = doc.file.animations?.[0]?.name ?? null;
+    // QA da noite (04/11): depois do "Abriu…" que a troca escreve, o que sumiu.
+    doc.notice(deletedNotice(apagada, doc.animation));
     this.render();
   }
 
@@ -467,7 +470,7 @@ class AnimationsPanel implements Panel {
     if (doc.animation === from) doc.animation = command.to;
     // Depois de trocar o nome aberto: o documento acabou de escrever "Abriu a
     // animação", e quem renomeou não abriu nada.
-    doc.notice(renamedNotice(from, command.to));
+    doc.notice(renamedNotice(from, command.to, resposta.to));
     this.render();
   }
 

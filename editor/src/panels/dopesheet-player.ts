@@ -26,7 +26,7 @@ import {
   BASE_CLOCK, baseOpenHint, popupPlacement, sliderFromSpeed, speedFromSlider,
 } from './dopesheet-model.js';
 import type { MoreControl, PlayerControl } from './dopesheet-model.js';
-import { selectionModeOf, startsKeyDrag } from './dopesheet-model.js';
+import { keysAfterEndNotice, selectionModeOf, startsKeyDrag } from './dopesheet-model.js';
 import { detailsButton, dockState } from './dock-model.js';
 import { paintIcon } from '../ui/icons.js';
 import { prefs } from '../ui/prefs.js';
@@ -415,9 +415,7 @@ export function setDurationTo(panel: DopesheetPanel, seconds: number): void {
   doc.run(new EditKeys(name, 'Mudar a duração', (file, animationName) => {
     setDuration(file, animationName, seconds, false);
   }));
-  doc.notice(sobrando === 0
-    ? `Duração: ${formatSeconds(seconds)}`
-    : `Duração: ${formatSeconds(seconds)}. ${sobrando} chave(s) ficaram depois do fim`);
+  doc.notice(keysAfterEndNotice(formatSeconds(seconds), sobrando));
 }
 
 /** Pergunta a duração nova, e o que fazer com as chaves — item 11. */
@@ -468,7 +466,7 @@ export async function askDuration(panel: DopesheetPanel): Promise<void> {
   }));
   doc.notice(sobrando === 0
     ? `Duração: ${formatSeconds(seconds)}${stretch ? ', com as chaves esticadas' : ''}`
-    : `Duração: ${formatSeconds(seconds)}. ${sobrando} chave(s) ficaram depois do fim`);
+    : keysAfterEndNotice(formatSeconds(seconds), sobrando));
 }
 
 /**
