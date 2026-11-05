@@ -1873,3 +1873,30 @@ describe('N-4b: o recorte arrastável na cena', () => {
     expect(keyConflicts(KEY_TABLE)).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Prova de pessoa (05/11/2026): depois de Abrir o herói, o rodapé diz o primeiro passo
+// ---------------------------------------------------------------------------
+
+import { EXAMPLE_FIRST_STEP } from '../src/viewport/welcome-model.js';
+import { versoesDaFrase as versoesDaFraseCena } from '../src/ui/shell-status.js';
+
+describe('prova de pessoa: o herói abre na base, e o rodapé diz onde clicar', () => {
+  it('a frase diz a animação, a aba e o botão — o que o ▶ cinza não dizia', () => {
+    expect(EXAMPLE_FIRST_STEP).toContain('idle');
+    expect(EXAMPLE_FIRST_STEP).toContain('aba Animações');
+    expect(EXAMPLE_FIRST_STEP).toContain('▶');
+    // O rodapé encolhe a frase até caber: a primeira frase, ou o que vem antes
+    // dos dois-pontos. Esta não tem nem um nem outro, e é curta: sai inteira.
+    expect(versoesDaFraseCena(EXAMPLE_FIRST_STEP)).toEqual([EXAMPLE_FIRST_STEP]);
+    expect(EXAMPLE_FIRST_STEP.length).toBeLessThanOrEqual(75);
+  });
+
+  it('o Abrir o herói diz a frase DEPOIS de abrir a base (senão o "Abriu a base" a apagaria)', () => {
+    const main = readFileSyncCena(resolveCena(import.meta.dirname, '../src/main.ts'), 'utf8');
+    const base = main.indexOf('switchAnimation(doc, null);');
+    const frase = main.indexOf('doc.notice(EXAMPLE_FIRST_STEP);');
+    expect(base).toBeGreaterThan(0);
+    expect(frase).toBeGreaterThan(base);
+  });
+});
