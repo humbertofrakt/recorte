@@ -101,7 +101,18 @@ dizendo o que fazer primeiro**, menos um:
 | No navegador: herói aberto → botão do rodapé → digitei "arma" → "Pôr uma arma na mão" com 4 passos → **Mostrar onde** → menu Entidades aberto, **Trazer entidade de fora…** aceso, rodapé com o caminho. Também abriu por Ajuda → Quero fazer… Console sem erro | fotos no capítulo 0 | — |
 | Manual, capítulo 0: seção "Não sabe como fazer? Quero fazer…", nas duas línguas | teste das imagens | — |
 
-Não rodei `npm run medir`: o rodapé ganhou um botão; a medição de painéis não olha o rodapé, mas quem fecha pode conferir.
+### Depois da junção com skins e reaproveitar (01h40 UTC)
+
+| O que fiz | Como provei |
+|:---|:---|
+| "Trocar a roupa" começa no **Skins → Guarda-roupa: desenho × skin…** | abri no navegador: a grade, "+ Nova skin", "Vestir só esta" |
+| "Usar a animação de outro boneco" começa em **Animação → Animações de outro boneco…** | abri: "De onde vêm", "Quais animações", a tabela dos ossos, "Usar as animações" |
+| Tarefa nova: "Fazer o boneco seguir o Esqueleto padrão" → **Base → Seguir o Esqueleto padrão…** | abri: a tabela, "Renomear os ossos" |
+| "Ver tudo funcionando" (a oficina) | ainda sem id de ação: o lugar está marcado no código |
+| `npm run medir`, sozinho | 92 de 92 cabem, console limpo |
+| O rodapé com o botão novo, a 1280×720 e a 1024×700, com a walk aberta | nada cortado, nada rolando |
+
+Arma e veículo esperam as TOMADAS, por ordem do Diretor.
 
 ## Decisões que tomei sozinho
 
