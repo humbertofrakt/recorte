@@ -242,7 +242,7 @@ regras, animar, vestir, encaixar, efeito — e então olhar.
 | **Malha e regras** | malha, pesos, regras, parâmetros, física |
 | **Animação** | nova, tocar, ir para, chavear, curvas, marcas, eventos, efeitos, chaves |
 | **Skins** | criar, clonar, editar, trocar imagem, ignorar, esconder |
-| **Entidades** | trazer, pôr na cena, testar, Este boneco, promover |
+| **Tomadas** | encaixar um projeto, pôr uma tomada, testar, Este boneco, promover. Era Entidades |
 | **Partículas** | o emissor vazio, fogo, fumaça, faísca, poeira |
 | **Exibir** | tema, o que aparece na tela, esconder, travar, zoom |
 | **Janela** | arranjos, arrumar, e os dezesseis painéis |
@@ -472,13 +472,14 @@ Veja os capítulos [6](06-malha-e-pesos.md) e [7](07-as-cinco-regras.md).
 
 Importar e exportar skin ficam no **Arquivo**. Veja o [capítulo 3](03-peles.md).
 
-### Entidades
+### Tomadas
 
-![O menu Entidades aberto: trazer, pôr na cena, testar e promover](imagens/00-menu-entidades.png)
+![O menu Tomadas aberto: encaixar um projeto, pôr uma tomada, tirar a peça, trazer, testar e promover](imagens/00-menu-tomadas.png)
 
 | Item | O que faz |
 |:---|:---|
-| **Trazer entidade de fora…** | um `.bone` de fora entra na lista Entidades |
+| **Encaixar um projeto…** · **Pôr uma tomada aqui…** · **Tirar a peça** | a espada na mão, o herói na cabine. Veja o [capítulo 5](05-entidades.md) |
+| **Trazer entidade de fora…** | um `.bone` de fora entra na lista Peças |
 | **Pôr entidade na cena…** | presa ao osso escolhido |
 | **Escolher a animação dela…** · **Em laço** | o que ela toca, e se repete |
 | **Marcar como slot…** · **Desmarcar o slot** | a imagem vira uma base, com nome e animações |
@@ -552,7 +553,7 @@ está na coluna. Clicar abre; clicar no que já está à frente fecha.
 
 | Bloco | Painéis |
 |:---|:---|
-| montar | **Imagens · Entidades · Pivôs · Árvore · Ordem · Malha e pesos** |
+| montar | **Imagens · Tomadas · Pivôs · Árvore · Ordem · Malha e pesos** |
 | animar | **Animações · Linha do tempo · Curvas · Skins · Regras · Partículas** |
 | olhar | **Propriedades · Exibição · Prévia · Histórico** |
 
@@ -582,7 +583,7 @@ Você sabe o que quer, mas não sabe o nome do comando. Comece aqui.
 
 ![A janela Quero fazer… com a palavra arma: a tarefa Pôr uma arma na mão, os quatro passos com o caminho de cada menu, e os botões Mostrar onde e Fechar](imagens/00-quero-fazer-arma.png)
 
-![Depois de Mostrar onde: o menu Entidades aberto, Trazer entidade de fora… aceso em laranja, e o rodapé dizendo o caminho](imagens/00-quero-fazer-onde.png)
+![Depois de Mostrar onde: o menu Tomadas aberto, o primeiro passo aceso em laranja, e o rodapé dizendo o caminho](imagens/00-quero-fazer-onde.png)
 
 O caminho escrito em cada passo vem dos menus do programa. Se um item mudar
 de nome, o passo muda junto.
@@ -639,7 +640,7 @@ De fábrica:
 | Coluna | Grupo de cima | Grupo de baixo |
 |:---|:---|:---|
 | **Esquerda** | Árvore · Ordem | Propriedades |
-| **Direita** | Imagens · Entidades · Pivôs · Malha e pesos · Partículas · Exibição · Prévia | Animações · Skins · Regras · Histórico |
+| **Direita** | Imagens · Tomadas · Pivôs · Malha e pesos · Partículas · Exibição · Prévia | Animações · Skins · Regras · Histórico |
 
 A **Linha do tempo** e as **Curvas** ficam embaixo, na faixa larga.
 

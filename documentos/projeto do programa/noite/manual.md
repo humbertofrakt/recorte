@@ -114,6 +114,20 @@ dizendo o que fazer primeiro**, menos um:
 
 Arma e veículo esperam as TOMADAS, por ordem do Diretor.
 
+### Depois das TOMADAS e da OFICINA (02h00 UTC)
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| "Pôr uma arma na mão" → botão direito no osso → **Encaixar um projeto…** (Tomadas) | navegador a 1280×720: "arma" → Mostrar onde → **Tomadas → Encaixar um projeto…** aceso | — |
+| "Pôr o boneco dentro de um veículo" → abrir o veículo, encaixar o boneco na cabine; teste por **Este boneco entra em…** | `npm run tomadas`: 11 de 11 | — |
+| Tarefa nova "Ver tudo funcionando" → **Arquivo → Abrir a oficina (exemplo)** | teste: a ação existe e tem porta | — |
+| Rodapé: o essencial ANTES do traço — "Tomadas → Encaixar um projeto… — aceso em laranja" | navegador | — |
+| Capítulo 5 reescrito curto: **Tomadas**, Encaixes e Peças, cita o 11. O inglês junto | testes do manual verdes | — |
+| "Entidades" virou "Tomadas" nos capítulos 0, 2, 3, 4, 9 e no README, nas duas línguas. A foto do menu virou `00-menu-tomadas.png` | verificador de caminhos | os nomes de expressão do Construct (cap. 8) e a pasta do projeto (cap. 2) ficam: são nomes de arquivo |
+| PDF refeito | 70 de 70 imagens | — |
+
+**Achado, fora da minha parte:** a **1024 de largura**, o menu **Ajuda** fica fora da tela (doze menus não cabem na barra). O botão "Quero fazer…" do rodapé continua à vista.
+
 ## Decisões que tomei sozinho
 
 | Decisão | Por quê |

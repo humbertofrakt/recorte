@@ -78,7 +78,7 @@ A espinha é **corpos · animações · entidades**, o modelo novo do programa
 | **2** | **[Bases e animações](02-corpos-e-animacoes.md)** | **A espinha do modelo novo: a base como animação de um quadro só, as duas listas, o lobisomem. Leia este antes dos outros.** |
 | 3 | [Skins](03-peles.md) | Trocar a roupa sem refazer o esqueleto. Uma skin, várias skins, e o que o jogo chama. |
 | 4 | [Animar](04-animar.md) | O tocador, as chaves, o laço, as marcas, as curvas, e a faixa que dirige uma entidade. |
-| 5 | [Entidades](05-entidades.md) | Esqueletos pendurados — a espada, a motosserra, o fogo do mecha — e a animação de fora reaproveitada. |
+| 5 | [Tomadas](05-entidades.md) | Uma peça dentro da outra: a espada na mão, o herói no mecha. Era Entidades. *Reescrito em 05/11.* |
 | 6 | [Malha e pesos](06-malha-e-pesos.md) | Dobrar o desenho por dentro, e pintar quanto cada osso puxa. |
 | 7 | [As cinco regras](07-as-cinco-regras.md) | IK, transformação, caminho, física e comando. Uma a uma, com o exemplo do herói. |
 | 8 | [Exportar e usar no jogo](08-exportar-e-usar-no-jogo.md) | As três embalagens, abrir e salvar, o menu Exportar, o validador, e o boneco no jogo: Construct 3, Godot, ou código. *Conferido em 07/10.* |

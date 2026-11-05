@@ -237,7 +237,7 @@ animate, dress, attach, effects — and then look.
 | **"Malha e regras" (Mesh and rules)** | mesh, weights, rules, parameters, physics |
 | **"Animação" (Animation)** | new, play, go to, key, curves, marks, events, effects, keys |
 | **"Skins" (Skins)** | create, clone, edit, swap image, ignore, hide |
-| **"Entidades" (Entities)** | bring in, put on the stage, test, This character, promote |
+| **"Tomadas" (Sockets)** | plug in a project, put a socket, test, This character, promote. Was Entidades |
 | **"Partículas" (Particles)** | the empty emitter, fire, smoke, spark, dust |
 | **"Exibir" (View)** | theme, what appears on screen, hide, lock, zoom |
 | **"Janela" (Window)** | layouts, arrange, and the sixteen panels |
@@ -461,13 +461,14 @@ See chapters [6](06-mesh-and-weights.md) and [7](07-the-five-rules.md).
 
 Importing and exporting skins are in **File**. See [chapter 3](03-skins.md).
 
-### Entities ("Entidades")
+### Sockets ("Tomadas")
 
-![The Entities menu open: bring in, put on the stage, test and promote](../imagens/00-menu-entidades.png)
+![The Tomadas (Sockets) menu open: plug in a project, put a socket, remove the piece, bring in, test and promote](../imagens/00-menu-tomadas.png)
 
 | Item | What it does |
 |:---|:---|
-| **"Trazer entidade de fora…" (Bring in outside entity…)** | an outside `.bone` enters the Entities list |
+| **"Encaixar um projeto…" (Plug in a project…)** · **"Pôr uma tomada aqui…" (Put a socket here…)** · **"Tirar a peça" (Remove the piece)** | the sword in the hand, the hero in the cockpit. See [chapter 5](05-entities.md) |
+| **"Trazer entidade de fora…" (Bring in outside entity…)** | an outside `.bone` enters the Pieces list |
 | **"Pôr entidade na cena…" (Put entity on stage…)** | attached to the selected bone |
 | **"Escolher a animação dela…" (Pick its animation…)** · **"Em laço" (Looping)** | what it plays, and whether it repeats |
 | **"Marcar como slot…" (Mark as slot…)** · **"Desmarcar o slot" (Unmark the slot)** | the image becomes a base, with a name and animations |
@@ -539,7 +540,7 @@ ones are in a column. Click to open; click the one already in front to close.
 
 | Block | Panels |
 |:---|:---|
-| build | **"Imagens" (Images) · "Entidades" (Entities) · "Pivôs" (Pivots) · "Árvore" (Tree) · "Ordem" (Order) · "Malha e pesos" (Mesh and weights)** |
+| build | **"Imagens" (Images) · "Tomadas" (Sockets) · "Pivôs" (Pivots) · "Árvore" (Tree) · "Ordem" (Order) · "Malha e pesos" (Mesh and weights)** |
 | animate | **"Animações" (Animations) · "Linha do tempo" (Timeline) · "Curvas" (Curves) · "Skins" (Skins) · "Regras" (Rules) · "Partículas" (Particles)** |
 | look | **"Propriedades" (Properties) · "Exibição" (Display) · "Prévia" (Preview) · "Histórico" (History)** |
 
@@ -569,7 +570,7 @@ You know what you want, but not the command's name. Start here.
 
 ![The Quero fazer… window with the word arma: the task Pôr uma arma na mão (Put a weapon in the hand), the four steps with each menu path, and the Mostrar onde and Fechar buttons](../imagens/00-quero-fazer-arma.png)
 
-![After Mostrar onde: the Entidades menu open, Trazer entidade de fora… lit in orange, and the status bar giving the path](../imagens/00-quero-fazer-onde.png)
+![After Mostrar onde: the Tomadas (Sockets) menu open, the first step lit in orange, and the status bar giving the path](../imagens/00-quero-fazer-onde.png)
 
 The path written in each step comes from the program's menus. If an item is
 renamed, the step changes with it.

@@ -262,7 +262,7 @@ In `heroi.bone` all three are there: the three skins; the `hand` slot, with
 The sentence says: *"Aqui é teste: pôr e tirar skin não mexe no arquivo"*
 ("This is a test: putting on and taking off skins does not touch the file").
 
-An entity's skin, in test: on its card, in the **"Entidades" (Entities)** tab,
+An entity's skin, in test: on its card, in the **"Tomadas" (Sockets)** tab,
 **"skins ▾"** ([chapter 5](05-entities.md)).
 
 ---

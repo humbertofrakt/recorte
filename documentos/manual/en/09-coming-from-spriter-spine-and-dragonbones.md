@@ -148,7 +148,7 @@ animation open exists.
 | In Spriter | In Recorte |
 |:---|:---|
 | *entity* | **base**. A project has several bases: Salvar (Save) saves one `.bone` per base and a `manifest.json` |
-| *sub-entity* | **entity** (entidade): a `.bone` hanging from a slot of another. **"Entidades"** (Entities) menu. See [chapter 5](05-entities.md) |
+| *sub-entity* | **entity** (entidade): a `.bone` hanging from a slot of another. **"Tomadas"** (Sockets) menu, formerly Entidades. See [chapter 5](05-entities.md) |
 | *character map* | **skin** |
 | *sprite* | **slot** plus **attachment** (anexo) |
 | *bone* | **bone** (osso) |
@@ -364,7 +364,7 @@ bases**. Checked in the code on 07/10/2026.
 | Skins in Feitas and Ativas, drag | exists | `panels/skins-model.ts` |
 | Variables, tags, events with audio | exists | Animação menu |
 | Several bases in one project (*entities*) | exists | Salvar with `manifest.json` |
-| Sub-entity (entity in a slot) | exists | Entidades menu, [chapter 5](05-entities.md) |
+| Sub-entity (entity in a slot) | exists | Tomadas (Sockets) menu, [chapter 5](05-entities.md) |
 | Import by folder, in the editor | exists | **Arquivo → Importar → De outro programa…** |
 | Import the whole `.scml` as a project | exists differently | only on the command line; the editor brings the first *entity* |
 | Lip sync, watermark, indexed palette, `M` + drag | missing | — |

@@ -266,7 +266,7 @@ No `heroi.bone` os três estão lá: as três skins; o slot `hand`, com `hand` e
 **Skins**: clique para pôr e tirar. A frase diz: *"Aqui é teste: pôr e tirar
 skin não mexe no arquivo"*.
 
-Skin de uma entidade, em teste: no cartão dela, na aba Entidades,
+Skin de uma entidade, em teste: no cartão dela, na aba Tomadas,
 **skins ▾** ([capítulo 5](05-entidades.md)).
 
 ---

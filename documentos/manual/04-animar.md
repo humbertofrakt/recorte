@@ -833,4 +833,4 @@ código de `editor/src` e nos docs `39`, `44`, `50`, `54`, `101` e `102`.
 
 ---
 
-Próximo: [5. Entidades](05-entidades.md)
+Próximo: [5. Tomadas](05-entidades.md)

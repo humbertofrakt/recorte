@@ -64,6 +64,10 @@ describe('Quero fazer…: as tarefas', () => {
     expect(primeira('psd')).toBe('importar-psd');
     // Noite de 04/11, depois da junção com skins e reaproveitar.
     expect(primeira('esqueleto padrao')).toBe('seguir-padrao');
+    // 05/11, depois das TOMADAS e da oficina.
+    expect(primeiroComando(TAREFAS.find((t) => t.id === 'arma')!)).toBe('encaixar-projeto');
+    expect(primeira('mecha')).toBe('veiculo');
+    expect(primeira('oficina')).toBe('oficina');
     expect(primeiroComando(TAREFAS.find((t) => t.id === 'roupa')!)).toBe('guarda-roupa');
     expect(primeiroComando(TAREFAS.find((t) => t.id === 'animacao-de-outro')!)).toBe('usar-animacoes');
   });

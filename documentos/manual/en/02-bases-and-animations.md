@@ -101,7 +101,7 @@ Animações (Animations)
 | Button | Does | Also in |
 |:---|:---|:---|
 | "Salvar como base nova" (Save as new base) | the current frame becomes a new base, with the name you give it. The animation does not change | "Base → Salvar como base nova…" (Base → Save as new base…) |
-| "Rebaixar a entidade" (Demote to entity) | the chosen base leaves the Bases list and goes to the Entities panel. The base in focus cannot be demoted | "Entidades → Rebaixar a entidade" (Entities → Demote to entity) |
+| "Rebaixar a entidade" (Demote to entity) | the chosen base leaves the Bases list and goes to the Sockets ("Tomadas") tab. The base in focus cannot be demoted | "Tomadas → Rebaixar a entidade" (Sockets → Demote to entity) |
 
 **None of this blocks editing.** New bone, new mesh, new image: everything works
 in the middle of an animation. What cannot be animated goes to the base, and the
@@ -281,7 +281,7 @@ chainsaw.)*
 | Several bases, each with its own animations | exists | **Bases** strip, in the Animations window |
 | New base from a frame | exists | Base → Save as new base… |
 | Bring in an outside base | exists | Base → Bring in an outside base… |
-| Demote a base to an entity | exists | Entities → Demote to entity · button on the Bases strip |
+| Demote a base to an entity | exists | Sockets → Demote to entity · button on the Bases strip |
 | Clone a base with its animations | missing | I found no door |
 | The player never disappears | exists | timeline, with the base open |
 | Stored keys of the removed piece | exists | Base → Stored keys… |
