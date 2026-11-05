@@ -2029,3 +2029,27 @@ describe('QA 04/11/2026 — o rodapé do PSD diz o resultado com a janela aberta
     }
   });
 });
+
+describe('QA 04/11/2026 — D21: os avisos do desenhador chegam em português na exportação', () => {
+  // A prova (Chromium sem janela): o projeto do Spriter → Exportar → GIF. A
+  // janela "Imagem exportada" terminava com 'attachment
+  // "mao/_0000_Camada-1-copiar_tmp5068" has no atlas region; not drawn' — a
+  // frase crua do desenhador do runtime, em inglês.
+  it('as frases fixas do CanvasRenderer viram português; a desconhecida fica como veio', async () => {
+    const { rendererWarningPt } = await import('../src/io/export-image.js');
+    expect(rendererWarningPt('attachment "mao/x" has no atlas region; not drawn'))
+      .toBe('o desenho "mao/x" não tem imagem no atlas: ficou de fora');
+    expect(rendererWarningPt('emitter "fogo" has no atlas region; not drawn'))
+      .toBe('o emissor "fogo" não tem imagem no atlas: ficou de fora');
+    expect(rendererWarningPt('atlas page "p" has no image; nothing drawn from it'))
+      .toBe('a página "p" do atlas não tem imagem: nada dela foi desenhado');
+    expect(rendererWarningPt('nested skeleton "espada.bone" is not loaded; nothing drawn (spec 7.11)'))
+      .toBe('a entidade "espada.bone" não foi aberta: ficou de fora');
+    expect(rendererWarningPt('uma frase qualquer')).toBe('uma frase qualquer');
+  });
+
+  it('a exportação passa todo aviso do desenhador pela tradução', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/export-image.ts'), 'utf8');
+    expect(fonte).toContain('onWarning: (cru) => { const message = rendererWarningPt(cru);');
+  });
+});

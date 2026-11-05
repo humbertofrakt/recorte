@@ -634,6 +634,26 @@ export function boundsOverAnimation(
   return box ?? { x: 0, y: 0, width: 1, height: 1 };
 }
 
+/**
+ * **As frases fixas do desenhador, em português** — QA de 04/11/2026 (D21). O
+ * `CanvasRenderer` do runtime fala inglês (é a língua do runtime); a janela
+ * "Imagem exportada" mostrava a frase crua. A que não bate fica como veio.
+ */
+export function rendererWarningPt(message: string): string {
+  let m = /^attachment "(.*)" has no atlas region; not drawn$/.exec(message);
+  if (m !== null) return `o desenho "${m[1]}" não tem imagem no atlas: ficou de fora`;
+  m = /^emitter "(.*)" has no atlas region; not drawn$/.exec(message);
+  if (m !== null) return `o emissor "${m[1]}" não tem imagem no atlas: ficou de fora`;
+  m = /^atlas page "(.*)" has no image; nothing drawn from it$/.exec(message);
+  if (m !== null) return `a página "${m[1]}" do atlas não tem imagem: nada dela foi desenhado`;
+  m = /^nested skeleton "(.*)" is not loaded; nothing drawn \(spec 7\.11\)$/.exec(message);
+  if (m !== null) return `a entidade "${m[1]}" não foi aberta: ficou de fora`;
+  if (message === 'no scratch canvas available; slot tint and dark color are ignored') {
+    return 'o navegador não deu uma tela de rascunho: a cor do slot e a cor escura ficaram de fora';
+  }
+  return message;
+}
+
 /** Devolve a vez à tela por um instante: o Andamento anda, e um clique responde — D20. */
 function respirar(): Promise<void> {
   return new Promise((done) => { setTimeout(done, 0); });
@@ -819,7 +839,7 @@ async function buildTaskExport(
     if (ctx === null) throw new Error('O navegador não deu um contexto 2D.');
     const renderer = new CanvasRenderer(ctx, {
       images: (page: AtlasPageData) => doc.imageFor(page),
-      onWarning: (message) => { if (!warnings.includes(message)) warnings.push(message); },
+      onWarning: (cru) => { const message = rendererWarningPt(cru); if (!warnings.includes(message)) warnings.push(message); },
       debug: options.bones ? { bones: true } : {},
     });
     renderer.draw(skeleton);
