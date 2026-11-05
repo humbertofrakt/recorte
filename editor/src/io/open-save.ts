@@ -1333,6 +1333,16 @@ export async function fetchDocument(
  * **O que veio dentro do pacote** — rodada 45, lote 4 (doc `64`, c). Abrir o
  * `.bonez` não dizia nada; a espada vinha dentro e ninguém sabia.
  */
+/** A frase do `.bone` aberto pelo Ctrl+O, sem aviso — QA de 04/11/2026: o rodapé dizia só "Sem mudanças por salvar.". */
+export function abertoNotice(arquivo: string, entidades: readonly string[], atlas: number): string {
+  const partes: string[] = [];
+  if (entidades.length > 0) {
+    partes.push(`${entidades.length === 1 ? 'a entidade' : `${entidades.length} entidades`} ${entidades.join(', ')}`);
+  }
+  if (atlas > 0) partes.push(atlas === 1 ? 'o atlas com as imagens' : `${atlas} atlas com as imagens`);
+  return partes.length === 0 ? `${arquivo} aberto.` : `${arquivo} aberto, com ${partes.join(' e ')}.`;
+}
+
 export function pacoteAbertoNotice(pacote: string, entidades: readonly string[], atlas: number): string {
   const partes: string[] = [];
   if (entidades.length > 0) {

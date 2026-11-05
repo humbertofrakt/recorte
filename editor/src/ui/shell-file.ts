@@ -14,7 +14,7 @@ import { createEmptyFile } from '../doc/new-file.js';
 import { describeDraftTime, draftsToOffer, readDraft, takeKeptDraft } from '../doc/rascunho.js';
 import {
   abrindoPelaPasta, cameFromOutside, deliverBody, deliveredLine, entitySaveLines, forgetHandle, forgetOutside,
-  hasOpenHandle, lastSaveNote, lastSaveWarns, saveStatusLine, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
+  abertoNotice, hasOpenHandle, lastSaveNote, lastSaveWarns, saveStatusLine, openAnotherSkeleton, openDocument, readOpenedFiles, rememberOutside,
   saveDocument, uriForOpened, useOpenHandle,
 } from '../io/open-save.js';
 import { perguntaSalvarComAvisos } from './salvar-avisos.js';
@@ -372,6 +372,8 @@ export async function open(shell: Shell): Promise<void> {
     else if (/\.bonez$/i.test(opened.path ?? '')) {
       shell.statusState.textContent = pacoteAbertoNotice(opened.path ?? '', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);
     }
+    // QA 04/11/2026: sem aviso, o rodapé diz o que abriu (dizia "Sem mudanças por salvar.").
+    else shell.statusState.textContent = abertoNotice(opened.path ?? '', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);
   } catch (error) {
     shell.statusState.textContent = error instanceof Error ? error.message : String(error);
   }

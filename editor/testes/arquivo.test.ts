@@ -2479,3 +2479,20 @@ describe('QA 04/11/2026 — o projeto com manifesto aberto com aviso: o aviso pr
     expect(fonte).toContain('? `${lido.warnings[0]}. ${projectOpenedNotice(folder.name, lido.lists)}`');
   });
 });
+
+describe('QA 04/11/2026 — Ctrl+O diz o que abriu, como o arrasto', () => {
+  // A prova (Chromium sem janela): Ctrl+O → heroi.bone, heroi.atlas.json,
+  // heroi.png e espada.bone. Abriu inteiro, e o rodapé dizia só "Sem mudanças
+  // por salvar." — o arrasto diz "heroi.bone aberto pelo arrasto.", e o
+  // pacote diz o que veio dentro.
+  it('a frase do .bone aberto conta a entidade e o atlas', async () => {
+    const { abertoNotice } = await import('../src/io/open-save.js');
+    expect(abertoNotice('heroi.bone', ['espada.bone'], 1)).toBe('heroi.bone aberto, com a entidade espada.bone e o atlas com as imagens.');
+    expect(abertoNotice('a.bone', [], 0)).toBe('a.bone aberto.');
+  });
+
+  it('o abrir da casca usa a frase quando não há aviso', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    expect(fonte).toContain('else shell.statusState.textContent = abertoNotice(opened.path ?? \'\', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);');
+  });
+});
