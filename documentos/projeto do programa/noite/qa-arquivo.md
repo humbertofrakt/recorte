@@ -30,11 +30,12 @@ Executor: `EXECUTANDO · QA arquivo`. Quem coordena: o DIRETOR.
 | D11 | `render-png --bone X` diz "Nenhum esqueleto passado" | `ferramentas/render-png.mjs` | o mesmo comando | sim |
 | D12 | Exportar imagem de um arquivo só de partículas: sai "1 quadro de 1x1" (a caixa não contava partículas — a mesma forma do D10, dentro do editor) | `io/export-image.ts` | `fogo.bone` → Só este quadro (0,4 s) | sim |
 | D13 | Exportar animações do herói sugere `animacoes-animacoes.bone` | `io/export-animation.ts` | Exportar → Animações, para outra base… | sim |
-| D14 | Abrir (ou soltar) a pasta `exemplo/game`: reabre `bcp 2026-09-09.bone` com **176 avisos** — 88 imagens "não encontradas" que **estão na pasta** (os mesmos 176 do doc 89). Agora: 2 avisos (a 1 que falta de verdade é uma pasta no disco) | `io/folder-save.ts` | Arquivo → Abrir pasta → `exemplo/game` | sim |
+| D14 | **(provavelmente os 176 avisos do `pularmachini` do Humberto, doc 89)** Abrir (ou soltar) a pasta `exemplo/game`: reabre `bcp 2026-09-09.bone` com **176 avisos** — 88 imagens "não encontradas" que **estão na pasta** (os mesmos 176 do doc 89). Agora: 2 avisos (a 1 que falta de verdade é uma pasta no disco) | `io/folder-save.ts` | Arquivo → Abrir pasta → `exemplo/game` | sim |
 | D15 | O menu diz **"Uma imagem por skin…"**, mas a janela fatia o `.bone` por skin; não sai imagem nenhuma (o manual já avisa: *"o nome do menu está errado"*) | `ui/menus.ts` (passagem) | Arquivo → Exportar → Uma imagem por skin… | **não** (ver abaixo) |
 | D16 | "Exportar por skin", tudo marcado: "Tamanho 48.326 / 48.319" — o recorte maior que o inteiro (anotado desde o doc 57) | `io/export-skin.ts` | a mesma janela | sim |
 | D17 | Entregar uma base depois de importar do Spine: sai só o `.bone`, citando `heroi-spine.atlas.json` que não existe em lugar nenhum; a janela dizia "o atlas que ele já citava vale" | `io/open-save.ts`, `ui/shell-file.ts` | Importar Spine → Exportar → Entregar uma base… | sim |
 | D18 | Reabrir o fechado: o guardado abre "Sem mudanças por salvar." (a forma do D4, na outra porta) | `ui/shell-file.ts` | Arquivo → Reabrir o fechado | sim |
+| D19 | Rascunho recuperado (sem imagens) → Salvar → Escolher a pasta → "Faltam 2 imagens", que **estão** na pasta recém-escolhida. E o rodapé do Recuperar não dizia como trazer as imagens | `ui/shell-file.ts`, `main.ts` | mexer, recarregar, Recuperar, Salvar | sim |
 | — | Linha de comando: opção errada saía com 1 em `empacotar`, `exportar`, `exportar-imagem`, `fatiar`, `render-png` (os outros com 2); `fatiar --animacoes X` não dizia quais há | `ferramentas/*.mjs` | `npm run fatiar -- a.bone x --bobagem` | sim |
 | — | Importar PSD: com a janela de avisos aberta, o rodapé dizia "Importar PSD." | `ui/shell-file.ts`, `ui/shell-drop.ts` | Importar → PSD… | sim |
 
@@ -48,7 +49,7 @@ Cada conserto: um commit, com teste no arquivo da parte, visto **vermelho antes*
 | Abrir pasta | `exemplo/game/mao`: 13 imagens na aba (a subpasta `_tmp` é pasta, não imagem) |
 | Arrastar peça para a cena | 2 slots; Salvar grava `.bone` + atlas + página; `validar` OK |
 | Salvar como → Numa pasta nova | leva `.bone`, atlas e página |
-| Rascunho | a janela "Havia trabalho não salvo" volta; o recuperado é igual ao mexido |
+| Rascunho | a janela "Havia trabalho não salvo" volta; o recuperado é igual ao mexido. Depois do D4 e do D19, o caminho inteiro: Recuperar → Abrir pasta → Salvar e continuar → a pasta reabre com o trabalho recuperado no disco e "Nenhum aviso" |
 | Exportar imagem, sem pasta | GIF 60 quadros 114×242 · PNG em `.zip` (60) · folha + JSON · WebM 1,97 s · um quadro 110×241 · as 3 animações em 3 GIF |
 | Exportar imagem, com pasta | tudo em `exportar/`; nome repetido ganha "(2)" |
 | Editor × linha de comando | o herói em `render-png` e o GIF do editor: o mesmo desenho (1 px de diferença na borda) — foto 04 |
@@ -98,7 +99,7 @@ Todas as mensagens em português.
 |:---|:---|
 | **D15, o nome "Uma imagem por skin…"** | o rótulo mora em `ui/menus.ts` (arquivo de passagem) e o manual (outra sessão desta noite) escreve sobre ele. **Recomendo**: "Um arquivo por skin…", dica *"Corta o .bone: só as skins e as animações marcadas"*. É uma linha; o Diretor decide junto com o manual |
 | Exportar skin grava só o `.bone` da skin, sem atlas | é o desenho (o arquivo de skin exige o rig e os nomes); noutro boneco as imagens vêm do atlas dele |
-| Rascunho recuperado vem **sem as imagens** (avisa 4) | o navegador não guarda a licença da pasta; a casca já diz "para trazê-las, Arquivo → Abrir pasta do projeto…" |
+| Rascunho recuperado vem **sem as imagens** (avisa 4) | o navegador só devolve a licença da pasta com um clique. O rodapé agora diz o remédio, e o remédio funciona (D19) |
 | O rodapé do Importar PSD diz "Importar PSD." até fechar a janela | cosmético |
 
 ## O que só a mão do Humberto confere
