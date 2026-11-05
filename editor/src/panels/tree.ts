@@ -23,7 +23,7 @@ import {
 import { bonesGone } from '../doc/skin-bones.js';
 import { AddAttachmentToSlot, AddConstraint, MoveSlot, RenameItem, CONSTRAINT_TYPES, canDeleteSelection, foldKey, hierarchyDropAction, hierarchyRows, parseFolded, searchHierarchy, selectionForRow, unfoldedRows, type RenameTarget, type TreeRow } from './tree-model.js';
 // Degrau 9 (I5): o sinal da pele na linha do osso.
-import { skinOnlyHint, treeIndent } from './tree-rows.js';
+import { skinOnlyHint, swapDropNotice, treeIndent } from './tree-rows.js';
 import {
   branchFoldIds, emptyNameSays, matchesSearch, rangeSelection, renameSays, stepRow,
   toggleRowInSelection,
@@ -1377,11 +1377,15 @@ class TreePanel implements Panel {
       // O arrasto na Árvore passa pela MESMA porta da tecla P — lote 34 —, e
       // é ela que guarda a pose de mundo. Desde o 63a, desenho sobre osso também.
       if (target !== null) {
+        // A troca de lugar (pai sobre o filho) já fala com os dois nomes.
+        // QA da noite (04/11/2026): a pergunta vem ANTES de mover — depois da
+        // troca o alvo já não está debaixo da origem, e a Árvore escrevia
+        // "virou filho de" por cima de "trocaram de lugar".
+        const troca = source.kind === 'bone' && target.kind === 'bone'
+          && isDescendantBone(corpoDe(doc).file, target.name, source.name, this.parentsNow(doc));
         const saida = runReparent(doc, action.selection, action.parent);
         // Rodada 43, lote 3 (doc 51, T3): o rodapé diz QUEM ("1 item" não
         // dizia), e a peça segue escolhida — sumia a escolha depois de soltar.
-        // A troca de lugar (pai sobre o filho) já fala com os dois nomes.
-        const troca = source.kind === 'bone' && target.kind === 'bone' && isDescendantBone(corpoDe(doc).file, target.name, source.name);
         // Escolher ANTES de falar: escolher redesenha o rodapé e apagava o recado.
         if (saida.moved) {
           this.anchor = this.cursor = source.id;
@@ -1389,6 +1393,7 @@ class TreePanel implements Panel {
           doc.select(selectionForRow(source));
         }
         if (saida.moved && !troca) doc.notice(`${source.name} virou filho de ${action.parent}${reparentExtra(saida)}`);
+        else if (saida.moved) doc.notice(swapDropNotice(action.parent, source.name, reparentExtra(saida)));
         return;
       }
       // Lote 64: solto. A raiz escondida não tem nome na tela; o recado diz "solto".
