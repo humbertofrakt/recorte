@@ -15,7 +15,7 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
-Medido às 00h55 UTC de 05/11 (o relógio da máquina), com a casa só minha.
+Medido às 00h50 UTC de 05/11 (o relógio da máquina), com a casa só minha.
 
 ## 1. O P-002 (taxa em rampa) entrou em `casos/`
 
