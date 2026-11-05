@@ -39,7 +39,7 @@ import { importPsd, psdWarningsNote } from '../io/import-psd.js';
 import { saveAsBinary, saveAsPackage, savingLine, stem as fileStem } from '../io/save-binary.js';
 import { gltfLine, saveAsGltf } from '../io/export-gltf.js';
 import {
-  buildImageExport, exportImageWindow, imageExportLine, imageExportReport,
+  buildImageExport, exportImageWindow, imageExportLead, imageExportLine, imageExportReport,
   saveExport,
 } from '../io/export-image.js';
 import type { ImageExportOptions } from '../io/export-image.js';
@@ -700,7 +700,7 @@ export async function exportImage(shell: Shell): Promise<void> {
     saveLastExport('imagem', run.options as unknown as Record<string, unknown>);
     await tellUser({
       title: 'Imagem exportada',
-      lead: `${run.result.files.length} arquivo(s) gravado(s).`,
+      lead: imageExportLead(run.result, run.options, run.base),
       lines: imageExportReport(run.result, run.options, run.base, run.where),
     });
   } catch (error) {
