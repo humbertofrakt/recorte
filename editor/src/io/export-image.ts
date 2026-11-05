@@ -30,7 +30,7 @@ import {
   type AnimationData, type AtlasPageData,
 } from '../../../runtime/src/index.js';
 import {
-  autoCropFrames, buildSpriteSheet, cameraFor, encodeGif, frameFileName, frameTimes,
+  autoCropFrames, buildSpriteSheet, cameraFor, encodeGifPaced, frameFileName, frameTimes,
   unionBox,
   type Box, type FrameCamera, type RgbaFrame, type SheetIndex,
 } from '../../../ferramentas/src/exportar/quadros.js';
@@ -634,6 +634,11 @@ export function boundsOverAnimation(
   return box ?? { x: 0, y: 0, width: 1, height: 1 };
 }
 
+/** Devolve a vez à tela por um instante: o Andamento anda, e um clique responde — D20. */
+function respirar(): Promise<void> {
+  return new Promise((done) => { setTimeout(done, 0); });
+}
+
 /** A canvas of the camera's size, with the world transform already set. */
 function stageFor(camera: FrameCamera, background: string | null): CanvasRenderingContext2D | null {
   const canvas = document.createElement('canvas');
@@ -820,6 +825,8 @@ async function buildTaskExport(
     renderer.draw(skeleton);
     frames.push(readPixels(ctx, time));
     onProgress(i + 1, times.length, 'Desenhando');
+    // QA 04/11/2026 (D20): a tela respira entre um quadro e outro.
+    await respirar();
   }
 
   // Com o retângulo da animação, a borda NÃO é cortada: o retângulo é o
@@ -834,8 +841,11 @@ async function buildTaskExport(
   let index: SheetIndex | null = null;
 
   if (options.format === 'gif') {
-    onProgress(times.length, times.length, 'Montando o GIF');
-    const bytes = encodeGif(frames, { fps, loop: options.loop, maxColors: options.maxColors });
+    onProgress(0, times.length, 'Montando o GIF');
+    // QA 04/11/2026 (D20): aos pedaços — eram 53 s num pedaço só, a página parada.
+    const bytes = await encodeGifPaced(frames, { fps, loop: options.loop, maxColors: options.maxColors },
+      (feito, total, fase) => onProgress(feito, total, fase === 'paleta' ? 'Escolhendo as cores do GIF' : 'Montando o GIF'),
+      respirar);
     files.push({ name: `${base}.gif`, blob: new Blob([bytes.slice().buffer as ArrayBuffer], { type: 'image/gif' }) });
   } else if (options.format === 'webm') {
     const support = webmSupport(browserWebmEnv());

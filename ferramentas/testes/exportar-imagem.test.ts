@@ -741,3 +741,36 @@ describe('QA 04/11/2026 — D10: a linha de comando desenha as partículas', () 
     }
   }, 120_000);
 });
+
+describe('QA 04/11/2026 — D20: o GIF se monta aos pedaços, e a tela respira', () => {
+  // A prova (Chromium sem janela): o projeto do Spriter (exemplo/game, bcp) →
+  // Exportar → GIF: 30 quadros de 2837x1197. A página ficou 64 s SEM
+  // RESPONDER — o Andamento parado, nenhum clique. Medido fora: o encodeGif
+  // leva ~53 s nesses quadros (a paleta, 7 s), num pedaço só.
+  const quadros = (n: number) => Array.from({ length: n }, (_, f) => {
+    const rgba = new Uint8Array(40 * 30 * 4);
+    for (let i = 0; i < rgba.length; i += 4) {
+      rgba[i] = (i * 7 + f * 40) & 255; rgba[i + 1] = (i * 3) & 255; rgba[i + 2] = f * 50; rgba[i + 3] = i % 12 === 0 ? 0 : 255;
+    }
+    return { width: 40, height: 30, rgba };
+  });
+
+  it('com pausa: os MESMOS bytes do encodeGif, e uma pausa por quadro na paleta e no desenho', async () => {
+    const { encodeGif, encodeGifPaced } = await import('../src/exportar/quadros.js');
+    const fs = quadros(5);
+    const passos: string[] = [];
+    let pausas = 0;
+    const bytes = await encodeGifPaced(fs, { fps: 12, loop: 0 }, (feito, total, fase) => passos.push(`${fase}${feito}/${total}`), async () => { pausas++; });
+    expect(Array.from(bytes)).toEqual(Array.from(encodeGif(fs, { fps: 12, loop: 0 })));
+    expect(pausas).toBe(10);
+    expect(passos[0]).toBe('paleta1/5');
+    expect(passos[passos.length - 1]).toBe('quadro5/5');
+  });
+
+  it('a exportação do editor usa a versão com pausa, e pausa entre quadros desenhados', () => {
+    const fonte = readFileSync(join(RAIZ, 'editor', 'src', 'io', 'export-image.ts'), 'utf8');
+    expect(fonte).toContain('await encodeGifPaced(');
+    const laco = fonte.slice(fonte.indexOf("onProgress(i + 1, times.length, 'Desenhando');"));
+    expect(laco.slice(0, 200)).toContain('await respirar();');
+  });
+});
