@@ -373,7 +373,7 @@ through the folder, or dropped on the window) and **"Reempacotar atlas"
 | **"Novo ▸ Osso" (New ▸ Bone)** | — | a bone, child of the selected one |
 | **"Novo ▸ Ponto" (New ▸ Point)** | `O` | a named position with a direction |
 | **"Novo ▸ Caixa de colisão" (New ▸ Collision box)** | `X` | an outline for the game to measure |
-| **"Novo ▸ Ponto neste slot" (New ▸ Point in this slot)** · **"Caixa neste slot" (Box in this slot)** | — | goes into the selected drawing, without creating another |
+| **"Novo ▸ Ponto neste desenho" (New ▸ Point in this drawing)** · **"Caixa neste desenho" (Box in this drawing)** | — | goes into the selected drawing, without creating another |
 | **"Novo ▸ Máscara" (New ▸ Mask)** | — | an outline that clips without erasing |
 | **"Virar filho de…" (Become child of…)** | `P` | with a bone selected: click whatever becomes its child, until `Esc` |
 | **"Trazer para a frente" (Bring forward)** | `+` | moves up one place in the draw order |
@@ -427,6 +427,8 @@ See chapters [6](06-mesh-and-weights.md) and [7](07-the-five-rules.md).
 | **"Chavear" (Key)** | `K` | protects the pose: records the selected one's key |
 | **"Chavear tudo" (Key all)** | `Ctrl+K` | records a key on every row |
 | **"Troca de base ▸" (Base swap ▸)** | — | "Colar outra base aqui" (Paste another base here) · "Tirar a troca daqui" (Remove the swap here) |
+| **"Recorte na cena" (Crop on the stage)** | `C` | the rectangle that the image export uses, for this animation only. See [chapter 8](08-export-and-use-in-a-game.md) |
+| **"Tirar o recorte" (Remove the crop)** | — | deletes the rectangle; the export goes back to trimming the border by itself |
 | **"Apagar chave" (Delete key)** | — | deletes the key at the current time |
 | **"Apagar as linhas" (Delete the rows)** | `Shift+Delete` | removes the whole property from the animation |
 | **"Limpar a animação inteira…" (Clear the whole animation…)** | — | asks first |

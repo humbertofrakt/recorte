@@ -1,0 +1,719 @@
+{
+  "probe": {
+    "animation": "engrossa",
+    "times": [
+      0.6,
+      1,
+      1.31
+    ],
+    "measure": [
+      "particles"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.6,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 7,
+            "birth": 0.591608,
+            "life": 2,
+            "age": 0.008392,
+            "x": 0,
+            "y": 0.839202,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.547723,
+            "life": 2,
+            "age": 0.052277,
+            "x": 0,
+            "y": 5.227744,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.5,
+            "life": 2,
+            "age": 0.1,
+            "x": 0,
+            "y": 10.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.447214,
+            "life": 2,
+            "age": 0.152786,
+            "x": 0,
+            "y": 15.27864,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.387298,
+            "life": 2,
+            "age": 0.212702,
+            "x": 0,
+            "y": 21.270167,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.316228,
+            "life": 2,
+            "age": 0.283772,
+            "x": 0,
+            "y": 28.377223,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.223607,
+            "life": 2,
+            "age": 0.376393,
+            "x": 0,
+            "y": 37.63932,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 0.6,
+            "x": 0,
+            "y": 60.0,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    },
+    {
+      "time": 1,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 20,
+            "birth": 1.0,
+            "life": 2,
+            "age": 0,
+            "x": 0,
+            "y": 0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 19,
+            "birth": 0.974679,
+            "life": 2,
+            "age": 0.025321,
+            "x": 0,
+            "y": 2.532057,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 18,
+            "birth": 0.948683,
+            "life": 2,
+            "age": 0.051317,
+            "x": 0,
+            "y": 5.13167,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 17,
+            "birth": 0.921954,
+            "life": 2,
+            "age": 0.078046,
+            "x": 0,
+            "y": 7.804555,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 16,
+            "birth": 0.894427,
+            "life": 2,
+            "age": 0.105573,
+            "x": 0,
+            "y": 10.557281,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 15,
+            "birth": 0.866025,
+            "life": 2,
+            "age": 0.133975,
+            "x": 0,
+            "y": 13.39746,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 14,
+            "birth": 0.83666,
+            "life": 2,
+            "age": 0.16334,
+            "x": 0,
+            "y": 16.333997,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 13,
+            "birth": 0.806226,
+            "life": 2,
+            "age": 0.193774,
+            "x": 0,
+            "y": 19.377423,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 12,
+            "birth": 0.774597,
+            "life": 2,
+            "age": 0.225403,
+            "x": 0,
+            "y": 22.540333,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 11,
+            "birth": 0.74162,
+            "life": 2,
+            "age": 0.25838,
+            "x": 0,
+            "y": 25.838015,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 10,
+            "birth": 0.707107,
+            "life": 2,
+            "age": 0.292893,
+            "x": 0,
+            "y": 29.289322,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 9,
+            "birth": 0.67082,
+            "life": 2,
+            "age": 0.32918,
+            "x": 0,
+            "y": 32.917961,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 8,
+            "birth": 0.632456,
+            "life": 2,
+            "age": 0.367544,
+            "x": 0,
+            "y": 36.754447,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 7,
+            "birth": 0.591608,
+            "life": 2,
+            "age": 0.408392,
+            "x": 0,
+            "y": 40.839202,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.547723,
+            "life": 2,
+            "age": 0.452277,
+            "x": 0,
+            "y": 45.227744,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.5,
+            "life": 2,
+            "age": 0.5,
+            "x": 0,
+            "y": 50.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.447214,
+            "life": 2,
+            "age": 0.552786,
+            "x": 0,
+            "y": 55.27864,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.387298,
+            "life": 2,
+            "age": 0.612702,
+            "x": 0,
+            "y": 61.270167,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.316228,
+            "life": 2,
+            "age": 0.683772,
+            "x": 0,
+            "y": 68.377223,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.223607,
+            "life": 2,
+            "age": 0.776393,
+            "x": 0,
+            "y": 77.63932,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 1.0,
+            "x": 0,
+            "y": 100.0,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    },
+    {
+      "time": 1.31,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 32,
+            "birth": 1.3,
+            "life": 2,
+            "age": 0.01,
+            "x": 0,
+            "y": 1.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 31,
+            "birth": 1.275,
+            "life": 2,
+            "age": 0.035,
+            "x": 0,
+            "y": 3.5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 30,
+            "birth": 1.25,
+            "life": 2,
+            "age": 0.06,
+            "x": 0,
+            "y": 6.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 29,
+            "birth": 1.225,
+            "life": 2,
+            "age": 0.085,
+            "x": 0,
+            "y": 8.5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 28,
+            "birth": 1.2,
+            "life": 2,
+            "age": 0.11,
+            "x": 0,
+            "y": 11.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 27,
+            "birth": 1.175,
+            "life": 2,
+            "age": 0.135,
+            "x": 0,
+            "y": 13.5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 26,
+            "birth": 1.15,
+            "life": 2,
+            "age": 0.16,
+            "x": 0,
+            "y": 16.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 25,
+            "birth": 1.125,
+            "life": 2,
+            "age": 0.185,
+            "x": 0,
+            "y": 18.5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 24,
+            "birth": 1.1,
+            "life": 2,
+            "age": 0.21,
+            "x": 0,
+            "y": 21.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 23,
+            "birth": 1.075,
+            "life": 2,
+            "age": 0.235,
+            "x": 0,
+            "y": 23.5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 22,
+            "birth": 1.05,
+            "life": 2,
+            "age": 0.26,
+            "x": 0,
+            "y": 26.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 21,
+            "birth": 1.025,
+            "life": 2,
+            "age": 0.285,
+            "x": 0,
+            "y": 28.5,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 20,
+            "birth": 1.0,
+            "life": 2,
+            "age": 0.31,
+            "x": 0,
+            "y": 31.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 19,
+            "birth": 0.974679,
+            "life": 2,
+            "age": 0.335321,
+            "x": 0,
+            "y": 33.532057,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 18,
+            "birth": 0.948683,
+            "life": 2,
+            "age": 0.361317,
+            "x": 0,
+            "y": 36.13167,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 17,
+            "birth": 0.921954,
+            "life": 2,
+            "age": 0.388046,
+            "x": 0,
+            "y": 38.804555,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 16,
+            "birth": 0.894427,
+            "life": 2,
+            "age": 0.415573,
+            "x": 0,
+            "y": 41.557281,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 15,
+            "birth": 0.866025,
+            "life": 2,
+            "age": 0.443975,
+            "x": 0,
+            "y": 44.39746,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 14,
+            "birth": 0.83666,
+            "life": 2,
+            "age": 0.47334,
+            "x": 0,
+            "y": 47.333997,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 13,
+            "birth": 0.806226,
+            "life": 2,
+            "age": 0.503774,
+            "x": 0,
+            "y": 50.377423,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 12,
+            "birth": 0.774597,
+            "life": 2,
+            "age": 0.535403,
+            "x": 0,
+            "y": 53.540333,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 11,
+            "birth": 0.74162,
+            "life": 2,
+            "age": 0.56838,
+            "x": 0,
+            "y": 56.838015,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 10,
+            "birth": 0.707107,
+            "life": 2,
+            "age": 0.602893,
+            "x": 0,
+            "y": 60.289322,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 9,
+            "birth": 0.67082,
+            "life": 2,
+            "age": 0.63918,
+            "x": 0,
+            "y": 63.917961,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 8,
+            "birth": 0.632456,
+            "life": 2,
+            "age": 0.677544,
+            "x": 0,
+            "y": 67.754447,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 7,
+            "birth": 0.591608,
+            "life": 2,
+            "age": 0.718392,
+            "x": 0,
+            "y": 71.839202,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.547723,
+            "life": 2,
+            "age": 0.762277,
+            "x": 0,
+            "y": 76.227744,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.5,
+            "life": 2,
+            "age": 0.81,
+            "x": 0,
+            "y": 81.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.447214,
+            "life": 2,
+            "age": 0.862786,
+            "x": 0,
+            "y": 86.27864,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.387298,
+            "life": 2,
+            "age": 0.922702,
+            "x": 0,
+            "y": 92.270167,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.316228,
+            "life": 2,
+            "age": 0.993772,
+            "x": 0,
+            "y": 99.377223,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.223607,
+            "life": 2,
+            "age": 1.086393,
+            "x": 0,
+            "y": 108.63932,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 1.31,
+            "x": 0,
+            "y": 131.0,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -619,6 +619,17 @@ passo('08-', async () => {
   await pagina.keyboard.press('Escape');
 });
 
+passo('08-recorte-na-cena.png', async () => {
+  // Animação → Recorte na cena (C): o retângulo da exportação, só desta animação.
+  await heroi();
+  await animacao('walk');
+  await menu('Animação');
+  await itemDeMenu('Recorte na cena');
+  await esperar(400);
+  await foto('08-recorte-na-cena.png');
+  await pagina.keyboard.press('Enter');
+});
+
 // --- 09: vindo de outro programa -------------------------------------------
 
 passo('09-', async () => {

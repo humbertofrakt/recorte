@@ -833,8 +833,8 @@ you want is the opposite: the punch box **inside the hand drawing**, swapping by
 key like the open hand swaps with the closed one.
 
 1. Select the **drawing** (in the Tree, its line — with no bone alongside).
-2. **"Base → Novo → Ponto neste slot" (Base → New → Point in this slot)**, or
-   **"Caixa neste slot" (Box in this slot)**.
+2. **"Base → Novo → Ponto neste desenho" (Base → New → Point in this drawing)**, or
+   **"Caixa neste desenho" (Box in this drawing)**.
 3. **Hold `Alt` and drag**, as always.
 
 The attachment is born **in the pencil's skin**, and does not become what the

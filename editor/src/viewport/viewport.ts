@@ -99,6 +99,12 @@ import * as viewportDraw from './viewport-draw.js';
 import { EMITTER_MARK_PIXELS, renewsParticleCache } from './particles-view.js';
 import { selectedEmitterShapes, shapeHandleAt, shapeHandleCommand, type SelectedShape, type ShapeHandle } from './emitter-shape.js';
 import { GestureNotice } from './gesture-notice.js';
+import {
+  CROP_DRAW_CURSOR, CROP_HANDLE_PIXELS, CROP_MIN_DRAW_PIXELS, CROP_NEEDS_ANIMATION, CROP_ZONE_CURSOR, SetCrop,
+  cropEditing, cropFromCorners, cropInFile, cropSays, cropZoneAt, cropZoneHint, dragCrop, hasCropField,
+  onCropEditing, removeCrop, setCropEditing, startCropEditing, type CropBox, type CropZone,
+} from './crop-model.js';
+import { CropNumbersBox } from './crop-box.js';
 import { HELD_DOOR, drifted, gripOfLabel, heldNotice, rulesOn, type BoneNumbers } from './held-by-rule.js';
 
 // ---------------------------------------------------------------------------
@@ -277,6 +283,7 @@ export class ViewportPanel implements Panel {
   forgetToolActions: Array<() => void> = [];
   private unsubscribeSpace: (() => void) | null = null;
   private unsubscribeCompensation: (() => void) | null = null;
+  private unsubscribeCrop: (() => void) | null = null;
   /** O que desfazer no registro de ações quando a cena for desmontada. */
   private forgetActions: Array<() => void> = [];
   /** O campo "100%" da camada do canto, para o zoom da roda aparecer nele. */
@@ -354,6 +361,9 @@ export class ViewportPanel implements Panel {
     canvas.setAttribute('aria-label', 'Área de desenho do boneco');
     stage.appendChild(canvas);
     stage.appendChild(this.buildZoomCorner());
+    // N-4b: os números do recorte, no canto oposto ao do zoom.
+    this.cropBox = new CropNumbersBox((d) => { d.notice(this.cropDoneNotice(d)); this.root?.focus(); });
+    stage.appendChild(this.cropBox.node);
     // As boas-vindas do documento vazio — anotação 24. Ela mora no palco, por
     // cima do canvas, e some sozinha no primeiro osso ou na primeira imagem.
     this.welcome = this.buildWelcome();
@@ -396,6 +406,10 @@ export class ViewportPanel implements Panel {
     this.unsubscribe = doc.on((change) => {
       this.needsDraw = true;
       this.gestureNotice.hear(change);
+      // N-4b: o recorte é de cada animação. Abrir a base, ou outro arquivo,
+      // desliga o modo — os puxadores não ficam valendo para coisa nenhuma.
+      if (cropEditing() && (change.kind === 'file' || doc.animation === null)) setCropEditing(false);
+      this.cropBox?.sync(doc);
     });
     this.unsubscribeView = onViewSettings(() => { this.syncLockButtons(); this.needsDraw = true; });
     this.unsubscribeFolder = onFolderChange(() => this.syncWelcome());
@@ -408,6 +422,16 @@ export class ViewportPanel implements Panel {
       this.needsDraw = true;
     });
     this.unsubscribeCompensation = onCompensationChange(() => { this.needsDraw = true; });
+    // N-4b: o modo Recorte na cena muda o desenho e o cursor.
+    this.unsubscribeCrop = onCropEditing((on) => {
+      this.root?.classList.toggle('recorte-ligado', on);
+      if (this.doc !== null) this.cropBox?.sync(this.doc);
+      if (!on) {
+        this.setCropCursor(null);
+        if (this.canvas !== null && this.canvas.title.startsWith('Recorte:')) this.canvas.title = '';
+      }
+      this.needsDraw = true;
+    });
     this.unsubscribePrefs = onPrefsChange(() => this.syncToolNames());
     this.unsubscribeKeys = onKeySwapsChange(() => viewportToolbar.syncToolKeys(this));
     // Trocar de tema muda as cores da cena, e a cena é canvas: ela não recebe
@@ -487,6 +511,8 @@ export class ViewportPanel implements Panel {
     this.unsubscribeSpace = null;
     this.unsubscribeCompensation?.();
     this.unsubscribeCompensation = null;
+    this.unsubscribeCrop?.();
+    this.unsubscribeCrop = null;
     this.unsubscribePrefs?.();
     this.unsubscribePrefs = null;
     this.unsubscribeKeys?.();
@@ -550,6 +576,16 @@ export class ViewportPanel implements Panel {
       // 'copiar-ordem-animacao' morava aqui desde o lote 66, só porque a cena
       // está sempre montada. Lote A2: mora em `draw-order-actions.ts`.
       registerAction('imagem-referencia', { run: () => void this.referenceWindow(doc) }),
+      // N-4b: o recorte da exportação, arrastado na cena.
+      registerAction('recorte-na-cena', {
+        run: () => this.toggleCropEditing(doc),
+        enabled: () => doc.animation !== null,
+        checked: () => cropEditing(),
+      }),
+      registerAction('tirar-recorte', {
+        run: () => { doc.notice(removeCrop(doc)); this.needsDraw = true; },
+        enabled: () => hasCropField(doc.file, doc.animation),
+      }),
       ...COMPENSATION_LABELS.map(({ id }) => registerAction(COMPENSATION_ACTIONS[id], {
         run: () => setCompensation({ [id]: !getCompensation()[id] } as Partial<CompensationFlags>),
         checked: () => getCompensation()[id],
@@ -559,6 +595,46 @@ export class ViewportPanel implements Panel {
         checked: () => getHandleSpace() === id,
       })),
     ];
+  }
+
+  /**
+   * *Recorte na cena* — N-4b. Liga (criando o retângulo em volta do desenho
+   * quando a animação não tem um) ou desliga. O rodapé diz o que aconteceu.
+   */
+  toggleCropEditing(doc: EditorDoc): void {
+    if (cropEditing()) {
+      setCropEditing(false);
+      doc.notice(this.cropDoneNotice(doc));
+      return;
+    }
+    doc.notice(startCropEditing(doc));
+    this.root?.focus();
+    this.needsDraw = true;
+  }
+
+  /** A frase de quando o modo desliga: o que ficou gravado. */
+  private cropDoneNotice(doc: EditorDoc): string {
+    const box = cropInFile(doc.file, doc.animation);
+    return box === null
+      ? 'Recorte na cena desligado'
+      : `Recorte na cena desligado. Ficou ${cropSays(box)}; a exportação usa com "A área desenhada nesta animação"`;
+  }
+
+  /** Troca a classe de cursor do recorte na cena. */
+  private setCropCursor(wanted: string | null): void {
+    const canvas = this.canvas;
+    if (canvas === null) return;
+    if (this.cropCursorClass !== null && this.cropCursorClass !== wanted) canvas.classList.remove(this.cropCursorClass);
+    if (wanted !== null) canvas.classList.add(wanted);
+    this.cropCursorClass = wanted;
+  }
+
+  /** A zona do recorte debaixo de um ponto do mundo, com o raio do puxador. */
+  private cropZoneUnder(doc: EditorDoc, x: number, y: number): { box: CropBox | null; zone: CropZone | null } {
+    const box = cropInFile(doc.file, doc.animation);
+    if (box === null) return { box: null, zone: null };
+    const raio = (CROP_HANDLE_PIXELS / 2 + 3) / this.camera.zoom;
+    return { box, zone: cropZoneAt(box, x, y, raio) };
   }
 
   /**
@@ -1346,6 +1422,17 @@ export class ViewportPanel implements Panel {
    * a pose se refaz a cada quadro e apaga o recado (`gesture-notice.ts`).
    */
   shapeDragSays: { id: string; text: string } | null = null;
+  /**
+   * N-4b: o arrasto do recorte. `start` é o retângulo de quando o botão desceu
+   * (`null` ao traçar um novo); `zone` o que se pegou, ou `'tracar'`.
+   */
+  private cropDrag: { animation: string; start: CropBox | null; zone: CropZone | 'tracar'; ax: number; ay: number; moved: boolean } | null = null;
+  /** O que o arrasto do recorte diz agora, escrito em cima do retângulo. */
+  cropDragSays: string | null = null;
+  /** N-4b: a caixa dos números do recorte, no canto da cena. */
+  private cropBox: CropNumbersBox | null = null;
+  /** A classe de cursor que o recorte pôs na cena, ou `null`. */
+  private cropCursorClass: string | null = null;
 
   private onPointerDown(e: PointerEvent): void {
     this.root?.focus();
@@ -1436,6 +1523,28 @@ export class ViewportPanel implements Panel {
           return;
         }
       }
+      // N-4b: com Recorte na cena ligado, o clique é do recorte — a
+      // ferramenta não o vê. Puxador ou meio: muda o retângulo; fora dele:
+      // traça um novo, de um canto ao outro.
+      if (e.button === 0 && cropEditing()) {
+        if (doc.animation === null) {
+          setCropEditing(false);
+          doc.notice(CROP_NEEDS_ANIMATION);
+          this.needsDraw = true;
+          return;
+        }
+        const { box, zone } = this.cropZoneUnder(doc, world.x, world.y);
+        doc.endMerge?.();
+        this.cropDrag = {
+          animation: doc.animation,
+          start: zone === null ? null : box,
+          zone: zone ?? 'tracar',
+          ax: world.x, ay: world.y, moved: false,
+        };
+        this.cropDragSays = null;
+        this.needsDraw = true;
+        return;
+      }
       // Conserto do lote 70: o modo Ligar da aba Malha e pesos é um MODO, como
       // o Bind do Spine. Enquanto está aberto, o clique no osso liga ele à
       // malha, com qualquer ferramenta na mão — e a ferramenta não vê o clique.
@@ -1480,6 +1589,15 @@ export class ViewportPanel implements Panel {
           if (dica !== null) this.doc.notice(dica);
         }
       }
+      // N-4b: com Recorte na cena ligado, o cursor diz o que o arrasto faz
+      // (puxar um lado, mover, traçar), e a dica diz em palavras.
+      if (cropEditing() && this.doc !== null && this.canvas !== null && this.doc.animation !== null) {
+        const at = this.camera.screenToWorld(screen.x, screen.y);
+        const { zone } = this.cropZoneUnder(this.doc, at.x, at.y);
+        this.setCropCursor(zone === null ? CROP_DRAW_CURSOR : CROP_ZONE_CURSOR[zone]);
+        this.canvas.title = cropZoneHint(zone);
+        return;
+      }
       // Lote 47: sem botão, a ferramenta só fica sabendo onde o ponteiro
       // está, para o cursor dizer o que o arrasto vai fazer. Nunca edita.
       const hovering = getActiveTool();
@@ -1503,6 +1621,13 @@ export class ViewportPanel implements Panel {
       return;
     }
     const doc = this.doc;
+    if (this.cropDrag !== null) {
+      if (doc !== null) this.moveCrop(doc, world.x, world.y);
+      this.lastScreenX = screen.x;
+      this.lastScreenY = screen.y;
+      this.needsDraw = true;
+      return;
+    }
     if (this.shapeDrag !== null) {
       if (doc !== null) {
         const passo = shapeHandleCommand(doc, this.shapeDrag.shape, this.shapeDrag.handle, world.x, world.y);
@@ -1548,10 +1673,63 @@ export class ViewportPanel implements Panel {
     return null;
   }
 
+  /** O retângulo que o arrasto do recorte pede agora, ou `null` (traço curto demais). */
+  private cropWanted(x: number, y: number): CropBox | null {
+    const drag = this.cropDrag;
+    if (drag === null) return null;
+    if (drag.zone === 'tracar' || drag.start === null) {
+      const w = Math.abs(x - drag.ax) * this.camera.zoom;
+      const h = Math.abs(y - drag.ay) * this.camera.zoom;
+      if (w < CROP_MIN_DRAW_PIXELS || h < CROP_MIN_DRAW_PIXELS) return null;
+      return cropFromCorners(drag.ax, drag.ay, x, y);
+    }
+    return dragCrop(drag.start, drag.zone, x - drag.ax, y - drag.ay);
+  }
+
+  /** Um passo do arrasto do recorte: um `SetCrop` que se junta ao anterior. */
+  private moveCrop(doc: EditorDoc, x: number, y: number): void {
+    const drag = this.cropDrag;
+    if (drag === null) return;
+    const box = this.cropWanted(x, y);
+    if (box === null) return;
+    const now = cropInFile(doc.file, drag.animation);
+    if (now !== null && now.x === box.x && now.y === box.y && now.width === box.width && now.height === box.height) return;
+    doc.run(new SetCrop(drag.animation, box, 'cena'));
+    drag.moved = true;
+    this.cropDragSays = `${box.width} × ${box.height} px`;
+  }
+
+  /** O fim do arrasto do recorte: o último passo, e o rodapé diz o que ficou. */
+  private endCrop(doc: EditorDoc, x: number, y: number): void {
+    const drag = this.cropDrag;
+    if (drag === null) return;
+    this.moveCrop(doc, x, y);
+    doc.endMerge?.();
+    if (!drag.moved) {
+      // Clique parado: nada muda. Fora do retângulo, ensina o traço.
+      if (drag.zone === 'tracar') doc.notice('Recorte: arraste de um canto ao outro para traçar. Enter ou Esc termina');
+      return;
+    }
+    const box = cropInFile(doc.file, drag.animation);
+    if (box === null) return;
+    const what = drag.zone === 'tracar' ? 'Recorte traçado' : drag.zone === 'move' ? 'Recorte movido' : 'Recorte';
+    doc.notice(`${what}: ${cropSays(box)}. Ctrl+Z desfaz`);
+  }
+
   private onPointerUp(e: PointerEvent): void {
     if (!this.pointerDown) return;
     const screen = this.screenOf(e);
     const world = this.camera.screenToWorld(screen.x, screen.y);
+    if (this.cropDrag !== null) {
+      const doc = this.doc;
+      if (doc !== null) this.endCrop(doc, world.x, world.y);
+      this.cropDrag = null;
+      this.cropDragSays = null;
+      this.pointerDown = false;
+      if (this.canvas?.hasPointerCapture(e.pointerId) === true) this.canvas.releasePointerCapture(e.pointerId);
+      this.needsDraw = true;
+      return;
+    }
     if (this.shapeDrag !== null) {
       this.shapeDrag = null;
       if (this.shapeDragSays !== null) this.doc?.notice(this.shapeDragSays.text);
@@ -1692,6 +1870,25 @@ export class ViewportPanel implements Panel {
     }
     const doc = this.doc;
     if (doc === null) return;
+    // N-4b: Enter ou Esc terminam o Recorte na cena (`ui/keys.ts`, escopo
+    // `cena`, "com Recorte na cena ligado"). Durante o arrasto, Esc desiste
+    // dele: o retângulo volta ao de quando o botão desceu.
+    if (cropEditing() && (e.key === 'Enter' || e.key === 'Escape') && !isTyping(e.target)) {
+      if (this.cropDrag !== null) {
+        if (this.cropDrag.moved) doc.undo();
+        this.cropDrag = null;
+        this.cropDragSays = null;
+        this.pointerDown = false;
+        doc.notice('Recorte: arrasto desfeito');
+      } else {
+        setCropEditing(false);
+        doc.notice(this.cropDoneNotice(doc));
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      this.needsDraw = true;
+      return;
+    }
     // A key the canvas answers must not reach the shell, which listens on the
     // document and would answer it AGAIN: a toggle (P, 8, 0) pressed once
     // would flip twice and land where it started. `stopPropagation` is what

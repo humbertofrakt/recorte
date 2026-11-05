@@ -107,11 +107,12 @@ describe('the manual page', () => {
     // teste guarda não é o NOME do primeiro: é que o índice venha antes dele,
     // e que a ordem seja a dos números. 07/10/2026: o manual da v36.5 tem
     // onze capítulos, de 00-abrir-o-recorte a 10-particulas-e-biblioteca.
+    // 05/11/2026: doze — o 11, a espada de um, o boneco de outro.
     expect(chapters[1].file).toBe('00-abrir-o-recorte.md');
     expect(chapters.map((c) => c.file.slice(0, 2))).toEqual(
-      ['RE', '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10'],
+      ['RE', '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11'],
     );
-    expect(chapters[chapters.length - 1].file).toBe('10-particulas-e-biblioteca.md');
+    expect(chapters[chapters.length - 1].file).toBe('11-a-espada-de-um-o-boneco-de-outro.md');
   });
 
   it('turns a table into a table and a link between chapters into a jump', () => {

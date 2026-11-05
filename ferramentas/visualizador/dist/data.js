@@ -841,6 +841,33 @@ export class ParticleEmittingTimelineData extends TimelineBase {
     }
     get times() { return this.keys.times; }
 }
+/**
+ * The animated `rate` of one emitter (extension `BONE_particles` 4.2, the
+ * `linear` branch, 2nd phase). Like `particle.emitting` it is never applied to
+ * the skeleton: the emitter integrates it, and inverts the integral, at birth
+ * instants that are not the frame being drawn.
+ *
+ * The loader already did the two swaps of 4.2: a negative key value became `0`
+ * (L1 `RANGE_PARTICLE_RATE`) and a Bézier key became `linear` (L2
+ * `RANGE_PARTICLE_RATE_CURVE`), so every curve here is `linear` or `stepped`.
+ */
+export class ParticleRateTimelineData extends TimelineBase {
+    slot;
+    skin;
+    attachmentName;
+    keys;
+    kind = 'particle.rate';
+    type = 'BONE_particle';
+    property = 'rate';
+    constructor(slot, skin, attachmentName, keys) {
+        super();
+        this.slot = slot;
+        this.skin = skin;
+        this.attachmentName = attachmentName;
+        this.keys = keys;
+    }
+    get times() { return this.keys.times; }
+}
 export class AnimationData {
     index;
     name;

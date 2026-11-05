@@ -336,7 +336,7 @@ const ROTULOS: readonly string[] = Object.freeze([
   'Abrir a base', 'Salvar como base nova…', 'Virar filho de…', 'Trazer para a frente',
   'Mandar para trás', 'Voltar à pose de repouso', 'Compensar',
   'Não mexer nos filhos', 'Não mexer nos desenhos', 'Não mexer nas caixas',
-  'Ponto neste slot', 'Caixa neste slot',
+  'Ponto neste desenho', 'Caixa neste desenho', 'Recorte na cena', 'Tirar o recorte',
   // Malha e regras
   'Virar malha', 'Gerar automática', 'Pesos automáticos', 'Nova regra…', 'Simular a física',
   // Animação

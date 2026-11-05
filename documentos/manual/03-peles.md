@@ -343,7 +343,7 @@ Osso só sai quando ninguém que ficou lê ele. O
 | O lápis (onde nasce o que se cria) | existe | lápis da linha · Skins → Editar esta skin… |
 | Ligar, desligar, reordenar a pilha | existe | arrastar entre Feitas e Ativas · olho · × |
 | Tirar a `default` da pilha | existe | arrastar para Feitas, ou × |
-| Esconder e ignorar uma imagem na skin | existe | botão direito na cena · Skins → Esconder / Ignorar esta imagem |
+| Esconder e ignorar uma imagem na skin | existe | botão direito na cena · Skins → Esconder esta imagem · Skins → Ignorar esta imagem |
 | A seção Nesta skin | existe | aba Skins, com o lápis numa skin |
 | Trocar a imagem em todas as skins | existe | Skins → Trocar imagem nas skins… · Árvore, botão direito |
 | Osso e regra só com a skin | existe | Propriedades → Skins → Só com a skin |

@@ -804,7 +804,7 @@ que se quer é o contrário: a caixa do soco **dentro do desenho da mão**,
 trocando por chave como a mão aberta troca com a fechada.
 
 1. Escolha o **desenho** (na Árvore, a linha dele — sem osso junto).
-2. **Base → Novo → Ponto neste slot**, ou **Caixa neste slot**.
+2. **Base → Novo → Ponto neste desenho**, ou **Caixa neste desenho**.
 3. **Segure `Alt` e arraste**, como sempre.
 
 O anexo nasce **na skin do lápis**, e não vira o que o desenho mostra. Para
@@ -974,7 +974,7 @@ programa com o mouse).
 | Eixos Local · Pai · Mundo | existe | `ui/menus.ts:828-837` |
 | Compensar aparece com Transformar, Mover, Girar, Escalar; desenhos e caixas só na base | existe | `panels/properties-model.ts:230`, `viewport/tools/compensate.ts:253` |
 | Ponto e Caixa: `Alt` + arrastar | existe | `ui/toolbar-model.ts:104-105,231-233` |
-| Ponto neste slot / Caixa neste slot | existe | `ui/menus.ts:736-748` |
+| Ponto neste desenho / Caixa neste desenho | existe | `ui/menus.ts:736-748` |
 | Máscara: Recorta até, Só estes, Inverter, Cantos, Copiar a silhueta | existe | `panels/properties-model.ts:1559-1580`, `panels/properties.ts:671-707` |
 | Máscara nasce no começo da ordem de desenho, recortando até o último | existe | `panels/tree-commands.ts:217-221,613-625` (`slots.unshift`) |
 | Imagem de referência: os quatro campos, guardada no navegador | existe | `viewport/viewport-draw.ts:397-425` |

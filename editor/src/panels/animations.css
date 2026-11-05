@@ -60,7 +60,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 8px 2px 12px;
+  /* QA da noite (04/11): 4 px à direita, e não 8 — "Animações" media 68,16 px
+     numa caixa de 68 e saía "Animaçõ…" ao lado dos seis botões. */
+  padding: 2px 4px 2px 12px;
   background: var(--painel-fundo);
   border-bottom: 1px solid var(--painel-borda);
 }
@@ -395,4 +397,18 @@
 /* As animações da entidade, recuadas embaixo do nome dela. */
 .anim-item-entidade {
   padding-left: 28px;
+}
+
+/*
+ * N-4b: a tira do Recorte da animação aberta (`animations-crop.ts`). Logo
+ * abaixo do título das Animações, sem rolar, numa linha só: os números abrem
+ * na cena.
+ */
+.anim-corpo > .anim-recorte {
+  flex: 0 0 auto;
+}
+
+.anim-recorte .is-ligado {
+  outline: 2px solid #ff00c8;
+  outline-offset: -2px;
 }

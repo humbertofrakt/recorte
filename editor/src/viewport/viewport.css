@@ -424,12 +424,99 @@
 }
 
 /*
+ * N-4b: Recorte na cena. Depois das do Transformar, e com o mesmo peso: com o
+ * modo ligado o clique é do recorte, e o cursor diz o que o arrasto dele faz.
+ */
+.viewport-canvas.cursor-recorte-nwse {
+  cursor: nwse-resize;
+}
+
+.viewport-canvas.cursor-recorte-nesw {
+  cursor: nesw-resize;
+}
+
+.viewport-canvas.cursor-recorte-ns {
+  cursor: ns-resize;
+}
+
+.viewport-canvas.cursor-recorte-ew {
+  cursor: ew-resize;
+}
+
+.viewport-canvas.cursor-recorte-mover {
+  cursor: move;
+}
+
+.viewport-canvas.cursor-recorte-tracar {
+  cursor: crosshair;
+}
+
+/*
  * Rodada 46, lote 2: o botão do meio também mostra a mão (antes só o Espaço),
  * e a mão vence o cursor da caixa embaixo dela — por isso o `[class]`, que
  * pesa mais do que as regras do Transformar acima.
  */
 .viewport-canvas.is-panning[class] {
   cursor: grab;
+}
+
+/*
+ * N-4b: os números do recorte, no canto de baixo à ESQUERDA (o zoom mora no
+ * da direita). Só com Recorte na cena ligado. O mesmo vidro da caixa do zoom;
+ * a borda magenta diz de quem são os números.
+ */
+.viewport-recorte {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  max-width: calc(100% - 270px);
+  padding: 5px 7px;
+  /* A cor do tema, e não o vidro branco do zoom: os campos da casa seguem o
+     tema (escuros no escuro), e texto claro em vidro branco não se lê. */
+  background: color-mix(in srgb, var(--panel, #ffffff) 94%, transparent);
+  color: var(--ink, #10151c);
+  border: 2px solid #ff00c8;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgb(26 26 26 / 18%);
+}
+
+.viewport-recorte-nome {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.viewport-recorte-nada {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.viewport-recorte-par {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.viewport-recorte-rotulo {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.viewport-recorte .campo-numero {
+  width: 52px;
+  min-height: 24px;
+  border-width: 1px;
+}
+
+.viewport-recorte-botao {
+  font-size: 13px;
+  padding: 3px 8px;
+  display: inline-flex;
+  align-items: center;
 }
 
 /*

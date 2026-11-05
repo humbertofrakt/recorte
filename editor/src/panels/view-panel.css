@@ -181,3 +181,77 @@
 .prop-grupo.is-dobrado > :not(legend) {
   display: none;
 }
+
+/*
+ * 04/11/2026 — a Exibição rolava 91 px em 1440×900 e 213 em 1280×720 (medido
+ * no Linux; 72 e 194 no Windows). Só recheio e arranjo, nenhuma caixa e
+ * nenhuma palavra a menos (doc `noite/paineis.md`):
+ *
+ *  - a tabela "Mostrar na tela" em linhas de 20 px (a caixa já tinha 20; a
+ *    linha tinha 23 por causa do texto, e mais 2 de vão);
+ *  - "A cena" com colunas do tamanho do nome: "Travar guias" quebrava em duas
+ *    linhas numa coluna de metade exata (45 px de linha em vez de 26);
+ *  - a faixa do "Voltar ao padrão" mais baixa.
+ */
+.exibicao-barra {
+  padding: 3px 10px;
+}
+.exibicao-botao-padrao {
+  min-height: 24px;
+  padding: 1px 10px;
+}
+.exibicao-grade {
+  row-gap: 0;
+}
+.exibicao-grade-cabeca {
+  font-size: 12px;
+  line-height: 16px;
+}
+.exibicao-grade-nome {
+  line-height: 20px;
+}
+.exibicao-pares {
+  grid-template-columns: auto auto;
+  justify-content: space-between;
+  gap: 0 8px;
+}
+.exibicao-par {
+  min-height: 22px;
+  white-space: nowrap;
+}
+.exibicao-par input[type="checkbox"] {
+  margin: 0;
+}
+.exibicao-par {
+  min-height: 20px;
+  line-height: 20px;
+}
+.exibicao-par input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+.exibicao-corpo .prop-grupo {
+  padding-bottom: 3px;
+}
+/* A caixa da tabela 2 px menor que a linha: coladas, a coluna "Ver" virava
+   uma barra só. */
+.exibicao-grade input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+/* A faixa do botão mais baixa ainda, e o corpo sem vão no alto: em 1280×720
+   faltavam 11 px para a tabela e o título de "A cena" caberem juntos. */
+.exibicao-barra {
+  padding: 2px 10px;
+}
+.exibicao-botao-padrao {
+  min-height: 22px;
+  padding: 0 10px;
+}
+.exibicao-corpo {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.exibicao-corpo .prop-grupo.is-dobrado {
+  padding-bottom: 2px;
+}

@@ -384,7 +384,7 @@ ou soltas na janela) e **Reempacotar atlas** (o Salvar faz o atlas).
 | **Novo ▸ Osso** | — | um osso, filho do escolhido |
 | **Novo ▸ Ponto** | `O` | uma posição com nome e direção |
 | **Novo ▸ Caixa de colisão** | `X` | um contorno para o jogo medir |
-| **Novo ▸ Ponto neste slot** · **Caixa neste slot** | — | entra no desenho escolhido, sem criar outro |
+| **Novo ▸ Ponto neste desenho** · **Caixa neste desenho** | — | entra no desenho escolhido, sem criar outro |
 | **Novo ▸ Máscara** | — | um contorno que recorta sem apagar |
 | **Virar filho de…** | `P` | com um osso escolhido: clique em quem vira filho dele, até o `Esc` |
 | **Trazer para a frente** | `+` | sobe uma posição na ordem de desenho |
@@ -438,6 +438,8 @@ Veja os capítulos [6](06-malha-e-pesos.md) e [7](07-as-cinco-regras.md).
 | **Chavear** | `K` | protege a pose: grava a chave do escolhido |
 | **Chavear tudo** | `Ctrl+K` | grava a chave de todas as linhas |
 | **Troca de base ▸** | — | Colar outra base aqui · Tirar a troca daqui |
+| **Recorte na cena** | `C` | o retângulo que a exportação de imagem usa, só desta animação. Veja o [capítulo 8](08-exportar-e-usar-no-jogo.md) |
+| **Tirar o recorte** | — | apaga o retângulo; a exportação volta a cortar a borda sozinha |
 | **Apagar chave** | — | apaga a chave do tempo atual |
 | **Apagar as linhas** | `Shift+Delete` | tira a propriedade inteira da animação |
 | **Limpar a animação inteira…** | — | pergunta antes |

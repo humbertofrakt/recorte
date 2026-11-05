@@ -74,4 +74,4 @@ export * from './particles/emitter.js';
 // Rodada 15 (04/10/2026): a porta que o desenhador usa, também para o editor
 // achar o emissor pelas partículas que estão na tela — a MESMA conta, nunca
 // uma segunda.
-export { particleFrame, ParticleCache } from './particles/frame.js';
+export { particleFrame, ParticleCache, rateKeysOf } from './particles/frame.js';
