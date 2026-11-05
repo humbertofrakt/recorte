@@ -49,7 +49,7 @@ Precisa do Playwright (`require('playwright')`). As fotos de agora: `fotos-entid
 
 ![O runtime antes e depois: a espada na mão no walk e no golpe, cinza e depois laranja](fotos-entidades/runtime-antes-e-depois.png)
 
-## O fecho — 05/11/2026, 00:27 a 00:45 (UTC), casa vazia (ninguém no `ListAgents`)
+## O fecho — 05/11/2026, 00:27 a 00:39 (UTC), casa vazia (ninguém no `ListAgents`)
 
 | Medida | Antes (commit de partida) | Agora |
 |:---|:---|:---|
