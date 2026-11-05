@@ -1021,7 +1021,12 @@ describe('rodada 17, K1b (a segunda volta): a Imagens tem chão, e quem cede sã
     const casca = readFileSync(resolve(__dirname, '../src/ui/shell.ts'), 'utf8');
     expect(casca).toContain('altura = Math.min(altura, dockRoomForColumn(altura, room, barra, alca, coluna, OPEN_MIN));');
     expect(casca).toContain("if (state.active[0] !== 'imagens' || isCollapsed(state, 0)) return null;");
-    expect(casca).toContain('if (this.dockView.open) {');
+    // 05/11/2026: as colunas descem até o rodapé e a faixa mora só debaixo da
+    // cena: os Detalhes abertos não tiram mais altura da coluna, e este chão
+    // fica DESLIGADO de propósito (não apagado). A prova disso é a medição:
+    // `npm run medir -- --detalhes`, de 79 para 92 de 92.
+    expect(casca).toContain('if (this.dockView.open && !COLUNAS_ATE_O_RODAPE) {');
+    expect(casca).toContain('const COLUNAS_ATE_O_RODAPE = true;');
   });
 });
 

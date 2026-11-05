@@ -241,6 +241,12 @@ export const CLOSED_PANELS: readonly string[] = Object.freeze([]);
 const STAGE_MIN = 260;
 
 /**
+ * As colunas descem até o rodapé, e a faixa de baixo mora só debaixo da cena —
+ * 05/11/2026. Ver o comentário em `shell-palco-e-faixa`, no construtor.
+ */
+const COLUNAS_ATE_O_RODAPE = true;
+
+/**
  * Fatia da altura disponível que o canvas leva quando `STAGE_MIN` não cabe.
  *
  * Numa janela de 568px de altura não há 260px de canvas MAIS 162px de barra de
@@ -351,6 +357,11 @@ export class Shell {
   private floatLayer!: HTMLElement;
   /** A caixa da cena: é nas bordas e quinas DELA que o flutuante cola. */
   private stageRow!: HTMLElement;
+  /**
+   * A cena e a faixa de baixo, empilhadas, ENTRE as duas colunas — 05/11/2026.
+   * É a caixa cuja altura o `fitToWindow` divide entre o desenho e a faixa.
+   */
+  private stageColumn!: HTMLElement;
   /** A sombra de onde o flutuante vai colar, enquanto a mão segura. */
   private snapShadow: HTMLElement | null = null;
   /** As caixas dos flutuantes montados, por id. */
@@ -450,11 +461,26 @@ export class Shell {
      * o que diz o que a coisa É (árvore, ordem, propriedades), à direita o que
      * diz o que se vai FAZER (imagens, animações).
      */
+    /*
+     * **As colunas descem até o rodapé; a faixa de baixo fica só debaixo da
+     * cena** — 05/11/2026, decisão do Diretor (doc `noite/paineis.md`).
+     *
+     * Antes a faixa atravessava a janela inteira, por baixo das colunas, e
+     * abrir os Detalhes tirava a altura DELAS: em 1280×720 uma aba do grupo
+     * de cima à direita caía de 272 para 123 px, e o palco da Prévia não
+     * cabia nem sozinho (a medição `--detalhes`: 79 de 92). É o arranjo do
+     * Spriter e do After Effects: os painéis laterais têm a altura inteira, e
+     * a linha do tempo divide a altura só com a cena. O que a faixa FAZ não
+     * mudou; mudou o lugar onde ela mora.
+     */
+    this.stageColumn = el('div', { class: 'shell-palco-e-faixa' }, [
+      stageRow, this.dockGrip, this.dock,
+    ]);
     const middle = el('div', { class: 'shell-middle' }, [
       this.toolStrip,
       this.leftColumn,
       this.buildWidthGrip('left'),
-      stageRow,
+      this.stageColumn,
       this.buildWidthGrip('right'),
       this.rightColumn,
     ]);
@@ -481,7 +507,7 @@ export class Shell {
     this.floatLayer = el('div', { class: 'panel-float-layer' });
     middle.append(this.floatLayer);
     this.center = el('div', { class: 'shell-body' }, [
-      this.actionBarHost, middle, this.dockGrip, this.dock,
+      this.actionBarHost, middle,
     ]);
 
     this.statusState = el('div', { class: 'status-state' });
@@ -3174,14 +3200,19 @@ export class Shell {
    * is no canvas.
    */
   private fitToWindow(pixels: number): number {
-    const room = this.center.clientHeight;
+    // 05/11/2026: a altura que a cena e a faixa dividem é a da caixa delas,
+    // entre as colunas (a barra de ações fica fora, numa linha da janela).
+    const room = this.stageColumn.clientHeight;
     if (room <= 0) return pixels;
     const most = Math.max(0, room - this.stageMin(room));
     let altura = Math.min(pixels, most);
     // Rodada 17, K1b (decisão do Diretor, 06/10): com os Detalhes ABERTOS, a
     // coluna da direita tem chão — a Imagens com uma fileira inteira, a lista
     // de Animações com três linhas —, e quem cede é a faixa, até o chão dela.
-    if (this.dockView.open) {
+    // 05/11/2026: com as colunas até o rodapé, a faixa não tira altura da
+    // coluna, e este chão não tem mais o que proteger. Fica desligado, e não
+    // apagado: se a faixa voltar a atravessar a janela, ele volta a valer.
+    if (this.dockView.open && !COLUNAS_ATE_O_RODAPE) {
       const coluna = this.rightColumnFloor();
       if (coluna !== null) {
         const barra = this.actionBarHost.offsetHeight;
@@ -3283,7 +3314,8 @@ export class Shell {
     // Ela continua entrando nesta conta: o `room` a inclui, e o que ela ocupa
     // não é desenho.
     const bar = this.root.querySelector('.viewport-toolbar');
-    const barHeight = bar instanceof HTMLElement ? bar.offsetHeight : 0;
+    // 05/11/2026: só conta se a barra mora DENTRO da caixa que se divide.
+    const barHeight = bar instanceof HTMLElement && this.stageColumn.contains(bar) ? bar.offsetHeight : 0;
     // On a window too short for `STAGE_MIN + toolbar`, ask for a share of what
     // there is instead of an absolute number that cannot be met. Without this
     // the floor of the bottom strip (`DOCK_MIN`) won every time and the canvas

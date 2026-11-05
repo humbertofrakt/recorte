@@ -154,7 +154,10 @@ body {
    * Spine a folha e as curvas dividem o MESMO lugar, em abas, e a cena é o que
    * sobra. Aqui quem cede é a faixa (`.dock`, que encolhe e rola por dentro).
    */
-  min-height: 55%;
+  /* 05/11/2026: o chão de 55% saiu daqui para a cena (`.shell-palco-e-faixa
+     > .shell-center`): o meio agora vai até o rodapé, com as colunas
+     inteiras, e quem divide a altura com a faixa é só a cena. */
+  min-height: 0;
   min-width: 0;
   /* A âncora da camada dos painéis descolados, que é `position: absolute`
      dentro dela — 13/09/2026. Sem isto, o flutuante se mediria pela janela
@@ -174,6 +177,26 @@ body {
   flex-direction: column;
   min-height: 0;
   min-width: 0;
+}
+
+/*
+ * A cena e a faixa de baixo, empilhadas ENTRE as colunas — 05/11/2026.
+ *
+ * As colunas descem até o rodapé (o arranjo do Spriter e do After Effects), e
+ * a linha do tempo divide a altura só com a cena. A cena nunca fica menor que
+ * 55% dessa altura (K13, chat P): quem cede é a faixa, que encolhe e rola por
+ * dentro (`.dock`).
+ */
+.shell-palco-e-faixa {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.shell-palco-e-faixa > .shell-center {
+  min-height: 55%;
 }
 
 /*
@@ -1418,4 +1441,27 @@ body {
 .panel-float[data-quina] {
   box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
   border-color: var(--accent, #3b82f6);
+}
+
+/*
+ * 05/11/2026 — a linha do tocador, agora na largura da CENA (e não da janela).
+ *
+ * Com a faixa só debaixo da cena, a linha do tocador (907 px de botões) não
+ * cabia em 744 px (1280×720) e rolava de lado, com "Chavear" cortado. Aqui a
+ * casca só arruma o LUGAR: o tocador vira peças soltas da linha de cima, que
+ * já quebra (`.dope-linha1`), e o que não cabe desce para a linha de baixo, ao
+ * lado do Mais e do Detalhes — que já desciam. Nenhum botão muda, e a faixa
+ * continua com as mesmas duas linhas. O que o tocador FAZ é da Linha do tempo.
+ */
+.shell-palco-e-faixa .dope-linha1 {
+  row-gap: 0;
+  column-gap: 4px;
+  padding: 0 10px;
+}
+.shell-palco-e-faixa .dope-linha1 > .dope-tocador {
+  display: contents;
+}
+.shell-palco-e-faixa .dope-linha1 > * {
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
