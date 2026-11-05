@@ -3216,3 +3216,51 @@ describe('trocar a pasta de origem: a dica não promete desfazer (rodada 44, lot
     expect(fonte).toContain('. Para voltar, Trocar pasta de origem com a pasta de antes');
   });
 });
+
+describe('QA 04/11/2026 — D14: o .bone sem atlas, aberto pela pasta, mostra as imagens que estão nela', () => {
+  // A prova (Chromium sem janela): Abrir pasta exemplo/game (ou soltá-la na
+  // cena). A pasta tem `bcp 2026-09-09.bone` na raiz — o projeto do Spriter
+  // convertido pela linha de comando, sem atlas, com as imagens soltas
+  // (`bot/01 (6)` → `bot/01 (6).png`). O editor reabria o .bone e dizia
+  // "176 avisos (88 iguais)": 88 imagens "não encontradas" que ESTÃO na pasta
+  // (a aba Imagens mostrava as 128). Importar o mesmo bcp.scml as ligava todas.
+  const GAME = resolve(__dirname, '../../exemplo/game');
+
+  it('as imagens em uso que nenhum atlas tem e a pasta tem: 87 das 88 do bcp', async () => {
+    const { looseImagesInFolder } = await import('../src/io/folder-save.js');
+    const { readdirSync, statSync } = await import('node:fs');
+    const nomes: string[] = [];
+    const anda = (dir: string, pre: string): void => {
+      for (const n of readdirSync(dir)) {
+        const p = resolve(dir, n);
+        if (statSync(p).isDirectory()) anda(p, `${pre}${n}/`);
+        else if (/\.png$/i.test(n)) nomes.push(imageNameOf(`${pre}${n}`));
+      }
+    };
+    anda(GAME, '');
+    const file = JSON.parse(readFileSync(resolve(GAME, 'bcp 2026-09-09.bone'), 'utf8')) as BoneFile;
+    const soltas = looseImagesInFolder(file, [], new Set(nomes));
+    expect(soltas).toContain('bot/01 (6)');
+    expect(soltas).toContain('Camada 87');
+    // 87 das 88: a que falta (`mao/_0000_Camada-1-copiar_tmp5068`) é uma PASTA
+    // no disco, e não um PNG — ela continua sendo dita pela barra de avisos.
+    expect(soltas.length).toBe(87);
+    expect(soltas).not.toContain('mao/_0000_Camada-1-copiar_tmp5068');
+  });
+
+  it('o que já está num atlas, ou não está na pasta, fica de fora', async () => {
+    const { looseImagesInFolder } = await import('../src/io/folder-save.js');
+    const file = {
+      skins: [{ name: 'default', attachments: { a: { a: { type: 'region' } }, b: { b: { type: 'region' } }, c: { c: { type: 'region' } } } }],
+    } as unknown as BoneFile;
+    const atlas = loadAtlas({ atlas: { version: '1.0' }, pages: [{ name: 'p', image: 'p.png', width: 4, height: 4 }], regions: [{ name: 'a', page: 0, x: 0, y: 0, width: 2, height: 2 }] });
+    expect(looseImagesInFolder(file, [atlas], new Set(['a', 'b']))).toEqual(['b']);
+  });
+
+  it('o adoptFolderAtlases liga as soltas, também quando nenhum atlas é da pasta', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/folder-save.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('export async function adoptFolderAtlases('));
+    const ate = corpo.indexOf('if (ours.length === 0)');
+    expect(corpo.slice(0, ate)).toContain('ensureProvisionalMany(doc, looseImagesInFolder(');
+  });
+});
