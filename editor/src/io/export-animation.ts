@@ -556,8 +556,12 @@ export function animationText(file: BoneFile): string {
 export function suggestedAnimationName(file: BoneFile, choice: AnimationExportChoice): string {
   if (choice.animations.length === 1) return `${choice.animations[0]!}${BONE_EXTENSION}`;
   const rigName = (file as unknown as { rig?: { name?: unknown } }).rig?.name;
-  const base = typeof rigName === 'string' && rigName !== '' ? rigName : 'animacoes';
-  return `${base}-animacoes${BONE_EXTENSION}`;
+  // QA 04/11/2026 (D13): sem rig, saía "animacoes-animacoes.bone". O nome da
+  // base vem no lugar do rig; sem nenhum dos dois, "animacoes.bone".
+  const skeletonName = (file as unknown as { skeleton?: { name?: unknown } }).skeleton?.name;
+  const base = typeof rigName === 'string' && rigName !== '' ? rigName
+    : typeof skeletonName === 'string' && skeletonName !== '' ? skeletonName : null;
+  return base === null ? `animacoes${BONE_EXTENSION}` : `${base}-animacoes${BONE_EXTENSION}`;
 }
 
 /** Uma caixa de marcar com as palavras ao lado, e as palavras são o rótulo. */

@@ -1998,3 +1998,18 @@ describe('QA 04/11/2026 — D12: a exportação de imagem conta as partículas n
     expect(anim.match(/boxWithParticles\(skeleton\)/g)?.length).toBe(2);
   });
 });
+
+describe('QA 04/11/2026 — D13: o nome sugerido das animações de uma base sem rig', () => {
+  // A prova (Chromium sem janela): herói aberto → Exportar → Animações, para
+  // outra base… → idle, walk, attack. O seletor sugeriu "animacoes-animacoes.bone":
+  // o herói não tem `rig`, e a palavra de reserva entrava duas vezes.
+  it('sem rig, vale o nome da base: heroi-animacoes.bone', () => {
+    const file = { skeleton: { name: 'heroi' }, bones: [{ name: 'root' }] } as unknown as BoneFile;
+    expect(suggestedAnimationName(file, { animations: ['idle', 'walk', 'attack'] })).toBe('heroi-animacoes.bone');
+  });
+
+  it('sem rig e sem nome: animacoes.bone, uma vez só', () => {
+    const file = { bones: [{ name: 'root' }] } as unknown as BoneFile;
+    expect(suggestedAnimationName(file, { animations: ['a', 'b'] })).toBe('animacoes.bone');
+  });
+});
