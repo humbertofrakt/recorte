@@ -918,3 +918,18 @@ export function treeIndent(depth: number): number {
   for (let d = 0; d < depth; d++) px += INDENT_STEPS[d] ?? INDENT_MIN_STEP;
   return px;
 }
+
+/**
+ * **Quando o redesenho rola a lista** — QA da noite de 04/11/2026. Em
+ * 1920×1080, duplo clique em "osso_16" renomeou o "leg_front": o primeiro
+ * clique escolhia a linha, o redesenho rolava 14 px para mostrá-la inteira,
+ * e o segundo clique caía na vizinha. A escolha que o próprio clique fez
+ * (`clicada`) não rola: quem clicou está apontando para a linha. A que veio
+ * de fora, ou da seta, rola como sempre — pela escolha que mudou, e pelo foco.
+ */
+export function treeReveal(
+  agora: string, clicada: string | null, mudou: boolean,
+): { escolha: boolean; foco: boolean } {
+  const doClique = clicada !== null && agora === clicada;
+  return { escolha: mudou && !doClique, foco: !doClique };
+}

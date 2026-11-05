@@ -3157,3 +3157,44 @@ describe('o cadeado da Árvore diz o que fez (QA da noite)', () => {
     expect(trava).toMatch(/notice\(lockNotice\(row\.kind === 'bone' \? 'bone' : 'slot', row\.name, !own\)\)/);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): em 1920×1080, duplo clique no
+// nome "osso_16" abriu o campo de renomear do "leg_front", a linha de cima — e
+// o desenho errado foi renomeado. O primeiro clique escolhia a linha, e o
+// redesenho rolava a lista 14 px ("nearest") para mostrá-la inteira; o
+// segundo clique caía na vizinha. Quem clicou está apontando para a linha:
+// não há o que rolar. Seta do teclado e escolha de fora continuam rolando.
+describe('o clique na Árvore não rola a lista (QA da noite)', () => {
+  it('a escolha que o clique fez não rola, nem pela escolha nem pelo foco', () => {
+    expect(TR43.treeReveal('bones:osso_16', 'bones:osso_16', true)).toEqual({ escolha: false, foco: false });
+    expect(TR43.treeReveal('bones:osso_16', 'bones:osso_16', false)).toEqual({ escolha: false, foco: false });
+  });
+  it('escolha de fora (a cena, o menu) ou pela seta: rola até a linha', () => {
+    expect(TR43.treeReveal('bones:osso_17', 'bones:osso_16', true)).toEqual({ escolha: true, foco: true });
+    expect(TR43.treeReveal('bones:osso_17', null, true)).toEqual({ escolha: true, foco: true });
+  });
+  it('sem mudar a escolha, só o foco pode rolar (o redesenho de sempre)', () => {
+    expect(TR43.treeReveal('bones:osso_17', null, false)).toEqual({ escolha: false, foco: true });
+  });
+  it('o clique da linha anota a escolha que fez ANTES de escolher', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const clique = fonte.slice(fonte.indexOf("node.addEventListener('click', (event) => {"), fonte.indexOf("node.addEventListener('dblclick'"));
+    expect(clique.match(/this\.escolher\(doc, /g)?.length).toBeGreaterThanOrEqual(3);
+  });
+});
+
+// A causa de verdade do duplo clique na linha errada (QA da noite, 04/11): o
+// redesenho chamava `focus()` com a lista já posta e a zona de soltar do fim
+// (48 px) ainda fora. O `focus` mede; o navegador prendia a rolagem no máximo
+// daquele instante — 804 → 756, exatos 48 px — e a linha andava debaixo do
+// dedo. A zona entra junto com a lista, antes de qualquer foco ou rolagem.
+describe('a Árvore se monta inteira antes de focar (QA da noite)', () => {
+  it('a zona do fim entra antes do foco e da rolagem', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const render = fonte.slice(fonte.indexOf('  private render(): void {'), fonte.indexOf('  /** A dobra deste arquivo'));
+    const zona = render.indexOf('body.append(this.rootDropZone())');
+    expect(zona).toBeGreaterThan(0);
+    expect(zona).toBeLessThan(render.indexOf('scrollIntoView'));
+    expect(zona).toBeLessThan(render.indexOf('.focus('));
+  });
+});
