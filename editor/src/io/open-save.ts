@@ -674,6 +674,23 @@ export interface SaveOptions {
 
 /** Writes the document. Returns the file name written, or `null` if cancelled. */
 export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise<string | null> {
+  // QA 05/11/2026 (reaproveitar §6, a raiz): o arquivo aberto é o da base
+  // PRINCIPAL; com o foco noutra base, o texto do foco ia para ele, e o
+  // manifesto saía sem a base em foco — perda calada. Salva com a principal em
+  // foco (cada base vai para o SEU arquivo), e volta ao foco de antes.
+  const projeto = doc.project;
+  if (options.saveAs !== true && projeto instanceof Projeto && projeto.temVarios) {
+    const principal = projeto.manifesto.main;
+    const foco = projeto.emFocoUri;
+    if (principal !== foco && projeto.corpos.has(principal)) {
+      projeto.trocarFoco(principal);
+      try {
+        return await saveDocument(doc, options);
+      } finally {
+        projeto.trocarFoco(foco);
+      }
+    }
+  }
   // Lote 61: o pivô da pasta de uma imagem que já está na cena mora na região.
   pruneFolderPivots(doc);
   lastNote = null;
