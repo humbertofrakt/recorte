@@ -856,6 +856,68 @@ try {
       }
     }
 
+    // A Malha UMA SEGUNDA VEZ, com a ferramenta PESOS na mão — 04/11/2026.
+    //
+    // A régua da ferramenta ('medirFerramenta') nasceu medida só com o
+    // Transformar, que abre a seção Forma. Com os Pesos na mão a aba abre
+    // Ossos, Pesos e o Pincel ao mesmo tempo — é o caso ALTO da aba, e é onde
+    // o Humberto pediu "não esconda a malha ou os pesos". Medir só o caso
+    // bonito é a mentira de sempre da prova (ver 'SO_A_REGRA'): por isso esta
+    // passada existe, conta no total, e o número cai se não couber.
+    if (SO === null || SO === 'Malha e pesos (Pesos)') {
+      let rp = null;
+      for (let tentativa = 0; tentativa < 3 && rp === null; tentativa++) {
+        if (tentativa > 0 || await ava('typeof window.__m !== "undefined" ? false : true')) {
+          if (tentativa > 0) consoleDaPagina.push('a página se recarregou na aba "Malha e pesos (Pesos)"; o editor foi reaberto');
+          await abrirEditor(largura, altura);
+        }
+        try {
+          await ava(SELECIONAR);
+          await ava(`(async () => { const r = await import('/src/viewport/tools/registry.ts'); r.setActiveTool('weights', __m.vp.doc); return r.getActiveToolId(); })()`);
+          await ava(`[...document.querySelectorAll('.panel-column .panel-tab')].find((t) => t.textContent.trim() === 'Malha e pesos')?.click()`);
+          await esperar(300);
+          rp = await ava('__m.medir("Malha e pesos")');
+          const d = await ava('__m.detalhar("Malha e pesos")');
+          if (rp !== null && d !== null) rp.numero = ` — pede ${d.conteudo} px, o painel tem ${d.cabe} px`;
+        } catch {
+          rp = null;
+        }
+      }
+      medicoes += 1;
+      if (rp === null || rp.erro) {
+        ruins += 1; altas += 1;
+        console.log(`  FALTOU  Malha e pesos (ferramenta Pesos): ${rp?.erro ?? 'a página caiu três vezes seguidas'}`);
+      } else {
+        const porqueP = await ava('__m.vazio("Malha e pesos")');
+        if (porqueP !== '') {
+          vazios.push(`Malha e pesos (ferramenta Pesos) (${largura}x${altura}): ${porqueP}`);
+          ruins += 1; altas += 1;
+          console.log(`  VAZIO   Malha e pesos (ferramenta Pesos): ${porqueP} — não medido`);
+        } else if (rp.fora.length === 0 && rp.alto.length === 0) {
+          console.log(`  cabe    Malha e pesos (ferramenta Pesos)${rp.numero ?? ''}`);
+        } else {
+          if (rp.fora.length > 0) {
+            ruins += 1;
+            console.log(`  PASSA   Malha e pesos (ferramenta Pesos): ${rp.fora.length} coisa(s) de lado`);
+            for (const linha of rp.fora.slice(0, 6)) console.log(`            ${linha}`);
+          }
+          if (rp.alto.length > 0) {
+            altas += 1;
+            console.log(`  ROLA    Malha e pesos (ferramenta Pesos): ${rp.alto.length} coisa(s) de altura${rp.numero ?? ''}`);
+            for (const linha of rp.alto.slice(0, 6)) console.log(`            ${linha}`);
+          }
+        }
+        if (FOTOS !== null) {
+          const foto = await cmd('Page.captureScreenshot', { format: 'png' });
+          writeFileSync(join(FOTOS, `${largura}x${altura}-Malha-e-pesos-ferramenta-Pesos.png`), Buffer.from(foto.result.data, 'base64'));
+        }
+      }
+      // A mão volta ao Transformar (depois da foto): a próxima medida é a de sempre.
+      try {
+        await ava(`(async () => { const r = await import('/src/viewport/tools/registry.ts'); r.setActiveTool('transform', __m.vp.doc); return true; })()`);
+      } catch { /* a página caiu: a próxima volta reabre o editor */ }
+    }
+
     if (SO !== null && SO !== 'Propriedades (regra Comando)') continue;
     // Propriedades UMA SEGUNDA VEZ, com a regra `look_driver` e nenhum desenho:
     // é o caso alto do painel, e a seleção de cima não o alcança. Ver

@@ -1206,6 +1206,15 @@ describe('a Malha em 1280×720 rola com régua própria, e a régua não isenta'
     expect(prova).toContain("el.dataset?.rolagem === 'ferramenta' && window.innerHeight <= 800");
   });
 
+  it('a prova mede também o caso ALTO: a Malha com a ferramenta Pesos, e conta no total', () => {
+    expect(prova).toContain("r.setActiveTool('weights', __m.vp.doc)");
+    expect(prova).toContain('Malha e pesos (ferramenta Pesos)');
+    // Conta no total: se não couber, o número cai.
+    const passada = prova.slice(prova.indexOf("SO === 'Malha e pesos (Pesos)'"));
+    expect(passada.slice(0, 3000)).toContain('medicoes += 1;');
+    expect(passada.slice(0, 3000)).toContain('altas += 1;');
+  });
+
   it('os botões da Forma vão dois por linha, com o nome inteiro (quebra entre palavras)', () => {
     const bloco = css.slice(css.lastIndexOf('@media (max-height: 800px)'));
     expect(bloco).toContain('grid-template-columns: 1fr 1fr');
