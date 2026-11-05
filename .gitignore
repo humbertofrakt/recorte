@@ -19,3 +19,6 @@ O PROGRAMA - o essencial/
 # Manuais e capturas de outros programas: não são nossos, não vão para o público
 documentos/pesquisa/nova pesquisa/*/*.pdf
 documentos/pesquisa/nova pesquisa/*/prints/
+
+# Saída da prova de pessoa final (ferramentas/provas/prova-de-pessoa-final.mjs)
+/prova-de-pessoa-final/
