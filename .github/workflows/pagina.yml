@@ -29,6 +29,8 @@ jobs:
       - run: npm ci
       - name: Montar o editor
         run: npx vite build editor --outDir "$PWD/_site/editor" --emptyOutDir
+      - name: Gerar o runtime do visualizador e do validador
+        run: npx tsc -p ferramentas/visualizador/tsconfig.json
       - name: Juntar o site, o validador, o visualizador e os documentos
         run: |
           mkdir -p _site/ferramentas _site/documentos _site/conformidade
@@ -39,7 +41,12 @@ jobs:
           cp conformidade/*.md _site/conformidade/
           cp LICENSE ESTADO.md README.md _site/
           cp pagina/index.html _site/index.html
+          # Sem extensão, o Pages manda baixar; com .txt, abre e se lê.
+          cp LICENSE _site/LICENSE.txt
+          cp formato/LICENSE _site/formato/LICENSE.txt
           touch _site/.nojekyll
+      - name: Transformar os .md em páginas que se leem
+        run: node ferramentas/pagina-md.mjs _site
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
