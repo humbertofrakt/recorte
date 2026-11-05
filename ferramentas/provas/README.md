@@ -8,6 +8,7 @@ servidor do editor e um Chrome sem janela, com um perfil novo.
 | `roteiro-30.mjs` | `npm run roteiro` | Os 14 passos do Roteiro dos 30 minutos, com gestos de verdade. `--fotos <pasta>` guarda uma foto por passo |
 | `medir-paineis.mjs` | `npm run medir` | Nenhuma aba passa da coluna, em 1440×900 e 1280×720. `--fotos <pasta>` guarda uma foto por aba (as fotos saem iguais byte a byte de uma rodada para a outra) |
 | `conferir-editor.mjs` | `node ferramentas/provas/conferir-editor.mjs %TEMP%/perfil tela.png` | Toca a animação, mede quadros, lê o console e tira a foto. Precisa do `npm run editor` ligado |
+| `skins-pessoa.mjs` | `node ferramentas/provas/skins-pessoa.mjs` | Os 5 objetivos de skin (roupa nova, lado a lado, combinar, levar para outro boneco, capacete de fora) só com cliques visíveis. `--fotos <pasta>`. Noite de 04/11/2026 |
 | `espada-e-boneco.mjs` | `npm run espada` | A espada de um, o boneco de outro (05/11/2026): a pessoa A desenha e anima a espada, a B a põe na mão do herói, liga **a de quem recebe** e anima o golpe; o validador e o runtime conferem; a A muda a cor, a B reabre. Dirigido pelo **Playwright** (`require('playwright')`), com a janela de pasta ligada ao disco por `disco-na-pagina.js`. `--fotos <pasta>`, `--trabalho <pasta>` |
 | `fotos-manual.mjs` | `node ferramentas/provas/fotos-manual.mjs %TEMP%/perfil` | As fotos do manual, em `documentos/manual/imagens/`. O manual está pausado |
 
