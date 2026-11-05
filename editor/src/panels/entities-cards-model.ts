@@ -40,6 +40,7 @@ import { DropEntityAsSlot } from '../doc/drop-entity.js';
 import { SetEntityAround } from '../anim/entity-around.js';
 import { entityShortName, entitySlots } from '../anim/entity-band.js';
 import { garantirAninhado, projetoDe } from '../doc/projeto.js';
+import { devolverFoto, fotografar } from './tomadas-model.js';
 import { entityFileText } from '../doc/entity-files.js';
 import {
   SetMontagem, cadeiaAcima, comAcima, comEscolhaBaixo, comEscolhaCima, comLigacao, comNaCena, ligacaoEm, ligacaoMovida,
@@ -1027,7 +1028,7 @@ class PutIntoProject implements Command {
 class KeepTestChoice implements Command {
   readonly label = 'Levar o que a peça toca';
   readonly kind: ChangeKind = 'structure';
-  private antes: Record<string, unknown> | null = null;
+  private antes: Array<[string, unknown]> | null = null;
   constructor(
     private readonly skin: string,
     private readonly slot: string,
@@ -1041,7 +1042,8 @@ class KeepTestChoice implements Command {
   apply(doc: EditorDoc): void {
     const def = this.def(doc);
     if (def === null) return;
-    this.antes = { animation: def['animation'], inheritAnimation: def['inheritAnimation'], skins: def['skins'] };
+    // 05/11/2026: a foto inteira, na ordem — a volta repõe os campos onde estavam.
+    this.antes = fotografar(def);
     delete def['animation'];
     delete def['inheritAnimation'];
     if (this.escolha.anima === '') def['inheritAnimation'] = true;
@@ -1051,10 +1053,7 @@ class KeepTestChoice implements Command {
   revert(doc: EditorDoc): void {
     const def = this.def(doc);
     if (def === null || this.antes === null) return;
-    for (const [k, v] of Object.entries(this.antes)) {
-      if (v === undefined) delete def[k];
-      else def[k] = v;
-    }
+    devolverFoto(def, this.antes);
     this.antes = null;
   }
 }
@@ -1438,7 +1437,7 @@ export const PROJECT_ANIMA_NEEDS_ANIMATION =
 export class SetInheritAnimation implements Command {
   readonly label: string;
   readonly kind: ChangeKind = 'structure';
-  private antes: boolean | undefined = undefined;
+  private antes: Array<[string, unknown]> | null = null;
   private feito = false;
   constructor(
     private readonly skin: string,
@@ -1455,7 +1454,7 @@ export class SetInheritAnimation implements Command {
   apply(doc: EditorDoc): void {
     const def = this.def(doc);
     if (def === null) return;
-    this.antes = def['inheritAnimation'] as boolean | undefined;
+    this.antes = fotografar(def);
     this.feito = true;
     if (this.ligar) def['inheritAnimation'] = true;
     else delete def['inheritAnimation'];
@@ -1463,8 +1462,8 @@ export class SetInheritAnimation implements Command {
   revert(doc: EditorDoc): void {
     const def = this.def(doc);
     if (def === null || !this.feito) return;
-    if (this.antes === undefined) delete def['inheritAnimation'];
-    else def['inheritAnimation'] = this.antes;
+    if (this.antes !== null) devolverFoto(def, this.antes);
+    this.antes = null;
     this.feito = false;
   }
 }

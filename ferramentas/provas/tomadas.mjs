@@ -248,7 +248,18 @@ async function roteiro(browser) {
     return ok || `o herói (com a espada dele) não entrou na cabine · ${await rodape(page)}`;
   });
 
-  await passo('b4. A aba Tomadas mostra a cadeia: mecha › cabine › heroi', async () => {
+  await passo('b4. Ícone da cabine → "Animação própria, sempre ligada: walk"; o "Mexe junto" vem marcado', async () => {
+    await page.locator('.tomada-icone[title^="Tomada cabine: segura heroi"]').first().click();
+    await page.waitForTimeout(200);
+    const itens = await page.locator('.menu-flutuante-item:visible').allTextContents();
+    await foto(page, 'menu-da-cabine');
+    if (!itens.some((t) => t.startsWith('✓ Mexe junto com a animação de quem segura'))) return `o menu tem: ${itens.join(' | ')}`;
+    await itemFlutuante(page, 'Animação própria, sempre ligada: walk');
+    const base = await ler(page, (d) => d.file.skins[0].attachments.cabine?.heroi?.baseAnimation ?? null);
+    return base === 'walk' || `baseAnimation ficou ${base}`;
+  });
+
+  await passo('b5. A aba Tomadas mostra a cadeia: mecha › cabine › heroi', async () => {
     await page.locator('[role="tab"]', { hasText: /^\s*Tomadas/ }).first().click();
     await page.waitForTimeout(400);
     const texto = await page.locator('.entidades-rolo, [class*="entidades"]').first().innerText().catch(() => '');

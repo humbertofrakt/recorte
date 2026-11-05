@@ -8,7 +8,7 @@
  */
 
 import type { EditorDoc } from '../contract.js';
-import { corpoDe } from '../contract.js';
+import { corpoDe, skeletonsDe } from '../contract.js';
 import { askChoice, askForm } from '../ui/dialog.js';
 import { openFloatingMenu } from '../ui/floating-menu.js';
 import type { FloatingItem } from '../ui/floating-menu.js';
@@ -18,10 +18,11 @@ import { firstAnimationOf } from '../doc/drop-entity.js';
 import { openEntityFromOutside, rememberOutside } from '../io/open-save.js';
 import type { FolderDirectoryHandle } from '../io/project-folder.js';
 import {
-  PALAVRAS, Passos, PlugIntoSocket, PutSocket, UnplugSocket, dicaDaTomada, encaixouDiz, nomeDaPeca, nomeDeTomada,
+  PALAVRAS, Passos, PlugIntoSocket, PutSocket, SetBaseAnimation, UnplugSocket, animacaoPropria, dicaDaTomada, encaixouDiz, nomeDaPeca, nomeDeTomada,
   tomadasDe, tomadasDoOsso,
 } from './tomadas-model.js';
 import type { Tomada } from './tomadas-model.js';
+import { SetInheritAnimation } from './entities-cards-model.js';
 
 /** Onde encaixar: uma tomada que já existe, ou um osso (a tomada nasce). */
 export type Alvo = { slot: string } | { bone: string };
@@ -170,6 +171,7 @@ export function itensDaTomada(doc: EditorDoc, onde: { bone: string; slot?: strin
     });
     if (t.peca !== null) {
       itens.push({ label: `${PALAVRAS.tirar} (${nomeDaPeca(t.peca)})`, hint: `A tomada ${t.slot} fica vazia`, run: () => { tirarPeca(doc, t.slot); } });
+      itens.push(...itensDaPeca(doc, t));
     }
   }
   if (onde.slot === undefined) {
@@ -184,6 +186,42 @@ export function itensDaTomada(doc: EditorDoc, onde: { bone: string; slot?: strin
       label: PALAVRAS.porTomada,
       hint: `Um lugar vazio no osso ${onde.bone}, para encaixar uma peça depois (um slot sem imagem)`,
       run: () => { void porTomada(doc, onde.bone); },
+    });
+  }
+  return itens;
+}
+
+/**
+ * As escolhas da peça encaixada, nas palavras da pessoa: mexer junto com quem
+ * segura (`inheritAnimation`) e a animação própria, sempre ligada
+ * (`baseAnimation`). O nome técnico fica na dica.
+ */
+function itensDaPeca(doc: EditorDoc, t: Tomada): FloatingItem[] {
+  if (t.peca === null || t.anexo === null) return [];
+  const uri = t.peca;
+  const anexo = t.anexo;
+  const nome = nomeDaPeca(uri);
+  const file = corpoDe(doc).file;
+  const itens: FloatingItem[] = [{
+    label: `${t.mexeJunto ? '✓ ' : ''}Mexe junto com a animação de quem segura`,
+    hint: t.mexeJunto
+      ? `${nome} toca a animação de mesmo nome que quem segura toca. Clique para desligar (inheritAnimation, 7.11)`
+      : `Quem segura toca attack, ${nome} toca o attack dela (inheritAnimation, 7.11)`,
+    run: () => {
+      corpoDe(doc).run(new SetInheritAnimation('default', t.slot, anexo, !t.mexeJunto));
+      doc.notice(t.mexeJunto ? `${nome} não mexe mais junto com quem segura` : `${nome} mexe junto com a animação de quem segura`);
+    },
+  }];
+  const dados = skeletonsDe(doc).get(uri) ?? projetoDe(doc)?.guardados.get(uri)?.data ?? null;
+  const propria = animacaoPropria(file, t);
+  for (const a of dados?.animations ?? []) {
+    itens.push({
+      label: `${propria === a.name ? '✓ ' : ''}Animação própria, sempre ligada: ${a.name}`,
+      hint: `${a.name} roda sempre por baixo, seja o que for que quem segura toca (baseAnimation, 7.11)`,
+      run: () => {
+        corpoDe(doc).run(new SetBaseAnimation(t.slot, anexo, propria === a.name ? null : a.name));
+        doc.notice(propria === a.name ? `${nome} sem animação própria` : `${nome}: ${a.name} sempre ligada, por baixo`);
+      },
     });
   }
   return itens;

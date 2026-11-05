@@ -3367,7 +3367,9 @@ describe('a espada de um, o boneco de outro (05/11/2026)', () => {
 
 import {
   PutSocket, PlugIntoSocket, UnplugSocket, Passos, tomadasDe, tomadasDoOsso, nomeDeTomada, nomeDaPeca, dicaDaTomada,
+  SetBaseAnimation, animacaoPropria,
 } from '../src/panels/tomadas-model.js';
+import { SetInheritAnimation as SetInheritAnimationEB } from '../src/panels/entities-cards-model.js';
 
 describe('as tomadas: o lugar no osso, e a peça encaixada (05/11/2026)', () => {
   const EX = resolve(__dirname, '../../formato/exemplos');
@@ -3432,6 +3434,38 @@ describe('as tomadas: o lugar no osso, e a peça encaixada (05/11/2026)', () => 
     doc.undo();
     doc.run(new PlugIntoSocket('weapon', 'espada.bone', null, 0));
     expect('rotation' in (doc.file.skins![0]!.attachments as Record<string, Record<string, Record<string, unknown>>>)['weapon']!['espada']!).toBe(false);
+  });
+
+  it('Animação própria, sempre ligada (baseAnimation): liga, troca, tira, desfaz exato — antes não havia porta', () => {
+    const doc = mecha();
+    const antes = JSON.stringify(doc.file);
+    const t = () => tomadasDoOsso(doc.file, 'hand')[0]!;
+    expect(animacaoPropria(doc.file, t())).toBe('brilho');
+    doc.run(new SetBaseAnimation('weapon', 'sword', null));
+    expect(animacaoPropria(doc.file, t())).toBeNull();
+    doc.run(new SetBaseAnimation('weapon', 'sword', 'idle'));
+    expect(animacaoPropria(doc.file, t())).toBe('idle');
+    doc.undo();
+    doc.undo();
+    expect(JSON.stringify(doc.file)).toBe(antes);
+  });
+
+  it('a volta é exata até na ordem dos campos: tirar a peça e desligar o mexer junto, no herói', () => {
+    // A forma do erro: apagar um campo e, na volta, pô-lo de novo NO FIM do
+    // objeto. O slot `weapon` do herói tem `visible` depois de `attachment`.
+    const doc = new Doc(JSON.parse(readFileSync(resolve(EX, 'heroi.bone'), 'utf8')) as BoneFile, { path: 'heroi.bone' });
+    const antes = JSON.stringify(doc.file);
+    doc.run(new UnplugSocket('weapon'));
+    doc.undo();
+    expect(JSON.stringify(doc.file)).toBe(antes);
+    doc.run(new PlugIntoSocket('weapon', 'motosserra.bone', null));
+    doc.undo();
+    expect(JSON.stringify(doc.file)).toBe(antes);
+    const comMexe = JSON.stringify(mecha().file);
+    const m = mecha();
+    m.run(new SetInheritAnimationEB('default', 'weapon', 'sword', false));
+    m.undo();
+    expect(JSON.stringify(m.file)).toBe(comMexe);
   });
 
   it('o nome da peça é o do arquivo, sem a extensão', () => {

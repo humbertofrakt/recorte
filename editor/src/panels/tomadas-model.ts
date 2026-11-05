@@ -114,6 +114,21 @@ export function dicaDaTomada(t: Tomada): string {
 // Os comandos
 // ---------------------------------------------------------------------------
 
+/**
+ * A foto de um objeto, campo por campo e NA ORDEM — 05/11/2026. A forma do
+ * erro que ela fecha: apagar um campo e, na volta, pô-lo de novo no fim. O
+ * arquivo volta "igual" e diferente. `devolverFoto` repõe tudo, na ordem.
+ */
+export function fotografar(obj: object): Array<[string, unknown]> {
+  return Object.entries(obj).map(([k, v]) => [k, v === undefined ? undefined : JSON.parse(JSON.stringify(v)) as unknown]);
+}
+
+export function devolverFoto(obj: object, foto: ReadonlyArray<[string, unknown]>): void {
+  const o = obj as Record<string, unknown>;
+  for (const k of Object.keys(o)) delete o[k];
+  for (const [k, v] of foto) o[k] = v;
+}
+
 /** **Pôr uma tomada aqui**: um slot vazio no osso, no fim da ordem de desenho. */
 export class PutSocket implements Command {
   readonly label = 'Pôr uma tomada';
@@ -145,7 +160,7 @@ export class PutSocket implements Command {
 export class PlugIntoSocket implements Command {
   readonly label: string;
   readonly kind: ChangeKind = 'structure';
-  private antes: { map: string | null; attachment: string | undefined; madeSkin: boolean } | null = null;
+  private antes: { map: string | null; slot: Array<[string, unknown]>; madeSkin: boolean } | null = null;
   readonly anexo: string;
   constructor(
     readonly slot: string, readonly uri: string, readonly toca: string | null,
@@ -169,7 +184,7 @@ export class PlugIntoSocket implements Command {
     const attachments = skin.attachments ?? (skin.attachments = {});
     this.antes = {
       map: attachments[this.slot] === undefined ? null : JSON.stringify(attachments[this.slot]),
-      attachment: slot.attachment ?? undefined,
+      slot: fotografar(slot),
       madeSkin,
     };
     attachments[this.slot] = {
@@ -195,10 +210,7 @@ export class PlugIntoSocket implements Command {
       else attachments[this.slot] = JSON.parse(antes.map) as Record<string, Def | null>;
     }
     const slot = (file.slots ?? []).find((s) => s.name === this.slot);
-    if (slot !== undefined) {
-      if (antes.attachment === undefined) delete slot.attachment;
-      else slot.attachment = antes.attachment;
-    }
+    if (slot !== undefined) devolverFoto(slot, antes.slot);
     this.antes = null;
   }
 }
@@ -207,7 +219,7 @@ export class PlugIntoSocket implements Command {
 export class UnplugSocket implements Command {
   readonly label = 'Tirar a peça';
   readonly kind: ChangeKind = 'structure';
-  private antes: { maps: Array<[number, string]>; attachment: string | undefined } | null = null;
+  private antes: { maps: Array<[number, string]>; slot: Array<[string, unknown]>; ordem: Array<string[]> } | null = null;
   constructor(readonly slot: string) {}
   apply(doc: EditorDoc): void {
     const file = doc.file;
@@ -215,13 +227,14 @@ export class UnplugSocket implements Command {
     if (slot === undefined) return;
     const skins = (file.skins ?? []) as unknown as Skins;
     const maps: Array<[number, string]> = [];
+    const ordem = skins.map((skin) => Object.keys(skin.attachments ?? {}));
     skins.forEach((skin, i) => {
       const map = skin.attachments?.[this.slot];
       if (map === undefined) return;
       maps.push([i, JSON.stringify(map)]);
       delete skin.attachments![this.slot];
     });
-    this.antes = { maps, attachment: slot.attachment ?? undefined };
+    this.antes = { maps, slot: fotografar(slot), ordem };
     delete slot.attachment;
   }
   revert(doc: EditorDoc): void {
@@ -231,10 +244,14 @@ export class UnplugSocket implements Command {
     for (const [i, json] of antes.maps) {
       const skin = skins[i];
       if (skin === undefined) continue;
-      (skin.attachments ?? (skin.attachments = {}))[this.slot] = JSON.parse(json) as Record<string, Def | null>;
+      const attachments = skin.attachments ?? (skin.attachments = {});
+      attachments[this.slot] = JSON.parse(json) as Record<string, Def | null>;
+      // O mapa do slot volta ao lugar dele na pele, e não ao fim.
+      const foto = (antes.ordem[i] ?? []).filter((k) => k in attachments).map((k) => [k, attachments[k]] as [string, unknown]);
+      devolverFoto(attachments, foto);
     }
     const slot = (doc.file.slots ?? []).find((s) => s.name === this.slot);
-    if (slot !== undefined && antes.attachment !== undefined) slot.attachment = antes.attachment;
+    if (slot !== undefined) devolverFoto(slot, antes.slot);
     this.antes = null;
   }
 }
@@ -251,4 +268,50 @@ export class Passos implements Command {
 export function encaixouDiz(peca: string, slot: string, nova: boolean): string {
   return `Encaixei ${nomeDaPeca(peca)} na tomada ${slot}${nova ? ' (tomada nova)' : ''}. `
     + 'A peça mexe junto com quem segura: isso muda na aba Tomadas, no cartão dela';
+}
+
+/**
+ * **Animação própria, sempre ligada** — `baseAnimation` (7.11): a animação da
+ * peça que roda sempre por baixo (o brilho da espada), seja o que for que quem
+ * segura toca. `null` tira. Até aqui o editor lia o campo e não havia porta.
+ */
+export class SetBaseAnimation implements Command {
+  readonly label: string;
+  readonly kind: ChangeKind = 'structure';
+  /** O anexo inteiro de antes, na ordem dos campos: a volta é exata. */
+  private antes: Array<[string, unknown]> | null = null;
+  constructor(readonly slot: string, readonly anexo: string, readonly nome: string | null) {
+    this.label = nome === null ? 'Tirar a animação própria' : `Animação própria: ${nome}`;
+  }
+  private def(doc: EditorDoc): Def | null {
+    for (const skin of skinsOf(doc.file)) {
+      const d = skin.attachments?.[this.slot]?.[this.anexo];
+      if (d !== undefined && d !== null && typeof d === 'object') return d;
+    }
+    return null;
+  }
+  apply(doc: EditorDoc): void {
+    const d = this.def(doc);
+    if (d === null) return;
+    this.antes = Object.entries(d).map(([k, v]) => [k, JSON.parse(JSON.stringify(v)) as unknown]);
+    if (this.nome === null) delete d['baseAnimation'];
+    else d['baseAnimation'] = this.nome;
+  }
+  revert(doc: EditorDoc): void {
+    const d = this.def(doc);
+    if (d === null || this.antes === null) return;
+    for (const k of Object.keys(d)) delete d[k];
+    for (const [k, v] of this.antes) d[k] = v;
+    this.antes = null;
+  }
+}
+
+/** A animação própria de agora de uma tomada, ou `null`. */
+export function animacaoPropria(file: BoneFile, t: Tomada): string | null {
+  if (t.anexo === null) return null;
+  for (const skin of skinsOf(file)) {
+    const d = skin.attachments?.[t.slot]?.[t.anexo];
+    if (d !== undefined && d !== null && typeof d === 'object' && typeof d['baseAnimation'] === 'string') return d['baseAnimation'] as string;
+  }
+  return null;
 }

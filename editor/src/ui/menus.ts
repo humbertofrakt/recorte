@@ -1208,8 +1208,9 @@ export function entitiesMenu(): MenuItem[] {
     },
     // Lote 4: para cima. O mesmo que arrastar o cartão AQUI até a entidade.
     {
-      label: 'Pôr o projeto dentro de…', action: 'por-dentro-de', enabled: true,
-      hint: 'Pergunta a entidade e o slot dela: o projeto aberto (ou o que já está em volta dele) entra ali EM TESTE, '
+      // 05/11/2026: as tomadas — a outra direção do mesmo gesto, nas palavras da pessoa.
+      label: 'Este boneco entra em…', action: 'por-dentro-de', enabled: true,
+      hint: 'Era "Pôr o projeto dentro de…". Pergunta a peça e a tomada dela: o projeto aberto (ou o que já está em volta dele) entra ali EM TESTE, '
         + 'como o boneco no piloto do mecha. Com Na cena ligado, a cena desenha o de fora em volta. Nada entra no arquivo',
     },
     {
