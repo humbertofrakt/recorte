@@ -763,8 +763,8 @@ class SkinsPanel implements Panel {
     }
 
     const conta = el('span', 'peles-conta', `${row.slots}`);
-    conta.title = row.slots === 1 ? '1 slot vestido por esta skin'
-      : `${row.slots} slots vestidos por esta skin`;
+    conta.title = row.slots === 1 ? '1 desenho vestido por esta skin'
+      : `${row.slots} desenhos vestidos por esta skin`;
 
     item.append(lapis, nome, conta);
 

@@ -68,11 +68,11 @@ Não mudou. Nenhum campo novo (regra 7). Toda troca é um passo do **Ctrl+Z**.
 
 | Medida | Resultado | Hora (UTC) |
 |:---|:---|:---|
-| `npx vitest run` | 5.909 passam, 1 vermelho, 31 pulados (5.941) | 01:00 |
-| o vermelho | `ajuda.test.ts` — as imagens do manual. **O conhecido.** Não é meu | 01:00 |
+| `npx vitest run` | 5.914 passam, 1 vermelho, 31 pulados (5.946) | 01:02 |
+| o vermelho | `ajuda.test.ts` — as imagens do manual. **O conhecido.** Não é meu | 01:02 |
 | testes novos meus | 14, em `peles.test.ts` | — |
 | `npx tsc --noEmit -p editor/tsconfig.json` | limpo | 00:57 |
-| `node ferramentas/conformidade.mjs` | 132 de 132 | 01:00 |
+| `node ferramentas/conformidade.mjs` | 132 de 132 | 01:02 |
 | prova de pessoa | 5 de 5 | 00:57 |
 
 Não rodei `npm run roteiro` nem `npm run medir`: usam as portas 5191 e 9335, proibidas nesta noite.
@@ -116,5 +116,6 @@ A régua dos painéis (`paineis.test.ts`) passa.
 | `22fb71d` | mouse na aba prova na cena |
 | `4b6f47a` | junta o ramo da noite; "peça" → "desenho" |
 | `726010f` | nome das colunas não rola |
+| (último) | junta o ramo da noite de novo; dicionário: "1 desenho vestido" (era "slot") |
 
 FIM
