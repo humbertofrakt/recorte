@@ -430,13 +430,35 @@
   background: var(--painel-hover, #3a3a3a);
 }
 
+.guarda-roupa-tabela {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: auto;
+}
+
 .guarda-roupa-grade {
   display: grid;
   gap: 4px;
-  padding: 6px 14px 10px;
-  overflow: auto;
-  min-height: 0;
+  padding: 0 14px;
+  /* As duas grades guardam o mesmo lugar da barra de rolagem: as colunas
+     de cima e de baixo ficam alinhadas. */
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.guarda-roupa-topo {
+  flex: 0 0 auto;
+  overflow-y: hidden;
+  padding-top: 6px;
+  padding-bottom: 4px;
+}
+
+.guarda-roupa-corpo {
   flex: 1 1 auto;
+  min-height: 0;
+  padding-bottom: 10px;
 }
 
 .guarda-roupa-canto,

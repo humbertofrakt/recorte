@@ -145,3 +145,4 @@ Clique numa casa abre a escolha, embaixo da grade:
 | O nome proposto vinha sem seleção: digitar dava "skinferro" | O nome vem selecionado |
 | Depois de marcar **por cima**, o mouse continuava na coluna e a prova mostrava só ela | Clicou na coluna: a prova pausa até o mouse sair |
 | A janela cobre a cena: a prova não se via | O **manequim** (boneco grande) dentro da janela mostra a prova |
+| Depois de trocar, a grade rolava e escondia o nome das colunas (a foto mostrou) | A linha dos nomes fica fora da parte que rola, e a rolagem se guarda |

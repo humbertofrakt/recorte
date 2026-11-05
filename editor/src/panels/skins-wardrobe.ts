@@ -80,6 +80,8 @@ class Wardrobe {
   private readonly fundo: HTMLElement;
   private readonly caixa: HTMLElement;
   private readonly grade: HTMLElement;
+  /** A linha das colunas, fora da parte que rola: o nome da skin nunca some. */
+  private readonly topo: HTMLElement;
   private readonly escolha: HTMLElement;
   /** O boneco grande, à esquerda: mostra o vestido, ou a prova do mouse. */
   private readonly manequim: HTMLImageElement;
@@ -118,7 +120,8 @@ class Wardrobe {
       }),
     );
 
-    this.grade = el('div', 'guarda-roupa-grade');
+    this.topo = el('div', 'guarda-roupa-grade guarda-roupa-topo');
+    this.grade = el('div', 'guarda-roupa-grade guarda-roupa-corpo');
     this.escolha = el('div', 'guarda-roupa-escolha');
     this.escolha.hidden = true;
     // O manequim dos jogos de roupa: o boneco grande ao lado da grade. A
@@ -132,7 +135,9 @@ class Wardrobe {
     lado.append(this.manequim, this.manequimLegenda);
     const meio = el('div', 'guarda-roupa-meio');
     const direita = el('div', 'guarda-roupa-direita');
-    direita.append(this.grade, this.escolha);
+    const tabela = el('div', 'guarda-roupa-tabela');
+    tabela.append(this.topo, this.grade);
+    direita.append(tabela, this.escolha);
     meio.append(lado, direita);
     this.caixa.append(cabeca, ajuda, barra, meio);
     this.fundo.append(this.caixa);
@@ -216,16 +221,22 @@ class Wardrobe {
   render(): void {
     const doc = this.doc;
     const grade = this.grade;
+    const topo = this.topo;
+    const rolagem = grade.scrollTop;
     grade.replaceChildren();
+    topo.replaceChildren();
     const fora = this.externals();
     const pilha = this.provando ?? skinStackOf(doc);
     const colunas = wardrobeColumns(doc.file, pilha, editingSkinOf(doc), fora.map((s) => s.name));
     const pecas = wardrobePieces(doc.file);
-    grade.style.gridTemplateColumns = `minmax(90px, auto) repeat(${colunas.length}, minmax(110px, 1fr))`;
+    // As duas grades com as mesmas colunas: a de cima não rola, a de baixo sim.
+    const molde = `120px repeat(${colunas.length}, minmax(110px, 1fr))`;
+    grade.style.gridTemplateColumns = molde;
+    topo.style.gridTemplateColumns = molde;
 
-    // A linha de cima: um canto vazio, e a cabeça de cada coluna.
-    grade.append(el('div', 'guarda-roupa-canto', 'desenho'));
-    for (const coluna of colunas) grade.append(this.columnHead(coluna));
+    // A linha de cima: um canto, e a cabeça de cada coluna.
+    topo.append(el('div', 'guarda-roupa-canto', 'desenho'));
+    for (const coluna of colunas) topo.append(this.columnHead(coluna));
 
     if (pecas.length === 0) {
       const vazio = el('div', 'guarda-roupa-vazio', WARDROBE_NOTICES.noPieces);
@@ -241,6 +252,8 @@ class Wardrobe {
       }
     }
     this.renderChooser();
+    // Redesenhar não pode jogar a pessoa para o topo da lista.
+    grade.scrollTop = rolagem;
     if (this.provando === null) this.drawMannequin(pilha, null);
   }
 
