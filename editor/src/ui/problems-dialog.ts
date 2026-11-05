@@ -65,8 +65,9 @@ export function resumoDasImagens(rows: readonly WarningRow[]): string | null {
   const nomes: string[] = [];
   for (const row of rows) {
     // Doc 78, c: a linha longa do leitor e a curta do Salvar ("imagem não encontrada: X").
-    const m = /imagem "(.+?)" não está em nenhum atlas/.exec(row.text) ?? /^imagem não encontrada: (.+)$/.exec(row.text);
-    if (m !== null && !nomes.includes(m[1]!)) nomes.push(m[1]!);
+    // Noite de 05/11/2026: pelo marcador da linha, e não pela frase traduzida.
+    const nome = row.imagemQueFalta ?? null;
+    if (nome !== null && !nomes.includes(nome)) nomes.push(nome);
   }
   if (nomes.length < 2) return null;
   const primeiros = nomes.slice(0, 8).join(', ');
@@ -121,7 +122,7 @@ export function showProblemsDialog(options: ProblemsDialogOptions): OpenDialog {
       linha.append(el('p', { class: 'dialog-problema-conserto', text: fixHint(fix) }));
     }
     if (botoes.childElementCount > 0) linha.append(botoes);
-    if (recolhidas !== null && (/não está em nenhum atlas/.test(row.text) || /^imagem não encontrada: /.test(row.text))) {
+    if (recolhidas !== null && (row.imagemQueFalta ?? null) !== null) {
       recolhidas.append(linha);
       quantasRecolhidas++;
     } else {

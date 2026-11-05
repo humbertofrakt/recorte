@@ -11,7 +11,7 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
 | TS × Python, campo a campo | 120 de 120 | **138 de 138** |
 | Pacote do Construct | 120 de 120 | **138 de 138** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.975**, 0 vermelho (depois dos merges da noite) |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **6.007**, 0 vermelho (depois dos merges da noite) |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
@@ -155,9 +155,17 @@ Os avisos de `actor.ts`, `nested.ts`, `file.ts` e do binário já nasciam em por
 | Teste novo `ferramentas/testes/pagina.test.ts` (12) | com as páginas antigas: **7 vermelhos** | — |
 | Funcionando, com o `heroi.bone` | conferidor: "Arquivo válido", desenho na tela; visualizador anima (0,53 s → 1,15 s); editor abre sem erro | — |
 
-**A frase com "atlas" na barra de avisos:** não troquei. Ela está presa em 5
-testes do editor **e** o `problems-dialog.ts` lê essa frase por regex para achar
-a imagem que falta. Trocar a frase quebra o botão do diálogo. Conserto certo:
-trocar as três coisas juntas (frase, regex, testes) — é código do editor.
+**A frase com "atlas" na barra de avisos — consertada.** A linha do aviso
+ganhou um marcador estável, `imagemQueFalta`, tirado da frase **original** do
+leitor. A janela de avisos (`problems-dialog.ts`) junta as imagens pelo
+marcador, e não lendo a tradução. A frase virou *"imagem "x" não está em
+nenhuma folha de imagens (atlas)"*. Os testes foram trocados junto.
+
+**O workflow da página:** as actions vão para as versões novas, todas em Node 24
+(conferido no `action.yml` de cada uma): `checkout` v7, `setup-node` v7,
+`setup-python` v7, `upload-pages-artifact` v5, `deploy-pages` v5. E roda
+`npx vitest run` **antes** de montar: se a suíte cair, não publica. O Python
+entra porque alguns testes chamam o runtime Python. **Não deu para rodar o
+workflow daqui**; a primeira rodada no GitHub é a prova.
 
 FIM
