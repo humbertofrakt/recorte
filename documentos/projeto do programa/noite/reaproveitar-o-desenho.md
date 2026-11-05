@@ -25,7 +25,7 @@ Pedido do Humberto: *"o Fortnite tem vários personagens, mas usa as mesmas anim
 
 | Palavra | O que é | Por quê |
 |:---|:---|:---|
-| **Usar animações de outro boneco…** | a porta. Menu Animação e botão na aba Animações | diz o objetivo, não a técnica |
+| **Usar animações de outro boneco** | a porta: o título da janela e o ícone da aba Animações. No menu Animação, **Animações de outro boneco…** (o menu aceita até 28 letras) | diz o objetivo, não a técnica |
 | **Esqueleto padrão** | o `humanoide-v1` (17 ossos com nomes em português) e as 4 de fábrica | "rig humanoide-v1" ninguém entende |
 | **Combinar os ossos** | a tabela "osso de lá → osso daqui". Mostra **"combinam 14 de 17"** | "mapear" e "retarget" são palavras de técnico |
 | **Ligadas** — *mudam junto com o original* | o boneco cita o arquivo (`assets.animations`); muda lá, muda aqui | o Fortnite |
@@ -41,7 +41,7 @@ Pedido do Humberto: *"o Fortnite tem vários personagens, mas usa as mesmas anim
 | (a) andar do herói noutro boneco | abrir o boneco → **Usar animações de outro boneco…** → Um arquivo… → `heroi.bone` → marcar `walk` → Combinar os ossos (já vem preenchido: hips→quadril…) → **Cópia** |
 | (b) as 4 de fábrica num boneco | **Usar animações de outro boneco…** → Esqueleto padrão → **Ligadas** (ou Cópia) |
 | (c) nomes diferentes | igual ao (b); a tabela acha `braco_direito → braco_d`; o que não achou, escolhe na lista. **Ligadas** renomeia os ossos daqui para os de lá (avisando antes); **Cópia** traduz as chaves |
-| (d) mudar num lugar, 3 mudam | cavaleiro: as 4 de fábrica como **Cópia** (o cavaleiro vira o dono). Goblin e robô: **Usar animações…** → "cavaleiro (base do projeto)" → **Ligadas**. Mudar o `andar` no cavaleiro: os 3 mudam. No goblin, **Abrir o original** leva ao cavaleiro |
+| (d) mudar num lugar, 3 mudam | cavaleiro: as 4 de fábrica como **Cópia** (o cavaleiro vira o dono). Goblin e robô: **Usar animações…** → "cavaleiro — base deste projeto" → **Ligadas**. Mudar o `andar` no cavaleiro: os 3 mudam. No goblin, **Abrir o original** leva ao cavaleiro. O **Salvar** grava `cavaleiro-animacoes.bone`, o arquivo que o goblin e o robô citam |
 
 ## 4. As telas
 
