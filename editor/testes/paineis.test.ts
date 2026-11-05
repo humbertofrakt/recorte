@@ -3594,7 +3594,7 @@ describe('rodada 48 — os avisos, o pior primeiro e os iguais juntos', () => {
   it('a dica conta os tipos, o pior primeiro', () => {
     const r = resumoDosAvisosR48(muitos);
     expect(r.dica).toMatch(/^3 tipos de aviso, o pior primeiro: 1 × arquivo na versão/);
-    expect(r.dica).toContain('170 × imagem "…" não está em nenhum atlas');
+    expect(r.dica).toContain('170 × imagem "…" não está em nenhuma folha de imagens (atlas)');
   });
   it('a lista sai com o pior primeiro, e na mesma ordem entre os iguais', () => {
     const lista = avisosPeloPiorR48(muitos);
@@ -3626,7 +3626,7 @@ describe('rodada 48, lote 3 — "imagem não encontrada" é UM tipo, com os nome
       '/a: image "x" not found in any atlas; attachment will be invisible',
       '/b: image "y" not found in any atlas; attachment will be invisible',
     ]);
-    expect(r.dica).toBe('1 tipo de aviso: 2 × imagem "…" não está em nenhum atlas; o desenho fica invisível: x, y');
+    expect(r.dica).toBe('1 tipo de aviso: 2 × imagem "…" não está em nenhuma folha de imagens (atlas); o desenho fica invisível: x, y');
   });
   it('a janela abre com UM parágrafo: o das imagens quando só há elas; o dos tipos quando há mais', () => {
     expect(abrirComParagrafoR48b(1, true)).toBe('imagens');

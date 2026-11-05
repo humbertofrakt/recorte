@@ -161,7 +161,7 @@ export function translateWarning(message: string): string {
 /** As oito que já existiam, letra por letra (testes de `acabamento` e `menus`), e as que não têm "; ". */
 function traduzInteira(message: string): string | null {
   let m = /^image "(.*)" not found in any atlas(; attachment will be invisible)?$/.exec(message);
-  if (m !== null) return `imagem "${m[1]}" não está em nenhum atlas${m[2] === undefined ? '' : '; o desenho fica invisível'}`;
+  if (m !== null) return `imagem "${m[1]}" não está em nenhuma folha de imagens (atlas)${m[2] === undefined ? '' : '; o desenho fica invisível'}`;
   m = /^unknown value "(.*)", using "(.*)"$/.exec(message);
   if (m !== null) return `valor "${m[1]}" desconhecido; usando "${m[2]}"`;
   m = /^file version (\S+) newer than reader (\S+): partial read$/.exec(message);
@@ -432,14 +432,29 @@ export interface WarningRow {
   pointer: string | null;
   target: WarningTarget | null;
   fix: WarningFix | null;
+  /**
+   * O nome da imagem que falta, quando é esse o aviso; `null` nos outros. É o
+   * marcador ESTÁVEL que a janela de avisos usa para juntar as imagens numa
+   * linha só — tirado da frase ORIGINAL do leitor, e não da tradução, para que
+   * trocar uma palavra da tradução nunca quebre o botão (noite de 05/11/2026).
+   */
+  imagemQueFalta?: string | null;
+}
+
+/** O nome da imagem que falta, pela frase do leitor ou pela curta do Salvar. */
+function imagemQueFaltaEm(message: string): string | null {
+  return /^image "(.*)" not found in any atlas/.exec(message)?.[1]
+    ?? /^imagem não encontrada: (.+)$/.exec(message)?.[1]
+    ?? null;
 }
 
 export function warningRow(file: BoneFile, line: string): WarningRow {
   const { pointer, message } = parseWarning(line);
   const said = translateWarning(message);
-  if (pointer === null) return { text: said, pointer: null, target: null, fix: null };
+  const imagemQueFalta = imagemQueFaltaEm(message);
+  if (pointer === null) return { text: said, pointer: null, target: null, fix: null, imagemQueFalta };
   const where = describePointer(file, pointer);
-  return { text: `${where.text}: ${said}`, pointer, target: where.target, fix: fixFor(message) };
+  return { text: `${where.text}: ${said}`, pointer, target: where.target, fix: fixFor(message), imagemQueFalta };
 }
 
 /** O painel que o Ir para abre, pelo tipo do alvo. */

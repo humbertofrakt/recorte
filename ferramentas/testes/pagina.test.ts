@@ -108,6 +108,16 @@ describe('a página na web: os .md viram HTML', () => {
     expect(WORKFLOW).toContain('cp LICENSE _site/LICENSE.txt');
   });
 
+  it('o workflow roda a suíte ANTES de montar, e usa as actions de Node 24', () => {
+    const suite = WORKFLOW.indexOf('npx vitest run');
+    const montar = WORKFLOW.indexOf('npx vite build editor');
+    expect(suite).toBeGreaterThan(0);
+    expect(suite).toBeLessThan(montar);
+    for (const a of ['actions/checkout@v7', 'actions/setup-node@v7', 'actions/setup-python@v7',
+      'actions/upload-pages-artifact@v5', 'actions/deploy-pages@v5']) expect(WORKFLOW).toContain(a);
+    expect(WORKFLOW).not.toMatch(/@v[1-4]\b/);
+  });
+
   it('título, tabela, código, lista e link .md → .html', () => {
     const html = markdownParaHtml([
       '# Título', '', 'Um **forte** e `código`.', '',

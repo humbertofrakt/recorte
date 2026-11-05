@@ -118,10 +118,10 @@ function solto(texto: string): string {
 
 /**
  * As frases antigas, presas letra por letra por `acabamento.test.ts`, que ainda
- * dizem "atlas" e "skin"/"slot" fora de parênteses. Dívida com dono: a parte
- * do editor que é dona desses testes.
+ * dizem "skin"/"slot" fora de parênteses. A do "atlas" saiu daqui em 05/11/2026,
+ * quando a janela de avisos passou a usar o marcador `imagemQueFalta`.
  */
-const PRESAS = [/não está em nenhum atlas/];
+const PRESAS: RegExp[] = [];
 
 describe('os avisos do leitor chegam em português (lista viva de runtime/src)', () => {
   const frases = frasesDoLeitor();
