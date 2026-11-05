@@ -1,0 +1,55 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "janelas"
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "tags": [
+    "idle",
+    "ataque",
+    "fim",
+    "invulneravel"
+  ],
+  "animations": [
+    {
+      "name": "golpe",
+      "duration": 1,
+      "tags": [
+        "idle"
+      ],
+      "timelines": [
+        {
+          "type": "tag",
+          "keys": [
+            {
+              "time": 0.5,
+              "value": [
+                "ataque",
+                "invulneravel"
+              ]
+            },
+            {
+              "time": 0.75,
+              "value": []
+            },
+            {
+              "time": 1,
+              "value": [
+                "fim",
+                "idle"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

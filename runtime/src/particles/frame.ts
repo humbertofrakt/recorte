@@ -18,7 +18,7 @@
 import type { Skeleton, Slot } from '../skeleton.js';
 import type { AnimationData, AtlasRegionData, SkeletonData } from '../data.js';
 import { ParticleAttachment } from '../attachments/particle.js';
-import { EmissionCurve, type EmittingKeys } from './emission.js';
+import { EmissionCurve, type EmittingKeys, type RateKeys } from './emission.js';
 import { computeParticles, type EmitterFrame, type ParticleSample } from './emitter.js';
 import { BonePoser } from './bone-poser.js';
 
@@ -51,7 +51,7 @@ export class ParticleCache {
     if (byAnimation === undefined) { byAnimation = new Map(); this.curves.set(attachment, byAnimation); }
     let c = byAnimation.get(animation);
     if (c === undefined) {
-      c = new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name));
+      c = new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name), rateKeysOf(animation, slot.data.name, attachment.name));
       byAnimation.set(animation, c);
     }
     return c;
@@ -90,6 +90,20 @@ export function emittingKeysOf(animation: AnimationData | null, slotName: string
 }
 
 /**
+ * The animated `rate` of one emitter (extension 4.2, 2nd phase), read straight
+ * off the animation like `emitting`, and for the same reason.
+ */
+export function rateKeysOf(animation: AnimationData | null, slotName: string, attachmentName: string): RateKeys | null {
+  if (animation === null) return null;
+  for (const tl of animation.timelines) {
+    if (tl.kind !== 'particle.rate') continue;
+    if (tl.slot.name !== slotName || tl.attachmentName !== attachmentName) continue;
+    return tl.keys;
+  }
+  return null;
+}
+
+/**
  * The live particles of `slot`'s emitter at the instant the skeleton is posed
  * at, in draw order, already cut by `maxParticles`.
  *
@@ -105,7 +119,7 @@ export function particleFrame(
   const duration = animation === null ? 0 : animation.duration;
   const time = animation === null ? skeleton.time : skeleton.playingTime;
   const curve = cache === null
-    ? new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name))
+    ? new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name), rateKeysOf(animation, slot.data.name, attachment.name))
     : cache.curveFor(skeleton, slot, attachment, animation);
 
   // The poser is needed whenever the emitter asks about an instant that is NOT

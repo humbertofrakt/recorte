@@ -426,6 +426,8 @@ ZIP (PKWARE APPNOTE 6.3.x), sem criptografia, sem multi-volume.
 
 Um leitor **DEVE** conseguir abrir o `.bonez` lendo só `mimetype`, `manifest.json` e as entradas que o manifesto cita.
 
+**As uris do manifesto são nomes de entrada**: `main`, `skeletons`, `atlases`, `images`, `audio` e as chaves de `hashes` são relativas à **raiz** do ZIP. Só as uris de **dentro** de um esqueleto usam a pasta do `main` como base (2.8). Com `main: "personagens/heroi.bone"`, o atlas que o esqueleto pede como `"heroi.atlas.json"` aparece no manifesto como `"personagens/heroi.atlas.json"`. Caso ZIP-502. *(Linha de 05/11/2026.)*
+
 **O projeto do editor é um `.bonez`.** A pasta de trabalho do editor é o pacote aberto: `manifest.json`, um `.bone` por corpo e por entidade, um atlas. "Salvar como pacote" só zipa. `main` é o corpo em foco na hora de salvar: é o que um jogo toca sem perguntar. As duas listas da janela (Corpos e Entidades) e o corpo em foco moram em `manifest.extras.RECORTE_projeto = { "corpos": [uri], "entidades": [uri], "emFoco": uri }`: são estado do editor, e um leitor os ignora. Um corpo citado por uma chave `body` (9.13) de qualquer animação do pacote **DEVE** estar em `skeletons`.
 
 Tipos MIME: `application/vnd.bone+json` (`.bone`), `application/vnd.bone` (`.boneb`), `application/vnd.bone+zip` (`.bonez`), `application/vnd.bone.atlas+json` (atlas).
@@ -2103,7 +2105,7 @@ Constraint que lê **um** parâmetro e escreve em propriedades. Fica em `constra
 | `property` | string | condicional | — | Como na 9.1. |
 | `skin` | name | não | `"default"` | Só `deform`. |
 | `attachment` | string | condicional | — | Só `deform`. |
-| `mode` | string | não | `"replace"` | `"replace"` = leva a propriedade ao valor. `"add"` = soma o valor. |
+| `mode` | string | não | `"replace"` | `"replace"` = leva a propriedade ao valor. `"add"` = soma o **desvio** do valor em relação ao setup do alvo: `cur + (val − setup)·mix`, como no pseudocódigo abaixo (caso C-330). |
 | `keys` | DriverKey[] | sim | — | Ordenadas por `input` crescente, sem repetição (L1). Mínimo 1. |
 
 **`DriverKey`** — igual a `Key` (9.2) trocando `time` por `input`:
@@ -2198,6 +2200,9 @@ Tags são strings ligadas a um trecho da animação. Uso: "janela de ataque", "i
 | timeline `tag` (9.9) | Cada chave traz `value: string[]`: tags ativas daquele instante até a próxima chave. Sempre stepped. |
 
 O runtime **DEVE** expor `activeTags(animation, time)` = `animation.tags ∪ value da última chave <= time` (só `animation.tags` antes da primeira chave).
+
+- **Esta regra ganha da borda geral da 9.10** ("antes da primeira chave vale a primeira chave"): para `tag`, antes da primeira chave valem só as da animação.
+- **A ordem da união:** primeiro `animation.tags`, na ordem do arquivo; depois os da chave, na ordem da chave; **sem repetir**. O dump compara tags exatas (12.4), então a ordem faz parte da resposta. Caso B-120. *(Linha de 05/11/2026.)*
 
 ### 8.6 Eventos — disparo
 
@@ -3184,16 +3189,22 @@ O executor é `ferramentas/conformidade.mjs`.
 
 **O que a suíte AINDA NÃO cobre.** Um número de casos não é uma promessa de
 cobertura, e esta lista existe para ninguém confundir as duas coisas. Nenhum
-caso exercita, hoje: `boundingbox`, `clipping`, `tag`, `variable`,
-`parameter`, `driver`, `darkColor` nem `blend`. Quatro dos canais de sonda
-listados abaixo — `boundingBoxes`, `tags`, `variables`, `parameters` — não são
-medidos por caso nenhum. (O `skeleton` aninhado, os dois canais de animação do
+caso exercita, hoje: `blend`, nem os alvos de `driver` do tipo `deform`,
+`morph`, `nested` e `drawOrder`.
+*(05/11/2026: entraram A-032 `darkColor`, B-120 `tag` e o canal `tags`, B-121
+`variable` e o canal `variables`, C-330 `parameter`, o canal `parameters` e o
+`driver` em modo alvos, C-331 o `driver` em modo contínuo, o `source` (Smart
+Bone) e o alvo `slot`, C-332 os alvos `parameter`, `variable` e `constraint`,
+X-309 o BOM na leitura (2.1). `boundingbox` e o canal `boundingBoxes` já tinham caso;
+`clipping` aparece em quatro casos de `drawList`. Até esta data a lista dizia
+"nenhum caso exercita `boundingbox`, `clipping`, `tag`, `variable`,
+`parameter`, `driver`, `darkColor` nem `blend`".)* (O `skeleton` aninhado, os dois canais de animação do
 filho, o `rig`, as animações e peles de fora, a virada, `slot/bone`, `weights`,
 a pele com osso, `rig.reference`, o `point` e o canal `points` **são** medidos
 desde 17/09/2026: C-270 a C-300, em `casos/`, com os dois runtimes passando.) A família `R-` (renderização) e o caso `X-306` (arquivo da `minor`
-anterior, congelado) estão previstos e ainda não existem. Também falta um caso
-de `.bonez` com o `main` numa subpasta, que é o único jeito de separar "pasta
-do main" de "raiz do ZIP" (2.8).
+anterior, congelado) estão previstos e ainda não existem. *(O caso de `.bonez`
+com o `main` numa subpasta, que separa "pasta do main" de "raiz do ZIP" (2.8),
+existe desde 05/11/2026: ZIP-502, com uma isca na raiz.)*
 
 Consequência prática, e ela é séria: um runtime pode passar em 100% da suíte
 de hoje e se declarar "bone 1.0 nível C" **sem** ter implementado nada dessa

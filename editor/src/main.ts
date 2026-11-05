@@ -249,7 +249,8 @@ async function offerDraft(doc: Doc): Promise<void> {
     : takeKeptDraft(storage, escolhido.savedAt) ?? escolhido;
   try {
     const file = JSON.parse(rascunho.json) as Parameters<Doc['setFile']>[0];
-    doc.setFile(file, { path: rascunho.path, atlases: [], images: new Map() });
+    // QA 04/11/2026 (D4): o recuperado não está no disco — nasce "não salvo".
+    doc.setFile(file, { path: rascunho.path, atlases: [], images: new Map(), unsaved: true });
   } catch {
     // O rascunho quebrado NÃO é apagado sem avisar: quem apaga é quem escolhe.
     void tellUser({

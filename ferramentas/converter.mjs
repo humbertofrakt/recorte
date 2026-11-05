@@ -343,9 +343,19 @@ function rodarValidador(doc) {
 function principal(argv) {
   const opcoes = argv.filter((a) => a.startsWith('--'));
   const caminhos = argv.filter((a) => !a.startsWith('--'));
-  if (opcoes.includes('--ajuda') || opcoes.includes('--help') || caminhos.length === 0) {
+  if (opcoes.includes('--ajuda') || opcoes.includes('--help')) {
     console.log(AJUDA);
     return;
+  }
+  // QA de 04/11/2026: sem caminho saía com 0, e opção errada passava calada.
+  const desconhecida = opcoes.find((a) => a !== '--validar');
+  if (desconhecida !== undefined) {
+    console.error(`\nErro: opção desconhecida: ${desconhecida}\n${AJUDA}`);
+    process.exit(2);
+  }
+  if (caminhos.length === 0) {
+    console.error(AJUDA);
+    process.exit(2);
   }
   if (caminhos.length !== 2) {
     erro('Preciso de dois caminhos: entrada e saída.');
@@ -361,10 +371,10 @@ function principal(argv) {
 
   console.log('');
   console.log(linha('Entrada', basename(entrada), `${numero(tamanhoEntrada)} bytes`));
-  console.log(linha('Saida', basename(saida), `${numero(tamanhoSaida)} bytes`));
+  console.log(linha('Saída', basename(saida), `${numero(tamanhoSaida)} bytes`));
   if (tamanhoEntrada > 0) {
     const reducao = ((tamanhoEntrada - tamanhoSaida) / tamanhoEntrada) * 100;
-    const rotulo = reducao >= 0 ? 'Reducao' : 'Aumento';
+    const rotulo = reducao >= 0 ? 'Redução' : 'Aumento';
     console.log(linha(rotulo, '', porcentagem(Math.abs(reducao))));
   }
   console.log('');

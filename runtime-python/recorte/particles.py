@@ -123,37 +123,60 @@ class Trechos:
     angle and colour. The same particle under two names draws two things.
     """
 
-    __slots__ = ("origem", "inicios", "taxas", "acumulado", "r0")
+    __slots__ = ("origem", "inicios", "taxas", "inclinacoes", "acumulado", "r0",
+                 "animada")
 
     def __init__(self, emitter, timelines, ate: float) -> None:
         self.origem = emitter.start_delay
         # 4.2: a negative rate is swapped for 0 AT THE KEY, before integrating.
         rate = max(0.0, emitter.rate)
         timeline = timelines.get("emitting") if timelines else None
+        # 4.2, the `linear` branch (2nd phase): `rate` animated by integral.
+        taxa_tl = _chaves_de_taxa(timelines.get("rate") if timelines else None)
+        self.animada = taxa_tl is not None
 
-        cortes = [self.origem]
+        marcas = []
         if timeline is not None:
-            for key in timeline.keys:
-                if key.time > self.origem and key.time > cortes[-1]:
-                    cortes.append(key.time)
-                if key.time > ate:
-                    break
+            marcas.extend(key.time for key in timeline.keys)
+        if taxa_tl is not None:
+            marcas.extend(tempo for tempo, _, _ in taxa_tl)
+        cortes = [self.origem]
+        for tempo in sorted(marcas):
+            if tempo > self.origem and tempo > cortes[-1]:
+                cortes.append(tempo)
+            if tempo > ate:
+                break
 
         self.inicios: list[float] = cortes
-        self.taxas: list[float] = [
-            rate if _emitting_at(emitter, timelines, inicio) else 0.0
-            for inicio in cortes
-        ]
+        self.taxas: list[float] = []
+        self.inclinacoes: list[float] = []
+        for inicio in cortes:
+            if not _emitting_at(emitter, timelines, inicio):
+                self.taxas.append(0.0)
+                self.inclinacoes.append(0.0)
+            elif taxa_tl is None:
+                self.taxas.append(rate)
+                self.inclinacoes.append(0.0)
+            else:
+                valor, inclinacao = _taxa_e_inclinacao(taxa_tl, inicio)
+                self.taxas.append(max(0.0, valor))
+                self.inclinacoes.append(inclinacao)
         # E_k: the areas of the stretches 0..k-1, summed in this order, in
         # float64. It is the ONLY accumulation the spec allows — per key, never
-        # per frame (3.4).
+        # per frame (3.4). A stretch of a `linear` key is a trapezoid.
         self.acumulado: list[float] = [0.0]
         for k in range(1, len(cortes)):
             largura = cortes[k] - cortes[k - 1]
-            self.acumulado.append(self.acumulado[k - 1] + self.taxas[k - 1] * largura)
+            self.acumulado.append(self.acumulado[k - 1]
+                                  + self.taxas[k - 1] * largura
+                                  + self.inclinacoes[k - 1] * largura * largura / 2)
         # 4.2 + 9.10 of the main spec: before the first key the first key holds,
         # so the prewarm of 6 has a known rate.
-        self.r0 = self.taxas[0]
+        if taxa_tl is None:
+            self.r0 = self.taxas[0]
+        else:
+            ligado = _emitting_at(emitter, timelines, -math.inf)
+            self.r0 = taxa_tl[0][1] if ligado else 0.0
 
     def E(self, t: float) -> float:
         """How many births happened up to `t`, counted from the origin."""
@@ -162,7 +185,18 @@ class Trechos:
         k = len(self.inicios) - 1
         while k > 0 and self.inicios[k] > t:
             k -= 1
-        return self.acumulado[k] + self.taxas[k] * (t - self.inicios[k])
+        dt = t - self.inicios[k]
+        return (self.acumulado[k] + self.taxas[k] * dt
+                + self.inclinacoes[k] * dt * dt / 2)
+
+    def taxa_em(self, t: float) -> float:
+        """The effective rate at `t` (4.4 needs it for the jitter)."""
+        if t < self.origem:
+            return self.r0
+        k = len(self.inicios) - 1
+        while k > 0 and self.inicios[k] > t:
+            k -= 1
+        return max(0.0, self.taxas[k] + self.inclinacoes[k] * (t - self.inicios[k]))
 
     def instante(self, index: int) -> float:
         """The skeleton instant where `E(t) = index` (4.2), or `inf`.
@@ -176,17 +210,55 @@ class Trechos:
             return self.origem + index / self.r0
         for k in range(len(self.inicios)):
             taxa = self.taxas[k]
-            if taxa <= 0:
+            s = self.inclinacoes[k]
+            if taxa <= 0 and s <= 0:
                 continue
             fim = (self.acumulado[k + 1] if k + 1 < len(self.acumulado)
                    else math.inf)
             if index < fim or k + 1 == len(self.inicios):
-                return self.inicios[k] + (index - self.acumulado[k]) / taxa
+                d = index - self.acumulado[k]
+                if s == 0:
+                    return self.inicios[k] + d / taxa
+                if d == 0:
+                    return self.inicios[k]
+                # 4.2: the STABLE root. It does not divide by `s`.
+                return self.inicios[k] + 2 * d / (
+                    taxa + math.sqrt(max(0.0, taxa * taxa + 2 * s * d)))
         return math.inf
 
     def total(self) -> float:
         """`E` at the far end: how many the last stretch will ever reach."""
         return math.inf if self.taxas[-1] > 0 else self.acumulado[-1]
+
+
+def _chaves_de_taxa(timeline):
+    """The keys of an animated `rate` as `(time, value, stepped)` (4.2).
+
+    A negative value is 0 at the key, and a Bezier is `linear`: the integral is
+    closed only for `linear` and `stepped`. The loader already warned of both.
+    """
+    if timeline is None or not timeline.keys:
+        return None
+    out = []
+    for key in timeline.keys:
+        valor = key.value if isinstance(key.value, (int, float)) else 0.0
+        out.append((float(key.time), max(0.0, float(valor)), key.curve == "stepped"))
+    return out
+
+
+def _taxa_e_inclinacao(chaves, t: float):
+    """The rate at `t` and its slope from `t` on (9.10 of the main spec)."""
+    if t < chaves[0][0]:
+        return chaves[0][1], 0.0
+    k = len(chaves) - 1
+    while k > 0 and chaves[k][0] > t:
+        k -= 1
+    tempo, valor, degrau = chaves[k]
+    if k == len(chaves) - 1 or degrau:
+        return valor, 0.0
+    t1, v1, _ = chaves[k + 1]
+    inclinacao = (v1 - valor) / (t1 - tempo)
+    return valor + inclinacao * (t - tempo), inclinacao
 
 
 def _birth_of_index(emitter, trechos: "Trechos", index: int) -> float:
@@ -204,8 +276,11 @@ def _birth_of_index(emitter, trechos: "Trechos", index: int) -> float:
     if emitter.randomness != 0:
         # The jitter stays INSIDE the particle's own slot, so the birth order
         # never changes. With a local rate of 0 there is no slot to jitter in.
-        taxa = trechos.taxas[0] if len(trechos.taxas) == 1 else max(
-            0.0, emitter.rate)
+        if trechos.animada:
+            taxa = trechos.taxa_em(t_cont)
+        else:
+            taxa = trechos.taxas[0] if len(trechos.taxas) == 1 else max(
+                0.0, emitter.rate)
         if taxa > 0:
             t_cont += emitter.randomness * acaso(
                 emitter.seed, 0, index, CANAL_RANDOMNESS) / taxa
@@ -220,7 +295,7 @@ def continuous_births(emitter, timelines, t: float, duration: float,
     animable: with keys the window would need the whole curve swept, and a
     Bezier makes a belly.
     """
-    if emitter.rate <= 0:
+    if emitter.rate <= 0 and not (timelines and timelines.get("rate")):
         return []
     life_max = emitter.lifetime[1]
     if life_max <= 0:

@@ -79,6 +79,7 @@ As **regras** e as **partículas** andam sozinhas. A física conta em passos fix
 | O addon | `addons/recorte/`. Cada `.gd` diz no topo de qual `.py` do `runtime-python/` veio |
 | Importar sem janela | `godot --headless --path leitor-godot --import` (uma vez, antes dos testes) |
 | Os testes, sem janela | `godot --headless --path leitor-godot --script res://testes/testes.gd` |
+| Os 15 passos, por código | `godot --headless --path leitor-godot --script res://testes/roteiro.gd` (o que só o olho vê fica para a mão) |
 | A velocidade | `godot --headless --path leitor-godot --script res://testes/medir.gd` |
 | Os casos da suíte | com `RECORTE_GODOT` apontando para o Godot: `node ferramentas/conformidade.mjs --adaptador "node leitor-godot/adaptador.mjs"` |
 | A referência do desenho | `npx vite-node leitor-godot/testes/gerar-referencia.mjs` (roda o desenhador do Construct) |

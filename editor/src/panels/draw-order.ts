@@ -43,6 +43,7 @@ import {
   orderEntries, orderRowSelection, arrayZone, dropZone, insertIndex,
   baseOrder, drawOrderAt, keyedMoved, moveBlock, orderDirOfActions, orderSkins, orderTargets, runOrderChange, runOrderStep, drawOrderNow,
   orderPieces, orderPlaceSays,
+  orderRowDetail, orderRowHint,
 } from './draw-order-model.js';
 import { actionsFor, isTyping, keyOf } from '../ui/keys.js';
 import type { DropZone, OrderEntry, OrderFolder, OrderPiece } from './draw-order-model.js';
@@ -533,16 +534,16 @@ class DrawOrderPanel implements Panel {
     const detalhe = row.faded
       ? 'sem imagem nesta skin'
       : entidade !== null ? `entidade ${entidade}` : (row.attachment ?? 'sem desenho');
-    nomes.append(
-      el('span', 'ordem-nome', row.name),
-      el('span', 'ordem-detalhe', detalhe),
-    );
+    nomes.append(el('span', 'ordem-nome', row.name));
+    // QA da noite (04/11): o detalhe só aparece quando não repete o nome.
+    const detalheVisto = orderRowDetail(row.name, detalhe);
+    if (detalheVisto !== null) nomes.append(el('span', 'ordem-detalhe', detalheVisto));
     // Lote 66: em Animando, a linha que uma chave tirou do lugar de montagem
     // ganha um losango pequeno, e a dica diz.
     const porChave = this.moved.has(row.name);
     if (porChave) nomes.append(el('span', 'ordem-losango', '◆'));
 
-    const dica = `${row.name}: ${detalhe}, no osso ${row.bone}. `
+    const dica = `${orderRowHint(row.name, detalhe, row.bone)}. `
       + (porChave ? 'Mudou de lugar por chave nesta animação. ' : '')
       + 'Arraste para mudar a ordem; Ctrl+↑ e Ctrl+↓ uma casa, Ctrl+→ e Ctrl+← frente e fundo de tudo';
     node.title = dica;

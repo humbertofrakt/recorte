@@ -19,7 +19,7 @@ import { describe, expect, it, afterEach } from 'vitest';
 import { loadAnimationsFor, loadSkeletonData, Skeleton, pose } from '../../runtime/src/index.js';
 import type { BoneFile, AtlasData, AtlasPageData, SkeletonData } from '../../runtime/src/index.js';
 import { Doc } from '../src/doc/document.js';
-import { MoveFolder, PutInFolder, RenameFolder, TakeOutOfFolder, folderMembers, mergeOnRename, mergeWarning, renameNotice, movedCount, orderEntries, orderPieces, slotLook, stepIndex, ORDER_BUTTONS, arrayZone, dropZone, insertIndex, baseOrder, drawOrderAt, moveBlock, offsetsFor, orderKeyDir, orderTargets, orderWithOffsets, copyOrderNotice, copyOrderTimes, runCopyOrderToAnimation, runOrderStep, stepOrder, orderRowSelection } from '../src/panels/draw-order-model.js';
+import { MoveFolder, PutInFolder, RenameFolder, TakeOutOfFolder, folderMembers, mergeOnRename, mergeWarning, renameNotice, movedCount, orderEntries, orderPieces, slotLook, stepIndex, ORDER_BUTTONS, arrayZone, dropZone, insertIndex, baseOrder, drawOrderAt, moveBlock, offsetsFor, orderKeyDir, orderTargets, orderWithOffsets, copyOrderNotice, copyOrderTimes, runCopyOrderToAnimation, runOrderStep, stepOrder, orderRowSelection, orderRowDetail, orderRowHint } from '../src/panels/draw-order-model.js';
 import { MoveSlot } from '../src/panels/tree-model.js';
 import { DOCK_PANELS } from '../src/ui/shell.js';
 import { RIGHT_GROUPS, allTabs, defaultLayout, parseLayout, sideOf } from '../src/ui/layout-model.js';
@@ -1448,5 +1448,24 @@ describe('rodada 48: a Ordem em 1280×720, três linhas de alvo inteiro', () => 
   it('a ponta "frente" sai da lista e vai para a barra, onde não come linha', () => {
     expect(tela).toMatch(/\.ordem-lista > \.ordem-ponta:first-child \{\s*display: none;/);
     expect(tela).toMatch(/\.ordem-barra::after \{[^}]*content: 'frente ↓'/);
+  });
+});
+
+// QA da noite de 04/11/2026 (obra/qa-animar): no herói importado do PSD, a
+// linha da Ordem dizia "forearm_b…  forearm_b…" — o detalhe repetia o nome
+// do slot, e os dois cortavam na coluna de 258 px. Como no Spine, a linha
+// mostra o nome; o nome do desenho só aparece quando é OUTRO (a mão trocada).
+describe('a linha da Ordem não repete o nome (QA da noite)', () => {
+  it('o detalhe some quando é igual ao nome do slot', () => {
+    expect(orderRowDetail('forearm_back', 'forearm_back')).toBeNull();
+  });
+  it('o detalhe fica quando diz outra coisa', () => {
+    expect(orderRowDetail('mao', 'mao_fechada')).toBe('mao_fechada');
+    expect(orderRowDetail('rosto', 'sem imagem nesta skin')).toBe('sem imagem nesta skin');
+    expect(orderRowDetail('portal', 'entidade porta')).toBe('entidade porta');
+  });
+  it('a dica não repete o nome também', () => {
+    expect(orderRowHint('hand_back', 'hand_back', 'antebraco_d')).toBe('hand_back, no osso antebraco_d');
+    expect(orderRowHint('mao', 'mao_fechada', 'braco')).toBe('mao: mao_fechada, no osso braco');
   });
 });

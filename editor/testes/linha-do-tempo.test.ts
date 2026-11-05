@@ -1957,3 +1957,20 @@ describe('rodada 50, lote 4: "Colar só o que cabe" diz quantas ficaram de fora 
     expect(pasteDoneNotice50([{ target: ROT, time: 1 }], 1, 1)).not.toContain('de fora');
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): o menu do botão direito no
+// losango (Linear, Suave, … Apagar chave) não fechava com Esc. Agora a folha
+// arma um só fecho para os seus menus: clique fora, ou Esc.
+import { closesPopup as closesPopupQA } from '../src/panels/dopesheet-model.js';
+describe('Esc fecha o menu do losango (QA da noite)', () => {
+  it('Esc fecha; Enter e as setas não', () => {
+    expect(closesPopupQA('Escape')).toBe(true);
+    expect(closesPopupQA('Enter')).toBe(false);
+    expect(closesPopupQA('ArrowDown')).toBe(false);
+  });
+  it('os dois menus da folha passam pelo mesmo fecho, que escuta o Esc', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/dopesheet.ts'), 'utf8');
+    expect(fonte.match(/this\.armMenuClose\(menu\)/g)?.length).toBe(2);
+    expect(fonte).toMatch(/addEventListener\('keydown', tecla, true\)/);
+  });
+});

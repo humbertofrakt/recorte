@@ -37,7 +37,7 @@ import {
   belowQuick, compensationApplies, evalFieldInput, notNumberSays, scrubValue,
 } from './properties-model.js';
 import {
-  alphaDragSays, alphaShown, alphaTip, arrowDirection, emptyGradientSays, EMPTY_GRADIENT_SHORT, buildProperties, entityShownName, evalNumberExpression, fieldIsSet, fieldValue, formatNumberField,
+  alphaDragSays, alphaShown, alphaTip, arrowDirection, fieldKeyAction, emptyGradientSays, EMPTY_GRADIENT_SHORT, buildProperties, entityShownName, evalNumberExpression, fieldIsSet, fieldValue, formatNumberField,
   REFUSED_MESSAGE, findAttachment, silhouetteSources, skinFieldCommand, stepValue, writeFieldValue,
   type FieldDef, type FieldGroup,
 } from './properties-model.js';
@@ -52,6 +52,7 @@ import { openFloatingMenu } from '../ui/floating-menu.js';
 import {
   alphaFromSlider, angleFromDial, dialPoint, formatQuick, quickFields, quickSubject,
   heldByRuleAfterWrite, readQuickNow, sliderFromAlpha, worldAngleOfField, writeQuickValue,
+  worldAngleBeside,
 } from './quick-model.js';
 import type { QuickField } from './quick-model.js';
 
@@ -533,7 +534,8 @@ class PropertiesPanel implements Panel {
           + 'Só para ler: o campo grava o giro local, em relação ao pai';
         // Rodada 43, lote 3 (doc 59): com a "base" ao lado (animação aberta), não
         // cabem os dois na coluna — o mundo vai para a dica do disco.
-        if (leitura.animated && Math.abs(leitura.frame - leitura.base) > 1e-9) {
+        // QA da noite (04/11): número longo no campo também manda o mundo para a dica.
+        if ((leitura.animated && Math.abs(leitura.frame - leitura.base) > 1e-9) || !worldAngleBeside(campo.value)) {
           dica.textContent = `${field.hint}. ${frase}`;
           disco.setAttribute('aria-label', dica.textContent);
         } else {
@@ -1663,6 +1665,15 @@ class PropertiesPanel implements Panel {
     read: () => number, write: (value: number) => void, show: (value: number) => string,
   ): void {
     input.addEventListener('keydown', (event) => {
+      // QA da noite (04/11): Esc devolve o número de antes e sai do campo; o
+      // Ctrl+Z seguinte volta a ser do documento.
+      if (fieldKeyAction(event.key) === 'cancelar') {
+        event.preventDefault();
+        event.stopPropagation();
+        input.value = show(read());
+        input.blur();
+        return;
+      }
       const direction = arrowDirection(event.key);
       if (direction === 0) return;
       event.preventDefault();

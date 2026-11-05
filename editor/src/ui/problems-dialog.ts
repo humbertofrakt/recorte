@@ -71,8 +71,8 @@ export function resumoDasImagens(rows: readonly WarningRow[]): string | null {
   if (nomes.length < 2) return null;
   const primeiros = nomes.slice(0, 8).join(', ');
   const mais = nomes.length > 8 ? ` e mais ${nomes.length - 8}` : '';
-  return `${nomes.length} imagens não estão em atlas nenhum, e os desenhos delas ficam invisíveis: ${primeiros}${mais}. `
-    + 'Quase sempre é o atlas que não veio junto: abra a pasta onde ele está, ou ponha o atlas e as imagens na pasta do projeto.';
+  return `${nomes.length} imagens não estão em folha de imagens nenhuma (atlas), e os desenhos delas ficam invisíveis: ${primeiros}${mais}. `
+    + 'Quase sempre é a folha de imagens (o atlas) que não veio junto: abra a pasta onde ela está, ou ponha a folha (atlas) e as imagens na pasta do projeto.';
 }
 
 export function showProblemsDialog(options: ProblemsDialogOptions): OpenDialog {

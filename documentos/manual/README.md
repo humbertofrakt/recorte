@@ -68,6 +68,7 @@ A espinha é **corpos · animações · entidades**, o modelo novo do programa
 | 8 | [Exportar e usar no jogo](08-exportar-e-usar-no-jogo.md) | As três embalagens, abrir e salvar, o menu Exportar, o validador, e o boneco no jogo: Construct 3, Godot, ou código. *Conferido em 07/10.* |
 | 9 | [Vindo do Spriter, Spine e DragonBones](09-vindo-do-spriter-spine-e-dragonbones.md) | Cada coisa do Spriter e onde ela está aqui, com a tecla. Trazer o projeto pela pasta. Também Spine e DragonBones. *Conferido em 07/10.* |
 | 10 | [Partículas e biblioteca](10-particulas-e-biblioteca.md) | Fogo, fumaça, faísca e poeira num clique; a ficha em dez abas, a forma, a cor, as rajadas, o peso. E parado, andar, correr e pular prontos. *Escrito em 07/10.* |
+| 11 | [A espada de um, o boneco de outro](11-a-espada-de-um-o-boneco-de-outro.md) | Uma pessoa desenha a espada, outra anima o herói, e o arquivo junta os dois. Passo a passo, com as fotos do programa. *Escrito em 05/11.* |
 
 Cada capítulo abre com **"O que você vai conseguir fazer no fim"**, em três
 linhas, e fecha com uma tabela de **selo** — a lista honesta do que existe,

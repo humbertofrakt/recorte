@@ -47,7 +47,7 @@ export class ParticleCache {
         }
         let c = byAnimation.get(animation);
         if (c === undefined) {
-            c = new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name));
+            c = new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name), rateKeysOf(animation, slot.data.name, attachment.name));
             byAnimation.set(animation, c);
         }
         return c;
@@ -92,6 +92,22 @@ export function emittingKeysOf(animation, slotName, attachmentName) {
     return null;
 }
 /**
+ * The animated `rate` of one emitter (extension 4.2, 2nd phase), read straight
+ * off the animation like `emitting`, and for the same reason.
+ */
+export function rateKeysOf(animation, slotName, attachmentName) {
+    if (animation === null)
+        return null;
+    for (const tl of animation.timelines) {
+        if (tl.kind !== 'particle.rate')
+            continue;
+        if (tl.slot.name !== slotName || tl.attachmentName !== attachmentName)
+            continue;
+        return tl.keys;
+    }
+    return null;
+}
+/**
  * The live particles of `slot`'s emitter at the instant the skeleton is posed
  * at, in draw order, already cut by `maxParticles`.
  *
@@ -105,7 +121,7 @@ export function particleFrame(skeleton, slot, attachment, cache = null) {
     const duration = animation === null ? 0 : animation.duration;
     const time = animation === null ? skeleton.time : skeleton.playingTime;
     const curve = cache === null
-        ? new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name))
+        ? new EmissionCurve(attachment, emittingKeysOf(animation, slot.data.name, attachment.name), rateKeysOf(animation, slot.data.name, attachment.name))
         : cache.curveFor(skeleton, slot, attachment, animation);
     // The poser is needed whenever the emitter asks about an instant that is NOT
     // the frame being drawn. That is `space: "world"` (the bone's matrix at `t_i`,

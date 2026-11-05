@@ -62,7 +62,9 @@
   gap: 8px;
   width: 100%;
   min-height: 32px;
-  padding: 4px 12px;
+  /* QA da noite (04/11): 4 px à direita, e não 12 — o olho vem logo depois,
+     e os 8 px vão para o nome. O recuo da esquerda é o `treeIndent`. */
+  padding: 4px 4px 4px 12px;
   border: 0;
   border-left: 4px solid transparent;
   background: transparent;

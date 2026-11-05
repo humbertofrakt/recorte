@@ -22,7 +22,7 @@ import {
 import { bonesGone } from '../doc/skin-bones.js';
 import { AddAttachmentToSlot, AddConstraint, MoveSlot, RenameItem, CONSTRAINT_TYPES, canDeleteSelection, foldKey, hierarchyDropAction, hierarchyRows, parseFolded, searchHierarchy, selectionForRow, unfoldedRows, type RenameTarget, type TreeRow } from './tree-model.js';
 // Degrau 9 (I5): o sinal da pele na linha do osso.
-import { skinOnlyHint } from './tree-rows.js';
+import { skinOnlyHint, treeIndent } from './tree-rows.js';
 import {
   branchFoldIds, emptyNameSays, matchesSearch, rangeSelection, renameSays, stepRow,
   toggleRowInSelection,
@@ -863,7 +863,7 @@ class TreePanel implements Panel {
 
     const node = el('button', 'arvore-item');
     node.type = 'button';
-    node.style.paddingLeft = `${6 + row.depth * 16}px`;
+    node.style.paddingLeft = `${treeIndent(row.depth)}px`;
     node.setAttribute('aria-selected', this.isSelected(row) ? 'true' : 'false');
     node.dataset['linha'] = row.id;
     node.append(this.foldToggle(row, canFold));
