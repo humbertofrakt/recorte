@@ -23,7 +23,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
 import {
-  abrirEsqueleto, cameraDe, carregarRuntime, desenharPose, gravarPng, juntarLimites, posarAte,
+  abrirEsqueleto, cameraDe, carregarRuntime, desenharPose, gravarPng, juntarLimites, limitesComParticulas, posarAte,
 } from './render-png.mjs';
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
@@ -146,7 +146,8 @@ function limitesDaAnimacao(rt, dados, animacao, tempos, passo) {
   for (const t of tempos) {
     posarAte(rt, esqueleto, animacao, t, passo, anterior);
     anterior = t;
-    caixa = juntarLimites(caixa, esqueleto.getBounds());
+    // QA 04/11/2026 (D10): as partículas entram na caixa.
+    caixa = juntarLimites(caixa, limitesComParticulas(rt, esqueleto));
   }
   return caixa;
 }

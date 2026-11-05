@@ -43,7 +43,8 @@ function lerArgumentos(argv) {
     const valor = () => (valorJunto !== undefined ? valorJunto : argv[++i]);
     switch (chave) {
       case 'largura': op.largura = Number(valor()); break;
-      case 'bone': op.bone = resolve(process.cwd(), valor()); break;
+      // QA 04/11/2026 (D11): com --bone, a ferramenta dizia "Nenhum esqueleto passado".
+      case 'bone': op.bone = resolve(process.cwd(), valor()); op.boneEscolhido = true; break;
       case 'fundo': op.fundo = valor(); break;
       case 'margem': op.margem = Number(valor()); break;
       case 'passo': op.passo = Number(valor()); break;
@@ -480,6 +481,28 @@ export function cameraDe(limites, { largura, escala = 1, margem = 0.12 } = {}) {
   };
 }
 
+/**
+ * Os limites do esqueleto posado **com as partículas** — QA de 04/11/2026
+ * (D10). O `getBounds` do runtime conta os desenhos, e não as partículas: um
+ * emissor sozinho dava um retângulo de nada, e a câmera ampliava até a tela
+ * virar uma cor só. Cada partícula entra com o quadrado da imagem dela.
+ */
+export function limitesComParticulas(rt, esqueleto, cache = new rt.ParticleCache()) {
+  let caixa = esqueleto.getBounds();
+  for (const d of rt.collectDrawables(esqueleto)) {
+    if (!rt.isParticleAttachment(d.attachment)) continue;
+    const quadroP = rt.particleFrame(esqueleto, d.slot, d.attachment, cache);
+    if (quadroP.silence !== null) continue;
+    for (const p of quadroP.particles) {
+      const regiao = d.attachment.region;
+      const lado = regiao === null ? 1 : Math.max(regiao.originalWidth ?? regiao.width ?? 1, regiao.originalHeight ?? regiao.height ?? 1);
+      const r = (lado * Math.abs(p.scale)) / 2;
+      caixa = juntarLimites(caixa, { x: p.x - r, y: p.y - r, width: r * 2, height: r * 2 });
+    }
+  }
+  return caixa;
+}
+
 /** O menor retângulo que segura os dois. Qualquer um pode ser `null`. */
 export function juntarLimites(a, b) {
   if (a === null) return b === null ? null : { ...b };
@@ -513,7 +536,58 @@ export function desenharPose(rt, esqueleto, imagens, camera, opcoes = {}) {
   const dst = new Float64Array(6);
   const src = new Float64Array(6);
   let mundo = new Float64Array(64);
-  let desenhados = 0, semImagem = 0, aninhados = 0;
+  let desenhados = 0, semImagem = 0, aninhados = 0, emissores = 0, particulas = 0;
+
+  // QA 04/11/2026 (D10): as partículas (extensão BONE_particles). Antes, o
+  // emissor caía no "sem imagem" e o GIF da linha de comando saía vazio. As
+  // contas são as do runtime — `particleFrame` diz onde, de que tamanho e de
+  // que cor, como no `drawParticles` do `CanvasRenderer`: um quadrado da
+  // imagem por partícula, centrado no pivô, girado e escalado pela partícula,
+  // com a cor = slot × anexo × partícula (9.7).
+  const cacheParticulas = new rt.ParticleCache();
+  const quadP = new Float64Array(8);
+  const uvsP = new Float64Array(8);
+  const mundoP = new Float64Array(8);
+  const corP = { light: new Float64Array(4), dark: new Float64Array(3), tintBlack: false };
+  const QUADRO_DA_PARTICULA = { x: 0, y: 0, rotation: 0, scaleX: 1, scaleY: 1, width: 0, height: 0 };
+  /** Desenha um emissor. Devolve quantas partículas, ou `null` quando falta a imagem. */
+  function desenharParticulas(alvo, d, recorte) {
+    const anexo = d.attachment;
+    const quadroP = rt.particleFrame(alvo, d.slot, anexo, cacheParticulas);
+    if (quadroP.silence !== null) return 0;
+    rt.computeFinalColor(d.slot, anexo, cor);
+    let n = 0;
+    for (const p of quadroP.particles) {
+      const regiao = anexo.sequence !== null && p.frame >= 0 ? anexo.sequence.regions[p.frame] ?? null : anexo.region;
+      const textura = regiao === null ? null : imagens.get(regiao.page.name) ?? null;
+      if (textura === null) return null;
+      const alfa = cor.light[3] * p.color[3];
+      if (alfa <= 0) continue;
+      for (let i = 0; i < 3; i++) { corP.light[i] = cor.light[i] * p.color[i]; corP.dark[i] = cor.dark[i]; }
+      corP.light[3] = alfa;
+      corP.tintBlack = cor.tintBlack;
+      rt.computeRegionFrame(QUADRO_DA_PARTICULA, regiao, quadP, uvsP);
+      const c = Math.cos((p.angle * Math.PI) / 180) * p.scale;
+      const sn = Math.sin((p.angle * Math.PI) / 180) * p.scale;
+      for (let i = 0; i < 8; i += 2) {
+        mundoP[i] = p.x + quadP[i] * c - quadP[i + 1] * sn;
+        mundoP[i + 1] = p.y + quadP[i] * sn + quadP[i + 1] * c;
+      }
+      const pw = regiao.page.width, ph = regiao.page.height;
+      const tris = rt.REGION_TRIANGLES;
+      for (let i = 0; i < tris.length; i += 3) {
+        for (let k = 0; k < 3; k++) {
+          const v = tris[i + k] * 2;
+          const [px, py] = paraTela(mundoP[v], mundoP[v + 1]);
+          dst[k * 2] = px; dst[k * 2 + 1] = py;
+          src[k * 2] = uvsP[v] * pw; src[k * 2 + 1] = uvsP[v + 1] * ph;
+        }
+        triangulo(quadro, dst, src, textura, corP, regiao.page.premultiplied, d.slot.blend, recorte, rt.shadeTexel);
+      }
+      n++;
+    }
+    return n;
+  }
 
   /**
    * Desenha uma ordem de desenho inteira. O attachment `skeleton` de §7.11
@@ -539,6 +613,13 @@ export function desenharPose(rt, esqueleto, imagens, camera, opcoes = {}) {
         if (filho === null || profundidade + 1 > 8) { semImagem++; continue; }
         aninhados++;
         desenharEsqueleto(filho.skeleton, recorte, profundidade + 1);
+        continue;
+      }
+
+      if (rt.isParticleAttachment(d.attachment)) {
+        const n = desenharParticulas(alvo, d, recorte);
+        if (n === null) semImagem++;
+        else { emissores++; particulas += n; }
         continue;
       }
 
@@ -580,7 +661,7 @@ export function desenharPose(rt, esqueleto, imagens, camera, opcoes = {}) {
     }
   }
 
-  return { largura, altura, rgba: quadro.paraRgba(), desenhados, semImagem, aninhados };
+  return { largura, altura, rgba: quadro.paraRgba(), desenhados, semImagem, aninhados, emissores, particulas };
 }
 
 // ---------------------------------------------------------------------------
@@ -616,7 +697,7 @@ async function principal() {
 
   // --- câmera: retângulo do desenho no setup mais a folga, para o
   //     enquadramento não pular de quadro para quadro.
-  const camera = cameraDe(juntarLimites(enquadramento, esqueleto.getBounds()), {
+  const camera = cameraDe(juntarLimites(enquadramento, limitesComParticulas(rt, esqueleto)), {
     largura: Math.max(1, Math.round(op.largura)), margem: op.margem,
   });
 
@@ -624,12 +705,13 @@ async function principal() {
   const imagem = desenharPose(rt, esqueleto, imagens, camera, { fundo: op.fundo, ossos: op.ossos });
   for (const aviso of esqueleto.nestedWarnings) process.stderr.write(`aviso: ${aviso}\n`);
 
-  const { largura, altura, desenhados, semImagem, aninhados } = imagem;
+  const { largura, altura, desenhados, semImagem, aninhados, emissores, particulas } = imagem;
   writeFileSync(resolve(process.cwd(), op.saida), gravarPng(largura, altura, imagem.rgba));
   process.stdout.write(
     `${op.saida}: ${largura}x${altura}, animação "${op.animacao}" em ${op.tempo}s, `
     + `${desenhados} attachment(s) desenhado(s)`
     + `${aninhados > 0 ? `, ${aninhados} esqueleto(s) aninhado(s)` : ''}`
+    + `${emissores > 0 ? `, ${emissores} emissor(es) com ${particulas} partícula(s)` : ''}`
     + `${semImagem > 0 ? `, ${semImagem} sem imagem` : ''}\n`,
   );
 }

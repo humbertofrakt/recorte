@@ -685,3 +685,59 @@ describe('linha de comando', () => {
     expect(FFMPEG_HINT).toContain('%04d.png');
   });
 });
+
+describe('QA 04/11/2026 — D10: a linha de comando desenha as partículas', () => {
+  // A prova: o projeto gravado pelo editor (fumaça, fogo e faísca) desenhado
+  // pelo `render-png` saía "0 attachment(s) desenhado(s), 3 sem imagem", e o
+  // `exportar-imagem` gravava um GIF de 729 bytes, vazio — o editor, a cena e a
+  // exportação de dentro dele mostram as três.
+  const PASTA = join(RAIZ, 'ferramentas', 'testes', 'dados', 'particulas-do-editor');
+
+  it('render-png: os três emissores desenhados, nenhum "sem imagem", e há pixel pintado', async () => {
+    const saida = mkdtempSync(join(tmpdir(), 'part-'));
+    try {
+      const png = join(saida, 'q.png');
+      const texto = execFileSync(process.execPath, [
+        join(RAIZ, 'ferramentas', 'render-png.mjs'), 'animação', '0.4', png, '--bone', join(PASTA, 'fogo.bone'), '--sem-ossos',
+      ], { encoding: 'utf8' });
+      expect(texto).not.toMatch(/sem imagem/);
+      expect(texto).toMatch(/3 emissor\(es\) com \d+ partícula\(s\)/);
+      const { decodePng } = await import('../src/atlas/png.js');
+      const zlib = await import('node:zlib');
+      const img = decodePng(new Uint8Array(readFileSync(png)), {
+        inflate: (d) => new Uint8Array(zlib.inflateSync(d)), deflate: (d) => new Uint8Array(zlib.deflateSync(d)),
+      });
+      let pintados = 0;
+      for (let i = 3; i < img.pixels.length; i += 4) if (img.pixels[i]! > 0) pintados++;
+      expect(pintados).toBeGreaterThan(200);
+      // A câmera conta as partículas: sem isso, a tela inteira era uma cor só.
+      expect(pintados).toBeLessThan(img.width * img.height * 0.9);
+    } finally {
+      rmSync(saida, { recursive: true, force: true });
+    }
+  }, 60_000);
+
+  it('render-png com --bone não diz mais "Nenhum esqueleto passado" (D11)', () => {
+    const saida = mkdtempSync(join(tmpdir(), 'part-'));
+    try {
+      const texto = execFileSync(process.execPath, [
+        join(RAIZ, 'ferramentas', 'render-png.mjs'), 'animação', '0', join(saida, 'q.png'), '--bone', join(PASTA, 'fogo.bone'),
+      ], { encoding: 'utf8' });
+      expect(texto).not.toMatch(/Nenhum esqueleto passado/);
+    } finally {
+      rmSync(saida, { recursive: true, force: true });
+    }
+  }, 60_000);
+
+  it('exportar-imagem: o GIF do fogo tem quadros pintados, e não 729 bytes de nada', () => {
+    const saida = mkdtempSync(join(tmpdir(), 'part-'));
+    try {
+      execFileSync(process.execPath, [
+        join(RAIZ, 'ferramentas', 'exportar-imagem.mjs'), join(PASTA, 'fogo.bone'), 'animação', join(saida, 'fogo'), '--formato', 'gif',
+      ], { encoding: 'utf8' });
+      expect(readFileSync(join(saida, 'fogo.gif')).length).toBeGreaterThan(20_000);
+    } finally {
+      rmSync(saida, { recursive: true, force: true });
+    }
+  }, 120_000);
+});

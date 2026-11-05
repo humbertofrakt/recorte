@@ -1,0 +1,325 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.1.0",
+    "created": "2026-11-05T00:40:45.436Z",
+    "modified": "2026-11-05T00:40:59.558Z"
+  },
+  "skeleton": {
+    "name": "sem nome",
+    "fps": 30,
+    "referenceScale": 100
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "root_particulas",
+      "bone": "root",
+      "attachment": "root_particulas"
+    },
+    {
+      "name": "root_particulas2",
+      "bone": "root",
+      "attachment": "root_particulas2"
+    },
+    {
+      "name": "root_particulas3",
+      "bone": "root",
+      "attachment": "root_particulas3"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "root_particulas": {
+          "root_particulas": {
+            "type": "BONE_particle",
+            "seed": 0,
+            "path": "fx/ponto-suave",
+            "rate": 10,
+            "lifetime": [
+              1.8,
+              2.6
+            ],
+            "maxParticles": 200,
+            "shape": "circle",
+            "radius": 12,
+            "speed": [
+              30,
+              55
+            ],
+            "direction": 90,
+            "spread": 20,
+            "drag": 0.3,
+            "angle": [
+              0,
+              360
+            ],
+            "angularVelocity": [
+              -40,
+              40
+            ],
+            "scale": [
+              1.6,
+              2.2
+            ],
+            "scaleOverLifetime": [
+              {
+                "time": 0,
+                "value": 0.6
+              },
+              {
+                "time": 1,
+                "value": 2.5
+              }
+            ],
+            "startColor": [
+              [
+                0.35,
+                0.35,
+                0.35,
+                1
+              ],
+              [
+                0.5,
+                0.5,
+                0.5,
+                1
+              ]
+            ],
+            "alphaOverLifetime": [
+              {
+                "time": 0,
+                "value": 0
+              },
+              {
+                "time": 0.15,
+                "value": 0.75
+              },
+              {
+                "time": 1,
+                "value": 0
+              }
+            ],
+            "space": "world"
+          }
+        },
+        "root_particulas2": {
+          "root_particulas2": {
+            "type": "BONE_particle",
+            "seed": 1,
+            "path": "fx/ponto-suave",
+            "rate": 40,
+            "lifetime": [
+              0.6,
+              1
+            ],
+            "maxParticles": 200,
+            "shape": "circle",
+            "radius": 10,
+            "speed": [
+              60,
+              110
+            ],
+            "direction": 90,
+            "spread": 12,
+            "gravity": [
+              0,
+              60
+            ],
+            "drag": 0.5,
+            "scale": [
+              1.6,
+              2.4
+            ],
+            "scaleOverLifetime": [
+              {
+                "time": 0,
+                "value": 1
+              },
+              {
+                "time": 1,
+                "value": 0.2
+              }
+            ],
+            "colorOverLifetime": [
+              {
+                "time": 0,
+                "value": [
+                  1,
+                  0.95,
+                  0.6,
+                  1
+                ]
+              },
+              {
+                "time": 0.4,
+                "value": [
+                  1,
+                  0.5,
+                  0.1,
+                  0.9
+                ]
+              },
+              {
+                "time": 1,
+                "value": [
+                  0.5,
+                  0.1,
+                  0.05,
+                  0
+                ]
+              }
+            ],
+            "space": "world"
+          }
+        },
+        "root_particulas3": {
+          "root_particulas3": {
+            "type": "BONE_particle",
+            "seed": 2,
+            "path": "fx/ponto-suave",
+            "rate": 0,
+            "bursts": [
+              {
+                "time": 0,
+                "count": 40,
+                "cycles": 2,
+                "interval": 0.5
+              }
+            ],
+            "lifetime": [
+              0.3,
+              0.6
+            ],
+            "maxParticles": 100,
+            "speed": [
+              180,
+              320
+            ],
+            "direction": 90,
+            "spread": 180,
+            "gravity": [
+              0,
+              -400
+            ],
+            "alignToVelocity": true,
+            "scale": [
+              0.7,
+              1.1
+            ],
+            "startColor": [
+              [
+                1,
+                0.55,
+                0.1,
+                1
+              ],
+              [
+                1,
+                0.3,
+                0.05,
+                1
+              ]
+            ],
+            "colorOverLifetime": [
+              {
+                "time": 0,
+                "value": [
+                  1,
+                  1,
+                  1,
+                  1
+                ]
+              },
+              {
+                "time": 1,
+                "value": [
+                  0.45,
+                  0.2,
+                  0.1,
+                  1
+                ]
+              }
+            ],
+            "alphaOverLifetime": [
+              {
+                "time": 0,
+                "value": 1
+              },
+              {
+                "time": 0.75,
+                "value": 1
+              },
+              {
+                "time": 1,
+                "value": 0
+              }
+            ],
+            "space": "world"
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "animação",
+      "duration": 1,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "BONE_particle",
+          "target": "root_particulas3",
+          "property": "emitting",
+          "skin": "default",
+          "attachment": "root_particulas3",
+          "keys": [
+            {
+              "time": 0,
+              "value": true
+            },
+            {
+              "time": 0.5,
+              "value": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "extensionsUsed": [
+    "BONE_particles",
+    "RECORTE_editor_state"
+  ],
+  "assets": {
+    "atlases": [
+      "particulas.atlas.json"
+    ]
+  },
+  "extensions": {
+    "RECORTE_editor_state": {
+      "selection": {
+        "bones": [],
+        "slots": [],
+        "attachments": [
+          {
+            "slot": "root_particulas3",
+            "attachment": "root_particulas3"
+          }
+        ],
+        "constraints": [],
+        "vertices": [],
+        "parameters": [],
+        "variables": []
+      },
+      "animation": "animação"
+    }
+  }
+}
