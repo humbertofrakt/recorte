@@ -60,6 +60,6 @@ Para o Humberto, pelo Diretor.
 
 ## A régua
 
-`npx vitest run` (com o `obra/noite-2026-11-04` juntado, 01:35 UTC): **6.010 passam, nenhum vermelho**. `tsc` limpo. Conformidade 138 de 138. `npm run espada` 18/18. `npm run tomadas` 11/11.
+`npx vitest run` (com o `obra/noite-2026-11-04` juntado, 01:30 UTC): **6.010 passam, nenhum vermelho**. `tsc` limpo. Conformidade 138 de 138. `npm run espada` 18/18. `npm run tomadas` 11/11.
 
 FIM
