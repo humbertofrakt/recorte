@@ -55,6 +55,10 @@ Relatório em andamento. A versão final fica no fim da noite.
 | D9 | **Vértice arrastado em 0,5 s: a malha já começava deformada em 0, a animação não andava** | Malha (a regra é da Linha do tempo) | malha → Animando → 0,5 s → arrastar vértice | `10` | a chave do começo `[]` nasce junto, como nos ossos (lote 68) |
 | D10 | Esc num campo de número deixava o texto digitado; a seta seguinte o gravava; o Ctrl+Z ia para o texto | Propriedades | X: digitar 77, Esc, ↑ | — | Esc devolve o número e sai do campo |
 | D11 | Tab depois de gravar perdia o foco | Propriedades | X: digitar 12, Tab | — | Tab vai ao campo seguinte (Shift+Tab, ao anterior) |
+| D12 | Cadeado da Árvore travava sem dizer nada (o olho diz) | Árvore | clicar no cadeado de uma linha | — | "O desenho … está travado: aparece, mas o clique passa por ele" |
+| D13 | **"Suave" virava "passa do alvo" ao mudar o valor de uma chave**: a alça ficava no valor velho | Linha do tempo | Suave em 0 → arrastar a chave de 0,5 de −54,7 para −64 (Curvas, cena ou campo) | — | as alças andam com o valor, como já andavam com o tempo (rodada 40) |
+| D14 | **Duplo clique renomeava a linha de CIMA** (em 1920: clicar "osso_16" renomeou "leg_front") | Árvore | 1920 → rolar a Árvore até o fim → duplo clique num nome | — | a lista se monta inteira antes de focar; o clique não rola |
+| D15 | Na Ordem, clicar numa peça com a lista rolada a fazia voltar a 0 e saltar; o duplo clique caía em outra | Ordem | rolar a Ordem → clicar numa peça | — | a rolagem é guardada e devolvida; o clique não rola |
 
 ## Os defeitos — fora da minha parte (só descritos)
 
@@ -68,6 +72,16 @@ Relatório em andamento. A versão final fica no fim da noite.
 | F6 | Em 1440, a dica do rodapé fica com a frase curta, e não a inteira (em 1920 a inteira aparece) | Casca (`shell-status.ts`) | Curva → Suave com chaves de fim escolhidas | — |
 | F7 | "sem no…" (nome do documento) e "Pasta boneco · 1…" cortados | Casca, Imagens | abrir a pasta em 1440 | `01` |
 | F8 | Depois de trocar a imagem pela grade, o rodapé diz só "Arquivo não salvo." | Imagens (a grade) | Animando → botão direito na mão → mão fechada | — |
+| F9 | **Em 1280×720 com Detalhes aberto, a Árvore some inteira** (só a barra de botões) | Casca (a altura da coluna) | 1280 → animação → Detalhes → escolher um osso | — |
+| F10 | A lista de Animações tem ~70 px: com 10 animações, vê-se 2 | Casca (a altura da coluna direita) | 1440 → criar 10 animações | — |
+
+## Achados pequenos que deixei como estão
+
+| O quê | Por quê ficou |
+|:---|:---|
+| Colar a POSE espelhada numa animação em laço grava a mesma chave em 0, no meio e no fim | o resultado na tela é o mesmo do colar comum (chave explícita não guarda o começo, lote 68); são 2 chaves a mais, não um movimento errado |
+| Na Ordem, o clique na cabeça da pasta dobra a pasta; no fim da lista, o duplo clique para renomear pode cair noutra linha | mudar o que o clique na cabeça faz é decisão de desenho (Photoshop dobra pela seta); fica para o Humberto |
+| Seleção por caixa na folha não diz quantas chaves escolheu (o "Selecionar todas" diz) | o número aparece nos losangos acesos |
 
 ## Decisões que tomei no lugar do Humberto
 
@@ -77,5 +91,7 @@ Relatório em andamento. A versão final fica no fim da noite.
 | No Ângulo, número longo manda o "mundo" para a dica | o número que se edita nunca corta; a rodada 43 já fazia isso com a base ao lado |
 | Esc no campo: devolve e sai (Photoshop) | o Ctrl+Z seguinte volta a ser do documento |
 | A chave do começo também na malha | a regra do lote 68 (Spriter) vale para toda chave; §9.6 diz que `[]` é sem deform |
+| Mudar o valor de uma chave leva as alças junto, proporcionalmente | é o que o Spine faz; a curva do arquivo é absoluta (9.3) |
+| Clique de mouse numa linha não rola a lista (Árvore e Ordem) | quem clicou está apontando para a linha; seta e escolha de fora rolam |
 
 FIM
