@@ -72,7 +72,7 @@ Relatório em andamento. A versão final fica no fim da noite.
 | F3 | Com a malha escolhida, o rodapé da ferramenta diz "Malha: escolha um desenho com malha" | Cena | Virar malha → a frase do rodapé | — |
 | F4 | Janela Nova regra: o tipo escolhido sai cortado ("…sozinhos") | Regras | Malha e regras → Nova regra… | `04` |
 | F5 | Janela da regra IK: o aviso vermelho "Escolha o osso…" aparece antes de tentar; "`ik_arm`" com crases à vista | Regras | Nova regra… → cinemática inversa → Continuar | — |
-| F6 | Em 1440, a dica do rodapé fica com a frase curta, e não a inteira (em 1920 a inteira aparece) | Casca (`shell-status.ts`) | Curva → Suave com chaves de fim escolhidas | — |
+| F6 | Em 1440, a dica do rodapé fica com a frase curta, e não a inteira: some "A animação cresceu de 1,00 para 1,20 s" (Empurrar), "As outras 2 são a última da linha" (Suave). **Causa:** `ui/shell.ts:489`, um `MutationObserver` da rodada 45 copia o texto CURTO visível para o `title`, por cima da frase inteira que o `falarPorUmLugar` (rodada 47) acabou de pôr. Tirar o observador basta | Casca (`shell.ts`) | Animação → Chaves → Empurrar as chaves… com a animação crescendo | — |
 | F7 | "sem no…" (nome do documento) e "Pasta boneco · 1…" cortados | Casca, Imagens | abrir a pasta em 1440 | `01` |
 | F8 | Depois de trocar a imagem pela grade, o rodapé diz só "Arquivo não salvo." | Imagens (a grade) | Animando → botão direito na mão → mão fechada | — |
 | F9 | **Em 1280×720 com Detalhes aberto, a Árvore some inteira** (só a barra de botões) | Casca (a altura da coluna) | 1280 → animação → Detalhes → escolher um osso | — |
