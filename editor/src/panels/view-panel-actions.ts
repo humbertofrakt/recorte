@@ -191,23 +191,38 @@ export function registerViewActions(doc: EditorDoc): Array<() => void> {
  * dobra igual. O estado vive na sessão, como o do Pincel: a aba é refeita a
  * cada mudança, e sem guardar isto o grupo abriria de novo a cada clique.
  */
-const dobrados = new Set<string>();
+const escolhidos = new Map<string, boolean>();
 
-/** O grupo está dobrado? */
-export function viewGroupFolded(title: string): boolean {
-  return dobrados.has(title);
+/**
+ * Os grupos que NASCEM dobrados na tela baixa (até 800 px de altura) —
+ * 04/11/2026, a Exibição em 1280×720. Ali a coluna dá 191 px à aba, e a
+ * tabela "Mostrar na tela" sozinha pede 165: "A cena" nasce dobrada, com o
+ * título à vista, e abre num clique. Na tela grande, tudo nasce aberto, como
+ * sempre. O que a mão escolheu vale acima disto, nas duas telas. (A grade, as
+ * réguas, os eixos e as guias moram também no menu Exibir.)
+ */
+const DOBRADOS_NA_TELA_BAIXA: readonly string[] = ['A cena'];
+
+/** A tela é baixa? A mesma marca da Ordem compacta e da Malha: até 800 px. */
+export function telaBaixa(altura: number): boolean {
+  return altura <= 800;
+}
+
+/** O grupo está dobrado? `baixa`: a tela tem até 800 px de altura. */
+export function viewGroupFolded(title: string, baixa = false): boolean {
+  return escolhidos.get(title) ?? (baixa && DOBRADOS_NA_TELA_BAIXA.includes(title));
 }
 
 /** Dobra ou abre. Devolve o estado novo: `true` = dobrado. */
-export function toggleViewGroup(title: string): boolean {
-  if (dobrados.has(title)) dobrados.delete(title);
-  else dobrados.add(title);
-  return dobrados.has(title);
+export function toggleViewGroup(title: string, baixa = false): boolean {
+  const agora = !viewGroupFolded(title, baixa);
+  escolhidos.set(title, agora);
+  return agora;
 }
 
 /** Para o teste começar limpo. */
 export function resetViewGroups(): void {
-  dobrados.clear();
+  escolhidos.clear();
 }
 
 /** A dica do título: o que o clique faz. */
