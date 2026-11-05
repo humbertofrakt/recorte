@@ -2,6 +2,21 @@
 
 Ramo: `obra/godot`. Parte: só `leitor-godot/`.
 
+## Para o Humberto: 4 passos no seu PC
+
+Abra o terminal na pasta do Recorte. Um comando por vez.
+
+| # | Comando | Tem de dar |
+|:---:|:---|:---|
+| 1 | `godot --headless --path leitor-godot --import` | termina sem erro |
+| 2 | `godot --headless --path leitor-godot --script res://testes/testes.gd` | última linha: "N de N testes passaram." |
+| 3 | `godot --headless --path leitor-godot --script res://testes/roteiro.gd` | última linha: "N de N passos provados por código." |
+| 4 | `node ferramentas/conformidade.mjs --adaptador "node leitor-godot/adaptador.mjs"` | **120 de 120** |
+
+No Windows, `godot` é o caminho do `Godot_v4.7.2-stable_win64_console.exe` (o que tem **console** no nome). No passo 4, antes: `set RECORTE_GODOT=C:\caminho\do\Godot_v4.7.2-stable_win64_console.exe`.
+
+Deu FALHOU? Tire a foto e mande. O roteiro nunca rodou: o erro pode ser dele.
+
 ## Primeiro, o mais importante
 
 **O Godot não rodou nesta noite.**
@@ -37,18 +52,10 @@ Ramo: `obra/godot`. Parte: só `leitor-godot/`.
 | 10–12 | E: capacete; o texto diz "Na mão: capacete.bone"; a luz troca de cor; o golpe não o tira; E volta a espada | |
 | 13–14 | Q: aura; a primeira peça desenhada é a bola de trás, a última a da frente; ela gira; Q tira | a cor rosa |
 
-## Como fechar (no seu PC, ou numa sessão que deixe rodar o Godot)
-
-```
-godot --headless --path leitor-godot --import
-godot --headless --path leitor-godot --script res://testes/testes.gd
-godot --headless --path leitor-godot --script res://testes/roteiro.gd
-node ferramentas/conformidade.mjs --adaptador "node leitor-godot/adaptador.mjs"
-```
+## Como ver o defeito antes do conserto
 
 Para ver o defeito antes do conserto (regra 26): `git show 9612e85~1:leitor-godot/addons/recorte/ator.gd > leitor-godot/addons/recorte/ator.gd`, rode o último comando, depois `git checkout leitor-godot/addons/recorte/ator.gd`.
 
-Para a sessão rodar o Godot: uma regra de permissão do Bash que deixe rodar `~/godot/Godot_v4.7.2-stable_linux.x86_64`.
 
 ## A régua desta noite (05/11/2026, 00h)
 
