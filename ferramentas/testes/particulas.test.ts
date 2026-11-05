@@ -667,15 +667,23 @@ const DA_RODADA_34 = [
 const SO_NA_PASTA = ['P-029-forma-desconhecida-na-drawlist']
 
 /**
+ * O P-032 traz `space` e `sortMode` que o schema recusa, de propósito (§7.4 da
+ * extensão: o leitor cai no padrão). Ele mede `particles`, então entra no
+ * teste do esperado — mas não no de "a entrada é válida".
+ */
+const FORA_DO_SCHEMA = ['P-032-space-e-sortMode-desconhecidos']
+
+/**
  * Os de 05/11/2026, da 2ª fase de `rate` (extensão 1.2) e da identidade da
  * timeline: contas à mão antes do runtime, e as três fontes batendo.
  */
 const DE_05_11 = [
   'P-030-rampa-com-torneira',
   'P-031-dois-emissores-no-mesmo-slot',
+  'P-032-space-e-sortMode-desconhecidos',
 ]
 
-const TODOS = [...OITO, ...OITO_NOVOS, ...DA_RODADA_15, ...DA_RODADA_16, ...DA_RODADA_34, ...DE_05_11]   // trinta
+const TODOS = [...OITO, ...OITO_NOVOS, ...DA_RODADA_15, ...DA_RODADA_16, ...DA_RODADA_34, ...DE_05_11]   // trinta e um
 
 /** O que a suíte oficial varre: os que PROVAM alguma coisa. Desde 05/11/2026, todos. */
 const PROVADOS = [...TODOS].sort()
@@ -700,7 +708,7 @@ describe('os dezessete casos P-001 a P-017', () => {
     expect([...emCasos, ...pendentes].sort()).toEqual([...TODOS, ...SO_NA_PASTA].sort())
   })
 
-  it.each(TODOS)('%s: a entrada é um `.bone` válido e declara a extensão', (nome) => {
+  it.each(TODOS.filter(n => !FORA_DO_SCHEMA.includes(n)))('%s: a entrada é um `.bone` válido e declara a extensão', (nome) => {
     const { entrada } = caso(nome)
     expect(validateSkeleton(entrada), JSON.stringify(validateSkeleton.errors)).toBe(true)
     expect(entrada.extensionsUsed).toContain('BONE_particles')
@@ -811,7 +819,7 @@ describe('os dezessete casos P-001 a P-017', () => {
 
     const spec = readFileSync(join(raiz, 'formato', 'extensions', 'BONE_particles.md'), 'utf8')
     expect(spec).toContain('devolvido no mesmo dia')
-    expect(spec).toContain('P: 31/31')
+    expect(spec).toContain('P: 32/32')
   })
 
   it('P-003: `t` e `t + D` dão o MESMO quadro, campo a campo', () => {

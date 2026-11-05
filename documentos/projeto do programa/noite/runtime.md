@@ -7,11 +7,11 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 
 | Medida | Antes | Agora |
 |:---|:---:|:---:|
-| Casos em `conformidade/casos/` | 120 | **131** |
+| Casos em `conformidade/casos/` | 120 | **132** |
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
-| TS × Python, campo a campo | 120 de 120 | **131 de 131** |
-| Pacote do Construct | 120 de 120 | **131 de 131** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.841**, o mesmo 1 vermelho |
+| TS × Python, campo a campo | 120 de 120 | **132 de 132** |
+| Pacote do Construct | 120 de 120 | **132 de 132** |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.850**, o mesmo 1 vermelho |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
@@ -61,6 +61,7 @@ conta **antes** de rodar runtime):
 | **C-332** driver em parâmetro, variável e constraint | `int` escrito por driver trunca; o `mix` de uma constraint posterior | verde | verde | sim (4 de 4) |
 | **X-309** BOM na leitura | §2.1: o leitor DEVE aceitar BOM | **vermelho (o executor) → consertado** | verde | — |
 | **ZIP-502** `main` numa subpasta | §2.8: a base é a pasta do `main`; uma **isca** com o mesmo nome na raiz | verde | verde | sim (a isca no lugar dá `−15` em vez de `−40`) |
+| **P-032** `space`/`sortMode` desconhecidos | §7.4 da extensão: caem em `local` e `youngestInFront` (o aviso **não** é medido) | verde | verde | sim (2 de 2) |
 | **P-030** rampa com torneira | ver acima | verde (consertado) | verde | — |
 | **P-031** dois emissores no slot | ver acima | verde (consertado) | verde | — |
 

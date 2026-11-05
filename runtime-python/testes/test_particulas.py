@@ -1094,7 +1094,8 @@ class TestOsCasosDeParticula(unittest.TestCase):
     # pendentes (rodada 34).
     # 31 desde 05/11/2026: P-030 e P-031 (a taxa animada, 1.2, e a identidade
     # da timeline). O P-002 saiu de `casos-pendentes/` e continua contado.
-    QUANTOS = 31
+    # 32: P-032 (space e sortMode desconhecidos, 7.4 da extensao).
+    QUANTOS = 32
 
     def test_todos_os_casos_passam(self):
         """Every case in the folder, and the whole list of failures at once.

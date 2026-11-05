@@ -1178,7 +1178,8 @@ runtime Python. Quem o move é o Planejador, nunca o executor.
 > um runtime sem a rampa dá zero partículas e **reprova**. Entraram junto o
 > **P-030** (rampa cortada pela torneira, e `rate` + `emitting` no mesmo
 > emissor) e o **P-031** (dois emissores no mesmo slot, cada um com a sua
-> torneira). A suíte passa a dizer **`P: 31/31`**. A história abaixo fica como
+> torneira), e o **P-032** (`space` e `sortMode` desconhecidos caem no padrão
+> da §7.4). A suíte passa a dizer **`P: 32/32`**. A história abaixo fica como
 > estava.
 
 > **Por que o P-002 fica de fora.** Ele é o único de **2ª fase**, e o
@@ -1219,6 +1220,7 @@ os dois runtimes bateram com eles. A suíte passa a dizer **`P: 19/19`**.
 | P-026 | §9.4.2, passo 7, em `world`: o ponto entra no esqueleto **uma vez**, e o `spherizeDirection` sai da **origem do emissor**, com o emissor girado e deslocado |
 | P-030 | §4.2: a torneira corta a rampa no meio; `rate` e `emitting` do mesmo emissor são **duas** timelines |
 | P-031 | §9: dois emissores no mesmo slot, cada um com a sua timeline de `emitting` — a identidade leva o `attachment` |
+| P-032 | §7.4: `space` e `sortMode` desconhecidos caem em `local` e `youngestInFront` |
 
 **Em 05/10/2026 entraram P-021 a P-026** (a forma `path`, versão 1.1): números
 calculados à mão antes do código, a conta escrita no `leiame` de cada um, e as
