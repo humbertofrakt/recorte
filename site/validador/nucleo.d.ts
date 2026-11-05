@@ -55,6 +55,8 @@ export interface Resumo {
   duracao?: number
   animacoes?: Array<{ nome: string; duracao: number; laco: boolean }>
   atlases?: string[]
+  /** `assets.animations` (2.8): os arquivos de onde vêm as animações de fora. */
+  animacoesDeFora?: string[]
   extensoes?: string[]
   imagens?: string[]
 }

@@ -1479,7 +1479,11 @@ export function avisos(doc, tipo) {
       texto: 'O arquivo tem desenhos mas não nomeia nenhum atlas em assets.atlases. Sem atlas, nada aparece na tela.',
     })
   }
-  if (!Array.isArray(doc.animations) || doc.animations.length === 0) {
+  // Animação de fora (`assets.animations`, 2.8) também é animação: o boneco
+  // que toca as do `humanoide-v1-animacoes.bone` não é pose de montagem
+  // (achado da Oficina, 05/11/2026). O resumo diz de onde elas vêm.
+  const deFora = Array.isArray(doc.assets?.animations) ? doc.assets.animations.filter(u => typeof u === 'string') : []
+  if ((!Array.isArray(doc.animations) || doc.animations.length === 0) && deFora.length === 0) {
     fora.push({
       gravidade: 'aviso',
       origem: 'regra',
@@ -1640,6 +1644,8 @@ export function resumirEsqueleto(doc) {
       laco: a?.loop === true,
     })),
     atlases: Array.isArray(doc.assets?.atlases) ? doc.assets.atlases.slice() : [],
+    // As animações que vêm de outro arquivo (2.8): o boneco as toca pelo nome.
+    animacoesDeFora: Array.isArray(doc.assets?.animations) ? doc.assets.animations.filter(u => typeof u === 'string') : [],
     extensoes: Array.isArray(doc.extensionsUsed) ? doc.extensionsUsed.slice() : [],
     recursos: [...recursos],
   }
