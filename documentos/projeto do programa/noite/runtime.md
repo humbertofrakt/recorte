@@ -131,4 +131,15 @@ no rascunho da sessão.
 | Versão da extensão 1.2 | O comportamento do leitor muda (aceita uma timeline que antes recusava) |
 | `add` do driver = soma do desvio | O pseudocódigo da §8.2 é a parte mais exata, e os dois runtimes já faziam assim |
 
+## 7. Tarefa nova do Diretor: os avisos em português
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| `translateWarning` (editor/src/panels/warning-model.ts) cobre as **204** frases de aviso do leitor: 179 do `loader.ts`, 7 de curva, os problemas de endereço do `uri.ts` | teste novo `editor/testes/avisos-em-portugues.test.ts`, com a lista tirada **viva** do código | — |
+| A frase se parte em **causa** e **consequência**: *"não existe osso com o nome "braco": essas chaves ficam sem efeito (TARGET_MISSING)"* | o teste confere: nenhuma volta em inglês, nenhuma palavra inglesa solta, nenhum jargão fora de parênteses (`ui/jargao.ts`) | — |
+| As 8 frases antigas ficam **letra por letra** | os testes de `acabamento` e `menus` passam | uma delas diz "atlas" fora de parênteses; está presa por `acabamento.test.ts`, e ficou anotada no teste como dívida |
+| Regra 26 | com a `translateWarning` antiga, **198 de 204** voltavam em inglês | — |
+
+Os avisos de `actor.ts`, `nested.ts`, `file.ts` e do binário já nasciam em português.
+
 FIM
