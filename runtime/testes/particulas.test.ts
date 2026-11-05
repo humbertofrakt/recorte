@@ -12,7 +12,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { loadSkeletonData } from '../src/loader.js';
 import { pcg, particleRandom, particleRange, PARTICLE_CHANNEL } from '../src/particles/hash.js';
-import { EmissionCurve, collectBirths, type ParticleBirth } from '../src/particles/emission.js';
+import { EmissionCurve, collectBirths, type ParticleBirth, type RateKeys, type EmittingKeys } from '../src/particles/emission.js';
 import { computeParticles, type EmitterFrame, type EmitterPose, type ParticleSample } from '../src/particles/emitter.js';
 import type { Matrix2x3 } from '../src/math.js';
 import { Skeleton } from '../src/skeleton.js';
@@ -23,8 +23,9 @@ import type { SkeletonData } from '../src/data.js';
 
 // Os casos P entraram em `conformidade/casos/` em 18/09/2026, quando os três
 // leitores independentes bateram — quem os escreveu, este runtime e o Python.
-// O P-002 voltou para `casos-pendentes/` no mesmo dia: ele passa sem exercitar
-// o que o nome dele promete, e só sai de lá quando a 2ª fase abrir.
+// O P-002 voltou para `casos-pendentes/` no mesmo dia: ele passava sem exercitar
+// o que o nome dele promete. Voltou para `casos/` em 05/11/2026, com a 2ª fase
+// (a taxa animada, §4.2) em serviço e o esperado preenchido por conta à parte.
 const CASOS = process.cwd().replace(/\\/g, '/') + '/conformidade/casos/';
 const PENDENTES = process.cwd().replace(/\\/g, '/') + '/conformidade/casos-pendentes/';
 
@@ -302,11 +303,75 @@ describe('a torneira: emitting liga e desliga (extensão 4.1)', () => {
     expect(fechaEm(0.4)).toBe(0.5);
   });
 
-  it('uma taxa em rampa é 2ª FASE: a timeline de rate é recusada com aviso, não adivinhada', () => {
-    // Extension 4.2 and 12. The conta of the `linear` branch is written whole in
-    // the spec ON PURPOSE, so that the second reader does not invent its own and
-    // so that the 2nd phase changes nobody's numbers. Case P-002 is its case and
-    // its `esperado.json` carries an EMPTY list, deliberately.
+  /** A rate timeline on the emitter `fx/jato`, with the given keys. */
+  function comRate(keys: Record<string, unknown>[], extra: Record<string, unknown> = {}): SkeletonData {
+    return loadSkeletonData({
+      bone: { version: '1.1', minVersion: '1.0', generator: 'test' },
+      extensionsUsed: ['BONE_particles'],
+      bones: [{ name: 'root' }],
+      slots: [{ name: 'fx', bone: 'root', attachment: 'jato' }],
+      skins: [{ name: 'default', attachments: { fx: { jato: { type: 'BONE_particle', ...extra } } } }],
+      animations: [{
+        name: 'engrossa', duration: 1,
+        timelines: [{ type: 'BONE_particle', target: 'fx', skin: 'default', attachment: 'jato', property: 'rate', keys }],
+      }],
+    });
+  }
+  function curvaRate(data: SkeletonData): EmissionCurve {
+    const tl = data.animations[0].timelines;
+    expect(tl).toHaveLength(1);
+    expect(tl[0].kind).toBe('particle.rate');
+    return new EmissionCurve(emissor(data), null, (tl[0] as { keys: RateKeys }).keys);
+  }
+
+  it('2ª fase: a timeline de rate é lida, e a rampa vira parábola (E = 20·t²)', () => {
+    // Extension 4.2: `rate` 0 → 40 between t = 0 and t = 1, `linear`.
+    const c = curvaRate(comRate([{ time: 0, value: 0, curve: 'linear' }, { time: 1, value: 40 }]));
+    expect(c.countAt(0.5)).toBeCloseTo(5, 12);
+    expect(c.countAt(1)).toBeCloseTo(20, 12);
+    // After the last key the last key holds: 40/s, a straight line again.
+    expect(c.countAt(1.5)).toBeCloseTo(40, 12);
+    expect(c.rateAt(0.25)).toBeCloseTo(10, 12);
+  });
+
+  it('P-002: a partícula 7 nasce em sqrt(7/20) = 0.591608, pela inversa estável', () => {
+    const c = curvaRate(caso('P-002-taxa-em-rampa'));
+    expect(c.timeOf(7)).toBeCloseTo(Math.sqrt(7 / 20), 12);
+    // Index 0 sits on the boundary with rate 0: `2d / (r0 + ...)` is 0/0 there,
+    // and it is born on the boundary, where E reaches it.
+    expect(c.timeOf(0)).toBe(0);
+    // Index 20 falls in the stretch AFTER the ramp, where s = 0: the forbidden
+    // form `(−r0 + sqrt(…)) / s` gives NaN there. This is where it breaks.
+    expect(c.timeOf(20)).toBe(1);
+    expect(c.timeOf(32)).toBeCloseTo(1.3, 12);
+  });
+
+  it('2ª fase não muda a 1ª: rate constante em chaves dá os MESMOS bits do rate fixo', () => {
+    const fixo = new EmissionCurve(emissor(comRate([], { rate: 20 })), null);
+    const chaves = curvaRate(comRate([{ time: 0, value: 20, curve: 'linear' }, { time: 1, value: 20 }]));
+    for (let i = 0; i < 40; i++) expect(chaves.timeOf(i)).toBe(fixo.timeOf(i));
+  });
+
+  it('chave stepped em rate: degrau, e a inversa é uma divisão', () => {
+    const c = curvaRate(comRate([{ time: 0, value: 10, curve: 'stepped' }, { time: 0.5, value: 30 }]));
+    expect(c.countAt(0.5)).toBeCloseTo(5, 12);
+    expect(c.timeOf(4)).toBeCloseTo(0.4, 12);
+    expect(c.timeOf(8)).toBeCloseTo(0.6, 12);
+  });
+
+  it('rate negativo na chave vira 0 com L1 RANGE_PARTICLE_RATE; Bézier vira linear com L2', () => {
+    const data = comRate([
+      { time: 0, value: -5, curve: [0.25, 0, 0.75, 1] },
+      { time: 1, value: 40 },
+    ]);
+    expect(avisos(data)).toContain('RANGE_PARTICLE_RATE:');
+    expect(avisos(data)).toContain('RANGE_PARTICLE_RATE_CURVE');
+    const c = curvaRate(data);
+    // 0 → 40 linear, the same parabola as P-002.
+    expect(c.timeOf(7)).toBeCloseTo(Math.sqrt(7 / 20), 12);
+  });
+
+  it('emitting fechado no meio da rampa: o trecho fechado não consome índice', () => {
     const data = loadSkeletonData({
       bone: { version: '1.1', minVersion: '1.0', generator: 'test' },
       extensionsUsed: ['BONE_particles'],
@@ -314,24 +379,24 @@ describe('a torneira: emitting liga e desliga (extensão 4.1)', () => {
       slots: [{ name: 'fx', bone: 'root', attachment: 'jato' }],
       skins: [{ name: 'default', attachments: { fx: { jato: { type: 'BONE_particle' } } } }],
       animations: [{
-        name: 'engrossa', duration: 1,
-        timelines: [{
-          type: 'BONE_particle', target: 'fx', skin: 'default', attachment: 'jato', property: 'rate',
-          keys: [{ time: 0, value: 0, curve: 'linear' }, { time: 1, value: 40 }],
-        }],
+        name: 'a', duration: 1,
+        timelines: [
+          { type: 'BONE_particle', target: 'fx', skin: 'default', attachment: 'jato', property: 'rate',
+            keys: [{ time: 0, value: 0, curve: 'linear' }, { time: 1, value: 40 }] },
+          { type: 'BONE_particle', target: 'fx', skin: 'default', attachment: 'jato', property: 'emitting',
+            keys: [{ time: 0, value: true }, { time: 0.5, value: false }, { time: 0.75, value: true }] },
+        ],
       }],
     });
-    expect(avisos(data)).toContain('2nd phase');
-  });
-
-  it('o P-002 continua de 2ª fase: a lista do esperado é VAZIA, e não se preenche aqui', () => {
-    // This test holds a sentence in place, not a number. The case is written, its
-    // conta is closed in the spec, and it does NOT move to `casos/` until the 2nd
-    // phase opens. A runtime that "passes" it by inventing the ramp has broken
-    // the rule, not fixed it.
-    const want = esperado('P-002-taxa-em-rampa');
-    expect(want.samples).toHaveLength(1);
-    expect(want.samples[0].particles['fx/jato']).toEqual([]);
+    const tls = data.animations[0].timelines;
+    const rate = tls.find((t) => t.kind === 'particle.rate') as unknown as { keys: RateKeys };
+    const em = tls.find((t) => t.kind === 'particle.emitting') as unknown as { keys: EmittingKeys };
+    const c = new EmissionCurve(emissor(data), em.keys, rate.keys);
+    // E(0.5) = 20·0.25 = 5; closed until 0.75; then the ramp at 30/s, slope 40.
+    expect(c.countAt(0.6)).toBeCloseTo(5, 12);
+    expect(c.timeOf(5)).toBe(0.75);
+    // d = 1: τ = 2 / (30 + sqrt(900 + 80)).
+    expect(c.timeOf(6)).toBeCloseTo(0.75 + 2 / (30 + Math.sqrt(980)), 12);
   });
 });
 

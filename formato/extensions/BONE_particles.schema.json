@@ -102,7 +102,7 @@
 
         "emitting": { "type": "boolean", "default": true },
         "rate": {
-          "description": "partículas/s. Na 1ª fase é FIXO: quem anima é emitting. Negativo é L1 RANGE_PARTICLE_RATE.",
+          "description": "partículas/s. Animável por integral desde a 1.2 (§4.2): timeline BONE_particle com property rate; com ela, este número não vale. Negativo é L1 RANGE_PARTICLE_RATE.",
           "type": "number",
           "minimum": 0,
           "default": 10

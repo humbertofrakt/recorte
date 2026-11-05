@@ -1,0 +1,150 @@
+{
+  "bone": {
+    "version": "1.1",
+    "minVersion": "1.0",
+    "generator": "Recorte 0.1.0"
+  },
+  "extensionsUsed": [
+    "BONE_particles"
+  ],
+  "bones": [
+    {
+      "name": "root"
+    },
+    {
+      "name": "emissor",
+      "parent": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "fx",
+      "bone": "emissor",
+      "attachment": "jato"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "fx": {
+          "jato": {
+            "type": "BONE_particle",
+            "path": "fx/faisca",
+            "seed": 42,
+            "rate": 10,
+            "lifetime": [
+              2,
+              2
+            ],
+            "speed": [
+              100,
+              100
+            ],
+            "direction": 90,
+            "spread": 0,
+            "shape": "point",
+            "gravity": [
+              0,
+              0
+            ],
+            "drag": 0,
+            "angle": [
+              0,
+              0
+            ],
+            "angularVelocity": [
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1
+            ],
+            "space": "local",
+            "looping": false,
+            "maxParticles": 1000
+          },
+          "jato2": {
+            "type": "BONE_particle",
+            "path": "fx/faisca",
+            "seed": 7,
+            "rate": 10,
+            "lifetime": [
+              2,
+              2
+            ],
+            "speed": [
+              100,
+              100
+            ],
+            "direction": 90,
+            "spread": 0,
+            "shape": "point",
+            "gravity": [
+              0,
+              0
+            ],
+            "drag": 0,
+            "angle": [
+              0,
+              0
+            ],
+            "angularVelocity": [
+              0,
+              0
+            ],
+            "scale": [
+              1,
+              1
+            ],
+            "space": "local",
+            "looping": false,
+            "maxParticles": 1000
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "soprar",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "BONE_particle",
+          "target": "fx",
+          "skin": "default",
+          "attachment": "jato",
+          "property": "emitting",
+          "keys": [
+            {
+              "time": 0,
+              "value": true,
+              "curve": "stepped"
+            },
+            {
+              "time": 0.5,
+              "value": false,
+              "curve": "stepped"
+            }
+          ]
+        },
+        {
+          "type": "BONE_particle",
+          "target": "fx",
+          "skin": "default",
+          "attachment": "jato2",
+          "property": "emitting",
+          "keys": [
+            {
+              "time": 0,
+              "value": true,
+              "curve": "stepped"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

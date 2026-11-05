@@ -1,0 +1,131 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "skeleton": {
+    "name": "placar"
+  },
+  "bones": [
+    {
+      "name": "root"
+    }
+  ],
+  "variables": [
+    {
+      "name": "forca",
+      "type": "float"
+    },
+    {
+      "name": "golpes",
+      "type": "int"
+    },
+    {
+      "name": "divida",
+      "type": "int",
+      "default": 3
+    },
+    {
+      "name": "fala",
+      "type": "string",
+      "default": "oi"
+    },
+    {
+      "name": "vivo",
+      "type": "bool",
+      "default": true
+    },
+    {
+      "name": "parada",
+      "type": "int",
+      "default": 7
+    }
+  ],
+  "animations": [
+    {
+      "name": "contar",
+      "duration": 1,
+      "timelines": [
+        {
+          "type": "variable",
+          "target": "forca",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "value": 1
+            }
+          ]
+        },
+        {
+          "type": "variable",
+          "target": "golpes",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "value": 10
+            }
+          ]
+        },
+        {
+          "type": "variable",
+          "target": "divida",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0,
+              "curve": "linear"
+            },
+            {
+              "time": 1,
+              "value": -10
+            }
+          ]
+        },
+        {
+          "type": "variable",
+          "target": "fala",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0.5,
+              "value": "ai"
+            },
+            {
+              "time": 1,
+              "value": "tchau"
+            }
+          ]
+        },
+        {
+          "type": "variable",
+          "target": "vivo",
+          "property": "value",
+          "keys": [
+            {
+              "time": 0,
+              "value": true
+            },
+            {
+              "time": 0.75,
+              "value": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

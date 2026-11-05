@@ -1,0 +1,29 @@
+{
+  "atlas": {
+    "version": "1.0",
+    "generator": "suite de conformidade bone"
+  },
+  "scale": 1,
+  "pages": [
+    {
+      "name": "pagina",
+      "image": "pagina.png",
+      "width": 128,
+      "height": 128
+    }
+  ],
+  "regions": [
+    {
+      "name": "recorte",
+      "page": 0,
+      "x": 66,
+      "y": 66,
+      "width": 30,
+      "height": 20,
+      "offsetX": 0,
+      "offsetY": 0,
+      "originalWidth": 30,
+      "originalHeight": 20
+    }
+  ]
+}
