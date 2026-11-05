@@ -1995,3 +1995,11 @@ describe('prova de pessoa: as teclas de ver e travar falam, na cena', () => {
     expect(ramo).toContain('doc.notice(frase)');
   });
 });
+
+describe('prova de pessoa: a frase do recorte guarda o tamanho no rodapé apertado', () => {
+  it('o tamanho vem antes dos dois-pontos', async () => {
+    const { cropSays: dizRecorte } = await import('../src/viewport/crop-model.js');
+    const frase = `Recorte ${dizRecorte({ x: -72, y: -30, width: 167, height: 283 })}. Ctrl+Z desfaz`;
+    expect(versoesDaFraseCena(frase).at(-1)).toBe('Recorte 167 × 283 px');
+  });
+});

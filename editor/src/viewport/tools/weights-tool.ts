@@ -246,7 +246,11 @@ class WeightsTool implements Tool {
   onDown(doc: EditorDoc, e: ToolEvent): void {
     if (e.button !== 0) return;
     const ref = selectedMesh(doc);
-    if (ref === null) return;
+    if (ref === null) {
+      // Prova de pessoa (05/11/2026): sem malha escolhida, o pincel era mudo.
+      doc.notice(NO_MESH_FOR_WEIGHTS);
+      return;
+    }
     const view = readMesh(doc, ref);
 
     // O modo Ligar não chega até aqui: desde o conserto do lote 70 quem o
@@ -430,3 +434,7 @@ function selectionKeepingVertices(doc: EditorDoc, vertices: number[]): void {
     vertices,
   });
 }
+
+/** O pincel dos Pesos sem malha escolhida — prova de pessoa, 05/11/2026. */
+export const NO_MESH_FOR_WEIGHTS =
+  'Pesos sem malha escolhida: clique no desenho com Selecionar (Q), ou na Árvore, e volte (G)';

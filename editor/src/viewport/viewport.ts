@@ -1714,7 +1714,7 @@ export class ViewportPanel implements Panel {
     const box = cropInFile(doc.file, drag.animation);
     if (box === null) return;
     const what = drag.zone === 'tracar' ? 'Recorte traçado' : drag.zone === 'move' ? 'Recorte movido' : 'Recorte';
-    doc.notice(`${what}: ${cropSays(box)}. Ctrl+Z desfaz`);
+    doc.notice(`${what} ${cropSays(box)}. Ctrl+Z desfaz`);
   }
 
   private onPointerUp(e: PointerEvent): void {

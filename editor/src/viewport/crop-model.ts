@@ -265,9 +265,13 @@ export function cropNumber(n: number): string {
   return n < 0 ? `−${Math.abs(n)}` : String(n);
 }
 
-/** O que o rodapé diz do retângulo: tamanho e canto, com unidade (R9). */
+/**
+ * O que o rodapé diz do retângulo: tamanho e canto, com unidade (R9). O
+ * tamanho vem ANTES dos dois-pontos: o rodapé apertado mostra só essa parte
+ * (`ui/shell-status.ts`), e o tamanho é o que a mão está mudando.
+ */
 export function cropSays(box: CropBox): string {
-  return `${cropNumber(box.width)} × ${cropNumber(box.height)} px, canto em `
+  return `${cropNumber(box.width)} × ${cropNumber(box.height)} px: canto em `
     + `(${cropNumber(box.x)}, ${cropNumber(box.y)}) px`;
 }
 
@@ -300,7 +304,7 @@ export class SetCrop implements Command {
     label?: string,
   ) {
     this.animationOnly = animation;
-    this.label = label ?? (next === null ? 'Tirar o recorte' : `Recorte: ${cropSays(next)}`);
+    this.label = label ?? (next === null ? 'Tirar o recorte' : `Recorte ${cropSays(next)}`);
   }
 
   apply(doc: EditorDoc): void {
@@ -414,8 +418,8 @@ export function startCropEditing(doc: EditorDoc): string {
       says = CROP_DRAW_FIRST;
     } else {
       doc.endMerge?.();
-      doc.run(new SetCrop(doc.animation, born, null, `Criar o recorte: ${cropSays(born)}`));
-      says = `Recorte criado em volta do desenho: ${cropSays(born)}. ${CROP_MODE_ON}`;
+      doc.run(new SetCrop(doc.animation, born, null, `Criar o recorte ${cropSays(born)}`));
+      says = `Recorte criado em volta do desenho, ${cropSays(born)}. ${CROP_MODE_ON}`;
     }
   }
   setCropEditing(true);
