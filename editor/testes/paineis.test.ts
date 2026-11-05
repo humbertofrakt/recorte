@@ -3570,3 +3570,38 @@ describe('rodada 48, lote 3 — "imagem não encontrada" é UM tipo, com os nome
     expect(abrirComParagrafoR48b(1, false)).toBe(null);
   });
 });
+
+describe('QA 04/11/2026 — D9: mudar uma ponta da Cor ao nascer grava o PAR', () => {
+  // A prova (Chromium sem janela): Partículas → Fogo, aba Cor, «de» vermelho.
+  // O arquivo saiu com `startColor: [[1,0,0,1]]` — UMA cor — e o schema da
+  // extensão pede duas: `npm run validar` deu ERRO no .bone salvo. A ficha
+  // continuava mostrando «a» branco, que é o que o leitor usa na falta dela.
+  const arquivo = (startColor?: number[][]): BoneFile => ({
+    bone: { version: '1.0' }, skeleton: { name: 't' }, bones: [{ name: 'root' }],
+    slots: [{ name: 'p', bone: 'root', attachment: 'p' }],
+    skins: [{ name: 'default', attachments: { p: { p: { type: 'BONE_particle', rate: 10, ...(startColor ? { startColor } : {}) } } } }],
+    extensionsUsed: ['BONE_particles'],
+  } as unknown as BoneFile);
+  const campo = (file: BoneFile, key: string): FieldDef =>
+    attachmentFields(file, 'p', 'p').flatMap((g) => g.fields).find((f) => f.key === key)!;
+  const par = (doc: Doc): unknown => (doc.file.skins![0]!.attachments!['p']!['p'] as { startColor?: unknown }).startColor;
+
+  it('sem par no arquivo, «de» grava as duas pontas: a outra fica branca, como a ficha mostrava', async () => {
+    const { writeFieldValue } = await import('../src/panels/properties-model.js');
+    const doc = new Doc(arquivo());
+    writeFieldValue(doc as unknown as EditorDoc, campo(doc.file, 'startColor0'), [1, 0, 0, 1]);
+    expect(par(doc)).toEqual([[1, 0, 0, 1], [1, 1, 1, 1]]);
+    doc.undo();
+    expect(par(doc)).toBeUndefined();
+  });
+
+  it('«a» sem par também, e com o par já lá muda só a sua ponta', async () => {
+    const { writeFieldValue } = await import('../src/panels/properties-model.js');
+    const doc = new Doc(arquivo());
+    writeFieldValue(doc as unknown as EditorDoc, campo(doc.file, 'startColor1'), [0, 0, 1, 1]);
+    expect(par(doc)).toEqual([[1, 1, 1, 1], [0, 0, 1, 1]]);
+    const com = new Doc(arquivo([[0.5, 0.5, 0.5, 1], [0.2, 0.2, 0.2, 1]]));
+    writeFieldValue(com as unknown as EditorDoc, campo(com.file, 'startColor0'), [1, 0, 0, 1]);
+    expect(par(com)).toEqual([[1, 0, 0, 1], [0.2, 0.2, 0.2, 1]]);
+  });
+});
