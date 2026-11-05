@@ -2410,3 +2410,20 @@ describe('QA 04/11/2026 — D5: Salvar como sem pasta pergunta UMA vez', () => {
     expect(corpo.indexOf('if (pastaEscolhidaAgora)')).toBeLessThan(corpo.indexOf('Onde vai a cópia?'));
   });
 });
+
+describe('QA 04/11/2026 — D8: o .boneb aberto sozinho fala português', () => {
+  // A prova (Chromium sem janela): Ctrl+O → heroi.boneb, sem o atlas. O
+  // rodapé mostrou '/skins/0/attachments/cape_upper/cape_upper/path: image
+  // "cape_upper" not found in any atlas; attachment will be invisible' — a
+  // frase crua do leitor, em inglês. O mesmo herói em .bone diz "Esta base usa
+  // heroi.atlas.json, que mora na pasta do projeto, e ela veio sozinha…".
+  it('a primeira frase é a do atlas que não veio, como no .bone', async () => {
+    const { writeBoneb } = await import('../../runtime/src/binario/escrever.js');
+    const { readOpenedFiles } = await import('../src/io/open-save.js');
+    const texto = readFileSync(resolve(__dirname, '../../formato/exemplos/heroi.bone'), 'utf8');
+    const bytes = writeBoneb(JSON.parse(texto));
+    const aberto = await readOpenedFiles([new File([bytes.slice().buffer as ArrayBuffer], 'heroi.boneb')]);
+    expect(aberto).not.toBeNull();
+    expect(aberto!.warnings[0]).toMatch(/^Esta base usa heroi\.atlas\.json, que mora na pasta do projeto, e ela veio sozinha/);
+  });
+});

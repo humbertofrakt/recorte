@@ -499,6 +499,16 @@ export async function readOpenedFiles(files: readonly File[], known?: KnownFiles
 async function readPackedFile(picked: File, warnings: string[]): Promise<OpenedDocument> {
   const bytes = new Uint8Array(await picked.arrayBuffer());
   const loaded = await loadSkeletonFileAsync(bytes);
+  // QA 04/11/2026 (D8): o `.boneb` vem sem atlas — o binário não o carrega
+  // dentro, como o `.bonez`. A primeira frase é a mesma do `.bone` sozinho, em
+  // português, antes das frases cruas do leitor, imagem por imagem.
+  const pedidos = (loaded.file as BoneFile).assets?.atlases ?? [];
+  if (loaded.archive === null && pedidos.length > 0 && loaded.atlases.length === 0) {
+    warnings.push(pastaAbrindo !== null
+      ? atlasForaDaPastaNotice(picked.name, pedidos, pastaAbrindo)
+      : missingAtlasNotice(picked.name, pedidos, companionFolder ?? foldersOfBone(picked.name)[0] ?? null));
+  }
+  companionFolder = null;
   warnings.push(...loaded.warnings);
   for (const warning of loaded.data.warnings) warnings.push(`${warning.pointer}: ${warning.message}`);
 
