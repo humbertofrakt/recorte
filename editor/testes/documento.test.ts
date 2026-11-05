@@ -1828,3 +1828,14 @@ describe('QA 04/11/2026 — D18: Reabrir o fechado também nasce "não salvo"', 
     expect(corpo).toContain('shell.doc.setFile(file, { path: draft.path, atlases: [], images: new Map(), unsaved: true });');
   });
 });
+
+describe('QA 04/11/2026 — o rascunho recuperado diz como trazer as imagens', () => {
+  // A prova (Chromium sem janela): "Recuperar este trabalho" → rodapé
+  // "Arquivo não salvo." e "4 avisos": as imagens não vêm no rascunho, e nada
+  // dizia o que fazer. O "Reabrir o fechado" já dizia; o arranque, não.
+  it('o arranque diz o remédio, com as palavras do Reabrir o fechado', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/main.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('async function offerDraft('));
+    expect(corpo).toContain("doc.notice('Recuperado sem as imagens: para trazê-las, Arquivo → Abrir pasta do projeto… e Salvar e continuar');");
+  });
+});

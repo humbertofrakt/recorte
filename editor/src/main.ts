@@ -251,6 +251,8 @@ async function offerDraft(doc: Doc): Promise<void> {
     const file = JSON.parse(rascunho.json) as Parameters<Doc['setFile']>[0];
     // QA 04/11/2026 (D4): o recuperado não está no disco — nasce "não salvo".
     doc.setFile(file, { path: rascunho.path, atlases: [], images: new Map(), unsaved: true });
+    // QA 04/11/2026: o remédio das imagens, como o Reabrir o fechado já dizia.
+    doc.notice('Recuperado sem as imagens: para trazê-las, Arquivo → Abrir pasta do projeto… e Salvar e continuar');
   } catch {
     // O rascunho quebrado NÃO é apagado sem avisar: quem apaga é quem escolhe.
     void tellUser({
