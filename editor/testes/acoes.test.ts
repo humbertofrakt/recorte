@@ -170,8 +170,10 @@ describe('a tabela das ações', () => {
     // 304 (rodada 40, lote 4): +1, `deslocar-em-laco` (Animação → Chaves).
     // 305 (rodada 41, lote 4): +1, `criar-aresta` (Malha e regras → Malha).
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    // Reaproveitar (04/11/2026): + 'usar-animacoes', 'seguir-esqueleto-padrao'.
-    expect(tabela.length).toBe(308);
+    // 308 (N-4b, 05/11/2026): +2, `recorte-na-cena` e `tirar-recorte` (Animação, da cena).
+    // 309 (noite de 04/11/2026, obra/skins): +1, `guarda-roupa` (Skins → Guarda-roupa).
+    // 311 (noite de 04/11/2026, obra/reaproveitar): +2, `usar-animacoes` e `seguir-esqueleto-padrao`.
+    expect(tabela.length).toBe(311);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');
@@ -258,8 +260,9 @@ describe('as ações de arranque, sem painel montado', () => {
     // +3 (rodada 39b, lote 6): `anima-do-teste`, `skins-do-teste`, `teste-nas-iguais`. 129.
     // +1 (rodada 41, lote 4): `criar-aresta`. 130.
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    // Reaproveitar (04/11/2026): + 'usar-animacoes', 'seguir-esqueleto-padrao'.
-    expect(arranque().length).toBe(133);
+    // +1 (noite de 04/11/2026, obra/skins): `guarda-roupa`. 132.
+    // +2 (noite de 04/11/2026, obra/reaproveitar): `usar-animacoes`, `seguir-esqueleto-padrao`. 134.
+    expect(arranque().length).toBe(134);
   });
 
   it('a função que ela devolve tira todas', () => {

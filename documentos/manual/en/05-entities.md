@@ -12,13 +12,9 @@ them all.
 
 ## What you will be able to do by the end
 
-1. Bring a ready-made animated piece (the sword, the fire, the tyre) into the
-   project.
-2. Put the piece in the place of an image, and have it inherit the place and
-   the keys.
-3. Drive the piece with its **strip** on the timeline.
-4. Test fittings without touching the file, and save only what turned out well.
-5. Put the character **inside** another piece ("Este boneco", this character).
+1. Bring a ready-made animated piece (the sword, the fire) and put it in the place of an image.
+2. Drive the piece with its **strip** on the timeline, and test without touching the file.
+3. Put the character **inside** another piece (**"Este boneco…"**, this character).
 
 ---
 
@@ -384,6 +380,17 @@ In the `formato/exemplos/` folder, cited in the specification.
 | `exemplos/capacete.bone` | a helmet with its own skeleton and animations |
 
 `npm run conformidade`: **120 of 120** cases pass (07/10).
+
+---
+
+## What does not work yet
+
+| What | How it is today |
+|:---|:---|
+| Swapping through the grid in an animation applying **only from there on** | the grid saves into the base. Dragging into the scene is what applies only in the animation |
+| Choosing the background channel (`baseAnimation`) | the editor reads it from the file, but there is no door to choose it |
+| The Preview showing the outer one **around** (the mecha) | the Preview shows only the test pieces **on** the character |
+| **"Pôr no projeto…" (Put in the project…)** in an animation, from the playhead on | it always goes to the base |
 
 ---
 

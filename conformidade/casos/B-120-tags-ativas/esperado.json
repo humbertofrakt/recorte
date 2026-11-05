@@ -1,0 +1,60 @@
+{
+  "probe": {
+    "animation": "golpe",
+    "times": [
+      0,
+      0.25,
+      0.5,
+      0.6,
+      0.75,
+      1
+    ],
+    "measure": [
+      "tags"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0,
+      "tags": [
+        "idle"
+      ]
+    },
+    {
+      "time": 0.25,
+      "tags": [
+        "idle"
+      ]
+    },
+    {
+      "time": 0.5,
+      "tags": [
+        "idle",
+        "ataque",
+        "invulneravel"
+      ]
+    },
+    {
+      "time": 0.6,
+      "tags": [
+        "idle",
+        "ataque",
+        "invulneravel"
+      ]
+    },
+    {
+      "time": 0.75,
+      "tags": [
+        "idle"
+      ]
+    },
+    {
+      "time": 1,
+      "tags": [
+        "idle",
+        "fim"
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@
  * a casca (`shell`), e a classe `Shell` guarda um método de uma linha.
  */
 
+import { avisoNoRodape } from '../panels/warning-model.js';
 import { clearDraft, draftMove, draftOnExit, shouldWriteDraft, writeDraft } from '../doc/rascunho.js';
 import type { DraftStorage } from '../doc/rascunho.js';
 import { abrindoPelaPasta, forgetHandle, readOpenedFiles } from '../io/open-save.js';
@@ -267,7 +268,7 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
           skeletons: aberto.skeletons,
         });
         await adoptFolderAtlases(shell.doc);
-        shell.statusState.textContent = aberto.warnings[0] ?? `${qual} aberto pelo arrasto.`;
+        shell.statusState.textContent = aberto.warnings[0] !== undefined ? avisoNoRodape(aberto.warnings[0]) : `${qual} aberto pelo arrasto.`;
         return;
       }
       case 'abrir': {
@@ -289,8 +290,8 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
           skeletons: aberto.skeletons,
         });
         await adoptFolderAtlases(shell.doc);
-        shell.statusState.textContent = aberto.warnings[0]
-          ?? `${plano.skeleton} aberto pelo arrasto.`;
+        shell.statusState.textContent = aberto.warnings[0] !== undefined ? avisoNoRodape(aberto.warnings[0])
+          : `${plano.skeleton} aberto pelo arrasto.`;
         return;
       }
       case 'psd': {
@@ -312,8 +313,9 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
         const importado = await importForeignProject(escolhidos);
         forgetHandle();
         forgetImportedImages(shell.doc);
+        // QA 04/11/2026 (D7): o importado ainda não existe no disco — nasce "não salvo".
         shell.doc.setFile(importado.file, {
-          path: importado.path, atlases: importado.atlases, images: importado.images,
+          path: importado.path, atlases: importado.atlases, images: importado.images, unsaved: true,
         });
         const programa = FORMAT_LABELS[importado.format];
         shell.statusState.textContent = `Importado do ${programa}: ${importado.path}. Lendo as imagens…`;

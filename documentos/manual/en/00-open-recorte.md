@@ -75,6 +75,8 @@ There is also the **built** editor, which needs no terminal: double-click
 The editor opens **empty**, with the **"Transformar" (Transform)** tool in
 hand. In the middle of the stage, four big buttons:
 
+![The editor just opened: the empty stage and the four big buttons in the middle](../imagens/00-boas-vindas.png)
+
 | Button | What it does |
 |:---|:---|
 | **"Abrir pasta" (Open folder)** | the folder's images go to the **"Imagens" (Images)** tab; you drag them in to build |
@@ -91,7 +93,7 @@ the work back. Nothing opens on its own.
 
 ## The screen, from top to bottom
 
-![The editor just opened, with the example hero: menus on top, the action bar, two panel columns, the stage in the middle and the timeline at the bottom](../imagens/01-a-tela.png)
+![The editor just opened, with the example hero: menus on top, the action bar, two panel columns, the stage in the middle and the timeline at the bottom](../imagens/00-a-tela.png)
 
 | Band | What it is |
 |:---|:---|
@@ -114,7 +116,7 @@ mouse on it: the whole sentence appears in the tooltip.
 
 It sits just below the menu and is **one single line**.
 
-![The whole action bar](../imagens/01-barra-de-acoes.png)
+![The whole action bar](../imagens/00-barra-de-acoes.png)
 
 | Group | What it has |
 |:---|:---|
@@ -169,7 +171,10 @@ shortcuts)** has a pencil on every line.
 
 These four are **words**, not icons. They turn **orange** while they are on.
 
-![The four see-and-lock buttons, with See bones and See drawings lit in orange](../imagens/08-ver-e-travar.png)
+![See bones lit in orange, and Lock bones off, on the action bar](../imagens/00-ver-e-travar.png)
+
+*At 1440 wide, only the two bone buttons fit on the bar. The two drawing
+buttons are in **"Mais ▾" (More)**.*
 
 | Button | Key | What it does |
 |:---|:---:|:---|
@@ -188,7 +193,7 @@ state that is on reads better as a lit word. That is how Spriter does it.
 **The Setup | Animating ("Montagem | Animando") switch is gone** (18/09/2026).
 `Ctrl+Tab` went with it. There is no mode: there is **what is open**.
 
-![The old mode switch](../imagens/01-modo.png)
+![The old mode switch](../imagens/00-rodape-base.png)
 
 | The status bar says | Moving a bone |
 |:---|:---|
@@ -245,7 +250,7 @@ animate, dress, attach, effects — and then look.
 | **"Peles" (Skins)** | **Skins** |
 | body ("corpo") | base |
 
-![The View menu open](../imagens/01-menu-exibir.png)
+![The View menu open](../imagens/00-menu-exibir.png)
 
 **The menu hides no button.** The button stays where it always was, and the
 menu calls the same function. It is there for you to *find* a function and
@@ -275,7 +280,7 @@ This manual opens from **"Ajuda → Manual" (Help → Manual)**, or `F1`.
 
 ### File ("Arquivo")
 
-![The File menu open](../imagens/01-menu-arquivo.png)
+![The File menu open](../imagens/00-menu-arquivo.png)
 
 | Item | Key | What it does |
 |:---|:---:|:---|
@@ -302,7 +307,7 @@ This manual opens from **"Ajuda → Manual" (Help → Manual)**, or `F1`.
 | **"Exportar ▸ Animações, para outra base…" (Export ▸ Animations, for another base…)** | — | writes the checked animations to a `.bone` |
 | **"Exportar ▸ Skin, para outro boneco…" (Export ▸ Skin, for another puppet…)** | — | writes the pencil's skin to a `.bone` |
 | **"Repetir a última exportação" (Repeat last export)** | `Ctrl+Shift+E` | exports again, without opening the window |
-| **"Configurações do projeto…" (Project settings…)** | — | frames per second, background colour, grid, mix time |
+| **"Configurações do projeto…" (Project settings…)** | — | frames per second, background colour, grid, what to do on an animation switch while playing, mix time |
 | **"Sair" (Quit)** | — | closes. What was not saved comes back through Reopen closed |
 
 **Gone from File:** **"Importar → Imagens…" (Import → Images…)** (images arrive
@@ -311,7 +316,7 @@ through the folder, or dropped on the window) and **"Reempacotar atlas"
 
 ### Edit ("Editar")
 
-![The Edit menu open](../imagens/01-menu-editar.png)
+![The Edit menu open](../imagens/00-menu-editar.png)
 
 | Item | Key | What it does |
 |:---|:---:|:---|
@@ -341,6 +346,8 @@ through the folder, or dropped on the window) and **"Reempacotar atlas"
 
 ### Images ("Imagens")
 
+![The Images menu open: reload the folder, put an image on the stage, the pivot](../imagens/00-menu-imagens.png)
+
 | Item | What it does |
 |:---|:---|
 | **"Recarregar a pasta" (Reload the folder)** | rereads the folder from disk: a new image comes in, a deleted one goes out |
@@ -356,7 +363,7 @@ through the folder, or dropped on the window) and **"Reempacotar atlas"
 
 ### Base ("Base")
 
-![The Skeleton menu open](../imagens/01-menu-esqueleto.png)
+![The Skeleton menu open](../imagens/00-menu-base.png)
 
 | Item | Key | What it does |
 |:---|:---:|:---|
@@ -366,7 +373,7 @@ through the folder, or dropped on the window) and **"Reempacotar atlas"
 | **"Novo ▸ Osso" (New ▸ Bone)** | — | a bone, child of the selected one |
 | **"Novo ▸ Ponto" (New ▸ Point)** | `O` | a named position with a direction |
 | **"Novo ▸ Caixa de colisão" (New ▸ Collision box)** | `X` | an outline for the game to measure |
-| **"Novo ▸ Ponto neste slot" (New ▸ Point in this slot)** · **"Caixa neste slot" (Box in this slot)** | — | goes into the selected drawing, without creating another |
+| **"Novo ▸ Ponto neste desenho" (New ▸ Point in this drawing)** · **"Caixa neste desenho" (Box in this drawing)** | — | goes into the selected drawing, without creating another |
 | **"Novo ▸ Máscara" (New ▸ Mask)** | — | an outline that clips without erasing |
 | **"Virar filho de…" (Become child of…)** | `P` | with a bone selected: click whatever becomes its child, until `Esc` |
 | **"Trazer para a frente" (Bring forward)** | `+` | moves up one place in the draw order |
@@ -388,6 +395,8 @@ through the folder, or dropped on the window) and **"Reempacotar atlas"
 
 ### Mesh and rules ("Malha e regras")
 
+![The Mesh and rules menu open: Mesh, Weights, the rules, the parameters and Physics](../imagens/00-menu-malha-e-regras.png)
+
 | Item | What it does |
 |:---|:---|
 | **"Malha ▸" (Mesh ▸)** | "Virar malha" (Turn into mesh) · "Gerar automática" (Generate automatically) · "Traçar contorno" (Trace outline) · "Criar vértice" (Create vertex) · "Criar ou apagar aresta" (Create or delete edge) · "Apagar vértice" (Delete vertex) · "Usar a forma de outra malha" (Use another mesh's shape) |
@@ -401,7 +410,7 @@ See chapters [6](06-mesh-and-weights.md) and [7](07-the-five-rules.md).
 
 ### Animation ("Animação")
 
-![The Animation menu open](../imagens/01-menu-animacao.png)
+![The Animation menu open](../imagens/00-menu-animacao.png)
 
 | Item | Key | What it does |
 |:---|:---:|:---|
@@ -413,24 +422,29 @@ See chapters [6](06-mesh-and-weights.md) and [7](07-the-five-rules.md).
 | **"Tocar / Pausar" (Play / Pause)** | `Space` | plays and pauses |
 | **"Tocar para trás" (Play backwards)** | `Shift+Space` | from the end to the start |
 | **"Abrir a Prévia" (Open the Preview)** | — | the Preview tab, with the animation playing |
-| **"Ir para ▸" (Go to ▸)** | `Home` `End` `←` `→` `↑` `↓` | start, end, frame, key; `Shift+↑` `Shift+↓`: only the selected one's |
+| **"Ir para ▸" (Go to ▸)** | `Home` `End` `←` `→` `↑` `↓` | "Início" (Start) · "Fim" (End) · "Quadro anterior" / "Quadro seguinte" (Previous / Next frame) · "Chave anterior" / "Chave seguinte" (Previous / Next key) |
+| **"Ir para ▸" (Go to ▸)** | `Shift+↑` `Shift+↓` | "Chave anterior do escolhido" / "Chave seguinte do escolhido" (Previous / Next key of the selected one) |
 | **"Chavear" (Key)** | `K` | protects the pose: records the selected one's key |
 | **"Chavear tudo" (Key all)** | `Ctrl+K` | records a key on every row |
 | **"Troca de base ▸" (Base swap ▸)** | — | "Colar outra base aqui" (Paste another base here) · "Tirar a troca daqui" (Remove the swap here) |
+| **"Recorte na cena" (Crop on the stage)** | `C` | the rectangle that the image export uses, for this animation only. See [chapter 8](08-export-and-use-in-a-game.md) |
+| **"Tirar o recorte" (Remove the crop)** | — | deletes the rectangle; the export goes back to trimming the border by itself |
 | **"Apagar chave" (Delete key)** | — | deletes the key at the current time |
 | **"Apagar as linhas" (Delete the rows)** | `Shift+Delete` | removes the whole property from the animation |
 | **"Limpar a animação inteira…" (Clear the whole animation…)** | — | asks first |
 | **"Curva da chave ▸" (Key curve ▸)** | — | "Linear" (Linear) · "Suave" (Smooth) · "Entrada suave" (Ease in) · "Saída suave" (Ease out) · "Parada" (Stepped) · "Curva à mão…" (Hand-drawn curve…) |
-| **"Marcas ▸" (Marks ▸)** | `M` · `Ctrl+↑` · `Ctrl+↓` | add or remove a mark, previous mark, next mark |
+| **"Marcas ▸" (Marks ▸)** | `M` · `Ctrl+↑` · `Ctrl+↓` | "Pôr ou tirar marca aqui" (Add or remove a mark here) · "Marca anterior" (Previous mark) · "Marca seguinte" (Next mark) |
 | **"Novo evento" (New event)** | — | a signal the animation sends to the game |
-| **"Trecho de laço ▸" (Loop range ▸)** | — | start · end · remove the range |
-| **"Variáveis e etiquetas ▸" (Variables and tags ▸)** | — | new, delete, rename, show in the Rules tab |
+| **"Trecho de laço ▸" (Loop range ▸)** | — | "Começo do trecho aqui" (Range start here) · "Fim do trecho aqui" (Range end here) · "Tirar o trecho" (Remove the range) |
+| **"Variáveis e etiquetas ▸" (Variables and tags ▸)** | — | "Nova variável" (New variable) · "Apagar a variável" (Delete the variable) · "Nova etiqueta" (New tag) · "Renomear etiqueta" (Rename tag) · "Apagar etiqueta" (Delete tag) · "Mostrar na aba Regras" (Show in the Rules tab) |
 | **"Efeitos de chave ▸" (Key effects ▸)** | — | "Flash…" (Flash…) · "Pulso…" (Pulse…) · "Tremor…" (Shake…) |
 | **"Chaves ▸" (Keys ▸)** | — | "Selecionar todas" (Select all) · "Esticar" (Stretch) · "Espelhar no tempo" (Mirror in time) · "Fechar ciclo" (Close cycle) · "Espelhar esquerda e direita" (Mirror left and right) · "Empurrar" (Push) · "Deslocar em laço" (Shift in loop) · "Limpar repetidas" (Clean up repeated) |
 
 **Gone from Animation:** Setup ⇄ Animating (`Ctrl+Tab`) and Auto-key (`A`).
 
 ### Skins ("Skins")
+
+![The Skins menu open: create, clone, delete and promote skins](../imagens/00-menu-skins.png)
 
 | Item | What it does |
 |:---|:---|
@@ -447,6 +461,8 @@ Importing and exporting skins are in **File**. See [chapter 3](03-skins.md).
 
 ### Entities ("Entidades")
 
+![The Entities menu open: bring in, put on the stage, test and promote](../imagens/00-menu-entidades.png)
+
 | Item | What it does |
 |:---|:---|
 | **"Trazer entidade de fora…" (Bring in outside entity…)** | an outside `.bone` enters the Entities list |
@@ -461,6 +477,8 @@ Importing and exporting skins are in **File**. See [chapter 3](03-skins.md).
 See [chapter 5](05-entities.md).
 
 ### Particles ("Partículas")
+
+![The Particles menu open: the empty emitter and the four ready-made ones](../imagens/00-menu-particulas.png)
 
 | Item | What it does |
 |:---|:---|
@@ -501,11 +519,11 @@ The same is on the **Particles** button of the action bar.
 
 ### Window ("Janela")
 
-![The Window menu open](../imagens/01-menu-janela.png)
+![The Window menu open](../imagens/00-menu-janela.png)
 
 | Item | Key | What it does |
 |:---|:---:|:---|
-| **"Arranjos ▸" (Layouts ▸)** | — | "Montar" (Build) · "Animar" (Animate) · "Pesos" (Weights) · "Pivô" (Pivot) · "Visualização" (Viewing) · your own · "Guardar" (Store) · "Apagar" (Delete) · "Voltar ao padrão" (Back to default) |
+| **"Arranjos ▸" (Layouts ▸)** | — | "Montar" (Build) · "Animar" (Animate) · "Pesos" (Weights) · "Pivô" (Pivot) · "Visualização" (Viewing) · your own · "Guardar este arranjo…" (Store this layout…) · "Apagar um arranjo…" (Delete a layout…) · "Voltar ao padrão" (Back to default) |
 | **"Arrumar ▸ Esconder painéis" (Arrange ▸ Hide panels)** | `Tab` | the columns and the timeline disappear |
 | **"Arrumar ▸ Esconder só as colunas" (Arrange ▸ Hide only the columns)** | `Shift+Tab` | the columns disappear; the timeline stays |
 | **"Arrumar ▸ Soltar o painel da parede" (Arrange ▸ Undock the panel)** | — | the panel in use floats over the stage |
@@ -525,7 +543,7 @@ ones are in a column. Click to open; click the one already in front to close.
 
 ### Help ("Ajuda")
 
-![The Help menu open](../imagens/01-menu-ajuda.png)
+![The Help menu open](../imagens/00-menu-ajuda.png)
 
 | Item | Key | What it does |
 |:---|:---:|:---|
@@ -543,6 +561,8 @@ Twelve menus and more than two hundred entries. The most common question is not
 "does this exist?" — it is **"which menu is it in?"**.
 
 Press `Ctrl+Shift+P`, type three letters, press `Enter`.
+
+![The command palette open, with the word chave (key) typed: each line gives the name, the menu it lives in, and the key](../imagens/00-paleta.png)
 
 - No accents or capitals needed: `cebola` finds **"Casca de cebola" (Onion skin)**.
 - The arrows move through the list, `Enter` picks, `Esc` closes.

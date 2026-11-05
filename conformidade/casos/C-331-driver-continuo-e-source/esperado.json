@@ -1,0 +1,90 @@
+{
+  "probe": {
+    "animation": "puxar",
+    "times": [
+      0.25,
+      0.5,
+      0.9
+    ],
+    "measure": [
+      "bones",
+      "slots",
+      "parameters"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "parameters": {
+        "puxa": 0.375
+      },
+      "bones": {
+        "alavanca": {
+          "ax": 37.5
+        },
+        "mao": {
+          "arotation": 45.0
+        }
+      },
+      "slots": {
+        "luz": {
+          "color": [
+            1,
+            0.625,
+            0.625,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "time": 0.5,
+      "parameters": {
+        "puxa": 0.75
+      },
+      "bones": {
+        "alavanca": {
+          "ax": 75.0
+        },
+        "mao": {
+          "arotation": 90.0
+        }
+      },
+      "slots": {
+        "luz": {
+          "color": [
+            1,
+            0.25,
+            0.25,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "time": 0.9,
+      "parameters": {
+        "puxa": 1.0
+      },
+      "bones": {
+        "alavanca": {
+          "ax": 135.0
+        },
+        "mao": {
+          "arotation": 120.0
+        }
+      },
+      "slots": {
+        "luz": {
+          "color": [
+            1,
+            0.0,
+            0.0,
+            1
+          ]
+        }
+      }
+    }
+  ]
+}

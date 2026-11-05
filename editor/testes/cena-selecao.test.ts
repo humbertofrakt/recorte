@@ -965,10 +965,11 @@ describe('menu Exibir e manual', () => {
     for (const nome of ['Guias', 'Travar guias', 'Limpar guias']) expect(labels).toContain(nome);
   });
 
-  itManual('o capítulo 2 diz os três gestos, nas duas línguas', () => {
+  itManual('o capítulo 1 diz os três gestos, nas duas línguas', () => {
     const ler = (...partes: string[]): string =>
       readFileSync(resolve(RAIZ, 'documentos', 'manual', ...partes), 'utf8').replace(/\s+/g, ' ');
-    for (const texto of [ler('02-montar-o-personagem.md'), ler('en', '02-build-the-character.md')]) {
+    // D13: montar o personagem é o capítulo 1 desde a v36.5.
+    for (const texto of [ler('01-montar-um-corpo.md'), ler('en', '01-build-a-body.md')]) {
       for (const trecho of ['Os filhos', 'Os pais', 'Travar guias', 'Limpar guias', 'RECORTE_editor_state']) {
         expect(texto, trecho).toContain(trecho);
       }

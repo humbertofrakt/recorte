@@ -210,6 +210,9 @@ class MeshPanel implements Panel {
     // `malha-corpo` aperta o preenchimento de baixo de `.painel-corpo` (16px,
     // pensado para uma lista) — prova de 1280×720, 14/09/2026.
     const body = el('div', 'painel-corpo malha-corpo');
+    // 04/11/2026: em 1280×720 a aba rola com régua própria — a seção da
+    // ferramenta inteira à vista, as dobradas rolam (`medir-paineis.mjs`).
+    body.dataset.rolagem = 'ferramenta';
     host.append(body);
     this.body = body;
     this.stopBrush = onBrushChange(() => this.render());

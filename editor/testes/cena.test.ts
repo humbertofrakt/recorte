@@ -1667,3 +1667,209 @@ describe('rodada 47, lote 3: o zoom da cena faz conta e anda com as setas (nota 
     expect(cena).toContain("const passo = (e.shiftKey ? 50 : 10) * (e.key === 'ArrowUp' ? 1 : -1);");
   });
 });
+
+// ---------------------------------------------------------------------------
+// N-4b (05/11/2026): o recorte da exportação, arrastado na cena
+// ---------------------------------------------------------------------------
+
+import {
+  CROP_DRAW_FIRST, CROP_MIN, CROP_NEEDS_ANIMATION, SetCrop, cropAroundDrawing, cropEditing, cropFromCorners,
+  cropHandles, cropInFile, cropOfOpenAnimation, cropZoneAt, dragCrop, hasCropField, removeCrop, setCropEditing,
+  startCropEditing,
+} from '../src/viewport/crop-model.js';
+import { cropChoice } from '../src/io/export-image.js';
+import { CROP_FIELDS } from '../src/viewport/crop-model.js';
+import { cropBoxSignature } from '../src/viewport/crop-box.js';
+import { CROP_NONE_TITLE, cropStripSignature, cropStripTitle } from '../src/panels/animations-crop.js';
+import { KEY_TABLE, keyConflicts } from '../src/ui/keys.js';
+import { parseBoneText as parseBoneTextN4b } from '../../runtime/src/index.js';
+
+describe('N-4b: o recorte arrastável na cena', () => {
+  const heroiN4b = (): InstanceType<typeof DocCena> => new DocCena(parseBoneTextN4b(
+    readFileSyncCena(resolveCena(import.meta.dirname, '../../formato/exemplos/heroi.bone'), 'utf8'),
+  ) as BoneFile);
+  const animOf = (doc: InstanceType<typeof DocCena>, name: string): Record<string, unknown> =>
+    (doc.file.animations ?? []).find((a) => a.name === name) as unknown as Record<string, unknown>;
+  const box = { x: -100, y: 0, width: 200, height: 300 };
+
+  beforeEach(() => setCropEditing(false));
+
+  it('prova do defeito: o herói não traz recorte, e sem recorte a cena não desenha nada', () => {
+    const doc = heroiN4b();
+    doc.animation = 'idle';
+    expect(hasCropField(doc.file, 'idle')).toBe(false);
+    expect(cropOfOpenAnimation(doc)).toBeNull();
+  });
+
+  it('os puxadores: canto antes de lado, lado antes do meio, fora é null', () => {
+    const r = 4;
+    expect(cropZoneAt(box, -100, 300, r)).toBe('nw');
+    expect(cropZoneAt(box, 100, 0, r)).toBe('se');
+    expect(cropZoneAt(box, 0, 300, r)).toBe('n');
+    expect(cropZoneAt(box, 100, 150, r)).toBe('e');
+    // A borda inteira puxa o lado, não só o quadradinho do meio.
+    expect(cropZoneAt(box, 100, 40, r)).toBe('e');
+    expect(cropZoneAt(box, -40, 1, r)).toBe('s');
+    expect(cropZoneAt(box, 0, 150, r)).toBe('move');
+    expect(cropZoneAt(box, 300, 150, r)).toBeNull();
+    expect(cropHandles(box).map((h) => h.zone)).toEqual(['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w']);
+  });
+
+  it('puxar um lado mexe só nele; o outro fica parado no inteiro em que estava', () => {
+    expect(dragCrop(box, 'e', 20.4, 99)).toEqual({ x: -100, y: 0, width: 220, height: 300 });
+    expect(dragCrop(box, 'w', -10, 0)).toEqual({ x: -110, y: 0, width: 210, height: 300 });
+    expect(dragCrop(box, 'n', 0, -50)).toEqual({ x: -100, y: 0, width: 200, height: 250 });
+    expect(dragCrop(box, 'sw', 10, 10)).toEqual({ x: -90, y: 10, width: 190, height: 290 });
+    expect(dragCrop(box, 'move', 5.6, -3.2)).toEqual({ x: -94, y: -3, width: 200, height: 300 });
+  });
+
+  it('puxar além do lado oposto não vira do avesso: para a 1 px dele', () => {
+    const r = dragCrop(box, 'e', -500, 0);
+    expect(r.x).toBe(-100);
+    expect(r.width).toBe(CROP_MIN);
+    const t = dragCrop(box, 'n', 0, -900);
+    expect(t.y).toBe(0);
+    expect(t.height).toBe(CROP_MIN);
+  });
+
+  it('traçar de um canto ao outro, em qualquer direção', () => {
+    expect(cropFromCorners(50, 80, -30.2, 10)).toEqual({ x: -30, y: 10, width: 80, height: 70 });
+  });
+
+  it('o recorte que nasce sozinho é o desenho com margem, e sem desenho não se inventa', () => {
+    expect(cropAroundDrawing({ x: -10.5, y: 0.2, width: 20, height: 30 }, 10)).toEqual({ x: -21, y: -10, width: 41, height: 51 });
+    expect(cropAroundDrawing(null)).toBeNull();
+    expect(cropAroundDrawing({ x: 0, y: 0, width: 0, height: 10 })).toBeNull();
+  });
+
+  it('SetCrop grava, o Ctrl+Z tira o campo inteiro, e a cena lê o novo na hora', () => {
+    const doc = heroiN4b();
+    doc.animation = 'idle';
+    doc.run(new SetCrop('idle', box));
+    expect(animOf(doc, 'idle').crop).toEqual(box);
+    // A cena e a exportação leem `doc.data`: o comando relê as animações.
+    expect(cropOfOpenAnimation(doc)).toEqual(box);
+    doc.undo();
+    expect(Object.prototype.hasOwnProperty.call(animOf(doc, 'idle'), 'crop')).toBe(false);
+    expect(cropOfOpenAnimation(doc)).toBeNull();
+    doc.redo();
+    expect(cropInFile(doc.file, 'idle')).toEqual(box);
+  });
+
+  it('o revert devolve o objeto antigo letra por letra, com campo a mais e tudo', () => {
+    const doc = heroiN4b();
+    const idle = animOf(doc, 'idle');
+    idle.crop = { x: 1, width: 10, height: 20, extra: 'fica' };
+    doc.rebuild();
+    doc.run(new SetCrop('idle', { x: 5, y: 5, width: 5, height: 5 }));
+    doc.undo();
+    expect(animOf(doc, 'idle').crop).toEqual({ x: 1, width: 10, height: 20, extra: 'fica' });
+  });
+
+  it('um arrasto é um passo de desfazer só; o próximo arrasto é outro', () => {
+    const doc = heroiN4b();
+    doc.animation = 'idle';
+    doc.run(new SetCrop('idle', box, 'cena'));
+    doc.run(new SetCrop('idle', { ...box, width: 210 }, 'cena'));
+    doc.run(new SetCrop('idle', { ...box, width: 220 }, 'cena'));
+    doc.endMerge?.();
+    doc.run(new SetCrop('idle', { ...box, width: 230 }, 'cena'));
+    doc.undo();
+    expect(cropInFile(doc.file, 'idle')?.width).toBe(220);
+    doc.undo();
+    expect(hasCropField(doc.file, 'idle')).toBe(false);
+  });
+
+  it('ligar o modo sem recorte cria um em volta do desenho, num passo de desfazer', () => {
+    const doc = heroiN4b();
+    doc.animation = 'idle';
+    doc.repose();
+    const says = startCropEditing(doc);
+    expect(cropEditing()).toBe(true);
+    const nasceu = cropInFile(doc.file, 'idle');
+    expect(nasceu).not.toBeNull();
+    expect(nasceu!.width).toBeGreaterThan(20);
+    expect(says).toContain('Recorte criado em volta do desenho');
+    expect(doc.undoLabel).toContain('Criar o recorte');
+    doc.undo();
+    expect(hasCropField(doc.file, 'idle')).toBe(false);
+  });
+
+  it('com a base aberta o modo não liga, e diz por quê (regra 21)', () => {
+    const doc = heroiN4b();
+    doc.animation = null;
+    expect(startCropEditing(doc)).toBe(CROP_NEEDS_ANIMATION);
+    expect(cropEditing()).toBe(false);
+    expect(removeCrop(doc)).toBe(CROP_NEEDS_ANIMATION);
+  });
+
+  it('sem desenho na cena o modo liga, mas não inventa tamanho: pede o traço', () => {
+    const doc = new DocCena({ skeleton: { name: 'vazio' }, bones: [{ name: 'root' }], animations: [{ name: 'a' }] } as unknown as BoneFile);
+    doc.animation = 'a';
+    expect(startCropEditing(doc)).toBe(CROP_DRAW_FIRST);
+    expect(cropEditing()).toBe(true);
+    expect(hasCropField(doc.file, 'a')).toBe(false);
+  });
+
+  it('tirar o recorte apaga o campo e desliga o modo; Ctrl+Z traz de volta', () => {
+    const doc = heroiN4b();
+    doc.animation = 'idle';
+    doc.run(new SetCrop('idle', box));
+    setCropEditing(true);
+    expect(removeCrop(doc)).toContain('corte automático');
+    expect(hasCropField(doc.file, 'idle')).toBe(false);
+    expect(cropEditing()).toBe(false);
+    doc.undo();
+    expect(cropInFile(doc.file, 'idle')).toEqual(box);
+  });
+
+  it('a exportação usa o recorte arrastado (A área desenhada nesta animação)', () => {
+    const doc = heroiN4b();
+    doc.animation = 'idle';
+    doc.run(new SetCrop('idle', { x: -40, y: 5, width: 80, height: 90 }, 'cena'));
+    const anim = doc.data!.animations.find((a) => a.name === 'idle')!;
+    expect(cropChoice({ crop: 'animacao' }, anim).box).toEqual({ x: -40, y: 5, width: 80, height: 90 });
+    // A outra opção continua sendo a borda: o recorte não manda nela.
+    expect(cropChoice({ crop: 'borda' }, anim).box).toBeNull();
+  });
+
+  it('a tira de Animações: some na base, muda de assinatura a cada passo', () => {
+    const doc = heroiN4b();
+    doc.animation = null;
+    expect(cropStripSignature(doc)).toBe('base');
+    expect(cropStripTitle(doc)).toBeNull();
+    doc.animation = 'idle';
+    expect(cropStripTitle(doc)).toBe(CROP_NONE_TITLE);
+    const antes = cropStripSignature(doc);
+    doc.run(new SetCrop('idle', box));
+    expect(cropStripSignature(doc)).not.toBe(antes);
+    expect(cropStripTitle(doc)).toBe('Recorte 200 × 300 px');
+    // R2/R3 do doc 68: unidade depois da caixa, faixa na dica.
+    for (const campo of CROP_FIELDS) expect(campo.dica).toMatch(/em px, de /);
+    expect(CROP_FIELDS.filter((c) => c.min === 1).map((c) => c.key)).toEqual(['width', 'height']);
+  });
+
+  it('a caixa dos números na cena só abre com o modo ligado, e muda a cada passo', () => {
+    const doc = heroiN4b();
+    doc.animation = 'idle';
+    doc.run(new SetCrop('idle', box));
+    expect(cropBoxSignature(doc)).toBe('fechada');
+    setCropEditing(true);
+    const aberta = cropBoxSignature(doc);
+    expect(aberta).toBe('idle|-100,0,200,300');
+    doc.run(new SetCrop('idle', { ...box, width: 260 }, 'cena'));
+    expect(cropBoxSignature(doc)).not.toBe(aberta);
+    doc.animation = null;
+    expect(cropBoxSignature(doc)).toBe('fechada');
+  });
+
+  it('o menu Animação tem as duas portas, com C para o recorte, e as teclas não brigam', () => {
+    const anim = allMenus(NEUTRAL_MENU_STATE).find((g) => g.label === 'Animação')!;
+    const entradas = flatEntries(anim.entries);
+    expect(entradas.find((e) => e.action === 'recorte-na-cena')?.shortcut).toBe('C');
+    expect(entradas.some((e) => e.action === 'tirar-recorte')).toBe(true);
+    expect(ACTION_TABLE.find((r) => r.id === 'recorte-na-cena')?.owner).toBe('cena');
+    expect(KEY_TABLE.filter((k) => k.action === 'local:recorte-fim').map((k) => k.key)).toEqual(['enter', 'escape']);
+    expect(keyConflicts(KEY_TABLE)).toEqual([]);
+  });
+});

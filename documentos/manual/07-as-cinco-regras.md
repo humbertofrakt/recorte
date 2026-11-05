@@ -1,14 +1,12 @@
 # 7. As cinco regras
 
-Também em inglês: [English](en/05-rules.md)
+Também em inglês: [English](en/07-the-five-rules.md)
 
 ## O que você vai conseguir fazer no fim
 
-1. Criar qualquer uma das cinco regras pela janela que pergunta, sem escrever no
-   arquivo.
-2. Fazer o pé não escorregar no chão e o cabelo balançar sozinho.
-3. Ligar e desligar uma regra no meio de uma animação.
-4. Trocar os ossos de uma regra sem apagar e refazer.
+1. Criar qualquer uma das cinco regras pela janela que pergunta.
+2. Fazer o pé não escorregar e o cabelo balançar sozinho.
+3. Ligar, desligar e trocar os ossos de uma regra, sem refazer.
 
 ---
 
@@ -45,7 +43,7 @@ No arquivo `.bone` elas se chamam *constraints*. No editor ficam na aba
 
 ## A aba Regras
 
-![A aba Regras: as cinco regras do herói, cada uma com olho, ícone do tipo, nome, a cadeia escrita embaixo e a força em barra](imagens/05-regras.png)
+![A aba Regras: as cinco regras do herói, cada uma com olho, ícone do tipo, nome, a cadeia escrita embaixo e a força em barra](imagens/07-regras.png)
 
 ### A barra de cima
 
@@ -113,7 +111,7 @@ frase do que faz. Botão **Continuar**.
 
 **Depois as perguntas daquele tipo, em palavras:**
 
-![A janela Nova regra de cinemática inversa: a lista de ossos com caixas, a pergunta do alvo, a caixa da dobra, e a frase dizendo o que ainda falta](imagens/05-nova-regra.png)
+![A janela Nova regra de cinemática inversa: a lista de ossos com caixas, a pergunta do alvo, a caixa da dobra, e a frase dizendo o que ainda falta](imagens/07-nova-regra.png)
 
 *Enquanto faltar alguma coisa, o botão **Criar a regra** fica cinza e a frase
 embaixo diz o quê. A janela não fecha errada.*

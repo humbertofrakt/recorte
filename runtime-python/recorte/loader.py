@@ -25,8 +25,8 @@ READER_VERSION = (1, 1)
 
 # Extensions this reader implements. Every extension is optional in 1.0, and
 # `extensionsRequired` with anything outside this set is refused (2.7).
-# `BONE_particles` is module P, first phase: the rate switches on and off, and
-# the `linear` branch of the rate integral (4.2) is second phase.
+# `BONE_particles` is module P: the rate switches on and off (4.1), and since
+# the 2nd phase it is also animated by integral (4.2, the `linear` branch).
 SUPPORTED_EXTENSIONS: set[str] = {"BONE_particles"}
 
 BONE_PROPERTIES = ("x", "y", "rotation", "scaleX", "scaleY", "shearX", "shearY")
@@ -1171,12 +1171,18 @@ def _load_timeline(raw: dict, data: SkeletonData, warnings: Warnings) -> Timelin
                 f"propriedade de emissor desconhecida, timeline ignorada: {prop}")
             return None
         if prop == "rate":
-            # 4.1: in the first phase `rate` is a fixed number and `emitting` is
-            # what animates. Animating it needs the `linear` branch of the rate
-            # integral (4.2), which is second phase. Saying so beats drawing a
-            # rate that never changed.
-            warnings.add("rate animado e de 2a fase: fica o numero do anexo")
-            return None
+            # 4.2, the `linear` branch (2nd phase): `rate` animated by integral.
+            # A negative key is 0 (L1 RANGE_PARTICLE_RATE) and a Bezier is
+            # `linear` (L2 RANGE_PARTICLE_RATE_CURVE); both are said here, and
+            # the swap itself is made where the emitter integrates.
+            for key in raw.get("keys") or []:
+                if not isinstance(key, dict):
+                    continue
+                valor = key.get("value")
+                if isinstance(valor, (int, float)) and valor < 0:
+                    warnings.add("RANGE_PARTICLE_RATE: taxa negativa na chave, fica 0")
+                if isinstance(key.get("curve"), list):
+                    warnings.add("RANGE_PARTICLE_RATE_CURVE: Bezier na taxa, fica linear")
 
     if kind == "BONE_particle":
         components = PARTICLE_PROPERTIES[prop or ""]

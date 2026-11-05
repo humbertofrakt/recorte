@@ -1,5 +1,7 @@
 # `casos-pendentes/` — os oito casos de partícula, desde 18/09/2026
 
+> **05/11/2026: o `P-002` saiu daqui para `casos/`. Esta pasta está VAZIA.** A 2ª fase de `rate` abriu (`BONE_particles` 1.2, §4.2): o `esperado.json` foi preenchido por uma conta à parte (`E = 20·t²`, raiz direta), os dois runtimes reprovavam com zero partículas, foram consertados, e passam; o confronto concorda campo a campo (121 de 121). O resto deste leiame é a história, como estava.
+
 > **05/10/2026 (v27.7): os 14 casos saíram daqui para `casos/`** — `C-263`, `C-310` a `C-321` e `X-307`. Os dois runtimes passam neles, e o confronto concorda campo a campo (104 de 104). **Aqui ficou só o `P-002`**. O resto deste leiame é a história, como estava.
 
 > **05/10/2026, noite (v28.8): os 10 casos da rodada 34 saíram daqui para `casos/`** — `C-264`, `C-322` a `C-326`, `P-027` a `P-029` e `X-308`, escritos à mão pela spec por um chat que não escreveu runtime. Três deles derrubaram o TypeScript (C-324, C-326, P-029) e dois o Python (C-326, P-027); consertados os dois, eles passam, e o confronto concorda campo a campo (121, contando o P-002). **Aqui ficou só o `P-002`**.

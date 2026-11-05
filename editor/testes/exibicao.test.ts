@@ -12,7 +12,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { resetViewGroups, toggleViewGroup, viewGroupFolded, viewGroupHint } from '../src/panels/view-panel-actions.js';
+import { resetViewGroups, telaBaixa, toggleViewGroup, viewGroupFolded, viewGroupHint } from '../src/panels/view-panel-actions.js';
 
 import {
   applyAnimation,
@@ -1032,6 +1032,24 @@ describe('rodada 17, I8: os grupos da aba Exibição dobram pelo título', () =>
     expect(toggleViewGroup('A cena')).toBe(false);
     expect(viewGroupHint('A cena', false)).toBe('Dobrar o grupo A cena');
     expect(viewGroupHint('A cena', true)).toBe('Abrir o grupo A cena');
+  });
+
+  it('04/11/2026: na tela baixa (até 800 px) "A cena" nasce dobrada; a mão manda acima disso', () => {
+    resetViewGroups();
+    expect(telaBaixa(720)).toBe(true);
+    expect(telaBaixa(800)).toBe(true);
+    expect(telaBaixa(900)).toBe(false);
+    // Tela grande: tudo nasce aberto, como sempre.
+    expect(viewGroupFolded('A cena', false)).toBe(false);
+    expect(viewGroupFolded('Mostrar na tela', false)).toBe(false);
+    // Tela baixa: só "A cena" nasce dobrada; a tabela continua aberta.
+    expect(viewGroupFolded('A cena', true)).toBe(true);
+    expect(viewGroupFolded('Mostrar na tela', true)).toBe(false);
+    // Um clique abre, e o que a mão escolheu vale nas duas telas.
+    expect(toggleViewGroup('A cena', true)).toBe(false);
+    expect(viewGroupFolded('A cena', true)).toBe(false);
+    expect(viewGroupFolded('A cena', false)).toBe(false);
+    resetViewGroups();
   });
 
   it('a aba usa o grupo que dobra nos três grupos (antes: o título não fazia nada)', () => {

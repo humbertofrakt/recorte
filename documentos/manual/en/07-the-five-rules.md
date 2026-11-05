@@ -8,11 +8,9 @@ Also in Portuguese: [Português](../07-as-cinco-regras.md)
 
 ## What you will be able to do by the end
 
-1. Create any of the five rules through the window that asks, without writing in
-   the file.
-2. Keep the foot from sliding on the ground and make the hair swing by itself.
-3. Turn a rule on and off in the middle of an animation.
-4. Change a rule's bones without deleting and redoing it.
+1. Create any of the five rules through the window that asks.
+2. Keep the foot from sliding and make the hair swing by itself.
+3. Turn a rule on and off, and change its bones, without redoing it.
 
 ---
 
@@ -50,7 +48,7 @@ the **"Regras"** (Rules) tab, and their fields are in **"Propriedades"**
 
 ## The Regras tab
 
-![The Rules tab: the hero's five rules, each with an eye, the type icon, the name, the chain written below and the strength as a bar](../imagens/05-regras.png)
+![The Rules tab: the hero's five rules, each with an eye, the type icon, the name, the chain written below and the strength as a bar](../imagens/07-regras.png)
 
 ### The top bar
 
@@ -121,7 +119,7 @@ five, each with a sentence saying what it does. Button **"Continuar"**
 
 **Then the questions for that type, in words:**
 
-![The New rule window for inverse kinematics: the list of bones with boxes, the target question, the bend box, and the sentence saying what is still missing](../imagens/05-nova-regra.png)
+![The New rule window for inverse kinematics: the list of bones with boxes, the target question, the bend box, and the sentence saying what is still missing](../imagens/07-nova-regra.png)
 
 *While something is missing, the **"Criar a regra"** (Create the rule) button
 stays grey and the sentence below says what. The window does not close wrong.*

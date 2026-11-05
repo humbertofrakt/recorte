@@ -16,11 +16,11 @@ import { notePickerProblem, noteSaveRefused } from './picker-problem.js';
 import {
   loadAtlas, loadSkeletonData, loadSkeletonFileAsync, nestedAttachments, parseBoneText,
 } from '../../../runtime/src/index.js';
-import type { AtlasData, BoneFile, SkeletonData } from '../../../runtime/src/index.js';
+import type { AtlasData, AtlasPageData, BoneFile, SkeletonData } from '../../../runtime/src/index.js';
 import { atlasPageBlobs } from './import-images.js';
 import { atlasFilesForDisk } from './pivot-atlas.js';
 import type { Doc } from '../doc/document.js';
-import { Projeto } from '../doc/projeto.js';
+import { Projeto, projetoDe } from '../doc/projeto.js';
 import { projectFilesToSave } from './project-open.js';
 import { recentHandles, rememberRecent } from './recent.js';
 import { pruneFolderPivots } from './folder-atlas.js';
@@ -28,8 +28,9 @@ import { buildFolderPack, descend, folderSaveRoute } from './folder-save.js';
 import { entityFileText, rememberEntityFile } from '../doc/entity-files.js';
 import type { FolderPack } from './folder-save.js';
 import {
-  companionFiles, foldersOfBone, isProvisionalAtlas, projectFolder, rememberFolderBone, rememberedFolders, rootFileNames,
+  boneFilesInFolder, companionFiles, foldersOfBone, isProvisionalAtlas, projectFolder, rememberFolderBone, rememberedFolders, rootFileNames,
 } from './project-folder.js';
+import type { FolderDirectoryHandle } from './project-folder.js';
 import { nomeParaSalvar, salvarDireto } from './pedir-pasta.js';
 
 /** Extension of a skeleton file. */
@@ -356,6 +357,48 @@ export async function openAnotherSkeleton(known?: KnownFiles): Promise<OpenedDoc
 }
 
 /**
+ * **Os atlas que o `.bone` cita e que não foram escolhidos junto** — 05/11/2026,
+ * a espada de um, o boneco de outro. Pelo nome do arquivo, sem a pasta.
+ */
+export function atlasesNotPicked(file: BoneFile, picked: readonly string[]): string[] {
+  const tem = new Set(picked.map(baseName));
+  return (file.assets?.atlases ?? []).filter((name) => !tem.has(baseName(name)));
+}
+
+/**
+ * **Trazer uma entidade de fora, com as imagens dela** — 05/11/2026.
+ *
+ * O gesto natural é escolher só o `espada.bone`. O atlas dela fica ao lado,
+ * na pasta da pessoa que a desenhou, e o navegador não deixa ler o vizinho de
+ * um arquivo escolhido. Então, quando falta atlas, quem chama pergunta pela
+ * PASTA da entidade (`askFolder`), e o `.bone`, o atlas e as páginas vêm de
+ * lá, juntos. Sem resposta, entra como antes, com o aviso.
+ */
+export async function openEntityFromOutside(
+  known: KnownFiles,
+  askFolder: (bone: string, missing: readonly string[]) => Promise<FolderDirectoryHandle | null>,
+): Promise<OpenedDocument | null> {
+  const files = await pickFilesToOpen({ claim: false });
+  if (files === null || files.length === 0) return null;
+  const boneFile = files.find((f) => isBoneFile(f.name));
+  if (boneFile !== undefined) {
+    let file: BoneFile | null = null;
+    try {
+      file = parseBoneText(await boneFile.text()) as BoneFile;
+    } catch {
+      file = null; // O leitor diz o que houve, abaixo.
+    }
+    const missing = file === null ? [] : atlasesNotPicked(file, files.map((f) => f.name));
+    if (missing.length > 0) {
+      const dir = await askFolder(baseName(boneFile.name), missing);
+      const found = dir === null ? null : await boneFilesInFolder(dir, baseName(boneFile.name));
+      if (found !== null) return readOpenedFiles(found.files, known);
+    }
+  }
+  return readOpenedFiles(files, known);
+}
+
+/**
  * **O que o projeto já tem aberto** — rodada 8b, C18. Quem traz um `.bone` para
  * dentro de um projeto (Abrir uma entidade, Abrir como base) passa os atlas e
  * as imagens de agora: o arquivo que veio sozinho, sem o atlas dele, procura as
@@ -500,6 +543,16 @@ export async function readOpenedFiles(files: readonly File[], known?: KnownFiles
 async function readPackedFile(picked: File, warnings: string[]): Promise<OpenedDocument> {
   const bytes = new Uint8Array(await picked.arrayBuffer());
   const loaded = await loadSkeletonFileAsync(bytes);
+  // QA 04/11/2026 (D8): o `.boneb` vem sem atlas — o binário não o carrega
+  // dentro, como o `.bonez`. A primeira frase é a mesma do `.bone` sozinho, em
+  // português, antes das frases cruas do leitor, imagem por imagem.
+  const pedidos = (loaded.file as BoneFile).assets?.atlases ?? [];
+  if (loaded.archive === null && pedidos.length > 0 && loaded.atlases.length === 0) {
+    warnings.push(pastaAbrindo !== null
+      ? atlasForaDaPastaNotice(picked.name, pedidos, pastaAbrindo)
+      : missingAtlasNotice(picked.name, pedidos, companionFolder ?? foldersOfBone(picked.name)[0] ?? null));
+  }
+  companionFolder = null;
   warnings.push(...loaded.warnings);
   for (const warning of loaded.data.warnings) warnings.push(`${warning.pointer}: ${warning.message}`);
 
@@ -610,6 +663,7 @@ export async function saveDocument(doc: Doc, options: SaveOptions = {}): Promise
   // Lote 61: o pivô da pasta de uma imagem que já está na cena mora na região.
   pruneFolderPivots(doc);
   lastNote = null;
+  lastNoteWarns = false;
 
   const check = checkBeforeSaving(doc.serialize(), doc.atlases, doc.skeletons);
   if (!check.ok || check.problems.length > 0) {
@@ -748,6 +802,7 @@ async function saveProjectBeside(doc: Doc, handle: FileHandle | null): Promise<s
     return `${frase} ${gravados} ao lado`;
   }
   for (const file of out) downloadBlob(file.name, file.blob);
+  lastNoteWarns = true;
   return `${frase} ${baixados}: salve o .bone dentro da pasta do projeto para ${quantos === 0 ? 'ir junto' : 'irem juntos'}`;
 }
 
@@ -884,6 +939,32 @@ export function lastSaveNote(): string | null {
 }
 
 /**
+ * `true` quando o último Salvar **não** pôs tudo ao lado do `.bone`: o atlas,
+ * as páginas ou os outros corpos foram baixados — QA de 04/11/2026.
+ */
+let lastNoteWarns = false;
+
+export function lastSaveWarns(): boolean {
+  return lastNoteWarns;
+}
+
+/**
+ * **A frase do rodapé depois do Salvar** — QA de 04/11/2026 (D3).
+ *
+ * O rodapé mostra a primeira frase que cabe (`versoesDaFrase`), e a frase era
+ * sempre *"Salvo em copia.bone. O .bone foi salvo fora da pasta mao: o atlas e
+ * as páginas foram baixados…"*: em 1920 px só o "Salvo em copia.bone." cabia,
+ * e quem salvou fora da pasta não ficava sabendo que o `.bone` saiu sem atlas
+ * ao lado (regra 21). Quando a nota é um aviso, ela vem **primeiro**; quando é
+ * só uma notícia ("Atlas da pasta gravado ao lado"), vem depois, como antes.
+ */
+export function saveStatusLine(name: string, note: string | null, warns: boolean, atlasTogether: boolean): string {
+  if (note !== null && warns) return `${note}. Salvo em ${name}.`;
+  if (note !== null) return `Salvo em ${name}. ${note}.`;
+  return atlasTogether ? `Salvo em ${name}. A folha de imagens (atlas e páginas) foi gravada junto.` : `Salvo em ${name}.`;
+}
+
+/**
  * O `.bone` reaberto pela pasta — lote 62 — passa a ser o arquivo aberto: o
  * `Ctrl+S` grava de volta nele, como no Abrir.
  */
@@ -959,6 +1040,34 @@ export function entidadesForaDaPasta(uris: readonly string[], raiz: readonly str
   return out;
 }
 
+/**
+ * **O atlas e as páginas de uma entidade que faltam na pasta** — 05/11/2026,
+ * a espada de um, o boneco de outro. A espada da pessoa A tem atlas próprio
+ * (`espada.atlas.json` e `espada-atlas.png`). O Salvar levava para a pasta o
+ * `espada.bone` e deixava o atlas dela para trás: reaberto, ou lido por um
+ * jogo, a espada vinha sem imagem. A conta, sem disco: o que levar, pelo nome
+ * que o `.bone` dela cita, e só o que a raiz ainda não tem.
+ */
+export function entityAtlasesForFolder(
+  entity: Doc, raiz: readonly string[],
+): { atlases: Array<{ name: string; text: string }>; pages: Array<{ name: string; page: AtlasPageData }> } {
+  const tem = new Set(raiz);
+  const nomeDe = (nome: string): string => nome.split(/[\\/]/).pop() || nome;
+  const disk = atlasFilesForDisk(entity);
+  const atlases = entity.atlases.filter((atlas) => !isProvisionalAtlas(atlas));
+  const outAtlases: Array<{ name: string; text: string }> = [];
+  const outPages: Array<{ name: string; page: AtlasPageData }> = [];
+  disk.files.forEach((file, i) => {
+    const nome = nomeDe(file.name);
+    if (!tem.has(nome) && !outAtlases.some((a) => a.name === nome)) outAtlases.push({ name: nome, text: file.text });
+    for (const page of atlases[i]?.pages ?? []) {
+      const p = nomeDe(page.image);
+      if (!tem.has(p) && !outPages.some((x) => x.name === p)) outPages.push({ name: p, page });
+    }
+  });
+  return { atlases: outAtlases, pages: outPages };
+}
+
 /** Grava na raiz da pasta o atlas e as páginas que faltam nela. A frase do rodapé, ou `null`. */
 async function levarAtlasParaAPasta(doc: Doc, handle: FileHandle | null): Promise<string | null> {
   const folder = projectFolder(doc);
@@ -981,7 +1090,15 @@ async function levarAtlasParaAPasta(doc: Doc, handle: FileHandle | null): Promis
   const falta = faltaNaPasta(pedidos, raiz);
   const citadas = doc.data === null ? [] : nestedAttachments(doc.data).map((attachment) => attachment.resolvedUri);
   const entidades = entidadesForaDaPasta(citadas, raiz);
-  if (falta.atlas.length === 0 && falta.paginas.length === 0 && entidades.length === 0) return null;
+  // 05/11/2026: a entidade com atlas próprio leva o atlas e as páginas dela.
+  const projeto = projetoDe(doc);
+  const daEntidade = citadas
+    .filter((uri) => uri.length > 0 && !uri.includes('/'))
+    .map((uri) => projeto?.guardados.get(uri) ?? projeto?.docOf(uri) ?? null)
+    .filter((entidade): entidade is Doc => entidade !== null && entidade !== doc)
+    .map((entidade) => ({ entidade, levar: entityAtlasesForFolder(entidade, raiz) }))
+    .filter(({ levar }) => levar.atlases.length > 0 || levar.pages.length > 0);
+  if (falta.atlas.length === 0 && falta.paginas.length === 0 && entidades.length === 0 && daEntidade.length === 0) return null;
   const dir = folder.handle as unknown as DirectoryHandle;
   const levados: string[] = [];
   const ficaram: string[] = [];
@@ -1013,6 +1130,24 @@ async function levarAtlasParaAPasta(doc: Doc, handle: FileHandle | null): Promis
     }
     await writeInto(dir, uri, new Blob([texto], { type: 'application/json' }));
     levados.push(uri);
+  }
+  for (const { entidade, levar } of daEntidade) {
+    for (const atlas of levar.atlases) {
+      if (levados.includes(atlas.name)) continue;
+      await writeInto(dir, atlas.name, new Blob([atlas.text], { type: 'application/json' }));
+      levados.push(atlas.name);
+    }
+    for (const { name, page } of levar.pages) {
+      if (levados.includes(name) || ficaram.includes(name)) continue;
+      const source = entidade.ownImageFor(page);
+      const blob = source === null ? null : await paginaComoPng(source, page.width, page.height);
+      if (blob === null) {
+        ficaram.push(name);
+        continue;
+      }
+      await writeInto(dir, name, blob);
+      levados.push(name);
+    }
   }
   const partes: string[] = [];
   if (levados.length > 0) partes.push(`Levei para a pasta ${folder.name} o que o .bone cita e estava fora dela: ${levados.join(', ')}`);
@@ -1077,6 +1212,7 @@ async function gravarAtlasAoLado(doc: Doc, handle: FileHandle | null, pack: Fold
       }
       if (route.kind === 'baixar') {
         for (const file of out) downloadBlob(file.name, file.blob);
+        lastNoteWarns = true;
         return route.why;
       }
     }
@@ -1089,6 +1225,7 @@ async function gravarAtlasAoLado(doc: Doc, handle: FileHandle | null, pack: Fold
     return pack === null ? null : `Atlas gravado ao lado: ${pack.atlasName}`;
   }
   for (const file of out) downloadBlob(file.name, file.blob);
+  if (pack !== null) lastNoteWarns = true;
   return pack === null ? null : `Atlas e páginas baixados: ${pack.atlasName}`;
 }
 

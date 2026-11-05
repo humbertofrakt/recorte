@@ -275,3 +275,22 @@
   height: 100%;
   object-fit: contain;
 }
+
+/*
+ * 04/11/2026 — a Prévia em 1280×720: o palco tomava a aba e sobravam 7 px
+ * depois dele, onde a régua do palco pede uma linha (24). É a saída que o
+ * `ESTADO.md` já apontava: na tela baixa o palco ENCOLHE com o painel, sem
+ * esticar torto (a largura sai da proporção do canvas, 480×300), e fica no
+ * meio. Nada do que vem depois dele muda.
+ */
+@media (max-height: 800px) {
+  :not(.previa-cheia) > .previa-tela:not(:fullscreen) {
+    padding-top: 6px;
+  }
+  :not(.previa-cheia) > .previa-tela:not(:fullscreen) .previa-canvas {
+    width: auto;
+    max-width: 100%;
+    height: 126px;
+    margin: 0 auto;
+  }
+}

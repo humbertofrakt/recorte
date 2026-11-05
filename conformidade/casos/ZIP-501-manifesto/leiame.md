@@ -19,7 +19,7 @@ runtime que não abrisse pacote nenhum.
 ## O que tem dentro do pacote
 
 ```
-mimetype              application/bone-package     (primeira entrada, sem compressão)
+mimetype              application/vnd.bone+zip     (primeira entrada, sem compressão)
 manifest.json         { "main": "esqueleto.bone", "atlases": ["entrada.atlas.json"] }
 esqueleto.bone        o esqueleto
 entrada.atlas.json    o atlas que o esqueleto pede

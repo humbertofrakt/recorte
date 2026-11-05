@@ -117,6 +117,16 @@ export function describePointer(
   return raw;
 }
 
+/**
+ * Uma linha de aviso como ela vai para o RODAPÉ: sem o ponteiro JSON, e em
+ * português. Noite de 04/11/2026: quatro lugares (abrir pasta, abrir arquivo,
+ * soltar na janela) punham `warnings[0]` cru no rodapé, e a frase do leitor
+ * chegava em inglês ("deform needs a vertex attachment; timeline ignored").
+ */
+export function avisoNoRodape(line: string): string {
+  return translateWarning(parseWarning(line).message);
+}
+
 /** As frases de forma fixa do leitor, em português. O que não bater fica como está. */
 export function translateWarning(message: string): string {
   let m = /^image "(.*)" not found in any atlas(; attachment will be invisible)?$/.exec(message);
