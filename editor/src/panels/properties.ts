@@ -37,7 +37,7 @@ import {
   belowQuick, compensationApplies, evalFieldInput, notNumberSays, scrubValue,
 } from './properties-model.js';
 import {
-  alphaDragSays, alphaShown, alphaTip, arrowDirection, fieldKeyAction, emptyGradientSays, EMPTY_GRADIENT_SHORT, buildProperties, entityShownName, evalNumberExpression, fieldIsSet, fieldValue, formatNumberField,
+  alphaDragSays, alphaShown, alphaTip, arrowDirection, fieldKeyAction, nextFieldId, emptyGradientSays, EMPTY_GRADIENT_SHORT, buildProperties, entityShownName, evalNumberExpression, fieldIsSet, fieldValue, formatNumberField,
   REFUSED_MESSAGE, findAttachment, silhouetteSources, skinFieldCommand, stepValue, writeFieldValue,
   type FieldDef, type FieldGroup,
 } from './properties-model.js';
@@ -166,7 +166,13 @@ class PropertiesPanel implements Panel {
     // Rodada 47, lote 4: a barrinha (o Alfa, a opacidade da cor) mexida pelo
     // teclado continua com o foco depois de gravar e redesenhar.
     const voltarFoco = lembrarFoco(body);
-    queueMicrotask(() => voltarFoco());
+    queueMicrotask(() => {
+      // QA da noite (04/11): o Tab que gravou leva ao campo que ele anotou.
+      const depois = this.focoDepoisDoTab;
+      this.focoDepoisDoTab = null;
+      const alvo = depois === null ? null : this.body?.querySelector<HTMLInputElement>(`[id="${depois}"]`) ?? null;
+      if (alvo !== null) { alvo.focus(); alvo.select(); } else voltarFoco();
+    });
 
     // As peles visíveis decidem quais desenhos a lista do campo "Anexo" mostra.
     const model = buildProperties(corpoDe(doc).file, doc.selection, doc.visibleSkins);
@@ -1661,6 +1667,15 @@ class PropertiesPanel implements Panel {
     read: () => number, write: (value: number) => void, show: (value: number) => string,
   ): void {
     input.addEventListener('keydown', (event) => {
+      // QA da noite (04/11): o Tab que vai gravar (o texto não é o número
+      // guardado) anota o próximo campo; o redesenho põe o foco nele.
+      if (event.key === 'Tab' && input.value !== show(read())) {
+        const ids = [...(this.body?.querySelectorAll<HTMLInputElement>('input[id]') ?? [])]
+          .filter((campo) => campo.type === 'text' && campo.getClientRects().length > 0)
+          .map((campo) => campo.id);
+        this.focoDepoisDoTab = nextFieldId(ids, id, event.shiftKey);
+        return;
+      }
       // QA da noite (04/11): Esc devolve o número de antes e sai do campo; o
       // Ctrl+Z seguinte volta a ser do documento.
       if (fieldKeyAction(event.key) === 'cancelar') {
@@ -1686,6 +1701,9 @@ class PropertiesPanel implements Panel {
       this.endMerge();
     });
   }
+
+  /** O campo que o próximo redesenho foca — anotado pelo Tab que grava (QA da noite). */
+  private focoDepoisDoTab: string | null = null;
 
   /** Põe o foco no campo `id` de novo, depois que o painel se redesenhou. */
   private refocus(id: string): void {
