@@ -2386,7 +2386,7 @@ describe('QA 04/11/2026 — D3: o aviso do Salvar não some no rodapé', () => {
     const casca = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
     expect(casca).toContain('saveStatusLine(name, lastSaveNote(), lastSaveWarns()');
     const io = readFileSync(resolve(__dirname, '../src/io/open-save.ts'), 'utf8');
-    expect(io.match(/lastNoteWarns = true;/g)?.length).toBe(3);
+    expect(io.match(/lastNoteWarns = true;/g)?.length).toBe(4);
   });
 });
 
@@ -2514,5 +2514,36 @@ describe('QA 04/11/2026 — D24b: o atlas importado vai para a pasta do projeto,
     const corpo = fonte.slice(fonte.indexOf('async function gravarAtlasAoLado('), fonte.indexOf('async function directoryOf('));
     expect(corpo).toContain("if (route.kind === 'pasta' && folder.handle !== null && out.length > 0) {");
     expect(corpo.indexOf('if (pack === null) {')).toBeLessThan(corpo.indexOf("if (route.kind === 'pasta' && folder.handle !== null && out.length > 0) {"));
+  });
+});
+
+describe('Prova de pessoa (5) e (6): Salvar sem seletor baixa UM arquivo, com as imagens dentro', () => {
+  // A prova (relatório prova-de-pessoa.md, 5 e 6): no navegador sem seletor de
+  // pasta, Abrir o herói → Salvar baixava só heroi.bone e manifest.json; a folha
+  // de imagens não ia, e ao reabrir o herói vinha sem desenho (42 avisos).
+  it('baixa só heroi.bonez, e o rodapé diz o que baixou e como reabrir', async () => {
+    const { saveDocument, lastSaveNote } = await import('../src/io/open-save.js');
+    const baixados: string[] = [];
+    const g = globalThis as unknown as Record<string, unknown>;
+    const antes = { document: g['document'], create: URL.createObjectURL };
+    g['document'] = {
+      createElement: () => {
+        const a = { href: '', download: '', style: {}, click() { baixados.push(a.download); }, remove() {} };
+        return a;
+      },
+      body: { append() {} },
+    };
+    URL.createObjectURL = () => 'blob:x';
+    try {
+      const doc = new Doc(JSON.parse(readFileSync(resolve(__dirname, '../../formato/exemplos/heroi.bone'), 'utf8')) as BoneFile, { path: 'heroi.bone' });
+      const nome = await saveDocument(doc, { confirmProblems: () => true });
+      expect(nome).toBe('heroi.bonez');
+      expect(baixados).toEqual(['heroi.bonez']);
+      expect(lastSaveNote()).toMatch(/^heroi\.bonez baixado, com as imagens dentro/);
+      expect(lastSaveNote()).toMatch(/Arquivo → Abrir projeto…/);
+    } finally {
+      g['document'] = antes.document;
+      URL.createObjectURL = antes.create;
+    }
   });
 });

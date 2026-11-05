@@ -153,4 +153,14 @@ Do doc `89`, nada disto se prova num Chrome sem janela:
 Em `fotos-qa-arquivo/`:
 01 partículas na linha do tempo · 02 a faixa fina da Cor ao nascer · 03 o fogo no editor × na linha de comando · 04 o herói no `render-png` × no editor · 05 o rodapé do Salvar fora da pasta · 06 o Spriter importado · 07 trocar imagem nas skins · 08 a pasta `game` aberta depois do D14 (2 avisos, o bcp desenhado).
 
+## O Salvar sem seletor (prova de pessoa 5 e 6) — 05/11, ~03h40
+
+| O que fiz | Como provei | O que ficou |
+|:---|:---|:---|
+| Sem seletor de pasta (o download), o Salvar baixa **um arquivo só, `heroi.bonez`**: o boneco, a espada, a folha de imagens e as páginas. Antes: `heroi.bone` + `manifest.json`, sem imagens | só cliques, num Chromium sem os seletores: Abrir o herói → Ctrl+S → baixou só `heroi.bonez` → recarregar → Ctrl+O nele → herói inteiro, **Nenhum aviso** (fotos 09 e 10). Teste em `arquivo.test.ts`, visto vermelho antes | o rodapé diz: *"heroi.bonez baixado, com as imagens dentro: para reabrir, Arquivo → Abrir projeto… e escolha heroi.bonez nos Downloads"*. Com seletor (o Chrome do Humberto) nada muda: pede a pasta e grava a folha junto |
+
+Decisão no lugar do Humberto: **um arquivo só** (`.bonez`), e não três soltos — é o mais simples de achar e de reabrir, e o Spine e o Spriter também salvam o projeto num arquivo.
+
+Não fiz, por falta de tempo e por ordem do Diretor (uma tarefa só): o nome `heroi-aceno.gif` (4c), o `openHandle` que não segue o foco (reaproveitar §6), a régua do ":" em `io/`, e a palavra "objeto" da grade.
+
 FIM
