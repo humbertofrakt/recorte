@@ -114,7 +114,10 @@ export async function encaixarProjeto(doc: EditorDoc, alvo: Alvo): Promise<boole
     nova = true;
     passos.push(new PutSocket(alvo.bone, slot));
   }
-  passos.push(new PlugIntoSocket(slot, uri, toca));
+  // A peça nasce em pé no mundo: o anexo desfaz o giro do osso, como no arrasto.
+  const ossoDaTomada = 'slot' in alvo ? (file.slots ?? []).find((s) => s.name === alvo.slot)?.bone ?? null : alvo.bone;
+  const giro = ossoDaTomada === null ? 0 : -(doc.skeleton?.findBone(ossoDaTomada)?.worldRotationX ?? 0);
+  passos.push(new PlugIntoSocket(slot, uri, toca, giro));
   corpo.run(new Passos(`Encaixar ${nomeDaPeca(uri)}`, passos));
   doc.select({ ...doc.selection, bones: [], slots: [slot], attachments: [] });
   doc.notice(encaixouDiz(uri, slot, nova));

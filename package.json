@@ -20,6 +20,7 @@
     "tarefas": "vite-node ferramentas/provas/folha-de-tarefas.ts",
     "pesos": "node ferramentas/provas/pesos-dois-ossos.mjs",
     "espada": "node ferramentas/provas/espada-e-boneco.mjs",
+    "tomadas": "node ferramentas/provas/tomadas.mjs",
     "conformidade:python": "python runtime-python/conformidade.py",
     "conformidade:dois": "node ferramentas/comparar-runtimes.mjs",
     "leitor:construct": "node leitor-construct/montar.mjs",

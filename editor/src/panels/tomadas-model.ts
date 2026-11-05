@@ -147,7 +147,11 @@ export class PlugIntoSocket implements Command {
   readonly kind: ChangeKind = 'structure';
   private antes: { map: string | null; attachment: string | undefined; madeSkin: boolean } | null = null;
   readonly anexo: string;
-  constructor(readonly slot: string, readonly uri: string, readonly toca: string | null) {
+  constructor(
+    readonly slot: string, readonly uri: string, readonly toca: string | null,
+    /** O giro do anexo: a peça nasce em pé no mundo, mesmo num osso girado (como o arrasto da prateleira). */
+    readonly rotation = 0,
+  ) {
     this.anexo = nomeDaPeca(uri);
     this.label = `Encaixar ${this.anexo}`;
   }
@@ -170,7 +174,9 @@ export class PlugIntoSocket implements Command {
     };
     attachments[this.slot] = {
       [this.anexo]: {
-        type: 'skeleton', uri: this.uri, x: 0, y: 0, inheritAnimation: true,
+        type: 'skeleton', uri: this.uri, x: 0, y: 0,
+        ...(Math.abs(this.rotation) < 1e-6 ? {} : { rotation: Math.round(this.rotation * 1e4) / 1e4 }),
+        inheritAnimation: true,
         ...(this.toca === null ? {} : { animation: this.toca }),
       },
     };
@@ -243,7 +249,6 @@ export class Passos implements Command {
 
 /** A frase do rodapé depois de encaixar. */
 export function encaixouDiz(peca: string, slot: string, nova: boolean): string {
-  const nome = nomeDaPeca(peca);
-  return `${nome.charAt(0).toUpperCase()}${nome.slice(1)} encaixada na tomada ${slot}${nova ? ' (tomada nova)' : ''}. `
-    + 'Ela mexe junto com quem segura: muda na aba Tomadas, no cartão dela';
+  return `Encaixei ${nomeDaPeca(peca)} na tomada ${slot}${nova ? ' (tomada nova)' : ''}. `
+    + 'A peça mexe junto com quem segura: isso muda na aba Tomadas, no cartão dela';
 }

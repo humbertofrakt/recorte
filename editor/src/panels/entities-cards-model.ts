@@ -468,14 +468,14 @@ export function cardAnima(card: EntityCard): string | null {
     if (card.anima === null) return 'anima: parada';
     if (card.anima === '') {
       const falta = card.carregada && card.paiToca !== null && !card.animacoes.includes(card.paiToca);
-      return falta ? `anima: a de quem recebe — ${card.nome} não tem ${card.paiToca}: parada` : 'anima: a de quem recebe';
+      return falta ? `anima: mexe junto com quem segura — ${card.nome} não tem ${card.paiToca}: parada` : 'anima: mexe junto com quem segura';
     }
     return card.carregada && !card.animacoes.includes(card.anima)
       ? `anima: ${card.anima} — ${card.nome} não tem: parada` : `anima: ${card.anima}`;
   }
   if (card.papel !== 'projeto') return null;
   if (card.anima === null) return 'anima: livre';
-  if (card.anima === '') return 'anima: a de quem recebe';
+  if (card.anima === '') return 'anima: mexe junto com quem segura';
   return `anima: ${card.anima}`;
 }
 
@@ -870,7 +870,7 @@ export function montagemLineText(doc: EditorDoc): string | null {
   const pecas = ligacoesDe(montagem, openProject(doc).uri);
   const fora = cadeiaAcima(montagem, openProject(doc).uri);
   if (pecas.length === 0 && fora.length === 0) return null;
-  const toca = (anima: string | undefined): string => (anima === undefined ? 'parada' : anima === '' ? 'a de quem recebe' : anima);
+  const toca = (anima: string | undefined): string => (anima === undefined ? 'parada' : anima === '' ? 'mexe junto com quem segura' : anima);
   const lista = [
     ...pecas.map((l) => `${entityShortName(l.uri)} (${toca(l.anima)}) no ${l.slot}`),
     ...fora.map((a) => `${entityShortName(a.uri)} (${toca(a.anima)}) em volta, no ${a.slot}`),
@@ -1495,7 +1495,7 @@ export function animaChoices(doc: EditorDoc, card: EntityCard): AnimaChoice[] {
   if (card.alvo.kind === 'projeto') {
     const agora = card.anima;
     const recebe: AnimaChoice = {
-      valor: '', label: 'a de quem recebe',
+      valor: '', label: 'mexe junto com quem segura',
       hint: agora === ''
         ? `${cap(nome)} responde à animação de quem a recebe. Clique para desligar: ela volta a tocar só a dela`
         : `${cap(nome)} toca a animação de mesmo nome que quem a recebe toca; numa que ela não tem, a dela. `
@@ -1513,7 +1513,7 @@ export function animaChoices(doc: EditorDoc, card: EntityCard): AnimaChoice[] {
   const recebe = card.alvo.kind === 'cima' ? 'o boneco' : 'quem a recebe';
   return [
     { valor: null, label: 'parada', hint: `${cap(nome)} fica parada, na pose de repouso. Teste: o arquivo não muda`, atual: card.anima === null },
-    { valor: '', label: 'a de quem recebe', hint: `${cap(nome)} toca a animação de mesmo nome que ${recebe} toca; sem ela, fica parada. Teste`, atual: card.anima === '' },
+    { valor: '', label: 'mexe junto com quem segura', hint: `${cap(nome)} toca a animação de mesmo nome que ${recebe} toca; sem ela, fica parada. Teste`, atual: card.anima === '' },
     ...card.animacoes.map((a) => ({ valor: a, label: a, hint: `${cap(nome)} toca ${a}, no relógio da agulha. Teste: o arquivo não muda`, atual: card.anima === a })),
   ];
 }

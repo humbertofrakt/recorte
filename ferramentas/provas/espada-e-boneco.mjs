@@ -517,12 +517,12 @@ async function pessoaB(browser) {
     return errados.length === 0 || `o anexo ficou ${JSON.stringify(a)}`;
   });
 
-  await passo('B: no cartão da espada, anima ▾ → "a de quem recebe" (inheritAnimation)', async () => {
+  await passo('B: no cartão da espada, anima ▾ → "mexe junto com quem segura" (inheritAnimation)', async () => {
     const cartao = page.locator('.entidades-cartao', { hasText: 'PROJETO' }).filter({ hasText: 'espada' }).first();
     await cartao.locator('button.entidades-cartao-anima').first().click();
     await page.waitForTimeout(200);
     await foto(page, 'b-anima-a-de-quem-recebe');
-    await page.locator('.menu-flutuante-item', { hasText: 'a de quem recebe' }).first().click();
+    await page.locator('.menu-flutuante-item', { hasText: 'mexe junto com quem segura' }).first().click();
     await page.waitForTimeout(300);
     const a = await page.evaluate(docJs((d) => d.file.skins[0].attachments.espada?.espada ?? null));
     return a?.inheritAnimation === true || `o anexo ficou ${JSON.stringify(a)} · rodapé: ${await rodape(page)}`;

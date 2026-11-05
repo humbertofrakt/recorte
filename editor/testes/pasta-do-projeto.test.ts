@@ -1839,7 +1839,7 @@ describe('a aba Entidades como árvore de cartões (rodada 39, lote 1)', () => {
     });
     const { topo } = cardTree(new DocR39(heroi, { path: 'heroi.bone' }));
     const [mao, costas] = topo.linhas.map((l) => l.cartoes[0]!);
-    expect(cardAnima(mao!)).toBe('anima: a de quem recebe');
+    expect(cardAnima(mao!)).toBe('anima: mexe junto com quem segura');
     expect(cardAnima(costas!)).toBe('anima: livre');
     expect(cardHint(costas!, 'heroi', 'costas')).toContain('o jogo escolhe');
   });
@@ -2704,7 +2704,7 @@ describe('no cartão: o que a peça toca, as skins, a mesma duas vezes, as iguai
     let card = naLinha(doc, 'hair')!;
     expect(cardAnima(card)).toBe('anima: parada');
     expect(card.alvo).toEqual({ kind: 'baixo', host: 'heroi.bone', slot: 'hair', uri: 'robo.bone' });
-    expect(animaChoices(doc, card).map((c) => c.label)).toEqual(['parada', 'a de quem recebe', 'andar']);
+    expect(animaChoices(doc, card).map((c) => c.label)).toEqual(['parada', 'mexe junto com quem segura', 'andar']);
     const gesto = setTestAnima(doc, card.alvo!, 'andar')!;
     expect(gesto.frase).toBe('Robo toca andar (teste). O arquivo não muda.');
     doc.run(gesto.command);
@@ -2726,7 +2726,7 @@ describe('no cartão: o que a peça toca, as skins, a mesma duas vezes, as iguai
     doc.animation = 'idle';
     doc.run(dropOnSlot(doc, 'heroi.bone', 'hair', 'robo.bone')!.command);
     doc.run(setTestAnima(doc, naLinha(doc, 'hair')!.alvo!, '')!.command);
-    expect(cardAnima(naLinha(doc, 'hair')!)).toBe('anima: a de quem recebe — robo não tem idle: parada');
+    expect(cardAnima(naLinha(doc, 'hair')!)).toBe('anima: mexe junto com quem segura — robo não tem idle: parada');
     expect(defNaCopia(doc, 'hair')).toMatchObject({ inheritAnimation: true });
   });
 
@@ -2809,13 +2809,13 @@ describe('no cartão: o que a peça toca, as skins, a mesma duas vezes, as iguai
     const ditos: string[] = [];
     doc.on((c) => { if (c.label !== undefined) ditos.push(c.label); });
     expect(whyNoCardAnima(doc, espada)).toBeNull();
-    expect(animaChoices(doc, espada).map((c) => c.label)).toEqual(['a de quem recebe']);
+    expect(animaChoices(doc, espada).map((c) => c.label)).toEqual(['mexe junto com quem segura']);
     expect(setCardAnima(doc, espada, 'brilho')).toBe(false);
     expect(ditos.at(-1)).toBe('Abra uma animação: no projeto, o que a peça toca vira chave na faixa dela, da agulha em diante');
     doc.animation = 'idle';
     doc.time = 0;
     expect(whyNoCardAnima(doc, espada)).toBeNull();
-    expect(animaChoices(doc, espada).map((c) => c.label)).toEqual(['livre — o jogo escolhe', 'a de quem recebe', 'idle', 'brilho', 'attack']);
+    expect(animaChoices(doc, espada).map((c) => c.label)).toEqual(['livre — o jogo escolhe', 'mexe junto com quem segura', 'idle', 'brilho', 'attack']);
     expect(setCardAnima(doc, espada, 'brilho')).toBe(true);
     type Linha = { type: string; target: string; property: string; keys: Array<{ value: unknown }> };
     const linhas = (doc.file.animations!.find((a) => a.name === 'idle') as unknown as { timelines: Linha[] }).timelines;
@@ -2840,7 +2840,7 @@ describe('no cartão: o que a peça toca, as skins, a mesma duas vezes, as iguai
     // A animação dela fica: é o que ela toca quando o herói toca uma que ela não tem.
     expect(def().animation).toBe('idle');
     expect(naLinha(doc, 'weapon')!.anima).toBe('');
-    expect(animaChoices(doc, naLinha(doc, 'weapon')!).find((c) => c.atual)!.label).toBe('a de quem recebe');
+    expect(animaChoices(doc, naLinha(doc, 'weapon')!).find((c) => c.atual)!.label).toBe('mexe junto com quem segura');
     expect(ditos.some((d) => d.includes('responde à animação de quem a recebe'))).toBe(true);
     doc.undo();
     expect(def().inheritAnimation).toBeUndefined();
@@ -3420,6 +3420,18 @@ describe('as tomadas: o lugar no osso, e a peça encaixada (05/11/2026)', () => 
     expect(tomadasDoOsso(doc.file, 'hand')).toEqual([{ slot: 'weapon', bone: 'hand', peca: null, anexo: null, mexeJunto: false }]);
     doc.undo();
     expect(JSON.stringify(doc.file)).toBe(antes);
+  });
+
+  it('a peça nasce em pé no mundo: o anexo desfaz o giro do osso (o herói entrava deitado na cabine)', () => {
+    // O defeito, visto na foto da prova: o tronco do mecha está a 90°, e o
+    // herói encaixado nascia deitado, no eixo do osso.
+    const doc = mecha();
+    doc.run(new Passos('Encaixar', [new PutSocket('torso', 'cabine'), new PlugIntoSocket('cabine', 'heroi.bone', null, -90)]));
+    const def = (doc.file.skins![0]!.attachments as Record<string, Record<string, Record<string, unknown>>>)['cabine']!['heroi']!;
+    expect(def['rotation']).toBe(-90);
+    doc.undo();
+    doc.run(new PlugIntoSocket('weapon', 'espada.bone', null, 0));
+    expect('rotation' in (doc.file.skins![0]!.attachments as Record<string, Record<string, Record<string, unknown>>>)['weapon']!['espada']!).toBe(false);
   });
 
   it('o nome da peça é o do arquivo, sem a extensão', () => {

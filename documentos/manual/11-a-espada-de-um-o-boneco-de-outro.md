@@ -99,12 +99,12 @@ Agora o golpe:
 
 ![A pergunta: a espada pede o atlas dela, e o botão escolhe a pasta](imagens/11-4-pede-a-pasta.png)
 
-A espada entra na **Prateleira** da aba **Tomadas**.
+A espada entra na lista **Peças** da aba **Tomadas**.
 
 ### 3. Pôr na mão
 
 1. Clique **Base — montar**, na aba **Animações**. Assim vale em todas.
-2. Arraste a espada da **Prateleira** até a mão, na cena.
+2. Arraste a espada da lista **Peças** até a mão, na cena.
 3. Ela fica presa ao osso em que caiu.
 
 ![A espada na mão do herói; na Montagem, o cartão espada com a palavra projeto](imagens/11-5-espada-na-mao.png)
@@ -123,9 +123,9 @@ Com a espada escolhida, na ficha das **Propriedades**:
 ### 5. Responder à animação
 
 1. Na aba **Tomadas**, no cartão **espada**, clique **anima ▾**.
-2. Escolha **a de quem recebe**.
+2. Escolha **mexe junto com quem segura**.
 
-![O menu anima no cartão da espada, com a de quem recebe](imagens/11-6-a-de-quem-recebe.png)
+![O menu anima no cartão da espada, com mexe junto com quem segura](imagens/11-6-a-de-quem-recebe.png)
 
 | O herói toca | A espada toca |
 |:---|:---|
