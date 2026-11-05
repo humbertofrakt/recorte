@@ -1900,3 +1900,21 @@ describe('Espaço toca com o foco na lista de Animações (QA da noite)', () => 
     expect(fonte).toMatch(/actionsFor\('animacoes', keyOf\(event\)\)\.includes\('tocar'\)/);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): clicar em "Duplicar" e depois
+// apertar Espaço duplicava de novo — o foco ficava no botão. O clique do mouse
+// num botão de barra não leva mais o foco, nas cinco abas da parte.
+import { clickKeepsFocus as clickKeepsFocusQA } from '../src/panels/sem-foco.js';
+describe('o botão de barra não guarda o foco do clique (QA da noite)', () => {
+  it('só as linhas das listas guardam o foco', () => {
+    expect(clickKeepsFocusQA(['painel-botao', 'painel-botao-icone'])).toBe(false);
+    expect(clickKeepsFocusQA(['arvore-item'])).toBe(true);
+    expect(clickKeepsFocusQA(['anim-item', 'is-active'])).toBe(true);
+  });
+  it('as cinco abas armam a regra ao montar', () => {
+    for (const arquivo of ['tree', 'animations', 'draw-order', 'mesh-panel', 'properties']) {
+      const fonte = readFileSync(resolve(__dirname, `../src/panels/${arquivo}.ts`), 'utf8');
+      expect(fonte, arquivo).toMatch(/barButtonsKeepNoFocus\(host\)/);
+    }
+  });
+});

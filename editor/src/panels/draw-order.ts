@@ -32,6 +32,7 @@ import { aroundLines } from '../anim/entity-around.js';
 import type { AroundLine } from '../anim/entity-around.js';
 import { MoveSlot } from './tree-model.js';
 import { clear, el, iconButton } from './dom.js';
+import { barButtonsKeepNoFocus } from './sem-foco.js';
 import { thumbnailNode } from './thumbnails.js';
 import { entityShownName } from './properties-model.js';
 import { actionState, registerAction, runAction } from '../ui/actions.js';
@@ -97,6 +98,8 @@ class DrawOrderPanel implements Panel {
     this.doc = doc;
     this.host = host;
     clear(host);
+    // QA da noite (04/11): o clique do mouse num botão de barra não leva o foco.
+    barButtonsKeepNoFocus(host);
     // `painel` traz as cores do tema — lote 25. Sem ela, todo
     // `var(--painel-x, claro)` desta folha caía no valor de RESERVA, que é a
     // cor do tema claro: fundo branco de miniatura e texto cinza-escuro em

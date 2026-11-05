@@ -30,6 +30,7 @@
 import type { DocChange, EditorDoc, Panel } from '../contract.js';
 import { registerPanel } from '../contract.js';
 import { clear, el, ensureStylesheet, separador, iconButton} from './dom.js';
+import { barButtonsKeepNoFocus } from './sem-foco.js';
 import {
   DeleteAnimation, DuplicateAnimation, MoveAnimationToTop,
   animationRowMenu, baseLineLabel, renameAfter, renameAnswer, renamedNotice, deletedNotice, showBodiesList,
@@ -133,6 +134,8 @@ class AnimationsPanel implements Panel {
     ensureStylesheet();
     this.doc = doc;
     clear(host);
+    // QA da noite (04/11): o clique do mouse num botão de barra não leva o foco.
+    barButtonsKeepNoFocus(host);
     host.classList.add('painel');
 
     /*

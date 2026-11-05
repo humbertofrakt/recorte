@@ -12,6 +12,7 @@
  */
 
 import { lembrarFoco } from './dom.js';
+import { barButtonsKeepNoFocus } from './sem-foco.js';
 import { campoNumero } from './campo-numero.js';
 import {
   corpoDe, registerPanel, wentToBase, type DocChange, type EditorDoc, type Panel,
@@ -206,6 +207,8 @@ class MeshPanel implements Panel {
     ensureMeshStylesheet();
     this.doc = doc;
     clear(host);
+    // QA da noite (04/11): o clique do mouse num botão de barra não leva o foco.
+    barButtonsKeepNoFocus(host);
     host.classList.add('painel');
     // `malha-corpo` aperta o preenchimento de baixo de `.painel-corpo` (16px,
     // pensado para uma lista) — prova de 1280×720, 14/09/2026.

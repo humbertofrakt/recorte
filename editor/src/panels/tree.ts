@@ -15,6 +15,7 @@ import type { ParentMap } from '../doc/bones.js';
 import { isDescendantBone } from '../doc/bones.js';
 import { Duplicate } from '../doc/duplicate.js';
 import { clear, el, ensureStylesheet, iconButton } from './dom.js';
+import { barButtonsKeepNoFocus } from './sem-foco.js';
 import {
   currentLocks, isBoneHidden, isSlotHidden, onViewSettings, setBoneHidden, setBoneLocked,
   setSlotHidden, setSlotLocked, setSkinGoneBones, skinStackOf,
@@ -203,6 +204,8 @@ class TreePanel implements Panel {
     ensureStylesheet();
     this.doc = doc;
     clear(host);
+    // QA da noite (04/11): o clique do mouse num botão de barra não leva o foco.
+    barButtonsKeepNoFocus(host);
     host.classList.add('painel');
 
     // "Novo:" uma vez, e depois só o substantivo. Com a palavra repetida em

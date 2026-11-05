@@ -10,6 +10,7 @@
 
 import { groupsOpen } from './properties-model.js';
 import { lembrarFoco } from './dom.js';
+import { barButtonsKeepNoFocus } from './sem-foco.js';
 import type { BoneFile, KeyValue } from '../../../runtime/src/index.js';
 import type { DocChange, EditorDoc, Panel, Selection } from '../contract.js';
 import { emptySelection, registerPanel, corpoDe } from '../contract.js';
@@ -116,6 +117,8 @@ class PropertiesPanel implements Panel {
     ensureStylesheet();
     this.doc = doc;
     clear(host);
+    // QA da noite (04/11): o clique do mouse num botão de barra não leva o foco.
+    barButtonsKeepNoFocus(host);
     host.classList.add('painel');
 
     const title = el('h2', 'prop-titulo', 'Propriedades');
