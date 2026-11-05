@@ -9,6 +9,7 @@
  * função. Nada mudou no que cada um faz.
  */
 
+import { avisoNoRodape } from '../panels/warning-model.js';
 import { setViewSettings, viewSettings } from '../viewport/onion.js';
 import { createEmptyFile } from '../doc/new-file.js';
 import { describeDraftTime, draftsToOffer, readDraft, takeKeptDraft } from '../doc/rascunho.js';
@@ -306,7 +307,7 @@ async function abrirNaPasta(shell: Shell, folder: ProjectFolder, boneEscolhido?:
         if (lido.mainHandle !== null) useOpenHandle(lido.mainHandle);
         await adoptFolderAtlases(shell.doc);
         shell.statusState.textContent = lido.warnings.length > 0
-          ? `${projectOpenedNotice(folder.name, lido.lists)}. ${lido.warnings[0]}`
+          ? `${projectOpenedNotice(folder.name, lido.lists)}. ${avisoNoRodape(lido.warnings[0]!)}`
           : projectOpenedNotice(folder.name, lido.lists);
         return;
       }
@@ -362,7 +363,7 @@ export async function open(shell: Shell): Promise<void> {
     });
     // Lote 62: com a pasta aberta, as imagens dela voltam a vir da pasta.
     await adoptFolderAtlases(shell.doc);
-    if (opened.warnings.length > 0) shell.statusState.textContent = opened.warnings[0];
+    if (opened.warnings.length > 0) shell.statusState.textContent = avisoNoRodape(opened.warnings[0]!);
     // Rodada 45, lote 4 (doc 64, c): o pacote diz o que veio dentro.
     else if (/\.bonez$/i.test(opened.path ?? '')) {
       shell.statusState.textContent = pacoteAbertoNotice(opened.path ?? '', [...(opened.skeletons?.keys() ?? [])], opened.atlases.length);
