@@ -211,6 +211,8 @@ class AnimationsPanel implements Panel {
     this.tiraCorpos = tiraCorpos;
     this.bodyTools = [baseNova, rebaixar];
     const corpos = el('ul', 'anim-corpos');
+    // 05/11/2026 (medição da oficina): a lista das Bases cresce com o projeto.
+    corpos.dataset.rolagem = 'lista';
     this.corpos = corpos;
 
     const tiraAnimacoes = el('div', 'anim-secao anim-secao-animacoes');
