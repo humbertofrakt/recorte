@@ -62,6 +62,10 @@ describe('Quero fazer…: as tarefas', () => {
     expect(primeira('animacao de outro')).toBe('animacao-de-outro');
     expect(primeira('gif')).toBe('gif');
     expect(primeira('psd')).toBe('importar-psd');
+    // Noite de 04/11, depois da junção com skins e reaproveitar.
+    expect(primeira('esqueleto padrao')).toBe('seguir-padrao');
+    expect(primeiroComando(TAREFAS.find((t) => t.id === 'roupa')!)).toBe('guarda-roupa');
+    expect(primeiroComando(TAREFAS.find((t) => t.id === 'animacao-de-outro')!)).toBe('usar-animacoes');
   });
 });
 

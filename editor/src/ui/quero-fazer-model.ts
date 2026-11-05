@@ -139,26 +139,42 @@ export const TAREFAS: readonly Tarefa[] = Object.freeze([
     capitulo: '5. Entidades',
   },
   {
+    // Noite de 04/11: o Guarda-roupa (obra/skins) é a porta da roupa.
     id: 'roupa', titulo: 'Trocar a roupa (skin)',
-    palavras: ['roupa', 'skin', 'pele', 'armadura', 'vestir', 'trocar'],
+    palavras: ['roupa', 'skin', 'pele', 'armadura', 'vestir', 'trocar', 'guarda-roupa'],
     passos: [
-      P('nova-pele'),
-      P('editar-pele', 'Ponha o lápis nela: {menu}.'),
-      G('Botão direito num desenho, e escolha a imagem da roupa nova.'),
-      P('pele-de-pasta', 'Ou a roupa inteira de uma vez, pelos nomes iguais: {menu}.'),
+      P('guarda-roupa', 'Abra {menu}.'),
+      G('Cada coluna é uma skin. "+ Nova skin" cria uma roupa nova.'),
+      G('Clique numa casa para trocar a imagem daquele desenho naquela skin.'),
+      G('"Vestir só esta" veste a roupa na cena.'),
     ],
     capitulo: '3. Skins',
   },
   {
+    // Noite de 04/11: Animações de outro boneco… (obra/reaproveitar).
     id: 'animacao-de-outro', titulo: 'Usar a animação de outro boneco',
-    palavras: ['reaproveitar', 'outro', 'copiar', 'importar', 'animação', 'pronta'],
+    palavras: ['reaproveitar', 'outro', 'copiar', 'importar', 'animação', 'pronta', 'goblin'],
     passos: [
-      P('importar-animacao'),
-      G('Escolha o arquivo .bone do outro boneco, e as animações.'),
-      P('biblioteca-animacoes', 'Ou pegue prontas — parado, andar, correr, pular: {menu}.'),
+      P('usar-animacoes'),
+      G('Escolha de onde vêm: o Esqueleto padrão, ou um arquivo .bone.'),
+      G('Marque as animações. Confira a tabela: cada osso de lá, o osso daqui.'),
+      G('Clique em "Usar as animações".'),
     ],
     capitulo: '2. Bases e animações',
   },
+  {
+    id: 'seguir-padrao', titulo: 'Fazer o boneco seguir o Esqueleto padrão',
+    palavras: ['padrão', 'padrao', 'esqueleto', 'nomes', 'ossos', 'reaproveitar', 'humanoide'],
+    passos: [
+      P('seguir-esqueleto-padrao'),
+      G('Confira a tabela: cada osso daqui ganha o nome de um osso do padrão.'),
+      G('Clique em "Renomear os ossos".'),
+      P('usar-animacoes', 'Daí, as animações do padrão tocam aqui: {menu}.'),
+    ],
+    capitulo: '2. Bases e animações',
+  },
+  // Pronto para acrescentar: "Ver tudo funcionando" → o cartão "Abrir a
+  // oficina", quando a sessão Reaproveitar der a ele um id de ação.
   {
     id: 'dobrar', titulo: 'Fazer uma imagem dobrar (malha)',
     palavras: ['malha', 'dobrar', 'curvar', 'mesh', 'peso', 'capa'],
