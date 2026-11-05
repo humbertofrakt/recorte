@@ -77,4 +77,28 @@ Com a pasta `backup/` presente — mesmo só com a saída do `npm run editor:bui
 Sem a pasta, passam. Eles leem cópias antigas em `backup/` e só se pulam quando a pasta **não existe**. Quem montar o editor num clone vê vermelho que não é defeito.
 Não mexi: são de outras partes.
 
+## A prova final, sobre a integração (03h37 UTC)
+
+Script: `ferramentas/provas/prova-de-pessoa-final.mjs`, sobre `a430d0d` + os consertos deste ramo. **13 PASSOU, 0 FALHOU, 4 atritos.**
+
+| # | A pessoa faz | Deu? |
+|:---:|:---|:---:|
+| 1 | boas-vindas → **Abrir a oficina** | sim; o rodapé diz por onde começar |
+| 2 | **walk** → ▶ | sim, com a motosserra na mão |
+| 3 | **Bases → mecha** | sim: o herói está na cabine (*"cabine · piloto"* na Árvore) |
+| 4 | **Skins → Guarda-roupa**, **Vestir só esta** na coluna armadura | sim: *"Vestida: armadura"* |
+| 5 | **Bases → cavaleiro**, **Animação → Animações de outro boneco…**, heroi, **Usar as animações** | sim: *"3 animações de heroi, ligadas"* |
+| 6 | **Quero fazer…** "arma" | sim: *"Pôr uma arma na mão"*, com os passos |
+| 7 | **Arquivo → Exportar → GIF** | sim: `heroi.gif`, 152 × 242 |
+
+| Atrito | De quem | Fiz |
+|:---|:---|:---|
+| **Bases → mecha** ficava no zoom do herói (216%), o mecha meio fora da cena e o ícone da cabine quase na régua | Cena | **consertei**: trocar de base ajusta a vista (216% → 106%) |
+| a **barra de menus** em 1024 px: Exibir, Janela e Ajuda fora da tela | casca | **consertei**: 0 menu fora em 1024, 1280, 1366 e 1920 |
+| **Bases → mecha**: o rodapé fica *"Sem mudanças por salvar."*; o *"Base de mecha"* do `openBody` não chega à vista (conferido: também sem o meu Ajustar) | Animações | **tabela** |
+| depois do Guarda-roupa, a aba **Skins** fica na frente da aba Animações, e a lista **Bases** some de vista: a pessoa precisa achar a aba | Skins / casca | **tabela** — o Guarda-roupa podia devolver a aba de antes ao fechar |
+| **Animações de outro boneco** → Usar: logo depois, **82 avisos** (47 iguais) no rodapé, e as animações ligadas não aparecem na lista do cavaleiro à vista (só *"Só compartilhadas, abaixo."* e as do esqueleto padrão) | Animações / reaproveitar | **tabela** |
+| o rodapé da **Oficina aberta** sai cortado com *"…"* (a frase é longa e não tem dois-pontos cedo) | Oficina | **tabela**: o essencial antes dos dois-pontos (#14) |
+
 FIM
+

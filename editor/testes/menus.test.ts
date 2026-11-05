@@ -2055,3 +2055,16 @@ describe('o rodapé apertado: o essencial antes dos dois-pontos (prova de pessoa
     expect(ruins.filter((r) => !r.includes('${title}: ${message}'))).toEqual([]);
   });
 });
+
+describe('a barra de menus cabe em 1024 px (noite de 05/11/2026)', () => {
+  it('em tela estreita encolhe o espaço dos botões e tira a marca — nenhum menu some', () => {
+    // Medido no navegador: em 1024 os doze menus pediam 1271 px, e Exibir,
+    // Janela e Ajuda ficavam fora da tela. Com estas regras, 0 fora em 1024,
+    // 1280, 1366 e 1920 (`ferramentas/provas`, relatório da noite).
+    const css = readFileSync(resolve(__dirname, '../src/ui/shell.css'), 'utf8').replace(/\s+/g, ' ');
+    expect(css).toContain('@media (max-width: 1399px) { .menu-button { padding: 6px 7px; } }');
+    expect(css).toContain('@media (max-width: 1150px) { .brand { display: none; } .menu-button { padding: 6px 5px; } }');
+    // E nada de esconder menu: nenhuma regra põe `display: none` num botão de menu.
+    expect(css).not.toMatch(/\.menu-button[^{]*\{[^}]*display:\s*none/);
+  });
+});

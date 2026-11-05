@@ -2003,3 +2003,14 @@ describe('prova de pessoa: a frase do recorte guarda o tamanho no rodapé aperta
     expect(versoesDaFraseCena(frase).at(-1)).toBe('Recorte 167 × 283 px');
   });
 });
+
+describe('prova de pessoa final: trocar de base ajusta a vista', () => {
+  it('a cena guarda a base em foco e chama o Ajustar quando ela muda (não na primeira abertura)', () => {
+    // Medido no navegador: Bases → mecha ficava em 216% (o zoom do herói), com
+    // o mecha meio fora da cena; com o conserto, 106% e o mecha inteiro.
+    const cena = readFileSyncCena(resolveCena(import.meta.dirname, '../src/viewport/viewport.ts'), 'utf8');
+    const ramo = cena.slice(cena.indexOf('const foco = projetoDe(doc)?.emFocoUri'), cena.indexOf('const foco = projetoDe(doc)?.emFocoUri') + 260);
+    expect(ramo).toContain('if (foco !== this.focoVisto)');
+    expect(ramo).toContain('if (antes !== null && foco !== null) this.fitToScreen();');
+  });
+});
