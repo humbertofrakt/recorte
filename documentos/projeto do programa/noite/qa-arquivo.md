@@ -39,6 +39,8 @@ Executor: `EXECUTANDO · QA arquivo`. Quem coordena: o DIRETOR.
 | D20 | Exportar GIF do projeto do Spriter (30 quadros de 2837×1197): a página fica **64 s sem responder**, o Andamento parado. Agora responde em até 1,9 s, o Andamento anda, e o arquivo sai com os mesmos bytes | `ferramentas/src/exportar/quadros.ts`, `io/export-image.ts` | `exemplo/game` → bcp → Exportar → GIF | sim |
 | D21 | A janela "Imagem exportada" mostra avisos do desenhador em inglês (`attachment "…" has no atlas region; not drawn`) | `io/export-image.ts` | a mesma exportação | sim |
 | D22 | Salvar o projeto do Spriter (91 imagens, 3 páginas de atlas): 8 s de página parada e o rodapé mudo. Agora: "Salvando: lendo as imagens do atlas, 56 de 91…", e a página responde em até 0,4 s | `io/folder-save.ts`, `io/open-save.ts`, `ui/shell-file.ts` | `exemplo/game` → bcp → Ctrl+S | sim |
+| D23 | Soltar só o `bcp.scml` (sem as imagens): 184 avisos, e o rodapé só "Importado do Spriter: bcp.bone." — sem imagem nenhuma junto, a frase das imagens nem existia; com algumas faltando, vinha depois e era cortada. Agora: "0 de 92 imagens do boneco estão na cena." primeiro | `io/import-foreign.ts`, `ui/shell-*.ts` | soltar `exemplo/game/bcp.scml` sozinho | sim |
+| — | A mesma forma, achada na varredura: abrir um projeto com manifesto e aviso punha o aviso depois da notícia | `ui/shell-file.ts` | — | sim |
 | — | Linha de comando: opção errada saía com 1 em `empacotar`, `exportar`, `exportar-imagem`, `fatiar`, `render-png` (os outros com 2); `fatiar --animacoes X` não dizia quais há | `ferramentas/*.mjs` | `npm run fatiar -- a.bone x --bobagem` | sim |
 | — | Importar PSD: com a janela de avisos aberta, o rodapé dizia "Importar PSD." | `ui/shell-file.ts`, `ui/shell-drop.ts` | Importar → PSD… | sim |
 
@@ -86,6 +88,18 @@ Cada conserto: um commit, com teste no arquivo da parte, visto **vermelho antes*
 
 Todas as mensagens em português.
 
+## A forma que mais se repetiu
+
+**"A notícia na frente, o aviso atrás."** O rodapé mostra a primeira frase que
+cabe; tudo o que vem depois só se lê passando o mouse. Quatro vezes nesta
+noite o aviso importante estava atrás e sumia: D3 (o atlas baixado), D23 (as
+imagens que faltam), o projeto com manifesto, e o rascunho recuperado. **Quem
+escreve uma frase de rodapé: o aviso primeiro.**
+
+A segunda: **"o trabalho pesado num pedaço só"** — D20 (GIF, 64 s parado) e
+D22 (Salvar, 8 s). Quem faz laço longo no editor: uma pausa por volta, e o
+andamento no rodapé.
+
 ## Decisões que tomei no lugar do Humberto
 
 | Decisão | Por quê |
@@ -101,6 +115,7 @@ Todas as mensagens em português.
 | O quê | Por quê |
 |:---|:---|
 | **D15, o nome "Uma imagem por skin…"** | o rótulo mora em `ui/menus.ts` (arquivo de passagem) e o manual (outra sessão desta noite) escreve sobre ele. **Recomendo**: "Um arquivo por skin…", dica *"Corta o .bone: só as skins e as animações marcadas"*. É uma linha; o Diretor decide junto com o manual |
+| "Salvar como pacote" do projeto do Spriter prende a tela 3,2 s | aceitável; o D20/D22 mostram como fazer se incomodar |
 | Exportar skin grava só o `.bone` da skin, sem atlas | é o desenho (o arquivo de skin exige o rig e os nomes); noutro boneco as imagens vêm do atlas dele |
 | Rascunho recuperado vem **sem as imagens** (avisa 4) | o navegador só devolve a licença da pasta com um clique. O rodapé agora diz o remédio, e o remédio funciona (D19) |
 | O rodapé do Importar PSD diz "Importar PSD." até fechar a janela | cosmético |
