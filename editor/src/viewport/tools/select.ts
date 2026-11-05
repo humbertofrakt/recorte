@@ -606,6 +606,9 @@ class SelectTool implements Tool {
     }
     const hits = pickInRect(doc.skeleton, box, pickLocks());
     doc.select(selectionForPicks(doc.selection, hits, this.boxMode));
+    // Prova de pessoa (05/11/2026): o retângulo escolhia calado, e o Delete
+    // seguinte apagava o que a pessoa nem sabia que tinha pegado.
+    doc.notice(boxSelectSays(hits.length, selectionSize(doc.selection)));
   }
 
   onKey(doc: EditorDoc, key: string): boolean {
@@ -826,3 +829,18 @@ registerTool(selectTool as Tool);
 
 // Re-exported so the viewport does not import the picking module twice.
 export { pickAt, samePick };
+
+/** Quantas coisas estão escolhidas: ossos, desenhos (slots e imagens, sem contar duas vezes) e regras. */
+export function selectionSize(selection: Selection): number {
+  const desenhos = new Set([...selection.slots, ...selection.attachments.map((a) => a.slot)]);
+  return selection.bones.length + desenhos.size + selection.constraints.length;
+}
+
+/** A frase do retângulo de seleção: o que ele pegou, e o total escolhido. */
+export function boxSelectSays(dentro: number, total: number): string {
+  // Curta e sem ponto: o rodapé encolhe até o que vem antes dos dois-pontos, e "Retângulo vazio" ainda diz.
+  if (dentro === 0) return 'Retângulo vazio: arraste por cima das peças';
+  const quantos = `${total} ${total === 1 ? 'item escolhido' : 'itens escolhidos'}`;
+  // O que importa vem antes dos dois-pontos: é o que sobra no rodapé apertado.
+  return `${quantos} pelo retângulo: Delete apaga, Esc tira a escolha`;
+}

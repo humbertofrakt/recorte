@@ -97,18 +97,19 @@ const animando = (doc: EditorDoc): boolean => doc.animation !== null;
  */
 function gravar(doc: EditorDoc, plano: PlanoDeEfeito): void {
   if (plano.chaves.length === 0) {
-    doc.notice(plano.aviso ?? `${plano.label}: não havia o que gravar`);
+    doc.notice(plano.aviso ?? `${plano.label} sem nada para gravar`);
     return;
   }
   const animation = doc.animation;
   if (animation === null) {
-    doc.notice(`${plano.label}: abra uma animação primeiro — um efeito é chave, e chave mora numa animação`);
+    // O essencial antes dos dois-pontos: o rodapé apertado mostra só essa parte (prova de pessoa, 05/11/2026).
+    doc.notice(`${plano.label} pede uma animação aberta: um efeito é chave, e chave mora numa animação`);
     return;
   }
   doc.run(new EditKeys(animation, plano.label, (file, name) => {
     aplicarPlano(file, name, plano);
   }));
-  doc.notice(`${plano.label}: ${plano.resumo}`);
+  doc.notice(`${plano.label} gravado: ${plano.resumo}`);
 }
 
 // ---------------------------------------------------------------------------

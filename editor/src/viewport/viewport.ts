@@ -28,7 +28,8 @@ import { emptySelection, getTool, registerPanel, readEditorState, type ChangeKin
 import { CanvasRenderer, type AtlasPageData, type Bone, type Skeleton, type Slot } from '../../../runtime/src/index.js';
 import { Camera } from './camera.js';
 import { RULER_SIZE } from './rulers.js';
-import { changeViewSettings, currentLocks, editingSkinOf, onViewSettings, toggleViewKey, viewSettings } from './onion.js';
+import { VIEW_TOGGLE_KEYS, changeViewSettings, currentLocks, editingSkinOf, onViewSettings, toggleViewKey, viewSettings } from './onion.js';
+import { switchNotice } from '../panels/view-panel-actions.js';
 import { addGuide, guideFromRuler, guideLabel, rulerAt } from './guides-model.js';
 import { pickAll, pickAt, selectionFor, setAlphaSampler, withChosen } from './picking.js';
 import { aroundGridOptions } from '../panels/entities-actions.js';
@@ -1543,7 +1544,7 @@ export class ViewportPanel implements Panel {
           this.shapeDrag = { shape: forma, handle: alca };
           // Conserto 2: o arrasto não se junta com o que se digitou antes.
           doc.endMerge?.();
-          doc.notice(`${alca.label}: arraste para mudar`);
+          doc.notice(`${alca.label} — arraste para mudar`);
           this.needsDraw = true;
           return;
         }
@@ -1603,10 +1604,10 @@ export class ViewportPanel implements Panel {
         let dica: string | null = null;
         for (const forma of selectedEmitterShapes(this.doc, EMITTER_MARK_PIXELS / this.camera.zoom)) {
           const alca = shapeHandleAt(forma.guide, at.x, at.y, raio);
-          if (alca !== null) { dica = `${alca.label}: arraste para mudar`; break; }
+          if (alca !== null) { dica = `${alca.label} — arraste para mudar`; break; }
         }
         if (dica !== null) this.canvas.title = dica;
-        else if (this.canvas.title.endsWith(': arraste para mudar')) this.canvas.title = '';
+        else if (this.canvas.title.endsWith(' — arraste para mudar')) this.canvas.title = '';
         // Segunda conferência, defeito 3: parado em cima, o RODAPÉ também diz
         // — a dica do navegador demora e às vezes nem vem. Uma vez por alça.
         if (dica !== this.dicaDaAlca) {
@@ -1732,13 +1733,13 @@ export class ViewportPanel implements Panel {
     doc.endMerge?.();
     if (!drag.moved) {
       // Clique parado: nada muda. Fora do retângulo, ensina o traço.
-      if (drag.zone === 'tracar') doc.notice('Recorte: arraste de um canto ao outro para traçar. Enter ou Esc termina');
+      if (drag.zone === 'tracar') doc.notice('Arraste de um canto ao outro para traçar o recorte. Enter ou Esc termina');
       return;
     }
     const box = cropInFile(doc.file, drag.animation);
     if (box === null) return;
     const what = drag.zone === 'tracar' ? 'Recorte traçado' : drag.zone === 'move' ? 'Recorte movido' : 'Recorte';
-    doc.notice(`${what}: ${cropSays(box)}. Ctrl+Z desfaz`);
+    doc.notice(`${what} ${cropSays(box)}. Ctrl+Z desfaz`);
   }
 
   private onPointerUp(e: PointerEvent): void {
@@ -1905,7 +1906,7 @@ export class ViewportPanel implements Panel {
         this.cropDrag = null;
         this.cropDragSays = null;
         this.pointerDown = false;
-        doc.notice('Recorte: arrasto desfeito');
+        doc.notice('Arrasto do recorte desfeito');
       } else {
         setCropEditing(false);
         doc.notice(this.cropDoneNotice(doc));
@@ -1941,6 +1942,12 @@ export class ViewportPanel implements Panel {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     // 7 8 9 0: show bones, lock bones, show drawings, lock drawings.
     if (toggleViewKey(e.key, doc)) {
+      // Prova de pessoa (05/11/2026): o 7 escondia os ossos CALADO — quem
+      // apertava sem querer via o boneco perder os ossos e não sabia a volta.
+      // A mesma frase dos botões do alto (`switchNotice`).
+      const campo = VIEW_TOGGLE_KEYS[e.key];
+      const frase = campo === undefined ? null : switchNotice(campo, viewSettings()[campo]);
+      if (frase !== null) doc.notice(frase);
       e.preventDefault();
       e.stopPropagation();
       this.needsDraw = true;
