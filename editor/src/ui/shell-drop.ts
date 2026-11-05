@@ -312,8 +312,9 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
         const importado = await importForeignProject(escolhidos);
         forgetHandle();
         forgetImportedImages(shell.doc);
+        // QA 04/11/2026 (D7): o importado ainda não existe no disco — nasce "não salvo".
         shell.doc.setFile(importado.file, {
-          path: importado.path, atlases: importado.atlases, images: importado.images,
+          path: importado.path, atlases: importado.atlases, images: importado.images, unsaved: true,
         });
         const programa = FORMAT_LABELS[importado.format];
         shell.statusState.textContent = `Importado do ${programa}: ${importado.path}. Lendo as imagens…`;

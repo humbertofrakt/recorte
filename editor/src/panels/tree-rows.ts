@@ -889,3 +889,20 @@ export function deleteSays(selection: Selection, plan: DeletePlan): string {
 }
 
 // `sortBonesTopologically` mora em `doc/bones.ts` desde o lote A4.
+
+/** Quanto cada nível anda para a direita: os dois primeiros 16 px, os fundos menos. */
+const INDENT_STEPS: readonly number[] = [16, 16, 12, 10, 8];
+const INDENT_MIN_STEP = 6;
+
+/**
+ * **O recuo da linha** — QA da noite de 04/11/2026. Era `6 + 16 × nível`: no
+ * herói do PSD, na profundidade 5, o nome começava em 154 px de uma linha de
+ * 191, e "weapon" cortava. Os dois primeiros níveis ficam iguais (a árvore
+ * rasa não muda); do terceiro em diante cada nível anda menos, nunca menos
+ * de 6 px, para o pai e o filho continuarem em colunas diferentes.
+ */
+export function treeIndent(depth: number): number {
+  let px = 6;
+  for (let d = 0; d < depth; d++) px += INDENT_STEPS[d] ?? INDENT_MIN_STEP;
+  return px;
+}

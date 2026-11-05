@@ -35,6 +35,7 @@ import {
   whyCannotGoUp, naCena, naCenaHint, otherLinesText, testPieces, toggleNaCena,
   treeSignature, unplug, whyCannotDrop,
   animaChoices, cardSkins, cardTitle, setTestAnima, skinChoices, testAllEqual, toggleTestSkin, whyNoCardAnima,
+  PROJECT_ANIMA_NEEDS_ANIMATION, projectInheritGesture,
   cardMissing, foldedByDefault, trailOf, useTrail, compactFor, upSlotHint,
 } from './entities-cards-model.js';
 import type { EntityCard, SlotLine, TestGesture, TestLink } from './entities-cards-model.js';
@@ -704,6 +705,18 @@ export function setCardAnima(doc: EditorDoc, card: EntityCard, valor: string | n
   const entidade = entitySlots(corpoDe(doc).file).find((e) => e.slot === alvo.slot && e.uri === alvo.uri) ?? null;
   if (entidade === null) {
     doc.notice(`${card.nome} não está gravada no slot ${alvo.slot} deste arquivo`);
+    return false;
+  }
+  // 05/11/2026: "a de quem recebe" é do anexo (inheritAnimation), não da faixa.
+  if (valor === '') {
+    const gesto = projectInheritGesture(doc, card);
+    if (gesto === null) return false;
+    corpoDe(doc).run(gesto.command);
+    doc.notice(gesto.frase);
+    return true;
+  }
+  if (doc.animation === null) {
+    doc.notice(PROJECT_ANIMA_NEEDS_ANIMATION);
     return false;
   }
   setEntityAnimationAt(doc, entidade, valor);

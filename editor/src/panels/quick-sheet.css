@@ -102,9 +102,16 @@
 }
 
 /* Rodada 43, lote 4: na linha do Ângulo o campo é mais estreito, para o
-   "mundo -104°" caber ao lado do disco (cortava em "mundo -10"). */
-.ficha-controle:has(.ficha-mundo) .ficha-campo {
-  width: 50px;
+   "mundo -104°" caber ao lado do disco (cortava em "mundo -10").
+   QA da noite (04/11/2026): 50 px cortava o NÚMERO ("-166,03" lia "-166,0").
+   O campo cresce com o que está escrito; com número longo o "mundo" vai
+   para a dica do disco (`worldAngleBeside`). */
+.ficha-controle:has(.ficha-disco) .ficha-campo {
+  width: auto;
+  min-width: 50px;
+  max-width: 96px;
+  field-sizing: content;
+  flex-shrink: 0;
 }
 
 /* Rodada 43, lote 2: o giro no mundo, só para ler, ao lado do disco. */
@@ -180,4 +187,9 @@
   color: var(--painel-texto-fraco);
   font-size: 0.85em;
   white-space: nowrap;
+  /* QA da noite (04/11): quem encolhe é a base, que tem dica — nunca o número. */
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -301,6 +301,10 @@ export async function buildFolderPack(doc: EditorDoc, stem: string): Promise<Fol
   const folder = projectFolder(doc);
   const paths = new Set([...(folder?.images.values() ?? [])].map((image) => image.path));
   const own = ownAtlas.get(doc) ?? null;
+  // 05/11/2026: as páginas que o atlas de ontem cita são DELE, não arte da
+  // pasta — o Salvar de hoje grava por cima, em vez de fugir para `-atlas2`.
+  const primeiro = folderAtlasNames(doc.file, stem, own, paths);
+  if (folder?.handle) for (const page of await ownPagesOnDisk(folder.handle, primeiro.atlas)) paths.delete(page);
   const names = folderAtlasNames(doc.file, stem, own, paths);
   const items: PackerItem[] = [];
   for (const item of plan.items) {
@@ -318,6 +322,24 @@ export async function buildFolderPack(doc: EditorDoc, stem: string): Promise<Fol
   const pages: FolderPack['pages'] = [];
   for (const page of packed.pages) pages.push({ name: page.image, bytes: await pngOf(page) });
   return { atlasName: names.atlas, text: `${JSON.stringify(packed.atlas, null, 2)}\n`, pages, count: items.length };
+}
+
+/**
+ * As páginas que o atlas `atlasName`, gravado na raiz da pasta por um Salvar
+ * de antes, cita — 05/11/2026. Lista vazia quando ele não está lá ou não se
+ * deixa ler: aí nada é tomado por página, e a arte da pasta fica protegida.
+ */
+export async function ownPagesOnDisk(root: FolderDirectoryHandle, atlasName: string): Promise<string[]> {
+  try {
+    for await (const entry of root.values()) {
+      if (entry.name !== atlasName || entry.kind === 'directory' || !('getFile' in entry)) continue;
+      const tree = JSON.parse(await (await entry.getFile()).text()) as { pages?: Array<{ image?: unknown }> };
+      return (tree.pages ?? []).map((page) => page.image).filter((image): image is string => typeof image === 'string');
+    }
+  } catch {
+    // Atlas estragado ou sem permissão: nada é tomado por página.
+  }
+  return [];
 }
 
 /** Desce da pasta do projeto até a subpasta `path`. */

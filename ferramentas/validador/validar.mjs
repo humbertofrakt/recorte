@@ -308,6 +308,34 @@ function validarArquivo(caminho, v, tipoForcado) {
 }
 
 const args = process.argv.slice(2)
+// QA da noite de 04/11/2026: `--help` validava os exemplos, e uma opção
+// errada passava calada (regra 21). Ajuda sai com 0; pergunta errada, com 2.
+const USO = `Uso: node ferramentas/validador/validar.mjs [opções] arquivo1 [arquivo2 ...]
+
+  Sem arquivo, valida os exemplos de formato/exemplos (o mesmo que --todos).
+  O tipo vem do nome: .bone (esqueleto), .atlas.json (atlas),
+  manifest.json (manifesto), .bonez (pacote).
+
+  --esqueleto        lê todo arquivo como esqueleto
+  --atlas            lê todo arquivo como atlas
+  --manifesto        lê todo arquivo como manifesto
+  --pacote           lê todo arquivo como pacote .bonez
+  --todos            valida os exemplos de formato/exemplos
+  --json             relatório em JSON, para máquina
+  --ajuda            mostra este texto
+
+Sai com 0 quando tudo é válido, 1 quando algum arquivo tem erro, 2 quando a
+pergunta está errada.`
+const CONHECIDAS = new Set(['--atlas', '--manifesto', '--esqueleto', '--pacote', '--json', '--todos', '--ajuda', '--help'])
+if (args.includes('--ajuda') || args.includes('--help')) {
+  console.log(USO)
+  process.exit(0)
+}
+const desconhecida = args.find(a => a.startsWith('--') && !CONHECIDAS.has(a))
+if (desconhecida !== undefined) {
+  console.error(`Erro: opção desconhecida: ${desconhecida}\n\n${USO}`)
+  process.exit(2)
+}
 let arquivos = args.filter(a => !a.startsWith('--'))
 let tipoForcado = null
 if (args.includes('--atlas')) tipoForcado = 'atlas'

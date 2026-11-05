@@ -63,7 +63,7 @@ import { askForm } from '../ui/dialog.js';
 import { renderEventKeyEditor } from './event-key-editor.js';
 import { registerAction, runAction } from '../ui/actions.js';
 import { actionsFor, isTyping, keyOf } from '../ui/keys.js';
-import { BASE_SHEET_NOTE, KEY_HINT, dragReadout, keyTitle, popupPlacement, segmentPath, shouldAnnounceNewKeys, entityStartValue, formatSeconds, bandLimitNotice, deleteKeyGoesTo, DUPLICATE_IN_TIMELINE_NOTICE, keyMenuPlan } from './dopesheet-model.js';
+import { BASE_SHEET_NOTE, KEY_HINT, dragReadout, keyTitle, popupPlacement, segmentPath, shouldAnnounceNewKeys, entityStartValue, formatSeconds, bandLimitNotice, deleteKeyGoesTo, DUPLICATE_IN_TIMELINE_NOTICE, keyMenuPlan, curveAppliedNotice, closesPopup } from './dopesheet-model.js';
 import { removeKeyRef } from '../anim/body.js';
 
 import { hasKeysCopied, setEntityAnimationAt } from './dopesheet-actions.js';
@@ -1364,16 +1364,7 @@ export class DopesheetPanel implements Panel {
       menu.append(node);
     }
 
-    const fora = (event: PointerEvent): void => {
-      if (menu.contains(event.target as Node)) return;
-      this.closeCurveMenu();
-    };
-    document.addEventListener('pointerdown', fora, true);
-    this.closeCurveMenu = (): void => {
-      document.removeEventListener('pointerdown', fora, true);
-      menu.remove();
-      this.closeCurveMenu = (): void => {};
-    };
+    this.armMenuClose(menu);
     document.body.append(menu);
   }
 
@@ -1558,19 +1549,37 @@ export class DopesheetPanel implements Panel {
     });
     menu.append(tirar);
 
-    // Um clique fora fecha. `capture` para o menu sumir antes de o clique virar
-    // seleção de outra chave.
+    // Um clique fora fecha, e o Esc também (`armMenuClose`).
+    this.armMenuClose(menu);
+    document.body.append(menu);
+  }
+
+  /**
+   * Como um menu da folha se fecha: um clique fora, ou **Esc** — QA da noite
+   * de 04/11/2026: o menu do botão direito no losango não fechava com Esc
+   * (o do Spine e o do Spriter fecham). `capture` nos dois, para o menu sumir
+   * antes de o clique virar seleção de outra chave, e para o Esc ser tratado
+   * uma vez só (regra 12) e não chegar à cena.
+   */
+  private armMenuClose(menu: HTMLElement): void {
     const fora = (event: PointerEvent): void => {
       if (menu.contains(event.target as Node)) return;
       this.closeCurveMenu();
     };
+    const tecla = (event: KeyboardEvent): void => {
+      if (!closesPopup(event.key)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeCurveMenu();
+    };
     document.addEventListener('pointerdown', fora, true);
+    document.addEventListener('keydown', tecla, true);
     this.closeCurveMenu = (): void => {
       document.removeEventListener('pointerdown', fora, true);
+      document.removeEventListener('keydown', tecla, true);
       menu.remove();
       this.closeCurveMenu = (): void => {};
     };
-    document.body.append(menu);
   }
 
   /** Escreve a curva nas chaves escolhidas — item 26. */
@@ -1585,9 +1594,7 @@ export class DopesheetPanel implements Panel {
       written = setKeyCurve(file, animationName, refs, kind);
     }));
     const rotulo = CURVE_KINDS.find((item) => item.id === kind)?.label ?? kind;
-    doc.notice(written === 0
-      ? 'Nenhuma chave mudou: a última de cada linha não tem para onde curvar'
-      : `${written} chave(s) agora ${rotulo === 'Parada' ? 'paradas' : `em ${rotulo}`}`);
+    doc.notice(curveAppliedNotice(written, refs.length, rotulo));
   }
 
   /** Apaga uma chave só, pelo duplo clique nela — item 90. */

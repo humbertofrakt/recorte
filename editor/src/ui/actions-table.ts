@@ -121,6 +121,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
       // Degrau 7, tarefa 7.5: as duas portas do botão direito na cena.
       'ferramenta-de-antes', 'opcoes-do-desenho',
       'eixos-local', 'eixos-pai', 'eixos-mundo',
+      // N-4b: o recorte da exportação, arrastado na cena (`viewport/crop-model.ts`).
+      'recorte-na-cena', 'tirar-recorte',
     ],
   },
   // Rodada final, chat B, lote 1 (P5): os modelos prontos de partícula.
@@ -367,8 +369,8 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
 /** Quando uma ação de arranque fica cinza. As outras dizem no próprio menu. */
 const GREY_WHEN: Readonly<Record<string, string>> = Object.freeze({
   duplicar: 'sem nada escolhido que se duplique',
-  'novo-ponto-no-slot': 'sem um slot escolhido',
-  'novo-caixa-no-slot': 'sem um slot escolhido',
+  'novo-ponto-no-slot': 'sem um desenho escolhido',
+  'novo-caixa-no-slot': 'sem um desenho escolhido',
   apagar: 'sem nada escolhido, ou só a raiz',
   'limpar-slots-vazios': 'sem nenhum desenho vazio no arquivo',
   'subir-ordem': 'sem desenho escolhido',

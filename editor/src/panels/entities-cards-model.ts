@@ -1419,10 +1419,73 @@ export interface AnimaChoice {
 export function whyNoCardAnima(doc: EditorDoc, card: EntityCard): string | null {
   if (card.alvo === null) return 'Este cartão não escolhe o que toca aqui';
   if (!card.carregada) return `O arquivo de ${card.nome} não está aberto: o editor não sabe que animações ela tem`;
-  if (card.alvo.kind === 'projeto' && doc.animation === null) {
-    return 'Abra uma animação: no projeto, o que a peça toca vira chave na faixa dela, da agulha em diante';
-  }
+  // 05/11/2026: com a base aberta o menu abre — "a de quem recebe" vale em
+  // todas as animações. As outras escolhas dizem `PROJECT_ANIMA_NEEDS_ANIMATION`.
   return null;
+}
+
+/** A frase de quem escolhe a faixa com a base aberta: no projeto, é chave. */
+export const PROJECT_ANIMA_NEEDS_ANIMATION =
+  'Abra uma animação: no projeto, o que a peça toca vira chave na faixa dela, da agulha em diante';
+
+/**
+ * **A peça responde à animação de quem a recebe** — 05/11/2026, a espada de
+ * um, o boneco de outro. O campo é da spec (7.11, `inheritAnimation`): o herói
+ * toca `attack`, a espada toca o `attack` dela; uma que ela não tem, toca a do
+ * anexo. É do anexo, não da faixa: vale em todas as animações, e uma chave na
+ * faixa continua ganhando (9.9). Liga e desliga; `revert` devolve como estava.
+ */
+export class SetInheritAnimation implements Command {
+  readonly label: string;
+  readonly kind: ChangeKind = 'structure';
+  private antes: boolean | undefined = undefined;
+  private feito = false;
+  constructor(
+    private readonly skin: string,
+    private readonly slot: string,
+    private readonly nome: string,
+    private readonly ligar: boolean,
+  ) {
+    this.label = ligar ? 'Responder à animação de quem recebe' : 'Deixar de responder à animação de quem recebe';
+  }
+  private def(doc: EditorDoc): Def | null {
+    const achado = (doc.file.skins ?? []).find((s) => s.name === this.skin)?.attachments?.[this.slot]?.[this.nome];
+    return achado === undefined || achado === null || typeof achado !== 'object' ? null : achado as unknown as Def;
+  }
+  apply(doc: EditorDoc): void {
+    const def = this.def(doc);
+    if (def === null) return;
+    this.antes = def['inheritAnimation'] as boolean | undefined;
+    this.feito = true;
+    if (this.ligar) def['inheritAnimation'] = true;
+    else delete def['inheritAnimation'];
+  }
+  revert(doc: EditorDoc): void {
+    const def = this.def(doc);
+    if (def === null || !this.feito) return;
+    if (this.antes === undefined) delete def['inheritAnimation'];
+    else def['inheritAnimation'] = this.antes;
+    this.feito = false;
+  }
+}
+
+/**
+ * O passo de "a de quem recebe" no cartão do projeto: liga quando está
+ * desligado, desliga quando está ligado. `null` quando a peça não está gravada
+ * no slot do cartão.
+ */
+export function projectInheritGesture(doc: EditorDoc, card: EntityCard): { command: Command; frase: string } | null {
+  const alvo = card.alvo;
+  if (alvo === null || alvo.kind !== 'projeto') return null;
+  const entidade = entitySlots(corpoDe(doc).file).find((e) => e.slot === alvo.slot && e.uri === alvo.uri) ?? null;
+  if (entidade === null) return null;
+  const ligar = !entidade.inheritAnimation;
+  const nome = cap(entityShortName(alvo.uri));
+  const dela = entidade.animation === null ? 'fica parada' : `toca ${entidade.animation}`;
+  const frase = ligar
+    ? `${nome} responde à animação de quem a recebe: toca a de mesmo nome; numa que ela não tem, ${dela}. Vale em todas as animações`
+    : `${nome} não responde mais à animação de quem a recebe: ${dela}`;
+  return { command: new SetInheritAnimation(entidade.skin, entidade.slot, entidade.attachment, ligar), frase };
 }
 
 /** O que se pode escolher no "anima ▾" deste cartão, com a de agora marcada. */
@@ -1431,8 +1494,19 @@ export function animaChoices(doc: EditorDoc, card: EntityCard): AnimaChoice[] {
   const nome = card.nome;
   if (card.alvo.kind === 'projeto') {
     const agora = card.anima;
+    const recebe: AnimaChoice = {
+      valor: '', label: 'a de quem recebe',
+      hint: agora === ''
+        ? `${cap(nome)} responde à animação de quem a recebe. Clique para desligar: ela volta a tocar só a dela`
+        : `${cap(nome)} toca a animação de mesmo nome que quem a recebe toca; numa que ela não tem, a dela. `
+          + 'Vale em todas as animações (inheritAnimation, 7.11)',
+      atual: agora === '',
+    };
+    // 05/11/2026: com a base aberta, só "a de quem recebe" — as outras são chave na faixa.
+    if (doc.animation === null) return [recebe];
     return [
       { valor: null, label: 'livre — o jogo escolhe', hint: `Ninguém manda em ${nome}: o jogo escolhe o que ela toca. Vira chave na faixa, da agulha em diante`, atual: agora === null },
+      recebe,
       ...card.animacoes.map((a) => ({ valor: a, label: a, hint: `${cap(nome)} toca ${a}, da agulha em diante. Vira chave na faixa`, atual: agora === a })),
     ];
   }

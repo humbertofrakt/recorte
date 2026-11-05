@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recorte</title>
+<link rel="icon" href="./site/favicon.ico">
+<style>
+  :root { --fundo:#f6f5f2; --texto:#1d1d1f; --suave:#5b5b60; --azul:#2f6fdc; --cartao:#ffffff; --borda:#e2e0da; }
+  @media (prefers-color-scheme: dark) { :root { --fundo:#17181b; --texto:#ececef; --suave:#a3a3aa; --azul:#6d9cff; --cartao:#212227; --borda:#34353b; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--fundo); color:var(--texto); font:18px/1.5 system-ui, sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:48px 16px; }
+  h1 { font-size:44px; margin:0 0 4px; }
+  p.sub { color:var(--suave); margin:0 0 32px; }
+  a.grande { display:block; background:var(--cartao); border:1px solid var(--borda); border-radius:12px; padding:20px 22px; margin:0 0 14px; color:inherit; text-decoration:none; }
+  a.grande:hover { border-color:var(--azul); }
+  a.grande b { display:block; font-size:22px; color:var(--azul); }
+  a.grande span { color:var(--suave); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Recorte</h1>
+  <p class="sub">Animação 2D por ossos para jogos. Formato de arquivo aberto: <code>.bone</code>.</p>
+  <a class="grande" href="./editor/index.html"><b>Abrir o editor</b><span>Roda no navegador. Nada para instalar.</span></a>
+  <a class="grande" href="./site/validador/index.html"><b>Conferir um arquivo .bone</b><span>Arraste o arquivo e veja se está certo.</span></a>
+  <a class="grande" href="./site/index.html"><b>O formato e o projeto</b><span>A especificação, o manual e os leitores para Godot e Construct.</span></a>
+</main>
+</body>
+</html>

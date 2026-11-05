@@ -25,7 +25,7 @@ import { readEditorState, registerPanel } from '../contract.js';
 // Degrau 9: a pilha e o lapis moram na aba Peles; aqui fica o atalho.
 import { skinOff, skinTabRows, stackAddOnTop, stackRemove } from './skins-model.js';
 import { putSkinStack } from './skins-actions.js';
-import { toggleViewGroup, viewGroupFolded, viewGroupHint } from './view-panel-actions.js';
+import { telaBaixa, toggleViewGroup, viewGroupFolded, viewGroupHint } from './view-panel-actions.js';
 
 /**
  * Um grupo da aba Exibição que DOBRA — rodada 17, I8. O título vira botão
@@ -35,7 +35,9 @@ import { toggleViewGroup, viewGroupFolded, viewGroupHint } from './view-panel-ac
 function foldGroup(title: string): HTMLFieldSetElement {
   const box = group(title);
   const legend = box.querySelector('legend');
-  const folded = viewGroupFolded(title);
+  // 04/11/2026: na tela baixa, "A cena" nasce dobrada (ver `viewGroupFolded`).
+  const baixa = telaBaixa(globalThis.innerHeight ?? 1080);
+  const folded = viewGroupFolded(title, baixa);
   box.classList.toggle('is-dobrado', folded);
   if (legend !== null) {
     legend.textContent = `${folded ? '▸' : '▾'} ${title}`;
@@ -45,7 +47,7 @@ function foldGroup(title: string): HTMLFieldSetElement {
     legend.setAttribute('aria-expanded', String(!folded));
     legend.title = viewGroupHint(title, folded);
     const virar = (): void => {
-      const agora = toggleViewGroup(title);
+      const agora = toggleViewGroup(title, baixa);
       box.classList.toggle('is-dobrado', agora);
       legend.textContent = `${agora ? '▸' : '▾'} ${title}`;
       legend.setAttribute('aria-expanded', String(!agora));
