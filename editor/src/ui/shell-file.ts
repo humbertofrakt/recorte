@@ -185,6 +185,10 @@ export async function askFolderFirst(
   setProjectFolder(shell.doc, folder);
   const faltam = soltas.filter((image) => !folder.images.has(image.name));
   if (faltam.length > 0) addFolderImages(shell.doc, faltam);
+  // QA 04/11/2026 (D19): as imagens que o desenho usa e estão nesta pasta voltam
+  // à cena agora — senão o Salvar seguinte dizia "Faltam 2 imagens" de imagens
+  // que estão na pasta recém-escolhida (o rascunho recuperado vem sem elas).
+  await adoptFolderAtlases(shell.doc);
   void rememberFolder(folder);
   shell.showPanel('imagens');
   return 'pasta';

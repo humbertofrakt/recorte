@@ -2453,3 +2453,20 @@ describe('QA 04/11/2026 — D17: Entregar uma base leva o atlas que ela cita', (
     expect(casca).not.toContain('o atlas que ele já citava vale');
   });
 });
+
+describe('QA 04/11/2026 — D19: a pasta escolhida no Salvar liga as imagens que o desenho usa', () => {
+  // A prova (Chromium sem janela): rascunho recuperado (sem imagens: 4 avisos)
+  // → Salvar → "O projeto ainda não tem pasta" → Escolher a pasta → mao. Em
+  // seguida: "Salvar com avisos? Faltam 2 imagens: _0000_Camada-1,
+  // _0001_Camada-2" — as duas estão NA pasta que acabou de ser escolhida. A
+  // pasta entrava no projeto, e o desenho não era ligado a ela.
+  it('askFolderFirst: depois de pôr a pasta no projeto, liga as imagens (adoptFolderAtlases)', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/ui/shell-file.ts'), 'utf8');
+    const corpo = fonte.slice(fonte.indexOf('export async function askFolderFirst('), fonte.indexOf('export async function openFolder('));
+    const pos = corpo.indexOf('setProjectFolder(shell.doc, folder);');
+    const liga = corpo.indexOf('await adoptFolderAtlases(shell.doc);');
+    expect(pos).toBeGreaterThan(0);
+    expect(liga).toBeGreaterThan(pos);
+    expect(liga).toBeLessThan(corpo.indexOf("return 'pasta';"));
+  });
+});
