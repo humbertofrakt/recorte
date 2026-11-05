@@ -2469,7 +2469,16 @@ export function variableFields(file: BoneFile, name: string): FieldGroup[] {
 export function groupsOpen(
   groups: ReadonlyArray<{ title: string; fields: ReadonlyArray<{ key: string; renameOf?: unknown }>; problem?: string }>,
   hand: ReadonlyMap<string, boolean> = new Map(),
+  baixaComRapida = false,
 ): boolean[] {
+  // 04/11/2026 — a ficha do desenho em 1280×720 rolava 135 px. Na tela baixa
+  // (até 800 px de altura) e com a Ficha rápida em cima, a ficha completa
+  // nasce DOBRADA, grupo por grupo, com cada título à vista: a rápida já tem
+  // o de todo dia (Imagem, Alfa), e a completa abre num clique no título. O
+  // grupo com problema abre sempre; o que a mão escolheu fica.
+  if (baixaComRapida) {
+    return groups.map((g) => hand.get(g.title) ?? (g.problem !== undefined));
+  }
   if (groups.length <= 2) return groups.map(() => true);
   return groups.map((g) => {
     const mao = hand.get(g.title);

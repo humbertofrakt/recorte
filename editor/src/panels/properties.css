@@ -747,3 +747,74 @@
 .prop-grupo-dobra.is-dobrado {
   padding-bottom: 2px;
 }
+
+/*
+ * 04/11/2026 — a ficha do desenho rolava 13 px em 1440×900. Só recheio: o
+ * vão de cima e de baixo de cada grupo (4/6 virou 2/3) e o vão do título
+ * (3 virou 1). Nenhum campo, rótulo ou unidade a menos; vale para toda ficha
+ * da aba, e só devolve altura. (O corpo da aba do emissor também é um
+ * `.prop-grupo`, com recheio 0 de propósito: ele fica de fora — na primeira
+ * volta não ficou, e a aba Lugar passou a rolar 4 px.)
+ */
+.prop-grupo:not(.prop-aba-corpo) {
+  padding-top: 2px;
+  padding-bottom: 3px;
+}
+.prop-grupo-titulo {
+  margin-bottom: 1px;
+}
+
+/*
+ * 04/11/2026 — a ficha da regra Comando rolava 78 px em 1280×720. Cada alvo
+ * dobrado ocupava 48 px: o "+" e a lixeira do título tinham a altura de um
+ * botão de barra (34 px), o dobro da linha do título. No título eles ficam
+ * da altura da linha; o ícone e a dica não mudam.
+ */
+.prop-grupo-dobra > .prop-grupo-titulo button {
+  min-height: 18px;
+  padding: 0 6px;
+  line-height: 1;
+}
+.prop-grupo-dobra > .prop-grupo-titulo button .painel-botao-icone,
+.prop-grupo-dobra > .prop-grupo-titulo button svg {
+  max-height: 16px;
+}
+
+/*
+ * Na tela baixa (até 800 px de altura), a caixa de texto da ficha tem 24 px,
+ * a mesma da ficha do emissor (`.prop-aba-corpo`, rodada 16): a régua da casa
+ * para 1280×720. A letra não muda; sai o vão de dentro da caixa.
+ */
+@media (max-height: 800px) {
+  .prop-corpo .prop-linha input:not([type="checkbox"]):not([type="color"]):not([type="range"]),
+  .prop-corpo .prop-linha select {
+    min-height: 0;
+    height: 24px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .prop-grupo-dobra > .prop-grupo-titulo button {
+    min-height: 16px;
+  }
+  /* E o vão entre as linhas e o do grupo dobrado, 1 px cada: a ficha da
+     regra Comando ainda rolava 5 px. */
+  .prop-corpo .prop-linha {
+    margin-bottom: 1px;
+  }
+  .prop-grupo-dobra.is-dobrado {
+    padding-top: 1px;
+    padding-bottom: 1px;
+  }
+}
+
+/*
+ * 04/11/2026 — a aba Nascer do emissor rolava 19 px em 1280×720 (medido no
+ * Linux, com a fonte Inter): "Máximo de vivas" quebrava em duas linhas na
+ * coluna de rótulo de 46% (45 px de linha em vez de 24). O rótulo continua
+ * com 46% no mínimo — as colunas de todas as outras linhas não andam — e
+ * cresce até o tamanho do nome numa linha só quando o nome pede. Nenhuma
+ * palavra a menos.
+ */
+.prop-aba-corpo .prop-linha:not(.prop-linha-par):not(.prop-linha-faixa) {
+  grid-template-columns: minmax(var(--painel-rotulo), max-content) minmax(0, 1fr);
+}

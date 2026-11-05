@@ -856,7 +856,7 @@ try {
       }
     }
 
-    if (SO !== null) continue;
+    if (SO !== null && SO !== 'Propriedades (regra Comando)') continue;
     // Propriedades UMA SEGUNDA VEZ, com a regra `look_driver` e nenhum desenho:
     // é o caso alto do painel, e a seleção de cima não o alcança. Ver
     // `SO_A_REGRA`. Conta como medição própria — se este número for ruim, o

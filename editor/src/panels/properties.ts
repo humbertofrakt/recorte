@@ -228,7 +228,11 @@ class PropertiesPanel implements Panel {
       }
     }
     // Rodada 43, lote 1: embaixo da ficha rápida, só o que ela não mostra.
-    else for (const node of this.renderGroups(belowQuick(model.groups, ficha === null ? [] : this.quickKeysShown()))) body.append(node);
+    else {
+      // 04/11/2026: na tela baixa, com a rápida em cima, a completa nasce dobrada.
+      const baixaComRapida = ficha !== null && (globalThis.innerHeight ?? 1080) <= 800;
+      for (const node of this.renderGroups(belowQuick(model.groups, ficha === null ? [] : this.quickKeysShown()), baixaComRapida)) body.append(node);
+    }
     if (silhueta !== null) body.append(silhueta);
 
     // O bloco da chave de evento vem no fim: é onde se escolhe QUAL evento a
@@ -764,12 +768,12 @@ class PropertiesPanel implements Panel {
    * anterior; a linha já diz "Cor" no próprio rótulo, então nada se perde.
    * O primeiro grupo nunca funde: não há "anterior" para receber.
    */
-  private renderGroups(groups: readonly FieldGroup[]): HTMLElement[] {
+  private renderGroups(groups: readonly FieldGroup[], baixaComRapida = false): HTMLElement[] {
     const out: HTMLElement[] = [];
     let last: HTMLElement | null = null;
     // Rodada 47, lote 6c (nota 5 do doc 90): os grupos dobram no título; abre o do nome.
     const juntos = groups.filter((g, i) => !(g.fields.length === 1 && i > 0));
-    const abertos = groupsOpen(juntos, gruposDaMao);
+    const abertos = groupsOpen(juntos, gruposDaMao, baixaComRapida);
     let k = 0;
     for (const group of groups) {
       if (group.fields.length === 1 && last !== null) {
@@ -777,7 +781,7 @@ class PropertiesPanel implements Panel {
         continue;
       }
       const box = this.renderGroup(group);
-      if (juntos.length > 2) this.dobrarGrupo(box, group.title, abertos[k] ?? true);
+      if (juntos.length > 2 || baixaComRapida) this.dobrarGrupo(box, group.title, abertos[k] ?? true);
       k += 1;
       out.push(box);
       last = box;
