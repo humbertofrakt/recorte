@@ -1900,3 +1900,46 @@ describe('prova de pessoa: o herói abre na base, e o rodapé diz onde clicar', 
     expect(frase).toBeGreaterThan(base);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Prova de pessoa (05/11/2026): arrastar na cena numa animação diz a chave que nasceu
+// ---------------------------------------------------------------------------
+
+import { GestureNotice, gestureSays, isKeyNotice } from '../src/viewport/gesture-notice.js';
+
+describe('prova de pessoa: o arrasto que grava chave diz a chave', () => {
+  it('a linha do tempo diz a chave no meio do gesto, e o recado do fim a guarda', () => {
+    const g = new GestureNotice();
+    g.press();
+    g.hear({ kind: 'structure', label: 'Mover osso' });
+    g.hear({ kind: 'selection', label: '2 chaves em 0,50 s: Posição X de torso, Posição Y de torso' });
+    g.hear({ kind: 'transform', label: 'Mover X 8,3 px · Y 0 px' });
+    const chave = g.keyNotice();
+    const said = g.release();
+    // Antes: o rodapé ficava com "Mover X 8,3 px · Y 0 px" e a chave sumia.
+    expect(said).toBe('Mover X 8,3 px · Y 0 px');
+    expect(gestureSays(said!, chave, g.lastCommand()))
+      .toBe('2 chaves em 0,50 s: Posição X de torso, Posição Y de torso. Mover X 8,3 px · Y 0 px');
+  });
+
+  it('a chave vai na frente: é o que sobra quando o rodapé encolhe a frase', () => {
+    const frase = gestureSays('Mover X 1 px · Y 0 px', 'Chave em 0,00 s: Rotação de torso', null);
+    expect(versoesDaFraseCena(frase).at(-1)).toBe('Chave em 0,00 s');
+    expect(versoesDaFraseCena(frase)[1]).toBe('Chave em 0,00 s: Rotação de torso.');
+  });
+
+  it('sem chave, o recado de sempre; a chave como última fala usa o nome do comando', () => {
+    expect(gestureSays('Mover X 1 px · Y 0 px', null)).toBe('Mover X 1 px · Y 0 px');
+    expect(gestureSays('Chave em 0,00 s: Rotação de torso', 'Chave em 0,00 s: Rotação de torso', 'Girar 15°'))
+      .toBe('Chave em 0,00 s: Rotação de torso. Girar 15°');
+    expect(gestureSays('Chave em 0,00 s: X', 'Chave em 0,00 s: X', null)).toBe('Chave em 0,00 s: X');
+    expect(isKeyNotice('3 chaves em 1,00 s')).toBe(true);
+    expect(isKeyNotice('Chaveou tudo')).toBe(false);
+  });
+
+  it('fora do gesto, nada se guarda', () => {
+    const g = new GestureNotice();
+    g.hear({ kind: 'selection', label: 'Chave em 0,00 s: X' });
+    expect(g.keyNotice()).toBeNull();
+  });
+});

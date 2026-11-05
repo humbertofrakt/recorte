@@ -54,6 +54,15 @@ O primeiro conserto saiu **cortado**: o rodapé encolhe a frase até caber (`ui/
 | `npx tsc --noEmit -p editor/tsconfig.json` | limpo |
 | `node ferramentas/conformidade.mjs` | 132 de 132 (a base cresceu) |
 
+## Atritos da cena com o herói aberto (01h15 UTC)
+
+| # | Onde | O que a pessoa via | Fiz |
+|:---:|:---|:---|:---|
+| 7 | arrastar um osso **na cena**, numa animação | o rodapé dizia só *"Mover X 8,3 px · Y 0 px"*: a chave que nasceu não aparecia. Pela ficha ele dizia *"Chave em …"* | **consertei** (`viewport/gesture-notice.ts`): a chave vai na frente — *"2 chaves em 0,00 s: Posição X de torso, Posição Y de torso. Mover …"*. Provado no navegador, com e sem o conserto; 4 testes em `cena.test.ts` |
+| — | clique no vazio, Esc, roda do mouse, botão direito, Delete, letras das ferramentas | tudo responde, e o rodapé diz | nada a fazer |
+| — | todo botão, campo e aba à vista | varredura da página: nenhum sem nome ou dica | nada a fazer |
+| 8 | a grade do botão direito | *"Laranja: a de agora"* e *"fonte: pasta · todas · objeto"*: **objeto** não diz o que é | Imagens e pasta: **tabela** |
+
 ## Achado para quem cuida da suíte (regra 24)
 
 Com a pasta `backup/` presente — mesmo só com a saída do `npm run editor:build`, que grava em `backup/editor-build` —, **5 testes ficam vermelhos**:
