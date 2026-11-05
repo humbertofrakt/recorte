@@ -15,7 +15,9 @@ import type { FloatingItem } from '../ui/floating-menu.js';
 import { Doc } from '../doc/document.js';
 import { garantirAninhado, projetoDe } from '../doc/projeto.js';
 import { firstAnimationOf } from '../doc/drop-entity.js';
-import { openEntityFromOutside, rememberOutside } from '../io/open-save.js';
+import { openEntityFromFiles, openEntityFromOutside, rememberOutside } from '../io/open-save.js';
+import type { OpenedDocument } from '../io/open-save.js';
+import { ENTITY_DRAG_TYPE } from './palette-entities-model.js';
 import type { FolderDirectoryHandle } from '../io/project-folder.js';
 import {
   PALAVRAS, Passos, PlugIntoSocket, PutSocket, SetBaseAnimation, UnplugSocket, animacaoPropria, dicaDaTomada, encaixouDiz, nomeDaPeca, nomeDeTomada,
@@ -74,16 +76,23 @@ async function pedirPastaDaPeca(bone: string, missing: readonly string[]): Promi
  * mesmo nome já estava, é ele que entra, e não uma cópia. Num osso sem tomada,
  * a tomada nasce junto, no mesmo passo de desfazer.
  */
-export async function encaixarProjeto(doc: EditorDoc, alvo: Alvo): Promise<boolean> {
+export async function encaixarProjeto(
+  doc: EditorDoc, alvo: Alvo,
+  /** De onde vem o arquivo: a janela do sistema (padrão), ou os soltos do disco. */
+  arquivos: readonly File[] | null = null,
+): Promise<boolean> {
   const projeto = projetoDe(doc);
   if (projeto === null) {
     doc.notice('Abra ou comece um projeto antes de encaixar: Arquivo → Novo projeto…');
     return false;
   }
   const corpo = corpoDe(doc);
-  let aberto;
+  let aberto: OpenedDocument | null;
   try {
-    aberto = await openEntityFromOutside({ atlases: doc.atlases, images: corpo instanceof Doc ? corpo.pageImages : new Map() }, pedirPastaDaPeca);
+    const known = { atlases: doc.atlases, images: corpo instanceof Doc ? corpo.pageImages : new Map<string, CanvasImageSource>() };
+    aberto = arquivos === null
+      ? await openEntityFromOutside(known, pedirPastaDaPeca)
+      : await openEntityFromFiles(arquivos, known, pedirPastaDaPeca);
   } catch (erro) {
     doc.notice(`O projeto não abriu: ${erro instanceof Error ? erro.message : String(erro)}`);
     return false;
@@ -124,6 +133,33 @@ export async function encaixarProjeto(doc: EditorDoc, alvo: Alvo): Promise<boole
   doc.notice(encaixouDiz(uri, slot, nova));
   if (aberto.warnings.length > 0) doc.notice(`${encaixouDiz(uri, slot, nova)} Aviso: ${aberto.warnings[0]}`);
   return true;
+}
+
+/**
+ * **Arrastar uma peça da lista Peças até a tomada** — 05/11/2026. A peça já
+ * está no projeto: não abre janela nenhuma, encaixa.
+ */
+export function encaixarDaLista(doc: EditorDoc, slot: string, uri: string): boolean {
+  const projeto = projetoDe(doc);
+  if (projeto !== null && uri === projeto.emFocoUri) {
+    doc.notice(`${nomeDaPeca(uri)} é o projeto aberto: ele não cabe dentro dele mesmo`);
+    return false;
+  }
+  garantirAninhado(doc, uri);
+  const corpo = corpoDe(doc);
+  const dados = projeto?.guardados.get(uri)?.data ?? projeto?.docOf(uri)?.data ?? null;
+  const toca = dados === null ? null : firstAnimationOf(new Map([[uri, dados]]), uri);
+  const bone = (corpo.file.slots ?? []).find((s) => s.name === slot)?.bone ?? null;
+  const giro = bone === null ? 0 : -(doc.skeleton?.findBone(bone)?.worldRotationX ?? 0);
+  corpo.run(new Passos(`Encaixar ${nomeDaPeca(uri)}`, [new PlugIntoSocket(slot, uri, toca, giro)]));
+  doc.notice(encaixouDiz(uri, slot, false));
+  return true;
+}
+
+/** O que se pode soltar numa tomada: uma peça da lista, ou um `.bone` do disco. */
+function aceitaSoltar(e: DragEvent): boolean {
+  const tipos = [...(e.dataTransfer?.types ?? [])];
+  return tipos.includes(ENTITY_DRAG_TYPE) || tipos.includes('Files');
 }
 
 /** **Pôr uma tomada aqui…** — pergunta o nome (mão_d, costas, cabine) e põe. */
@@ -277,6 +313,25 @@ export class TomadasLayer {
           b.className = 'tomada-icone';
           const alvo = t.slot;
           b.addEventListener('pointerdown', (e) => e.stopPropagation());
+          // A terceira porta: soltar uma peça (da lista Peças, ou um .bone do disco) em cima.
+          b.addEventListener('dragover', (e) => {
+            if (!aceitaSoltar(e)) return;
+            e.preventDefault();
+            e.stopPropagation();
+            b?.classList.add('tomada-alvo');
+          });
+          b.addEventListener('dragleave', () => b?.classList.remove('tomada-alvo'));
+          b.addEventListener('drop', (e) => {
+            if (!aceitaSoltar(e)) return;
+            e.preventDefault();
+            e.stopPropagation();
+            b?.classList.remove('tomada-alvo');
+            const uri = e.dataTransfer?.getData(ENTITY_DRAG_TYPE) ?? '';
+            if (uri !== '') { encaixarDaLista(doc, alvo, uri); return; }
+            const soltos = [...(e.dataTransfer?.files ?? [])];
+            if (soltos.some((f) => /\.bone[bz]?$/i.test(f.name))) void encaixarProjeto(doc, { slot: alvo }, soltos);
+            else doc.notice('Solte aqui um arquivo .bone, ou uma peça da aba Tomadas');
+          });
           b.addEventListener('click', (e) => {
             e.stopPropagation();
             const r = (e.currentTarget as HTMLElement).getBoundingClientRect();

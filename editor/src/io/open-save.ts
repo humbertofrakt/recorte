@@ -379,6 +379,18 @@ export async function openEntityFromOutside(
 ): Promise<OpenedDocument | null> {
   const files = await pickFilesToOpen({ claim: false });
   if (files === null || files.length === 0) return null;
+  return openEntityFromFiles(files, known, askFolder);
+}
+
+/**
+ * O mesmo, com os arquivos já na mão — um `.bone` solto do disco em cima de
+ * uma tomada (05/11/2026). Faltou o atlas? Pergunta a pasta, como acima.
+ */
+export async function openEntityFromFiles(
+  files: readonly File[],
+  known: KnownFiles,
+  askFolder: (bone: string, missing: readonly string[]) => Promise<FolderDirectoryHandle | null>,
+): Promise<OpenedDocument | null> {
   const boneFile = files.find((f) => isBoneFile(f.name));
   if (boneFile !== undefined) {
     let file: BoneFile | null = null;

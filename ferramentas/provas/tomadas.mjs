@@ -21,7 +21,7 @@
 // USO, da raiz:  npm run tomadas   ·   node ferramentas/provas/tomadas.mjs --fotos PASTA
 
 import { createRequire } from 'node:module';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -204,6 +204,21 @@ async function roteiro(browser) {
     return (itens.some((t) => t.startsWith('Trocar a peça')) && itens.some((t) => t.startsWith('Tirar a peça'))) || `o menu tem: ${itens.join(' | ')}`;
   });
 
+  await passo('a4. Ícone → Tirar a peça; depois arrastar a espada da lista Peças até o ícone vazio', async () => {
+    await page.locator('.tomada-icone[title^="Tomada tomada_forearm_b"]').first().click();
+    await itemFlutuante(page, 'Tirar a peça (espada)');
+    const vazio = page.locator('.tomada-icone[title^="Tomada tomada_forearm_b, vazia"]').first();
+    if (await vazio.count() === 0) return `a tomada não ficou vazia · ${await rodape(page)}`;
+    await page.locator('[role="tab"]', { hasText: /^\s*Tomadas/ }).first().click();
+    await page.waitForTimeout(300);
+    const peca = page.locator('.imagens-linha[data-entidade="espada.bone"]').first();
+    await peca.dragTo(vazio);
+    await page.waitForTimeout(400);
+    await foto(page, 'arrastou-a-peca');
+    const ok = await ler(page, (d) => (d.file.slots ?? []).some((s) => s.name === 'tomada_forearm_b' && s.attachment === 'espada'));
+    return ok || `a espada não voltou para a tomada · ${await rodape(page)}`;
+  });
+
   await passo('b1. Arquivo → Abrir pasta do projeto…, a pasta do mecha', async () => {
     await escolherNaJanela(page, { pasta: PASTA_MECHA });
     await menu(page, 'Arquivo', 'Abrir pasta do projeto…');
@@ -298,6 +313,33 @@ async function roteiro(browser) {
     if (!fixo) return 'o herói não ficou preso ao tronco do mecha';
     if (!laminaAnda) return 'a espada do herói ficou parada';
     return torsoAnda || 'o tronco do mecha não andou no idle: a prova de "junto" não prova';
+  });
+
+  await passo('d. Ctrl+S: o mecha salvo passa no validador, e o runtime desenha o herói na cabine', async () => {
+    await page.locator('canvas.viewport-canvas').first().focus().catch(() => {});
+    await page.locator('.viewport').first().focus();
+    await page.keyboard.press('Control+s');
+    await page.waitForTimeout(2500);
+    const arquivos = readdirSync(PASTA_MECHA);
+    if (!arquivos.includes('heroi.bone')) return `o heroi.bone não foi para a pasta do mecha: ${arquivos.join(', ')} · ${await rodape(page)}`;
+    const v = spawnSync(process.execPath, [join(RAIZ, 'ferramentas/validador/validar.mjs'), join(PASTA_MECHA, 'mecha.bone')], { encoding: 'utf8' });
+    if (v.status !== 0) return `validador: ${v.stdout} ${v.stderr}`;
+    const rp = await import('../render-png.mjs');
+    const rt = await rp.carregarRuntime();
+    const { dados, imagens } = rp.abrirEsqueleto(rt, join(PASTA_MECHA, 'mecha.bone'));
+    const sk = new rt.Skeleton(dados);
+    sk.setToSetupPose(); sk.updateWorldTransform(0);
+    rp.posarAte(rt, sk, dados.animations.find((a) => a.name === 'idle'), 0.5);
+    const n = sk.findSlot('cabine')?.nestedSkeleton() ?? null;
+    if (n === null) return 'o runtime não montou o herói na cabine';
+    if (n.skeleton.findSlot('weapon')?.nestedSkeleton() == null) return 'o runtime não montou a espada do herói';
+    if (FOTOS !== null) {
+      const cam = rp.cameraDe(sk.getBounds(), { largura: 320, margem: 0.12 });
+      const img = rp.desenharPose(rt, sk, imagens, cam, { ossos: false });
+      fotoN++;
+      writeFileSync(join(FOTOS, `${String(fotoN).padStart(2, '0')}-runtime-mecha-com-heroi.png`), rp.gravarPng(img.largura, img.altura, img.rgba));
+    }
+    return true;
   });
 
   await ctx.close();
