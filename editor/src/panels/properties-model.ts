@@ -430,6 +430,18 @@ export function fieldKeyAction(key: string): 'passo' | 'cancelar' | null {
   return arrowDirection(key) === 0 ? null : 'passo';
 }
 
+/**
+ * O campo que recebe o foco depois de um Tab que gravou — QA da noite de
+ * 04/11/2026. Gravar redesenha o painel, e o campo que tinha o foco deixa de
+ * existir: o Tab caía no nada. O painel anota o próximo (ou o anterior, com
+ * Shift) ANTES de gravar. Nas pontas, `null`: o navegador segue sozinho.
+ */
+export function nextFieldId(ids: readonly string[], current: string, back: boolean): string | null {
+  const i = ids.indexOf(current);
+  if (i < 0) return null;
+  return ids[back ? i - 1 : i + 1] ?? null;
+}
+
 export function arrowDirection(key: string): 1 | -1 | 0 {
   if (key === 'ArrowUp') return 1;
   if (key === 'ArrowDown') return -1;

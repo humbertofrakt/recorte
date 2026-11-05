@@ -1469,3 +1469,26 @@ describe('a linha da Ordem não repete o nome (QA da noite)', () => {
     expect(orderRowHint('mao', 'mao_fechada', 'braco')).toBe('mao: mao_fechada, no osso braco');
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): na Ordem, com a lista rolada,
+// um clique numa peça fazia a lista voltar a 0 e depois rolar até a peça — a
+// linha andava debaixo do dedo, e o duplo clique caía em outra ("cliquei
+// atras, escolheu head"). A forma é a mesma da Árvore: medir a lista no meio
+// da montagem. A rolagem é guardada antes de esvaziar e devolvida depois de
+// montar; e o clique na própria linha não rola (quem clicou está apontando).
+describe('a Ordem não anda debaixo do dedo (QA da noite)', () => {
+  const fonte = readFileSync(resolve(__dirname, '../src/panels/draw-order.ts'), 'utf8');
+  it('a rolagem volta depois de remontar a lista, antes do foco', () => {
+    const render = fonte.slice(fonte.indexOf('  private render(): void {'), fonte.indexOf('  /** Rodada 43, lote 4: a última peça escolhida'));
+    const guarda = render.indexOf('const rolagem = list.scrollTop');
+    const devolve = render.indexOf('list.scrollTop = rolagem');
+    expect(guarda).toBeGreaterThan(0);
+    expect(guarda).toBeLessThan(render.indexOf('clear(list)'));
+    expect(devolve).toBeGreaterThan(render.indexOf("list.append(fundo)"));
+    expect(devolve).toBeLessThan(render.indexOf('.focus()'));
+  });
+  it('o clique na peça marca a peça como já mostrada antes de escolher', () => {
+    const clique = fonte.slice(fonte.indexOf("node.addEventListener('click', (event) => {\n      event.stopPropagation();"));
+    expect(clique.slice(0, 400)).toMatch(/this\.shownPicked = row\.name;\s*doc\.select\(orderRowSelection/);
+  });
+});

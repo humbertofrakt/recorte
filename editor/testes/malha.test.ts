@@ -13,7 +13,7 @@ import { Skeleton, loadSkeletonData } from '../../runtime/src/index.js';
 import type { BoneFile, MeshAttachmentDef, RegionAttachmentDef } from '../../runtime/src/index.js';
 import { Doc } from '../src/doc/document.js';
 import { cropPlacement } from '../src/panels/mesh-panel.js';
-import { findTimeline, deformTarget, weightsTarget } from '../src/anim/keying.js';
+import { findTimeline, deformTarget, weightsTarget, valueAt as valueAtQA } from '../src/anim/keying.js';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { addEdge, addVertex, autoMeshFromImage, autoMeshOptionsFromBox, boundsOf, DEFAULT_OUTLINE_OUTSET, earClip, moveVertex, regionToMesh, removeVertex, simplifyLoop, traceOutline, triangulate } from '../src/mesh/mesh-edit.js';
@@ -851,8 +851,13 @@ describe('mover vértice nos dois modos', () => {
 
     const timeline = findTimeline(doc.file, 'andar', deformTarget('corpo', 'tronco'));
     expect(timeline).not.toBeNull();
-    const keys = (timeline as unknown as { keys: Array<{ time: number; value: number[] }> }).keys;
-    expect(keys.length).toBe(1);
+    const all = (timeline as unknown as { keys: Array<{ time: number; value: number[] }> }).keys;
+    // QA da noite (04/11/2026): a primeira chave depois de 0 leva junto a do
+    // começo, `[]` (sem deform) — era 1 chave só, e a malha não andava.
+    expect(all.length).toBe(2);
+    expect(all[0].time).toBe(0);
+    expect(all[0].value).toEqual([]);
+    const keys = all.slice(1);
     expect(keys[0].time).toBeCloseTo(0.5, 9);
     // Vertex 0 went from (-20, -20) to (-30, -25): the offset is (-10, -5).
     expect(keys[0].value[0]).toBeCloseTo(-10, 6);
@@ -887,6 +892,39 @@ describe('mover vértice nos dois modos', () => {
     expect(keys[0].value.length).toBe(total * 2);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): no herói do PSD, arrastar um
+// vértice da perna em 0,50 s gravava a chave de deform SÓ em 0,50 s. Em 0 a
+// malha já estava deformada, e a animação não andava — o mesmo defeito que o
+// lote 68 consertou para os ossos (o passo 10 do roteiro). O começo se guarda
+// sozinho também na malha: a chave em 0 é `[]` ("sem deform", §9.6).
+describe('a malha deformada em Animando anda (QA da noite)', () => {
+  it('a primeira chave de deform depois de 0 leva junto a do começo, vazia', () => {
+    const doc = new Doc(twoBoneFile());
+    doc.animation = 'andar';
+    doc.time = 0.5;
+    const ref = meshRef(doc, 'corpo', 'tronco');
+    if (ref === null) throw new Error('a malha não foi encontrada');
+    moveMeshVertex(doc, readMesh(doc, ref), 0, -30, -25);
+    const timeline = findTimeline(doc.file, 'andar', deformTarget('corpo', 'tronco'));
+    const keys = (timeline as unknown as { keys: Array<{ time: number; value: number[] }> }).keys;
+    expect(keys.map((k) => k.time)).toEqual([0, 0.5]);
+    expect(keys[0].value).toEqual([]);
+    // No meio do caminho, metade do movimento: a animação anda.
+    const meio = valueAtQA(doc.file, 'andar', 0.25, deformTarget('corpo', 'tronco')) as number[];
+    expect(meio[0]).toBeCloseTo(-5, 6);
+    expect(meio[1]).toBeCloseTo(-2.5, 6);
+  });
+  it('um desfazer leva as duas chaves', () => {
+    const doc = new Doc(twoBoneFile());
+    doc.animation = 'andar';
+    doc.time = 0.5;
+    const ref = meshRef(doc, 'corpo', 'tronco');
+    if (ref === null) throw new Error('a malha não foi encontrada');
+    moveMeshVertex(doc, readMesh(doc, ref), 0, -30, -25);
+    doc.undo();
+    expect(findTimeline(doc.file, 'andar', deformTarget('corpo', 'tronco'))).toBeNull();
+  });
 
 // ---------------------------------------------------------------------------
 // 10. A ferramenta não expulsa mais — plano "fluxo criar e animar", lote 2,
@@ -2100,6 +2138,8 @@ describe('rodada 41, lote 4: as notas da conferência da v32.2 (doc 53)', () => 
   });
 });
 
+});
+
 // ---------------------------------------------------------------------------
 // Rodada 47, lote 3 (doc 68, R7): o número da casa fora da ficha
 // ---------------------------------------------------------------------------
@@ -2145,3 +2185,4 @@ describe('rodada 47, lote 5: a Malha abre a seção da ferramenta (R11, opção 
     expect(MESH_REST_POSE_NOTICE.length).toBeGreaterThan(MESH_REST_POSE_SHORT.length);
   });
 });
+

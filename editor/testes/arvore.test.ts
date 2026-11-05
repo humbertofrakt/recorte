@@ -3141,3 +3141,77 @@ describe('o recuo da Árvore encolhe no fundo (QA da noite)', () => {
     expect(TR43.treeIndent(5)).toBeLessThanOrEqual(6 + 5 * 16 - 18);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): o cadeado da linha travava e o
+// rodapé dizia só "Arquivo não salvo." — o olho, ao lado, sempre disse o que
+// fez (`eyeNotice`). O cadeado ganha a frase dele, com a mesma forma.
+describe('o cadeado da Árvore diz o que fez (QA da noite)', () => {
+  it('travar diz o que muda; destravar diz que voltou', () => {
+    expect(TR43.lockNotice('slot', 'leg_front', true))
+      .toBe('O desenho "leg_front" está travado: aparece, mas o clique passa por ele. O cadeado de novo destrava');
+    expect(TR43.lockNotice('bone', 'coxa_e', false)).toBe('O osso "coxa_e" está destravado: o clique pega de novo');
+  });
+  it('a Árvore chama a frase no clique do cadeado', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const trava = fonte.slice(fonte.indexOf('private renderLock('), fonte.indexOf('private renderLock(') + 2000);
+    expect(trava).toMatch(/notice\(lockNotice\(row\.kind === 'bone' \? 'bone' : 'slot', row\.name, !own\)\)/);
+  });
+});
+
+// QA da noite de 04/11/2026 (obra/qa-animar): em 1920×1080, duplo clique no
+// nome "osso_16" abriu o campo de renomear do "leg_front", a linha de cima — e
+// o desenho errado foi renomeado. O primeiro clique escolhia a linha, e o
+// redesenho rolava a lista 14 px ("nearest") para mostrá-la inteira; o
+// segundo clique caía na vizinha. Quem clicou está apontando para a linha:
+// não há o que rolar. Seta do teclado e escolha de fora continuam rolando.
+describe('o clique na Árvore não rola a lista (QA da noite)', () => {
+  it('a escolha que o clique fez não rola, nem pela escolha nem pelo foco', () => {
+    expect(TR43.treeReveal('bones:osso_16', 'bones:osso_16', true)).toEqual({ escolha: false, foco: false });
+    expect(TR43.treeReveal('bones:osso_16', 'bones:osso_16', false)).toEqual({ escolha: false, foco: false });
+  });
+  it('escolha de fora (a cena, o menu) ou pela seta: rola até a linha', () => {
+    expect(TR43.treeReveal('bones:osso_17', 'bones:osso_16', true)).toEqual({ escolha: true, foco: true });
+    expect(TR43.treeReveal('bones:osso_17', null, true)).toEqual({ escolha: true, foco: true });
+  });
+  it('sem mudar a escolha, só o foco pode rolar (o redesenho de sempre)', () => {
+    expect(TR43.treeReveal('bones:osso_17', null, false)).toEqual({ escolha: false, foco: true });
+  });
+  it('o clique da linha anota a escolha que fez ANTES de escolher', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const clique = fonte.slice(fonte.indexOf("node.addEventListener('click', (event) => {"), fonte.indexOf("node.addEventListener('dblclick'"));
+    expect(clique.match(/this\.escolher\(doc, /g)?.length).toBeGreaterThanOrEqual(3);
+  });
+});
+
+// A causa de verdade do duplo clique na linha errada (QA da noite, 04/11): o
+// redesenho chamava `focus()` com a lista já posta e a zona de soltar do fim
+// (48 px) ainda fora. O `focus` mede; o navegador prendia a rolagem no máximo
+// daquele instante — 804 → 756, exatos 48 px — e a linha andava debaixo do
+// dedo. A zona entra junto com a lista, antes de qualquer foco ou rolagem.
+describe('a Árvore se monta inteira antes de focar (QA da noite)', () => {
+  it('a zona do fim entra antes do foco e da rolagem', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const render = fonte.slice(fonte.indexOf('  private render(): void {'), fonte.indexOf('  /** A dobra deste arquivo'));
+    const zona = render.indexOf('body.append(this.rootDropZone())');
+    expect(zona).toBeGreaterThan(0);
+    expect(zona).toBeLessThan(render.indexOf('scrollIntoView'));
+    expect(zona).toBeLessThan(render.indexOf('.focus('));
+  });
+});
+
+// QA da noite de 04/11/2026 (obra/qa-animar): depois de clicar num osso na
+// Árvore, o Espaço não tocava — a linha é um botão, e o Espaço "apertava" de
+// novo a linha que já estava escolhida. A decisão do lote 68 é "Espaço toca
+// em toda parte". A Árvore lê o Espaço da tabela (escopo `arvore`) e toca.
+import { actionsFor as actionsForQA } from '../src/ui/keys.js';
+describe('Espaço toca com o foco na Árvore (QA da noite)', () => {
+  it('a tabela diz: Espaço na Árvore é Tocar', () => {
+    expect(actionsForQA('arvore', ' ')).toContain('tocar');
+  });
+  it('a Árvore trata o Espaço da tabela e para a propagação', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const gesto = fonte.slice(fonte.indexOf('private readonly gestureKey'), fonte.indexOf('private arrowKey('));
+    expect(gesto).toMatch(/actionsFor\('arvore', keyOf\(event\)\)\.includes\('tocar'\)/);
+    expect(gesto).toMatch(/runAction\('tocar'\)/);
+  });
+});

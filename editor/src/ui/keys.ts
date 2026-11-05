@@ -46,7 +46,7 @@ import type { LiveBinding } from './key-swaps.js';
  * | `arvore` | a Árvore, com o foco nela |
  * | `ordem` | a aba Ordem, com o foco nela ou numa linha dela |
  */
-export type KeyScope = 'toda-parte' | 'cena' | 'linha-do-tempo' | 'arvore' | 'ordem';
+export type KeyScope = 'toda-parte' | 'cena' | 'linha-do-tempo' | 'arvore' | 'ordem' | 'animacoes';
 
 /** Uma linha da tabela. */
 export interface KeyBinding {
@@ -270,6 +270,14 @@ export const TREE_KEYS: readonly KeyBinding[] = Object.freeze([
   { key: 'arrowdown', scope: 'arvore', action: 'local:arvore-desce', label: 'A linha de baixo', when: 'foco na Árvore' },
   { key: 'arrowleft', scope: 'arvore', action: 'local:arvore-dobra', label: 'Dobra o osso, ou vai ao pai', when: 'foco na Árvore' },
   { key: 'arrowright', scope: 'arvore', action: 'local:arvore-abre', label: 'Abre o osso dobrado', when: 'foco na Árvore' },
+  // QA da noite (04/11/2026): a linha é um botão, e o Espaço a "apertava" de
+  // novo em vez de tocar. Lote 68: o Espaço toca em toda parte.
+  { key: ' ', scope: 'arvore', action: 'tocar', label: 'Tocar / Pausar', when: 'foco numa linha da Árvore' },
+]);
+
+/** A lista de Animações, com o foco numa linha — QA da noite (04/11/2026). */
+export const ANIMATION_LIST_KEYS: readonly KeyBinding[] = Object.freeze([
+  { key: ' ', scope: 'animacoes', action: 'tocar', label: 'Tocar / Pausar', when: 'foco numa linha da lista de Animações' },
 ]);
 
 // ---------------------------------------------------------------------------
@@ -291,6 +299,7 @@ export function keyTable(groups: readonly MenuGroupDef[] = allMenus(NEUTRAL_MENU
     ...TIMELINE_KEYS,
     ...ORDER_KEYS,
     ...TREE_KEYS,
+    ...ANIMATION_LIST_KEYS,
   ];
 }
 

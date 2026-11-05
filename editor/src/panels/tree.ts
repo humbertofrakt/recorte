@@ -16,6 +16,7 @@ import type { ParentMap } from '../doc/bones.js';
 import { isDescendantBone } from '../doc/bones.js';
 import { Duplicate } from '../doc/duplicate.js';
 import { clear, el, ensureStylesheet, iconButton } from './dom.js';
+import { barButtonsKeepNoFocus } from './sem-foco.js';
 import {
   currentLocks, isBoneHidden, isSlotHidden, onViewSettings, setBoneHidden, setBoneLocked,
   setSlotHidden, setSlotLocked, setSkinGoneBones, skinStackOf,
@@ -29,7 +30,7 @@ import {
   toggleRowInSelection,
 } from './tree-rows.js';
 // Lote 1 do chat D (28/09): o grupo do fim, com os eventos e os parâmetros.
-import { EVENTS_GROUP_ID, eventParameterRows, eyeNotice, foldable, newKeyItemRow, selectionKey } from './tree-rows.js';
+import { EVENTS_GROUP_ID, eventParameterRows, eyeNotice, foldable, lockNotice, newKeyItemRow, selectionKey, treeReveal } from './tree-rows.js';
 import { DeleteParameter } from './tree-commands.js';
 import { chooseEvent, currentEventChoice, focusEvent } from './event-key-editor.js';
 import { registerAction, runAction } from '../ui/actions.js';
@@ -135,6 +136,15 @@ class TreePanel implements Panel {
    * é tratada uma vez: quem trata para a propagação. Campo de texto passa reto.
    */
   private readonly gestureKey = (event: KeyboardEvent): void => {
+    // QA da noite (04/11/2026): o Espaço toca, como em toda parte (lote 68) —
+    // a linha é um botão, e ele a "apertava" de novo. Na descida E na subida:
+    // o botão se aperta na subida.
+    if (!isTyping(event.target) && actionsFor('arvore', keyOf(event)).includes('tocar')) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.type === 'keydown' && !event.repeat) runAction('tocar');
+      return;
+    }
     // Rodada 43, lote 3: as setas, da mesma tabela (`ui/keys.ts`, escopo `arvore`).
     if (event.type === 'keydown' && this.arrowKey(event)) return;
     // A tecla vem da tabela (`ui/keys.ts`, escopo `arvore`): P, com ou sem
@@ -195,6 +205,8 @@ class TreePanel implements Panel {
     ensureStylesheet();
     this.doc = doc;
     clear(host);
+    // QA da noite (04/11): o clique do mouse num botão de barra não leva o foco.
+    barButtonsKeepNoFocus(host);
     host.classList.add('painel');
 
     // "Novo:" uma vez, e depois só o substantivo. Com a palavra repetida em
@@ -601,6 +613,20 @@ class TreePanel implements Panel {
   /** A escolha do último desenho, para saber se ela mudou — B2, F7. */
   private lastSelection = '';
 
+  /** A escolha que o último clique numa linha fez — QA da noite (`treeReveal`). */
+  private escolhaDoClique: string | null = null;
+
+  /**
+   * Escolhe pelo clique na linha: anota a escolha ANTES (o redesenho roda
+   * dentro do `select`) e depois (o documento pode completá-la), para que
+   * nenhum redesenho role a lista debaixo do dedo — QA da noite de 04/11.
+   */
+  private escolher(doc: EditorDoc, selection: Selection): void {
+    this.escolhaDoClique = selectionKey(selection);
+    doc.select(selection);
+    this.escolhaDoClique = selectionKey(doc.selection);
+  }
+
   private render(): void {
     const doc = this.doc;
     const body = this.body;
@@ -635,7 +661,9 @@ class TreePanel implements Panel {
     const escolha = selectionKey(doc.selection);
     const mudou = escolha !== this.lastSelection;
     this.lastSelection = escolha;
-    const achado = mudou && nasceu === null ? todas.find((row) => this.isSelected(row)) ?? null : null;
+    // QA da noite (04/11): a escolha que o clique da linha fez não rola.
+    const revelar = treeReveal(escolha, this.escolhaDoClique, mudou);
+    const achado = revelar.escolha && nasceu === null ? todas.find((row) => this.isSelected(row)) ?? null : null;
     if (achado !== null) {
       const byId = new Map(todas.map((row) => [row.id, row]));
       for (let at = achado.owner; at !== undefined; at = byId.get(at)?.owner) this.foldState().delete(at);
@@ -658,6 +686,12 @@ class TreePanel implements Panel {
       const list = el('ul', 'arvore-lista arvore-hierarquia');
       for (const row of linhas) list.append(this.renderRow(row, busca === ''));
       body.append(list);
+      // QA da noite (04/11/2026): a zona de soltar do fim entra ANTES de focar
+      // ou rolar. O `focus` mede a lista; sem os 48 px da zona, o navegador
+      // prendia a rolagem no máximo daquele instante (804 → 756 em 1920), e o
+      // segundo clique do duplo clique caía na linha de cima — renomeava o
+      // desenho errado.
+      body.append(this.rootDropZone());
       if (mostrar !== null) {
         const node = list.querySelector(`[data-linha="${CSS.escape(mostrar.id)}"]`);
         node?.scrollIntoView?.({ block: 'nearest' });
@@ -667,11 +701,11 @@ class TreePanel implements Panel {
           ?? list.querySelector('.arvore-item[aria-selected="true"]');
         if (alvo instanceof HTMLElement) {
           alvo.focus({ preventScroll: true });
-          alvo.scrollIntoView?.({ block: 'nearest' });
+          if (revelar.foco) alvo.scrollIntoView?.({ block: 'nearest' });
         }
       }
     }
-    body.append(this.rootDropZone());
+    if (body.lastElementChild?.classList.contains('arvore-vazio-fim') !== true) body.append(this.rootDropZone());
   }
 
   /** A dobra deste arquivo, lida do navegador quando o arquivo muda. */
@@ -964,18 +998,18 @@ class TreePanel implements Panel {
       this.keepFocus = true;
       if (manter === undefined && (event.ctrlKey || event.metaKey)) {
         this.anchor = this.cursor = row.id;
-        doc.select(toggleRowInSelection(doc.selection, row));
+        this.escolher(doc, toggleRowInSelection(doc.selection, row));
         sayChosen(doc);
         return;
       }
       if (manter === undefined && event.shiftKey) {
         this.cursor = row.id;
-        doc.select(rangeSelection(this.visible, this.anchor, row.id));
+        this.escolher(doc, rangeSelection(this.visible, this.anchor, row.id));
         sayChosen(doc);
         return;
       }
       this.anchor = this.cursor = row.id;
-      doc.select(selectionForRow(row, manter));
+      this.escolher(doc, selectionForRow(row, manter));
     });
     node.addEventListener('dblclick', () => {
       if (this.renameTarget(row) === null) return;
@@ -1189,6 +1223,8 @@ class TreePanel implements Panel {
       const doc = this.doc;
       if (row.kind === 'bone') setBoneLocked(row.name, !own, doc);
       else setSlotLocked(row.name, !own, doc);
+      // QA da noite (04/11): o cadeado diz o que fez, como o olho.
+      doc?.notice(lockNotice(row.kind === 'bone' ? 'bone' : 'slot', row.name, !own));
     });
     return node;
   }

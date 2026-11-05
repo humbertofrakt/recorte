@@ -908,3 +908,57 @@ describe('o rodapé da curva conta direito (QA da noite)', () => {
     expect(keysAfterEndNoticeQA('0,50 s', 3)).toBe('Duração: 0,50 s. 3 chaves ficaram depois do fim');
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): no andar do herói, a chave de
+// 0 em "Suave" (alças em −84,74 e −54,74) e a de 0,5 em −54,74. Arrastar a de
+// 0,5 para −64 deixava a alça de chegada em −54,74: a curva passava do alvo
+// e voltava — um "Passa do alvo" que ninguém pediu. A curva do arquivo é
+// absoluta (9.3); as alças têm de andar com o valor, como já andam com o
+// tempo (rodada 40, lote 4).
+import { boneTarget as boneTargetQA, setKeyCurve as setKeyCurveQA } from '../src/anim/keying.js';
+describe('mudar o valor de uma chave leva as alças junto (QA da noite)', () => {
+  const arquivo = (): BoneFile => ({
+    bone: { version: '1.0' }, bones: [{ name: 'root' }, { name: 'coxa', parent: 'root' }],
+    animations: [{ name: 'andar' }],
+  } as unknown as BoneFile);
+  const alvo = boneTargetQA('coxa', 'rotation');
+  const montar = (): BoneFile => {
+    const file = arquivo();
+    setKey(file, 'andar', 0, alvo, -84.74);
+    setKey(file, 'andar', 0.5, alvo, -54.74);
+    setKey(file, 'andar', 1, alvo, -84.74);
+    setKeyCurveQA(file, 'andar', [{ target: alvo, time: 0 }, { target: alvo, time: 0.5 }], 'suave');
+    return file;
+  };
+  const chaves = (file: BoneFile): Array<{ time: number; value: number; curve?: number[] }> =>
+    ((file.animations![0] as unknown as { timelines: Array<{ keys: Array<{ time: number; value: number; curve?: number[] }> }> }).timelines[0]!.keys);
+
+  it('a curva de antes da chave chega no valor novo, sem passar dele', () => {
+    const file = montar();
+    setKey(file, 'andar', 0.5, alvo, -64);
+    const [k0] = chaves(file);
+    // As alças de 0 → 0,5 ficam entre −84,74 e −64: a "Suave" continua Suave.
+    expect(k0!.curve![1]).toBeCloseTo(-84.74, 6);
+    expect(k0!.curve![3]).toBeCloseTo(-64, 6);
+    for (let t = 0; t <= 0.5; t += 0.05) {
+      const v = valueAt(file, 'andar', t, alvo) as number;
+      expect(v).toBeLessThanOrEqual(-64 + 1e-9);
+      expect(v).toBeGreaterThanOrEqual(-84.74 - 1e-9);
+    }
+  });
+  it('a curva de depois da chave sai do valor novo', () => {
+    const file = montar();
+    setKey(file, 'andar', 0.5, alvo, -64);
+    const k1 = chaves(file)[1]!;
+    expect(k1.curve![1]).toBeCloseTo(-64, 6);
+    expect(k1.curve![3]).toBeCloseTo(-84.74, 6);
+  });
+  it('o tempo das alças não muda quando só o valor muda', () => {
+    const file = montar();
+    const antes = chaves(file)[0]!.curve!.slice();
+    setKey(file, 'andar', 0.5, alvo, -64);
+    const depois = chaves(file)[0]!.curve!;
+    expect(depois[0]).toBeCloseTo(antes[0]!, 9);
+    expect(depois[2]).toBeCloseTo(antes[2]!, 9);
+  });
+});

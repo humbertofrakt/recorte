@@ -3718,3 +3718,20 @@ describe('QA 04/11/2026 — D9: mudar uma ponta da Cor ao nascer grava o PAR', (
     expect(par(com)).toEqual([[1, 0, 0, 1], [0.2, 0.2, 0.2, 1]]);
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): no Ângulo, digitar 90+15 e
+// apertar Tab gravava, mas o foco sumia (o painel se redesenha e o campo que
+// tinha o foco deixa de existir). O Tab tem de levar ao próximo campo.
+import { nextFieldId as nextFieldIdQA } from '../src/panels/properties-model.js';
+describe('Tab depois de gravar vai ao próximo campo (QA da noite)', () => {
+  const ids = ['ficha-x', 'ficha-y', 'ficha-scaleX', 'ficha-scaleY', 'ficha-rotation'];
+  it('Tab: o seguinte; Shift+Tab: o anterior', () => {
+    expect(nextFieldIdQA(ids, 'ficha-y', false)).toBe('ficha-scaleX');
+    expect(nextFieldIdQA(ids, 'ficha-y', true)).toBe('ficha-x');
+  });
+  it('nas pontas, ou fora da lista: ninguém (o navegador decide)', () => {
+    expect(nextFieldIdQA(ids, 'ficha-rotation', false)).toBeNull();
+    expect(nextFieldIdQA(ids, 'ficha-x', true)).toBeNull();
+    expect(nextFieldIdQA(ids, 'outro', false)).toBeNull();
+  });
+});

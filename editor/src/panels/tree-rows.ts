@@ -546,6 +546,18 @@ export function selectionKey(selection: Selection): string {
  * O rodapé do olho — I-O1 (chat I, 29/09): esconder calava, e o rodapé ficava
  * com a frase velha. **Escondido é diferente de travado**, e a frase diz isso.
  */
+/**
+ * O rodapé do cadeado — QA da noite de 04/11/2026. Travar dizia só "Arquivo
+ * não salvo.", e o olho ao lado sempre disse o que fez. **Travado é diferente
+ * de escondido**: aparece, e o clique passa.
+ */
+export function lockNotice(kind: 'bone' | 'slot', name: string, locked: boolean): string {
+  const o = kind === 'bone' ? 'O osso' : 'O desenho';
+  return locked
+    ? `${o} "${name}" está travado: aparece, mas o clique passa por ele. O cadeado de novo destrava`
+    : `${o} "${name}" está destravado: o clique pega de novo`;
+}
+
 export function eyeNotice(kind: 'bone' | 'slot', name: string, hidden: boolean): string {
   const o = kind === 'bone' ? 'O osso' : 'O desenho';
   return hidden
@@ -905,4 +917,19 @@ export function treeIndent(depth: number): number {
   let px = 6;
   for (let d = 0; d < depth; d++) px += INDENT_STEPS[d] ?? INDENT_MIN_STEP;
   return px;
+}
+
+/**
+ * **Quando o redesenho rola a lista** — QA da noite de 04/11/2026. Em
+ * 1920×1080, duplo clique em "osso_16" renomeou o "leg_front": o primeiro
+ * clique escolhia a linha, o redesenho rolava 14 px para mostrá-la inteira,
+ * e o segundo clique caía na vizinha. A escolha que o próprio clique fez
+ * (`clicada`) não rola: quem clicou está apontando para a linha. A que veio
+ * de fora, ou da seta, rola como sempre — pela escolha que mudou, e pelo foco.
+ */
+export function treeReveal(
+  agora: string, clicada: string | null, mudou: boolean,
+): { escolha: boolean; foco: boolean } {
+  const doClique = clicada !== null && agora === clicada;
+  return { escolha: mudou && !doClique, foco: !doClique };
 }

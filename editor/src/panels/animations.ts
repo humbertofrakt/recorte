@@ -30,6 +30,7 @@
 import type { DocChange, EditorDoc, Panel } from '../contract.js';
 import { registerPanel } from '../contract.js';
 import { clear, el, ensureStylesheet, separador, iconButton} from './dom.js';
+import { barButtonsKeepNoFocus } from './sem-foco.js';
 import {
   DeleteAnimation, DuplicateAnimation, MoveAnimationToTop,
   animationRowMenu, baseLineLabel, renameAfter, renameAnswer, renamedNotice, deletedNotice, showBodiesList,
@@ -78,7 +79,8 @@ import { RenameItem } from './tree-model.js';
 import { listShared, sharedFrom } from './reuse-model.js';
 import { openOriginal, ownerOf, useAnimations } from './reuse-actions.js';
 import { projetoDe } from '../doc/projeto.js';
-import { registerAction } from '../ui/actions.js';
+import { registerAction, runAction } from '../ui/actions.js';
+import { actionsFor, keyOf } from '../ui/keys.js';
 import { transport } from '../anim/transport.js';
 import {
   BASE_NOVA_DICA, addAnimation as addAnimationNow, askNewBase, demoteBody, exportAnimation, openAnimation,
@@ -139,6 +141,8 @@ class AnimationsPanel implements Panel {
     ensureStylesheet();
     this.doc = doc;
     clear(host);
+    // QA da noite (04/11): o clique do mouse num botão de barra não leva o foco.
+    barButtonsKeepNoFocus(host);
     host.classList.add('painel');
 
     /*
@@ -678,6 +682,16 @@ class AnimationsPanel implements Panel {
         node.append(proxima);
       }
       node.addEventListener('click', () => this.open(doc, row.name));
+      // QA da noite (04/11/2026): o Espaço toca, como em toda parte (lote 68);
+      // a linha é um botão, e ele a "apertava" de novo. A tabela decide.
+      const espaco = (event: KeyboardEvent): void => {
+        if (!actionsFor('animacoes', keyOf(event)).includes('tocar')) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.type === 'keydown' && !event.repeat) runAction('tocar');
+      };
+      node.addEventListener('keydown', espaco);
+      node.addEventListener('keyup', espaco);
       // Q2: duplo clique renomeia ali mesmo — Spriter e Spine.
       node.addEventListener('dblclick', (event) => {
         event.preventDefault();
