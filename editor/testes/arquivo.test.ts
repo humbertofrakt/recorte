@@ -820,16 +820,17 @@ describe('soltar arquivo na janela', () => {
 describe('as boas-vindas do documento vazio', () => {
   const vazio = { bone: { version: '1.0' }, bones: [{ name: 'root' }] } as unknown as BoneFile;
 
-  it('são quatro, com ícone que existe, nome e frase', () => {
+  it('são cinco, com ícone que existe, nome e frase', () => {
     // Lote 59: Abrir pasta entrou na frente — começar como o Spriter.
-    expect(WELCOME_BUTTONS.length).toBe(4);
+    // 05/11/2026: Abrir a oficina, o exemplo com tudo junto.
+    expect(WELCOME_BUTTONS.length).toBe(5);
     for (const botao of WELCOME_BUTTONS) {
       expect(hasIcon(botao.icon), botao.icon).toBe(true);
       expect(botao.label.trim()).not.toBe('');
       expect(botao.hint.length).toBeGreaterThan(15);
     }
     expect(WELCOME_BUTTONS.map((b) => b.action))
-      .toEqual(['abrir-pasta', 'importar-psd', 'abrir-exemplo', 'comecar-vazio']);
+      .toEqual(['abrir-pasta', 'importar-psd', 'abrir-exemplo', 'abrir-oficina', 'comecar-vazio']);
   });
 
   it('um arquivo só com a raiz está vazio; com um osso a mais, não', () => {

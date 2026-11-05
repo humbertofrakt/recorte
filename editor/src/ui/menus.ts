@@ -255,6 +255,8 @@ export function fileMenu(_state: FileMenuState = { canRepack: false }): MenuItem
     // documento vazio oferece o mesmo botão, mas ela some assim que o trabalho
     // começa, e quem quer olhar o herói de novo não tem como pedir.
     { label: 'Abrir o herói (exemplo)', action: 'abrir-exemplo', enabled: true, hint: 'O personagem de exemplo, montado e animado, para olhar por dentro' },
+    // 05/11/2026: a oficina, o exemplo que mostra tudo junto.
+    { label: 'Abrir a oficina (exemplo)', action: 'abrir-oficina', enabled: true, hint: 'Tudo junto: a motosserra, o mecha com o herói dentro, três bonecos com as mesmas animações, duas roupas' },
     SEP,
     // **A pasta é a arte, e a arte tem o seu bloco** — P41 (29/09/2026). Lote
     // 59, plano pasta do projeto: começar como o Spriter, abrindo a pasta das

@@ -177,6 +177,7 @@ export const TAREFAS: readonly TarefaDef[] = Object.freeze([
   { action: 'abrir-recente', grupo: 'Começar, abrir e salvar', tarefa: 'Voltar a um dos últimos arquivos abertos' },
   { action: 'reabrir', grupo: 'Começar, abrir e salvar', tarefa: 'Recuperar o que fechei sem salvar' },
   { action: 'abrir-exemplo', grupo: 'Começar, abrir e salvar', tarefa: 'Ver um boneco pronto, para entender o programa' },
+  { action: 'abrir-oficina', grupo: 'Começar, abrir e salvar', tarefa: 'Abrir a oficina: o exemplo com tudo junto' },
   { action: 'salvar', grupo: 'Começar, abrir e salvar', tarefa: 'Salvar o trabalho' },
   { action: 'salvar-como', grupo: 'Começar, abrir e salvar', tarefa: 'Salvar noutro lugar, ou com outro nome' },
   { action: 'salvar-binario', grupo: 'Começar, abrir e salvar', tarefa: 'Salvar num arquivo menor, que o jogo lê mais rápido' },

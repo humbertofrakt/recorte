@@ -1,0 +1,457 @@
+{
+  "bone": {
+    "version": "1.0",
+    "minVersion": "1.0",
+    "generator": "Recorte — fazer-oficina.mjs",
+    "id": "6f1e2d3c-4b5a-4968-8778-a1b2c3d4e5f1",
+    "created": "2026-11-05T00:00:00Z",
+    "modified": "2026-11-05T00:00:00Z",
+    "license": "CC0-1.0",
+    "copyright": "Exemplo \"oficina\" do Recorte — a motosserra"
+  },
+  "skeleton": {
+    "name": "motosserra",
+    "x": -10,
+    "y": -20,
+    "width": 120,
+    "height": 40,
+    "fps": 30,
+    "referenceScale": 100
+  },
+  "assets": {
+    "atlases": [
+      "oficina.atlas.json"
+    ],
+    "imagesBase": "",
+    "skeletonsBase": ""
+  },
+  "bones": [
+    {
+      "name": "raiz"
+    },
+    {
+      "name": "motor",
+      "parent": "raiz",
+      "length": 30
+    },
+    {
+      "name": "lamina",
+      "parent": "motor",
+      "x": 30,
+      "y": 0,
+      "length": 62
+    },
+    {
+      "name": "corrente_cima",
+      "parent": "lamina",
+      "x": 0,
+      "y": 6
+    },
+    {
+      "name": "corrente_baixo",
+      "parent": "lamina",
+      "x": 0,
+      "y": -6
+    },
+    {
+      "name": "roda",
+      "parent": "lamina",
+      "x": 56,
+      "y": 0
+    }
+  ],
+  "slots": [
+    {
+      "name": "cabo",
+      "bone": "motor",
+      "attachment": "cabo"
+    },
+    {
+      "name": "lamina",
+      "bone": "lamina",
+      "attachment": "lamina"
+    },
+    {
+      "name": "dente_cima_1",
+      "bone": "corrente_cima",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_cima_2",
+      "bone": "corrente_cima",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_cima_3",
+      "bone": "corrente_cima",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_cima_4",
+      "bone": "corrente_cima",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_cima_5",
+      "bone": "corrente_cima",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_cima_6",
+      "bone": "corrente_cima",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_cima_7",
+      "bone": "corrente_cima",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_cima_8",
+      "bone": "corrente_cima",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_baixo_1",
+      "bone": "corrente_baixo",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_baixo_2",
+      "bone": "corrente_baixo",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_baixo_3",
+      "bone": "corrente_baixo",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_baixo_4",
+      "bone": "corrente_baixo",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_baixo_5",
+      "bone": "corrente_baixo",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_baixo_6",
+      "bone": "corrente_baixo",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_baixo_7",
+      "bone": "corrente_baixo",
+      "attachment": "dente"
+    },
+    {
+      "name": "dente_baixo_8",
+      "bone": "corrente_baixo",
+      "attachment": "dente"
+    },
+    {
+      "name": "roda",
+      "bone": "roda",
+      "attachment": "roda"
+    },
+    {
+      "name": "motor",
+      "bone": "motor",
+      "attachment": "motor"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "cabo": {
+          "cabo": {
+            "type": "region",
+            "path": "motosserra/cabo",
+            "x": 2,
+            "y": 14,
+            "rotation": 0,
+            "width": 22,
+            "height": 8
+          }
+        },
+        "lamina": {
+          "lamina": {
+            "type": "region",
+            "path": "motosserra/lamina",
+            "x": 30,
+            "y": 0,
+            "width": 64,
+            "height": 14
+          }
+        },
+        "motor": {
+          "motor": {
+            "type": "region",
+            "path": "motosserra/motor",
+            "x": 14,
+            "y": 0,
+            "width": 36,
+            "height": 26
+          }
+        },
+        "roda": {
+          "roda": {
+            "type": "region",
+            "path": "motosserra/roda",
+            "x": 0,
+            "y": 0,
+            "width": 16,
+            "height": 16
+          }
+        },
+        "dente_cima_1": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 2,
+            "y": 1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_cima_2": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 10,
+            "y": 1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_cima_3": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 18,
+            "y": 1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_cima_4": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 26,
+            "y": 1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_cima_5": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 34,
+            "y": 1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_cima_6": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 42,
+            "y": 1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_cima_7": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 50,
+            "y": 1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_cima_8": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 58,
+            "y": 1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_baixo_1": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 2,
+            "y": -1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_baixo_2": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 10,
+            "y": -1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_baixo_3": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 18,
+            "y": -1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_baixo_4": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 26,
+            "y": -1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_baixo_5": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 34,
+            "y": -1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_baixo_6": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 42,
+            "y": -1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_baixo_7": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 50,
+            "y": -1,
+            "width": 7,
+            "height": 5
+          }
+        },
+        "dente_baixo_8": {
+          "dente": {
+            "type": "region",
+            "path": "motosserra/dente",
+            "x": 58,
+            "y": -1,
+            "width": 7,
+            "height": 5
+          }
+        }
+      }
+    }
+  ],
+  "animations": [
+    {
+      "name": "girar",
+      "duration": 0.2,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "corrente_cima",
+          "property": "x",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 0.2,
+              "value": 8
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "corrente_baixo",
+          "property": "x",
+          "keys": [
+            {
+              "time": 0,
+              "value": 8
+            },
+            {
+              "time": 0.2,
+              "value": 0
+            }
+          ]
+        },
+        {
+          "type": "bone",
+          "target": "roda",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 0.1,
+              "value": -180
+            },
+            {
+              "time": 0.2,
+              "value": -360
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "parado",
+      "duration": 1,
+      "loop": true,
+      "timelines": [
+        {
+          "type": "bone",
+          "target": "motor",
+          "property": "rotation",
+          "keys": [
+            {
+              "time": 0,
+              "value": 0
+            },
+            {
+              "time": 0.5,
+              "value": 1.5
+            },
+            {
+              "time": 1,
+              "value": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

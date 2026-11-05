@@ -92,7 +92,7 @@ const GROUPS: readonly ActionGroup[] = Object.freeze([
   // Só abre (o `painel-previa` acima é o interruptor do menu Janela).
   { owner: 'casca', where: 'casca', ids: ['mostrar-painel-previa'] },
   // O `main.ts` registra: é ele que sabe onde o exemplo mora.
-  { owner: 'documento', where: 'casca', ids: ['abrir-exemplo'] },
+  { owner: 'documento', where: 'casca', ids: ['abrir-exemplo', 'abrir-oficina'] },
   // Itens que só abrem um submenu. Não são ações.
   {
     owner: 'casca', where: 'submenu', ids: [
