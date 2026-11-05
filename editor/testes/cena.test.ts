@@ -383,7 +383,11 @@ describe('a barra da cena', () => {
 
   it('a ordem é a do trabalho: escolher vem antes de criar', () => {
     const ids = toolbarItems().map((item) => item.id);
-    expect(ids[0]).toBe('select');
+    // Desde 13/09/2026 (item 2.2) o primeiro botão é o Transformar. Este teste
+    // dizia 'select' e passava só porque o Transformar não estava carregado
+    // neste arquivo (regra 28: verde por outro motivo). Com a cena inteira
+    // carregada, a verdade: Transformar, depois Selecionar.
+    expect(ids.slice(0, 2)).toEqual(['transform', 'select']);
     expect(ids.indexOf('select')).toBeLessThan(ids.indexOf('create-bone'));
   });
 
@@ -1941,5 +1945,27 @@ describe('prova de pessoa: o arrasto que grava chave diz a chave', () => {
     const g = new GestureNotice();
     g.hear({ kind: 'selection', label: 'Chave em 0,00 s: X' });
     expect(g.keyNotice()).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Prova de pessoa (05/11/2026): recorte e máscara, dois tracejados quase da mesma cor, com nome
+// ---------------------------------------------------------------------------
+
+import { clippingLabel, cropLabel } from '../src/viewport/viewport-draw.js';
+import { LIGHT as temaClaroCena } from '../src/ui/theme.js';
+
+describe('prova de pessoa: o recorte e a máscara dizem o que são', () => {
+  it('as duas cores são quase a mesma — por isso o nome escrito (prova do defeito)', () => {
+    const rgb = (h: string): number[] => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+    const [a, b] = [rgb('#ff00c8'), rgb(temaClaroCena.sceneClipping)];
+    const distancia = Math.hypot(a[0]! - b[0]!, a[1]! - b[1]!, a[2]! - b[2]!);
+    expect(distancia).toBeLessThan(80);
+  });
+
+  it('o recorte diz "recorte" e o tamanho; a máscara diz "máscara" e o nome', () => {
+    expect(cropLabel({ width: 143, height: 265 })).toBe('recorte 143 × 265 px');
+    expect(cropLabel({ width: 1, height: 1 }, '167 × 283 px')).toBe('recorte 167 × 283 px');
+    expect(clippingLabel('mask')).toBe('máscara mask');
   });
 });
