@@ -531,4 +531,4 @@ Conferido no código em 07/10/2026. Caminhos a partir de `editor/src/`.
 
 ---
 
-Volta ao [índice](README.md).
+Próximo: [11. A espada de um, o boneco de outro](11-a-espada-de-um-o-boneco-de-outro.md) · Volta ao [índice](README.md).

@@ -94,6 +94,14 @@ export interface BodyProvider {
    * volta a anotar só o objeto, como no 4b.
    */
   uriOf?(self: Doc): string | null;
+  /**
+   * **A página de outro documento do projeto** — 05/11/2026, a espada de um,
+   * o boneco de outro. Uma entidade com atlas próprio (a espada da pessoa A)
+   * pendurada neste corpo traz as páginas DELA, e este documento não as tem.
+   * Procura pela IDENTIDADE da página, nunca pelo nome: dois atlas podem ter
+   * páginas de mesmo nome. Opcional; `null` = ninguém tem.
+   */
+  pageImage?(self: Doc, page: AtlasPageData): CanvasImageSource | null;
 }
 
 export class Doc implements EditorDoc {
@@ -374,6 +382,11 @@ export class Doc implements EditorDoc {
   }
 
   imageFor(page: AtlasPageData): CanvasImageSource | null {
+    return this.ownImageFor(page) ?? this.project?.pageImage?.(this, page) ?? null;
+  }
+
+  /** A página pelas imagens DESTE documento só — sem perguntar ao projeto. */
+  ownImageFor(page: AtlasPageData): CanvasImageSource | null {
     return this.images.get(page.image) ?? this.images.get(page.name) ?? null;
   }
 
