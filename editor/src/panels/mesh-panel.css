@@ -324,3 +324,43 @@
     padding: 0;
   }
 }
+
+/*
+ * 05/11/2026 — a Malha com a ferramenta PESOS na mão, na tela baixa. A
+ * decisão (a mesma saída 3, doc `noite/paineis.md`): a aba rola com a régua da
+ * ferramenta, e a primeira seção da ferramenta (Ossos que influenciam) tem de
+ * aparecer inteira, com o título da seguinte (Pesos) logo abaixo. Faltavam
+ * 49 px. Só recheio: o aviso azul, o vão das seções e dos títulos, e a linha
+ * de cada osso (a lixeira tinha 34 px de altura; agora a da linha). Nenhum
+ * osso, botão, número ou palavra a menos.
+ */
+@media (max-height: 800px) {
+  .malha-recado.malha-recado-curto {
+    margin: 2px 12px;
+    padding: 3px 10px;
+  }
+  .malha-secao {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  .malha-secao-titulo {
+    margin-bottom: 1px;
+  }
+  .malha-osso {
+    padding: 0;
+  }
+  .malha-osso .painel-botao {
+    min-height: 22px;
+    padding: 0 4px;
+  }
+  /* O ícone da lixeira é um span com a mesma classe do botão de ícone, e
+     herdava o recheio dele (5 px em cima e embaixo): 32 px de botão. */
+  .malha-osso .painel-botao > .painel-botao-icone {
+    padding: 0;
+  }
+  .malha-osso-nome {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 20px;
+  }
+}
