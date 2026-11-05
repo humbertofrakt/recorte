@@ -2103,7 +2103,7 @@ Constraint que lê **um** parâmetro e escreve em propriedades. Fica em `constra
 | `property` | string | condicional | — | Como na 9.1. |
 | `skin` | name | não | `"default"` | Só `deform`. |
 | `attachment` | string | condicional | — | Só `deform`. |
-| `mode` | string | não | `"replace"` | `"replace"` = leva a propriedade ao valor. `"add"` = soma o valor. |
+| `mode` | string | não | `"replace"` | `"replace"` = leva a propriedade ao valor. `"add"` = soma o **desvio** do valor em relação ao setup do alvo: `cur + (val − setup)·mix`, como no pseudocódigo abaixo (caso C-330). |
 | `keys` | DriverKey[] | sim | — | Ordenadas por `input` crescente, sem repetição (L1). Mínimo 1. |
 
 **`DriverKey`** — igual a `Key` (9.2) trocando `time` por `input`:
@@ -2198,6 +2198,9 @@ Tags são strings ligadas a um trecho da animação. Uso: "janela de ataque", "i
 | timeline `tag` (9.9) | Cada chave traz `value: string[]`: tags ativas daquele instante até a próxima chave. Sempre stepped. |
 
 O runtime **DEVE** expor `activeTags(animation, time)` = `animation.tags ∪ value da última chave <= time` (só `animation.tags` antes da primeira chave).
+
+- **Esta regra ganha da borda geral da 9.10** ("antes da primeira chave vale a primeira chave"): para `tag`, antes da primeira chave valem só as da animação.
+- **A ordem da união:** primeiro `animation.tags`, na ordem do arquivo; depois os da chave, na ordem da chave; **sem repetir**. O dump compara tags exatas (12.4), então a ordem faz parte da resposta. Caso B-120. *(Linha de 05/11/2026.)*
 
 ### 8.6 Eventos — disparo
 
@@ -3184,10 +3187,14 @@ O executor é `ferramentas/conformidade.mjs`.
 
 **O que a suíte AINDA NÃO cobre.** Um número de casos não é uma promessa de
 cobertura, e esta lista existe para ninguém confundir as duas coisas. Nenhum
-caso exercita, hoje: `boundingbox`, `clipping`, `tag`, `variable`,
-`parameter`, `driver`, `darkColor` nem `blend`. Quatro dos canais de sonda
-listados abaixo — `boundingBoxes`, `tags`, `variables`, `parameters` — não são
-medidos por caso nenhum. (O `skeleton` aninhado, os dois canais de animação do
+caso exercita, hoje: `blend`, o modo contínuo do `driver` (`animation`), o
+`source` de parâmetro (Smart Bone), nem os alvos de `driver` fora de `bone`.
+*(05/11/2026: entraram A-032 `darkColor`, B-120 `tag` e o canal `tags`, B-121
+`variable` e o canal `variables`, C-330 `parameter`, o canal `parameters` e o
+`driver` em modo alvos. `boundingbox` e o canal `boundingBoxes` já tinham caso;
+`clipping` aparece em quatro casos de `drawList`. Até esta data a lista dizia
+"nenhum caso exercita `boundingbox`, `clipping`, `tag`, `variable`,
+`parameter`, `driver`, `darkColor` nem `blend`".)* (O `skeleton` aninhado, os dois canais de animação do
 filho, o `rig`, as animações e peles de fora, a virada, `slot/bone`, `weights`,
 a pele com osso, `rig.reference`, o `point` e o canal `points` **são** medidos
 desde 17/09/2026: C-270 a C-300, em `casos/`, com os dois runtimes passando.) A família `R-` (renderização) e o caso `X-306` (arquivo da `minor`

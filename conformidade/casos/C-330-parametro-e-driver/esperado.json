@@ -1,0 +1,50 @@
+{
+  "probe": {
+    "animation": "mexer",
+    "times": [
+      0.25,
+      0.75
+    ],
+    "measure": [
+      "bones",
+      "parameters"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.25,
+      "parameters": {
+        "abre": 0.25,
+        "teto": 0.5,
+        "volta": 0.0,
+        "quieto": 0.25
+      },
+      "bones": {
+        "braco": {
+          "arotation": 22.5
+        },
+        "perna": {
+          "arotation": 15.0
+        }
+      }
+    },
+    {
+      "time": 0.75,
+      "parameters": {
+        "abre": 0.75,
+        "teto": 1.0,
+        "volta": 20.0,
+        "quieto": 0.25
+      },
+      "bones": {
+        "braco": {
+          "arotation": 67.5
+        },
+        "perna": {
+          "arotation": 25.0
+        }
+      }
+    }
+  ]
+}
