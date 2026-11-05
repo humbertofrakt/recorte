@@ -168,4 +168,22 @@ nenhuma folha de imagens (atlas)"*. Os testes foram trocados junto.
 entra porque alguns testes chamam o runtime Python. **Não deu para rodar o
 workflow daqui**; a primeira rodada no GitHub é a prova.
 
+## 9. O segundo passeio de links
+
+Marcado para 05:00 UTC. O processo da sessão reiniciou, e o passeio só rodou
+às **08:22 UTC** — **depois do prazo das 05:45**. Com o ramo comum daquela hora
+(tomadas, oficina e quero-fazer dentro), montado pelos passos do próprio
+`pagina.yml` e servido em `/recorte/`:
+
+| Conferência | Resultado |
+|:---|:---|
+| Links quebrados | 0 |
+| Erros no console | 0 |
+| Conferidor com o `heroi.bone` | "Arquivo válido", desenho na tela |
+| Visualizador | anima, com a espada |
+| Editor | abre (195 botões) |
+| Régua | 6.124 testes, 0 vermelho; `tsc` limpo; conformidade 138 de 138 |
+
+Nada quebrou; nada a consertar.
+
 FIM
