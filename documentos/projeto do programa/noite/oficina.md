@@ -35,7 +35,7 @@ Pedido do Diretor, noite de 04 para 05/11/2026. Feito pela sessão do reaproveit
 |:---|:---|
 | `node ferramentas/validador/validar.mjs exemplo/oficina/*` | 10 válidos, 0 com erro |
 | `render-png` | desenha as 5 bases, com o herói na cabine e a motosserra (foto `fotos-oficina/runtime-a-oficina-inteira.png`) |
-| `ferramentas/provas/oficina/prova.cjs` (só cliques) | 11 passos, nenhum travou |
+| `ferramentas/provas/oficina/prova.cjs` (só cliques) | 12 passos, nenhum travou — refeita sobre a integração com as Tomadas (e46cfc8): a cabine aparece na aba Tomadas e como tomada na cena |
 | programa montado (`vite build`) | a oficina vai junto e abre igual |
 
 ## Aviso para a parte do validador
