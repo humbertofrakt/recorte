@@ -666,7 +666,16 @@ const DA_RODADA_34 = [
  */
 const SO_NA_PASTA = ['P-029-forma-desconhecida-na-drawlist']
 
-const TODOS = [...OITO, ...OITO_NOVOS, ...DA_RODADA_15, ...DA_RODADA_16, ...DA_RODADA_34]   // vinte e oito
+/**
+ * Os de 05/11/2026, da 2ª fase de `rate` (extensão 1.2) e da identidade da
+ * timeline: contas à mão antes do runtime, e as três fontes batendo.
+ */
+const DE_05_11 = [
+  'P-030-rampa-com-torneira',
+  'P-031-dois-emissores-no-mesmo-slot',
+]
+
+const TODOS = [...OITO, ...OITO_NOVOS, ...DA_RODADA_15, ...DA_RODADA_16, ...DA_RODADA_34, ...DE_05_11]   // trinta
 
 /** O que a suíte oficial varre: os que PROVAM alguma coisa. Desde 05/11/2026, todos. */
 const PROVADOS = [...TODOS].sort()
@@ -704,10 +713,14 @@ describe('os dezessete casos P-001 a P-017', () => {
     const { entrada, esperado } = caso(nome)
     expect(esperado.probe.measure).toEqual(['particles'])
     expect(esperado.samples.length).toBeGreaterThan(0)
-    // Uma chave por emissor do arquivo — o P-015 tem três, e é de propósito.
+    // Uma chave por emissor que um slot MOSTRA — o P-015 tem três, e é de
+    // propósito. Um placeholder que o slot não mostra não é desenhado e não entra
+    // (§14.1, linha de 05/11/2026): o P-031 tem um, o `jato2`.
     const emissores = entrada.skins[0].attachments
-    const esperadas = Object.entries<any>(emissores).flatMap(([slot, porNome]) =>
-      Object.entries<any>(porNome).filter(([, a]) => a.type === 'BONE_particle').map(([n]) => `${slot}/${n}`))
+    const esperadas = (entrada.slots as any[]).flatMap((sl) => {
+      const a = emissores[sl.name]?.[sl.attachment]
+      return a?.type === 'BONE_particle' ? [`${sl.name}/${sl.attachment}`] : []
+    })
     for (const s of esperado.samples) {
       // Emissor sem viva nenhuma sai como lista VAZIA, e não some da chave:
       // sumir confundiria "não há partícula" com "o leitor não implementa P".
@@ -773,7 +786,7 @@ describe('os dezessete casos P-001 a P-017', () => {
     // Os da rodada 15 entraram noutro dia (04/10/2026), pelas mesmas três
     // fontes; os da rodada 34, no fecho da v28.8.
     const dia = DA_RODADA_15.includes(nome) ? '04/10/2026' : DA_RODADA_34.includes(nome) ? '05/10/2026'
-      : nome === 'P-002-taxa-em-rampa' ? '05/11/2026' : '18/09/2026'
+      : nome === 'P-002-taxa-em-rampa' || DE_05_11.includes(nome) ? '05/11/2026' : '18/09/2026'
     expect(leiame).toContain(`Entrou em \`casos/\` em ${dia}`)
     expect(leiame).toContain('três** fontes independentes')
   })
@@ -798,7 +811,7 @@ describe('os dezessete casos P-001 a P-017', () => {
 
     const spec = readFileSync(join(raiz, 'formato', 'extensions', 'BONE_particles.md'), 'utf8')
     expect(spec).toContain('devolvido no mesmo dia')
-    expect(spec).toContain('P: 29/29')
+    expect(spec).toContain('P: 31/31')
   })
 
   it('P-003: `t` e `t + D` dão o MESMO quadro, campo a campo', () => {

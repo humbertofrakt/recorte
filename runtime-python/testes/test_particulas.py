@@ -1092,7 +1092,9 @@ class TestOsCasosDeParticula(unittest.TestCase):
     # 25 desde 05/10/2026: P-021 a P-025, da 9.4.2 (a forma `path`, 1.1).
     # 29 desde 05/10/2026, noite: P-026 em `casos/`; P-027, P-028 e P-029
     # pendentes (rodada 34).
-    QUANTOS = 29
+    # 31 desde 05/11/2026: P-030 e P-031 (a taxa animada, 1.2, e a identidade
+    # da timeline). O P-002 saiu de `casos-pendentes/` e continua contado.
+    QUANTOS = 31
 
     def test_todos_os_casos_passam(self):
         """Every case in the folder, and the whole list of failures at once.

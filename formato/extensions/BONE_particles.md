@@ -1175,8 +1175,11 @@ runtime Python. Quem o move é o Planejador, nunca o executor.
 > **05/11/2026: o P-002 entrou.** A 2ª fase de `rate` abriu (versão 1.2), o
 > `esperado.json` foi preenchido por uma conta à parte — 8, 21 e 33 vivas em
 > `t = 0.6`, `1` e `1.31` —, os dois runtimes passaram e o confronto bateu. Agora
-> um runtime sem a rampa dá zero partículas e **reprova**. A suíte passa a dizer
-> **`P: 29/29`**. A história abaixo fica como estava.
+> um runtime sem a rampa dá zero partículas e **reprova**. Entraram junto o
+> **P-030** (rampa cortada pela torneira, e `rate` + `emitting` no mesmo
+> emissor) e o **P-031** (dois emissores no mesmo slot, cada um com a sua
+> torneira). A suíte passa a dizer **`P: 31/31`**. A história abaixo fica como
+> estava.
 
 > **Por que o P-002 fica de fora.** Ele é o único de **2ª fase**, e o
 > `esperado.json` dele traz uma lista **vazia** de propósito. Um runtime de 1ª
@@ -1214,6 +1217,8 @@ os dois runtimes bateram com eles. A suíte passa a dizer **`P: 19/19`**.
 | P-024 | §9.4.2: uma curva de verdade — a **poligonal de 10 segmentos**, e não o comprimento exato |
 | P-025 | §9.4.2: caminho **fechado** — o comprimento inclui a curva que volta |
 | P-026 | §9.4.2, passo 7, em `world`: o ponto entra no esqueleto **uma vez**, e o `spherizeDirection` sai da **origem do emissor**, com o emissor girado e deslocado |
+| P-030 | §4.2: a torneira corta a rampa no meio; `rate` e `emitting` do mesmo emissor são **duas** timelines |
+| P-031 | §9: dois emissores no mesmo slot, cada um com a sua timeline de `emitting` — a identidade leva o `attachment` |
 
 **Em 05/10/2026 entraram P-021 a P-026** (a forma `path`, versão 1.1): números
 calculados à mão antes do código, a conta escrita no `leiame` de cada um, e as
@@ -1245,7 +1250,7 @@ o contrato que ele cumpre.
 
 | Campo | O que é |
 |:---|:---|
-| A chave | `<slot>/<placeholder>`, o emissor |
+| A chave | `<slot>/<placeholder>`, o emissor **que o slot mostra** no instante. Um placeholder que o slot não mostra não é desenhado e não entra no dump (linha de 05/11/2026; o P-031 tem um) |
 | A lista | As vivas, **na ordem de desenho** já cortada por `maxParticles` (§7.1) |
 | `flow`, `index` | A identidade da §3.1. `index` **pode ser negativo** (pré-aquecimento) |
 | `birth` | `t_i`, no tempo do esqueleto. Negativo no pré-aquecimento e nas voltas anteriores |

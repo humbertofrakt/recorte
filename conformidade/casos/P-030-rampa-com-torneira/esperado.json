@@ -1,0 +1,444 @@
+{
+  "probe": {
+    "animation": "engrossa",
+    "times": [
+      0.6,
+      0.9,
+      1.2
+    ],
+    "measure": [
+      "particles"
+    ]
+  },
+  "version": "1.0",
+  "samples": [
+    {
+      "time": 0.6,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.447214,
+            "life": 2,
+            "age": 0.152786,
+            "x": 0,
+            "y": 15.27864,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.387298,
+            "life": 2,
+            "age": 0.212702,
+            "x": 0,
+            "y": 21.270167,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.316228,
+            "life": 2,
+            "age": 0.283772,
+            "x": 0,
+            "y": 28.377223,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.223607,
+            "life": 2,
+            "age": 0.376393,
+            "x": 0,
+            "y": 37.63932,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 0.6,
+            "x": 0,
+            "y": 60.0,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    },
+    {
+      "time": 0.9,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 9,
+            "birth": 0.873212,
+            "life": 2,
+            "age": 0.026788,
+            "x": 0,
+            "y": 2.678754,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 8,
+            "birth": 0.844097,
+            "life": 2,
+            "age": 0.055903,
+            "x": 0,
+            "y": 5.590285,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 7,
+            "birth": 0.813941,
+            "life": 2,
+            "age": 0.086059,
+            "x": 0,
+            "y": 8.605897,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.782624,
+            "life": 2,
+            "age": 0.117376,
+            "x": 0,
+            "y": 11.737621,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.75,
+            "life": 2,
+            "age": 0.15,
+            "x": 0,
+            "y": 15.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.447214,
+            "life": 2,
+            "age": 0.452786,
+            "x": 0,
+            "y": 45.27864,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.387298,
+            "life": 2,
+            "age": 0.512702,
+            "x": 0,
+            "y": 51.270167,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.316228,
+            "life": 2,
+            "age": 0.583772,
+            "x": 0,
+            "y": 58.377223,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.223607,
+            "life": 2,
+            "age": 0.676393,
+            "x": 0,
+            "y": 67.63932,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 0.9,
+            "x": 0,
+            "y": 90.0,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    },
+    {
+      "time": 1.2,
+      "particles": {
+        "fx/jato": [
+          {
+            "flow": 0,
+            "index": 21,
+            "birth": 1.18125,
+            "life": 2,
+            "age": 0.01875,
+            "x": 0,
+            "y": 1.875,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 20,
+            "birth": 1.15625,
+            "life": 2,
+            "age": 0.04375,
+            "x": 0,
+            "y": 4.375,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 19,
+            "birth": 1.13125,
+            "life": 2,
+            "age": 0.06875,
+            "x": 0,
+            "y": 6.875,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 18,
+            "birth": 1.10625,
+            "life": 2,
+            "age": 0.09375,
+            "x": 0,
+            "y": 9.375,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 17,
+            "birth": 1.08125,
+            "life": 2,
+            "age": 0.11875,
+            "x": 0,
+            "y": 11.875,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 16,
+            "birth": 1.05625,
+            "life": 2,
+            "age": 0.14375,
+            "x": 0,
+            "y": 14.375,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 15,
+            "birth": 1.03125,
+            "life": 2,
+            "age": 0.16875,
+            "x": 0,
+            "y": 16.875,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 14,
+            "birth": 1.00625,
+            "life": 2,
+            "age": 0.19375,
+            "x": 0,
+            "y": 19.375,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 13,
+            "birth": 0.981071,
+            "life": 2,
+            "age": 0.218929,
+            "x": 0,
+            "y": 21.892916,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 12,
+            "birth": 0.955249,
+            "life": 2,
+            "age": 0.244751,
+            "x": 0,
+            "y": 24.475134,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 11,
+            "birth": 0.928709,
+            "life": 2,
+            "age": 0.271291,
+            "x": 0,
+            "y": 27.129122,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 10,
+            "birth": 0.901388,
+            "life": 2,
+            "age": 0.298612,
+            "x": 0,
+            "y": 29.861218,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 9,
+            "birth": 0.873212,
+            "life": 2,
+            "age": 0.326788,
+            "x": 0,
+            "y": 32.678754,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 8,
+            "birth": 0.844097,
+            "life": 2,
+            "age": 0.355903,
+            "x": 0,
+            "y": 35.590285,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 7,
+            "birth": 0.813941,
+            "life": 2,
+            "age": 0.386059,
+            "x": 0,
+            "y": 38.605897,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 6,
+            "birth": 0.782624,
+            "life": 2,
+            "age": 0.417376,
+            "x": 0,
+            "y": 41.737621,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 5,
+            "birth": 0.75,
+            "life": 2,
+            "age": 0.45,
+            "x": 0,
+            "y": 45.0,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 4,
+            "birth": 0.447214,
+            "life": 2,
+            "age": 0.752786,
+            "x": 0,
+            "y": 75.27864,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 3,
+            "birth": 0.387298,
+            "life": 2,
+            "age": 0.812702,
+            "x": 0,
+            "y": 81.270167,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 2,
+            "birth": 0.316228,
+            "life": 2,
+            "age": 0.883772,
+            "x": 0,
+            "y": 88.377223,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 1,
+            "birth": 0.223607,
+            "life": 2,
+            "age": 0.976393,
+            "x": 0,
+            "y": 97.63932,
+            "angle": 0,
+            "scale": 1
+          },
+          {
+            "flow": 0,
+            "index": 0,
+            "birth": 0,
+            "life": 2,
+            "age": 1.2,
+            "x": 0,
+            "y": 120.0,
+            "angle": 0,
+            "scale": 1
+          }
+        ]
+      }
+    }
+  ]
+}
