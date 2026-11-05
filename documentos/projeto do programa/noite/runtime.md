@@ -15,7 +15,7 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
-Medido à 01h UTC de 05/11, com a casa só minha.
+Medido às 00h55 UTC de 05/11 (o relógio da máquina), com a casa só minha.
 
 ## 1. O P-002 (taxa em rampa) entrou em `casos/`
 
@@ -76,7 +76,7 @@ conta **antes** de rodar runtime):
 | Onde | A linha |
 |:---|:---|
 | `BONE_particles` §4.2 | os trechos da taxa animada; o índice na fronteira de rampa que começa em zero (`0/0` → nasce na fronteira); a 1ª fase não muda um bit |
-| `BONE_particles` §9, §12, §14 | `rate` é **I** desde a 1.2; P: 31/31 |
+| `BONE_particles` §9, §12, §14 | `rate` é **I** desde a 1.2; P: 32/32 |
 | `BONE_particles` §14.1 | a chave do dump é o emissor **que o slot mostra** (P-031 tem um que não mostra) |
 | Spec §8.2, tabela `DriverTarget` | `add` = soma o **desvio** em relação ao setup, como o pseudocódigo (a tabela dizia "soma o valor") |
 | Spec §8.5 | a regra das tags ganha da borda da §9.10; a ordem da união |
@@ -119,7 +119,7 @@ no rascunho da sessão.
 
 | Parte | O que precisa |
 |:---|:---|
-| `leitor-godot/` | Conferir o **X-309** (BOM): o `adaptador.mjs` dele entrega o caminho ao Godot, e não sei se o carregador `.gd` tira o BOM. **Vai reprovar P-002, P-030 e B-120** até copiar dois consertos do Python: (1) `particulas.gd`, os trechos com rampa — o `Trechos` de `runtime-python/recorte/particles.py`; (2) `carregador.gd` linha ~1226, aceitar a timeline de `rate` em vez de avisar "2a fase"; (3) as tags antes da 1ª chave, como em `runtime-python/recorte/animation.py` (`kind == "tag"`). Conferir também se a identidade de timeline leva `attachment` (P-031) |
+| `leitor-godot/` | Conferir o **X-309** (BOM): o `adaptador.mjs` dele entrega o caminho ao Godot, e não sei se o carregador `.gd` tira o BOM. **Vai reprovar P-002, P-030 e B-120** até copiar três consertos do Python: (1) `particulas.gd`, os trechos com rampa — o `Trechos` de `runtime-python/recorte/particles.py`; (2) `carregador.gd` linha ~1226, aceitar a timeline de `rate` em vez de avisar "2a fase"; (3) as tags antes da 1ª chave, como em `runtime-python/recorte/animation.py` (`kind == "tag"`). Conferir também se a identidade de timeline leva `attachment` (P-031), e rodar os **18 casos novos** (`A-032`, `B-120`, `B-121`, `C-330` a `C-333`, `P-030` a `P-032`, `X-309` a `X-314`, `ZIP-502`): eu não tenho Godot nesta máquina |
 | editor | O editor ganha `rate` animado de graça pelo runtime. Se o painel recusa animar `rate`, isso agora é escolha, não limite |
 | `programa/` | não remontei; o Diretor monta no fecho |
 
@@ -127,7 +127,7 @@ no rascunho da sessão.
 
 | Decisão | Por quê |
 |:---|:---|
-| Abrir a 2ª fase de `rate` | A tarefa mandava fechar o P-002, e a conta já estava inteira na spec. **Não é campo novo**: a timeline `BONE_particle` com `property: "rate"` já estava escrita (§9, marca I). Se o Humberto não quiser, reverter é um commit |
+| Abrir a 2ª fase de `rate` | A tarefa mandava fechar o P-002, e a conta já estava inteira na spec. **Não é campo novo**: a timeline `BONE_particle` com `property: "rate"` já estava escrita (§9, marca I). Se o Humberto não quiser, reverter é desfazer a mudança em `runtime/src/particles/emission.ts`, `runtime-python/recorte/particles.py` e nos dois loaders, e devolver o P-002 e o P-030 para `casos-pendentes/` |
 | Versão da extensão 1.2 | O comportamento do leitor muda (aceita uma timeline que antes recusava) |
 | `add` do driver = soma do desvio | O pseudocódigo da §8.2 é a parte mais exata, e os dois runtimes já faziam assim |
 
