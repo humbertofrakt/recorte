@@ -108,6 +108,8 @@ const SCOPE_WORDS: Readonly<Record<KeyBinding['scope'], string>> = Object.freeze
   'linha-do-tempo': 'na linha do tempo',
   arvore: 'na Árvore',
   ordem: 'na aba Ordem',
+  // QA da noite (04/11/2026): o Espaço da lista de Animações (`ANIMATION_LIST_KEYS`).
+  animacoes: 'na lista de Animações',
 });
 
 /*

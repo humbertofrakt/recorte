@@ -134,6 +134,15 @@ class TreePanel implements Panel {
    * é tratada uma vez: quem trata para a propagação. Campo de texto passa reto.
    */
   private readonly gestureKey = (event: KeyboardEvent): void => {
+    // QA da noite (04/11/2026): o Espaço toca, como em toda parte (lote 68) —
+    // a linha é um botão, e ele a "apertava" de novo. Na descida E na subida:
+    // o botão se aperta na subida.
+    if (!isTyping(event.target) && actionsFor('arvore', keyOf(event)).includes('tocar')) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (event.type === 'keydown' && !event.repeat) runAction('tocar');
+      return;
+    }
     // Rodada 43, lote 3: as setas, da mesma tabela (`ui/keys.ts`, escopo `arvore`).
     if (event.type === 'keydown' && this.arrowKey(event)) return;
     // A tecla vem da tabela (`ui/keys.ts`, escopo `arvore`): P, com ou sem

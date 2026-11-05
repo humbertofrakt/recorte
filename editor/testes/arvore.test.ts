@@ -3198,3 +3198,20 @@ describe('a Árvore se monta inteira antes de focar (QA da noite)', () => {
     expect(zona).toBeLessThan(render.indexOf('.focus('));
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): depois de clicar num osso na
+// Árvore, o Espaço não tocava — a linha é um botão, e o Espaço "apertava" de
+// novo a linha que já estava escolhida. A decisão do lote 68 é "Espaço toca
+// em toda parte". A Árvore lê o Espaço da tabela (escopo `arvore`) e toca.
+import { actionsFor as actionsForQA } from '../src/ui/keys.js';
+describe('Espaço toca com o foco na Árvore (QA da noite)', () => {
+  it('a tabela diz: Espaço na Árvore é Tocar', () => {
+    expect(actionsForQA('arvore', ' ')).toContain('tocar');
+  });
+  it('a Árvore trata o Espaço da tabela e para a propagação', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/tree.ts'), 'utf8');
+    const gesto = fonte.slice(fonte.indexOf('private readonly gestureKey'), fonte.indexOf('private arrowKey('));
+    expect(gesto).toMatch(/actionsFor\('arvore', keyOf\(event\)\)\.includes\('tocar'\)/);
+    expect(gesto).toMatch(/runAction\('tocar'\)/);
+  });
+});

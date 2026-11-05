@@ -1887,3 +1887,16 @@ describe('o rodapé da aba Animações diz o que aconteceu (QA da noite)', () =>
     expect(deletedNoticeQA('andar', null)).toBe('Apagou a animação "andar" (Ctrl+Z volta). Aberta agora: a base');
   });
 });
+
+// QA da noite de 04/11/2026 (obra/qa-animar): o mesmo na lista de Animações —
+// clicar em "andar" e apertar Espaço não tocava (a linha é um botão).
+import { actionsFor as actionsForQA } from '../src/ui/keys.js';
+describe('Espaço toca com o foco na lista de Animações (QA da noite)', () => {
+  it('a tabela diz: Espaço na lista de Animações é Tocar', () => {
+    expect(actionsForQA('animacoes', ' ')).toContain('tocar');
+  });
+  it('a linha da animação trata o Espaço da tabela', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/panels/animations.ts'), 'utf8');
+    expect(fonte).toMatch(/actionsFor\('animacoes', keyOf\(event\)\)\.includes\('tocar'\)/);
+  });
+});
