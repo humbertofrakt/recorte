@@ -26,7 +26,7 @@
  */
 
 import {
-  CanvasRenderer, Skeleton, applyResets, pose,
+  CanvasRenderer, ParticleCache, Skeleton, applyResets, collectDrawables, isParticleAttachment, particleFrame, pose,
   type AnimationData, type AtlasPageData,
 } from '../../../runtime/src/index.js';
 import {
@@ -587,9 +587,34 @@ export function freshSkeleton(doc: Doc): Skeleton | null {
   return skeleton;
 }
 
+/**
+ * **A caixa do esqueleto posado, com as partículas** — QA de 04/11/2026 (D12).
+ * O `getBounds` conta os desenhos e não as partículas: um arquivo só de
+ * fumaça, fogo e faísca exportava "1 quadro de 1x1". Cada partícula entra com
+ * o quadrado da imagem dela, na escala dela — a mesma conta do `render-png`
+ * da linha de comando (`limitesComParticulas`).
+ */
+export function boxWithParticles(skeleton: Skeleton, cache: ParticleCache = new ParticleCache()): Box | null {
+  const b = skeleton.getBounds();
+  let box: Box | null = b !== null && (b.width > 0 || b.height > 0) ? b : null;
+  for (const d of collectDrawables(skeleton)) {
+    if (!isParticleAttachment(d.attachment)) continue;
+    const frame = particleFrame(skeleton, d.slot, d.attachment, cache);
+    if (frame.silence !== null) continue;
+    const region = d.attachment.region;
+    const side = region === null ? 1 : Math.max(region.originalWidth, region.originalHeight);
+    for (const p of frame.particles) {
+      const r = (side * Math.abs(p.scale)) / 2;
+      box = unionBox(box, { x: p.x - r, y: p.y - r, width: r * 2, height: r * 2 });
+    }
+  }
+  return box;
+}
+
 /** A caixa da base, na pose de repouso — rodada 45, lote 5. */
 function baseBounds(doc: Doc): Box {
-  return freshSkeleton(doc)?.getBounds() ?? { x: 0, y: 0, width: 1, height: 1 };
+  const skeleton = freshSkeleton(doc);
+  return (skeleton === null ? null : boxWithParticles(skeleton)) ?? { x: 0, y: 0, width: 1, height: 1 };
 }
 
 /** The box every frame of the animation draws inside, in world units. */
@@ -598,13 +623,13 @@ export function boundsOverAnimation(
 ): Box {
   const skeleton = freshSkeleton(doc);
   if (skeleton === null) return { x: 0, y: 0, width: 1, height: 1 };
-  let box: Box | null = skeleton.getBounds();
+  let box: Box | null = boxWithParticles(skeleton);
   let previous: number | null = null;
   for (const time of times) {
     poseAt(skeleton, animation, time, step, previous);
     previous = time;
     skeleton.updateWorldTransform(0);
-    box = unionBox(box, skeleton.getBounds());
+    box = unionBox(box, boxWithParticles(skeleton));
   }
   return box ?? { x: 0, y: 0, width: 1, height: 1 };
 }

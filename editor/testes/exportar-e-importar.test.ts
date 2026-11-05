@@ -1960,3 +1960,41 @@ describe('QA 04/11/2026 — D7: o projeto importado de outro programa nasce "nã
     expect(corpo).toMatch(/shell\.doc\.setFile\(importado\.file, \{[^}]*unsaved: true/);
   });
 });
+
+describe('QA 04/11/2026 — D12: a exportação de imagem conta as partículas na caixa', () => {
+  // A prova (Chromium sem janela): Abrir pasta com o fogo.bone gravado pelo
+  // editor (fumaça, fogo e faísca, nenhum desenho) → Exportar → "GIF, PNG,
+  // folha, vídeo…" → Só este quadro (0,4 s). Saiu "1 quadro de 1x1, 88 bytes":
+  // a caixa era a do `getBounds`, que conta desenhos e não partículas — a mesma
+  // forma do D10 na linha de comando.
+  const PASTA = resolve(__dirname, '../../ferramentas/testes/dados/particulas-do-editor');
+  const posado = (t: number) => {
+    const file = JSON.parse(readFileSync(join(PASTA, 'fogo.bone'), 'utf8'));
+    const atlas = loadAtlas(JSON.parse(readFileSync(join(PASTA, 'particulas.atlas.json'), 'utf8')));
+    const data = loadSkeletonData(file, { atlases: [atlas] });
+    return { data, t };
+  };
+
+  it('em 0,4 s a caixa tem o tamanho do fogo, e não 1x1', async () => {
+    const { boxWithParticles } = await import('../src/io/export-image.js');
+    const { Skeleton, pose } = await import('../../runtime/src/index.js');
+    const { data } = posado(0.4);
+    const sk = new Skeleton(data);
+    sk.setToSetupPose();
+    sk.updateWorldTransform(0);
+    expect(sk.getBounds()?.width ?? 0).toBe(0);
+    pose(sk, data.animations[0]!, 0.4, 0.4);
+    const caixa = boxWithParticles(sk);
+    expect(caixa).not.toBeNull();
+    expect(caixa!.width).toBeGreaterThan(40);
+    expect(caixa!.height).toBeGreaterThan(40);
+  });
+
+  it('as duas caixas da janela usam a conta nova', () => {
+    const fonte = readFileSync(resolve(__dirname, '../src/io/export-image.ts'), 'utf8');
+    const base = fonte.slice(fonte.indexOf('function baseBounds('), fonte.indexOf('/** The box every frame'));
+    expect(base).toContain('boxWithParticles(');
+    const anim = fonte.slice(fonte.indexOf('export function boundsOverAnimation('), fonte.indexOf('/** A canvas of the camera'));
+    expect(anim.match(/boxWithParticles\(skeleton\)/g)?.length).toBe(2);
+  });
+});
