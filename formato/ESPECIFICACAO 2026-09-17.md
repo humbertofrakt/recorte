@@ -3188,11 +3188,12 @@ O executor é `ferramentas/conformidade.mjs`.
 **O que a suíte AINDA NÃO cobre.** Um número de casos não é uma promessa de
 cobertura, e esta lista existe para ninguém confundir as duas coisas. Nenhum
 caso exercita, hoje: `blend`, nem os alvos de `driver` do tipo `deform`,
-`morph`, `constraint`, `parameter`, `variable`, `nested` e `drawOrder`.
+`morph`, `nested` e `drawOrder`.
 *(05/11/2026: entraram A-032 `darkColor`, B-120 `tag` e o canal `tags`, B-121
 `variable` e o canal `variables`, C-330 `parameter`, o canal `parameters` e o
 `driver` em modo alvos, C-331 o `driver` em modo contínuo, o `source` (Smart
-Bone) e o alvo `slot`, X-309 o BOM na leitura (2.1). `boundingbox` e o canal `boundingBoxes` já tinham caso;
+Bone) e o alvo `slot`, C-332 os alvos `parameter`, `variable` e `constraint`,
+X-309 o BOM na leitura (2.1). `boundingbox` e o canal `boundingBoxes` já tinham caso;
 `clipping` aparece em quatro casos de `drawList`. Até esta data a lista dizia
 "nenhum caso exercita `boundingbox`, `clipping`, `tag`, `variable`,
 `parameter`, `driver`, `darkColor` nem `blend`".)* (O `skeleton` aninhado, os dois canais de animação do

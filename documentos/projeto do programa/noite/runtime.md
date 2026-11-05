@@ -7,11 +7,11 @@ Ramo: `obra/runtime`. Parte: `formato/`, `runtime/`, `runtime-python/`,
 
 | Medida | Antes | Agora |
 |:---|:---:|:---:|
-| Casos em `conformidade/casos/` | 120 | **129** |
+| Casos em `conformidade/casos/` | 120 | **130** |
 | Casos em `casos-pendentes/` | 1 (P-002) | **0** |
-| TS × Python, campo a campo | 120 de 120 | **129 de 129** |
-| Pacote do Construct | 120 de 120 | **129 de 129** |
-| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.839**, o mesmo 1 vermelho |
+| TS × Python, campo a campo | 120 de 120 | **130 de 130** |
+| Pacote do Construct | 120 de 120 | **130 de 130** |
+| `npx vitest run` | 5.806 testes, 1 vermelho (manual) | **5.840**, o mesmo 1 vermelho |
 | Testes do Python | 275 | **277** |
 | `tsc` do editor | limpo | limpo |
 
@@ -58,6 +58,7 @@ conta **antes** de rodar runtime):
 | **B-121** variáveis | `int` trunca em direção a zero; padrão; antes da 1ª chave | verde | verde | sim (3 de 3) |
 | **C-330** parâmetro e driver | clamp; envolver (`360 → 0`); `add` soma o **desvio** do setup | verde | verde | sim (3 de 3) |
 | **C-331** driver contínuo e `source` | Smart Bone com clamp; `timeTo` padrão = duração; alvo `slot/color` | verde | verde | sim (3 de 3) |
+| **C-332** driver em parâmetro, variável e constraint | `int` escrito por driver trunca; o `mix` de uma constraint posterior | verde | verde | sim (4 de 4) |
 | **X-309** BOM na leitura | §2.1: o leitor DEVE aceitar BOM | **vermelho (o executor) → consertado** | verde | — |
 | **P-030** rampa com torneira | ver acima | verde (consertado) | verde | — |
 | **P-031** dois emissores no slot | ver acima | verde (consertado) | verde | — |
@@ -74,8 +75,7 @@ conta **antes** de rodar runtime):
 | Spec §12.4 | a lista "o que a suíte ainda não cobre" atualizada |
 
 **O que ainda não tem caso** (está na §12.4): `blend` (o dump não tem canal
-para ele), e os alvos de `driver` do tipo `deform`, `morph`, `constraint`,
-`parameter`, `variable`, `nested` e `drawOrder`.
+para ele), e os alvos de `driver` do tipo `deform`, `morph`, `nested` e `drawOrder`.
 
 **Pergunta para o Humberto (não decidi):** a §2.1 chama de **L0** um número que
 não cabe em float64 (`1e400`) e chaves duplicadas no mesmo objeto. A §12.2 diz
