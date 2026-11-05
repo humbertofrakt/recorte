@@ -305,3 +305,54 @@ describe('a Cópia não deixa o boneco inválido', () => {
     expect(problemas.filter((x) => x.gravidade === 'erro').map((x) => x.codigo)).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Seguir o Esqueleto padrão; a Biblioteca antiga toca; o Salvar grava o arquivo
+// ---------------------------------------------------------------------------
+
+import { followStandardCommand, standardBones } from '../src/panels/reuse-actions.js';
+import { sharedFilesToSave } from '../src/io/shared-save.js';
+import { openAnimationLibrary } from '../src/panels/animations-actions.js';
+import { factoryLibrary } from '../src/io/animation-library.js';
+
+describe('Seguir o Esqueleto padrão', () => {
+  it('o robô ganha os 17 nomes e o rig "humanoide-v1"; um passo de desfazer', () => {
+    const doc = new Doc(robo());
+    const m = matchBones(standardBones(), nomes(doc.file));
+    expect(m.matched).toBe(17);
+    const c = followStandardCommand(doc.file, m);
+    if ('refused' in c) throw new Error(c.refused);
+    doc.run(c);
+    expect(nomes(doc.file)).toEqual(PADRAO_NOMES);
+    expect((doc.file as unknown as { rig?: { name?: string } }).rig?.name).toBe('humanoide-v1');
+    doc.undo();
+    expect(nomes(doc.file)).toEqual(ROBO);
+  });
+});
+
+describe('a Biblioteca antiga também toca agora', () => {
+  it('trazer as quatro de fábrica: "andar" toca no editor', async () => {
+    forgetSharedFiles();
+    const host = JSON.parse(JSON.stringify(PADRAO)) as BoneFile;
+    host.animations = [];
+    const doc = new Doc(host);
+    const quatro = factoryLibrary().find((e) => e.uri === PADRAO_URI)!;
+    await openAnimationLibrary(doc, async () => ({ entry: quatro, savedAs: 'animacoes.bone' }));
+    expect(doc.data?.findAnimation('andar')).not.toBeNull();
+    forgetSharedFiles();
+  });
+});
+
+describe('o Salvar grava o arquivo da dona', () => {
+  it('sharedFilesToSave: um arquivo, com as animações de agora e o rig gerado', () => {
+    const cav = new Doc(JSON.parse(JSON.stringify(PADRAO)) as BoneFile);
+    cav.file.animations = JSON.parse(JSON.stringify(FABRICA.animations));
+    expect(sharedFilesToSave(cav)).toEqual([]);
+    cav.run(shareCommand('cavaleiro-animacoes.bone', ['andar']));
+    const f = sharedFilesToSave(cav);
+    expect(f.map((x) => x.name)).toEqual(['cavaleiro-animacoes.bone']);
+    const lido = JSON.parse(f[0]!.text) as BoneFile & { rig?: { bones?: string[] } };
+    expect((lido.animations ?? []).map((a) => a.name)).toEqual(['andar']);
+    expect(lido.rig?.bones).toContain('coxa_e');
+  });
+});

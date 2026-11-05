@@ -200,6 +200,39 @@ const passo = (ok, texto) => { log(`${ok ? 'passou' : 'TRAVOU'}  ${texto}`); if 
   passo('cavaleiro-animacoes.bone' in salvos, `o arquivo das compartilhadas foi gravado ao lado: ${Object.keys(salvos).filter((n) => n.endsWith('.bone')).join(', ')}`);
   log(`arquivos em ${SAIDA}`);
 
+  // --- (e) fechar e reabrir: a ligação atravessa o disco -------------------
+  // Página nova, memória vazia; o disco é o que o Salvar gravou.
+  const p2 = await b.newPage({ viewport: { width: 1440, height: 900 } });
+  await disco.instalar(p2, salvos);
+  p2.on('pageerror', (e) => erros.push(e.message));
+  await p2.goto(`http://localhost:${PORTA}/`);
+  await p2.waitForTimeout(2000);
+  await p2.getByRole('button', { name: /^Abrir pasta/ }).first().click();
+  await p2.waitForTimeout(1500);
+  await p2.locator('.anim-corpos button, .anim-corpos [role=button]').filter({ hasText: 'goblin' }).first().click();
+  await p2.waitForTimeout(800);
+  const reaberto = (await p2.locator('.anim-de-fora').innerText().catch(() => '')).replace(/\s+/g, ' ');
+  passo(/andar/.test(reaberto) && /do cavaleiro/.test(reaberto), `(e) reaberto do disco, o goblin ainda toca as do cavaleiro: "${reaberto.slice(0, 70)}"`);
+  if (FOTOS) await p2.screenshot({ path: path.join(FOTOS, '8-reaberto.png') });
+  await p2.close();
+
+  // --- (f) o goblin sozinho, numa pasta sem o cavaleiro: o arquivo basta -----
+  const soGoblin = { ...salvos };
+  delete soGoblin['manifest.json']; delete soGoblin['cavaleiro.bone']; delete soGoblin['robo.bone']; delete soGoblin['heroi.bone'];
+  const p3 = await b.newPage({ viewport: { width: 1440, height: 900 } });
+  await disco.instalar(p3, soGoblin);
+  p3.on('pageerror', (e) => erros.push(e.message));
+  await p3.goto(`http://localhost:${PORTA}/`);
+  await p3.waitForTimeout(2000);
+  await p3.getByRole('button', { name: /^Abrir pasta/ }).first().click();
+  await p3.waitForTimeout(1500);
+  await p3.locator('.dialog-box button').filter({ hasText: 'goblin.bone' }).first().click({ timeout: 2000 }).catch(() => {});
+  await p3.waitForTimeout(1500);
+  const sozinho = (await p3.locator('.anim-de-fora').innerText().catch(() => '')).replace(/\s+/g, ' ');
+  passo(/andar/.test(sozinho) && /cavaleiro-animacoes\.bone/.test(sozinho),
+    `(f) o goblin sozinho lê cavaleiro-animacoes.bone da pasta: "${sozinho.slice(0, 70)}"`);
+  await p3.close();
+
   if (erros.length > 0) { log('erros da página:'); for (const e of erros) log('  ', e); travou += erros.length; }
   await b.close();
   log(travou === 0 ? '\nOs 4 objetivos, só com cliques: nenhum passo travou.' : `\n${travou} passo(s) travaram.`);
