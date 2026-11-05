@@ -179,7 +179,7 @@ class EntitiesPanel implements Panel {
     prateleira.setAttribute('aria-label', 'Peças');
     const tituloP = el('h3', 'entidades-titulo', 'Peças');
     tituloP.title = PRATELEIRA_HINT;
-    tituloP.append(el('span', 'entidades-titulo-dica', 'arraste para um slot'));
+    tituloP.append(el('span', 'entidades-titulo-dica', 'arraste para uma tomada'));
     prateleira.append(tituloP);
     // Lote 2: soltar uma peça de teste na prateleira a desliga.
     this.acceptUnplug(doc, prateleira);
