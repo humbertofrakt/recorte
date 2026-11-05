@@ -2005,3 +2005,22 @@ describe('o dicionário da tela: toda função tem porta, e a porta fala a líng
     for (const v of DICIONARIO) expect(v.fonte.length, v.termo).toBeGreaterThan(10);
   });
 });
+
+// Noite de 04/11/2026: o aviso do leitor chegava em inglês no rodapé, porque
+// quatro lugares punham `warnings[0]` cru. Regra 26: a forma crua existia
+// (`warnings[0]` sem tradução), e a frase crua é inglesa.
+import { avisoNoRodape } from '../src/panels/warning-model.js';
+describe('o rodapé fala português quando o arquivo abre com aviso', () => {
+  it('a frase do leitor vira português, e o ponteiro sai', () => {
+    const cru = '/animations/0/timelines/3: deform needs a vertex attachment; timeline ignored';
+    expect(avisoNoRodape(cru)).toBe('chaves de deformação num desenho que não é malha: ficam sem efeito');
+    expect(avisoNoRodape('A pasta abriu.')).toBe('A pasta abriu.');
+  });
+  it('nenhum lugar da casca põe o aviso cru no rodapé', () => {
+    for (const nome of ['shell-file.ts', 'shell-drop.ts']) {
+      const fonte = readFileSync(resolve(__dirname, '../src/ui', nome), 'utf8');
+      expect(fonte, nome).not.toMatch(/textContent = (aberto|opened)\.warnings\[0\](;|\s*\?\?)/);
+      expect(fonte, nome).not.toMatch(/\$\{lido\.warnings\[0\]\}/);
+    }
+  });
+});

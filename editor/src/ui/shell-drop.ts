@@ -9,6 +9,7 @@
  * a casca (`shell`), e a classe `Shell` guarda um método de uma linha.
  */
 
+import { avisoNoRodape } from '../panels/warning-model.js';
 import { clearDraft, draftMove, draftOnExit, shouldWriteDraft, writeDraft } from '../doc/rascunho.js';
 import type { DraftStorage } from '../doc/rascunho.js';
 import { abrindoPelaPasta, forgetHandle, readOpenedFiles } from '../io/open-save.js';
@@ -267,7 +268,7 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
           skeletons: aberto.skeletons,
         });
         await adoptFolderAtlases(shell.doc);
-        shell.statusState.textContent = aberto.warnings[0] ?? `${qual} aberto pelo arrasto.`;
+        shell.statusState.textContent = aberto.warnings[0] !== undefined ? avisoNoRodape(aberto.warnings[0]) : `${qual} aberto pelo arrasto.`;
         return;
       }
       case 'abrir': {
@@ -289,8 +290,8 @@ export async function openDropped(shell: Shell, files: readonly File[]): Promise
           skeletons: aberto.skeletons,
         });
         await adoptFolderAtlases(shell.doc);
-        shell.statusState.textContent = aberto.warnings[0]
-          ?? `${plano.skeleton} aberto pelo arrasto.`;
+        shell.statusState.textContent = aberto.warnings[0] !== undefined ? avisoNoRodape(aberto.warnings[0])
+          : `${plano.skeleton} aberto pelo arrasto.`;
         return;
       }
       case 'psd': {
