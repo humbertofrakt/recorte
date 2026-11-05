@@ -1144,6 +1144,21 @@ export function skinsMenu(): MenuItem[] {
  */
 export function entitiesMenu(): MenuItem[] {
   return [
+    // 05/11/2026: as tomadas — o gesto de encaixar, em palavras da pessoa.
+    {
+      label: 'Encaixar um projeto…', action: 'encaixar-projeto', enabled: true,
+      hint: 'Escolhe um .bone e o encaixa na tomada do osso escolhido (a tomada nasce, se não houver). '
+        + 'A espada na mão; o herói na cabine do mecha. É um anexo skeleton (7.11)',
+    },
+    {
+      label: 'Pôr uma tomada aqui…', action: 'por-tomada', enabled: true,
+      hint: 'Um lugar vazio no osso escolhido, onde uma peça entra depois: mão, costas, cabine (um slot sem imagem)',
+    },
+    {
+      label: 'Tirar a peça', action: 'tirar-peca', enabled: true,
+      hint: 'A peça sai da tomada escolhida, e a tomada continua, vazia',
+    },
+    SEP,
     // Era Arquivo → Trazer para o projeto → Abrir uma entidade…
     {
       label: 'Trazer entidade de fora…',
@@ -1646,7 +1661,7 @@ export const WINDOW_PANELS: ReadonlyArray<{ id: string; label: string }> = Objec
   { id: 'regras', label: 'Regras' },
   { id: 'historico', label: 'Histórico' },
   { id: 'imagens', label: 'Imagens' },
-  { id: 'entidades', label: 'Entidades' },
+  { id: 'entidades', label: 'Tomadas' },
   { id: 'particulas', label: 'Partículas' },
   { id: 'pivos', label: 'Pivôs' },
   { id: 'exibicao', label: 'Exibição' },
@@ -1908,7 +1923,7 @@ export function allMenus(state: MenuState): MenuGroupDef[] {
     { label: 'Malha e regras', entries: meshRulesMenu() },
     { label: 'Animação', entries: animationMenu(state) },
     { label: 'Skins', entries: skinsMenu() },
-    { label: 'Entidades', entries: entitiesMenu() },
+    { label: 'Tomadas', entries: entitiesMenu() },
     { label: 'Partículas', entries: particlesMenu() },
     { label: 'Exibir', entries: viewMenu(state.view, state) },
     { label: 'Janela', entries: windowMenu(state) },

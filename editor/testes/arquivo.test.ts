@@ -1343,7 +1343,7 @@ describe('abrir e salvar a pasta do projeto (degrau 4b)', () => {
     expect(entries.map((e) => e.action)).not.toContain('abrir-corpo');
     expect(entries.map((e) => e.action)).not.toContain('abrir-entidade');
     const base = menu('Base').find((e) => e.action === 'abrir-corpo');
-    const entidade = menu('Entidades').find((e) => e.action === 'abrir-entidade');
+    const entidade = menu('Tomadas').find((e) => e.action === 'abrir-entidade');
     expect(base?.label).toBe('Trazer uma base de fora…');
     expect(entidade?.label).toBe('Trazer entidade de fora…');
     // Regra 12: todo botão novo com o nome na dica — aqui, o que ele faz.

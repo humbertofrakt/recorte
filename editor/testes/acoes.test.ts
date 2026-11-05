@@ -171,7 +171,8 @@ describe('a tabela das ações', () => {
     // 305 (rodada 41, lote 4): +1, `criar-aresta` (Malha e regras → Malha).
     // Rodada 44, lote 7: + 'caber-na-antiga'.
     // 308 (N-4b, 05/11/2026): +2, `recorte-na-cena` e `tirar-recorte` (Animação, da cena).
-    expect(tabela.length).toBe(308);
+    // 05/11/2026: +3, as tomadas (encaixar-projeto, por-tomada, tirar-peca).
+    expect(tabela.length).toBe(311);
     expect(tabela).not.toContain('trazer-para-projeto');
     expect(tabela).toContain('ferramenta-de-antes');
     expect(tabela).toContain('opcoes-do-desenho');
@@ -258,7 +259,8 @@ describe('as ações de arranque, sem painel montado', () => {
     // +3 (rodada 39b, lote 6): `anima-do-teste`, `skins-do-teste`, `teste-nas-iguais`. 129.
     // +1 (rodada 41, lote 4): `criar-aresta`. 130.
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    expect(arranque().length).toBe(131);
+    // 05/11/2026: +3, as tomadas.
+    expect(arranque().length).toBe(134);
   });
 
   it('a função que ela devolve tira todas', () => {
@@ -297,6 +299,19 @@ describe('pelo menu, com as abas fechadas', () => {
     expect(runAction('fundo-de-tudo')).toBe(true);
     const fundo = (doc.file.slots ?? []).map((slot) => slot.name);
     expect(fundo.indexOf('arm_back')).toBeLessThan(depois.indexOf('arm_back'));
+  });
+
+  it('Tomadas → Tirar a peça, com a aba fechada: a espada sai da mão, a tomada fica (05/11/2026)', () => {
+    const { doc } = heroi();
+    registerCoreActions(doc);
+    expect(runAction('tirar-peca')).toBe(false); // nada escolhido: cinza
+    doc.select({ ...emptySelection(), slots: ['weapon'] });
+    expect(runAction('tirar-peca')).toBe(true);
+    const weapon = (doc.file.slots ?? []).find((slot) => slot.name === 'weapon')!;
+    expect(weapon.attachment).toBeUndefined();
+    expect(doc.file.skins![0]!.attachments!['weapon']).toBeUndefined();
+    doc.undo();
+    expect((doc.file.slots ?? []).find((slot) => slot.name === 'weapon')!.attachment).toBe('sword');
   });
 
   it('novo osso, duplicar e apagar, com a Árvore fechada', () => {

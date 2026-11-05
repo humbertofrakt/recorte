@@ -55,7 +55,8 @@ export { ENTITY_THUMB, entityThumbnail };
 
 class EntitiesPanel implements Panel {
   readonly id = 'entidades';
-  readonly title = 'Entidades';
+  // 05/11/2026: a aba das tomadas (era Entidades). O id fica: é o que a arrumação guarda.
+  readonly title = 'Tomadas';
   readonly listensTo = ['file', 'structure', 'assets'] as const;
 
   private doc: EditorDoc | null = null;

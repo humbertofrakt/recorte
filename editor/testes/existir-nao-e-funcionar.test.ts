@@ -173,6 +173,10 @@ function contar(): Record<Resposta, string[]> {
  * É assim que se vê a régua andar.
  */
 const CINZAS_SEM_ESTADO: readonly string[] = [
+  // 05/11/2026, as tomadas: pedem um osso escolhido e a janela de arquivo do
+  // sistema. Exercitadas pela tela em `npm run tomadas` e pelo modelo em
+  // `pasta-do-projeto.test.ts` ("as tomadas").
+  'encaixar-projeto', 'por-tomada', 'tirar-peca',
   // Exercitadas à mão no `acoes.test.ts` (com seleção, ou com animação aberta).
   'duplicar', 'apagar', 'subir-ordem', 'fundo-de-tudo',
   'abrir-a-base', 'copiar-pose', 'colar-todas-chaves',
@@ -331,7 +335,8 @@ describe('existir não é funcionar — quanto a exigência de efeito exercita',
     // 55 desde 06/10/2026: `anima-do-teste`, `skins-do-teste`, `teste-nas-iguais` (rodada 39b, lote 6).
     // 56 desde 06/10/2026: `criar-aresta` (rodada 41, lote 4).
     // Rodada 44, lote 7: + 'caber-na-antiga'.
-    expect(CINZAS_SEM_ESTADO.length).toBe(57);
+    // 05/11/2026: +3, as tomadas.
+    expect(CINZAS_SEM_ESTADO.length).toBe(60);
   });
 
   /**
@@ -651,6 +656,11 @@ const O_ESTADO_DE_CADA: ReadonlyArray<{
  * teste acima diz o nome de quem saiu.
  */
 const ALHEIAS: ReadonlyMap<string, string> = new Map([
+  // 05/11/2026, dono: as tomadas (`recorte-54`, ramo obra/entidades). As duas
+  // abrem a janela de arquivo do sistema e uma janela nossa: não rodam sem
+  // navegador. Exercitadas pela tela em `npm run tomadas` (Playwright).
+  ['encaixar-projeto', 'tomadas — exercitada pela tela, npm run tomadas'],
+  ['por-tomada', 'tomadas — exercitada pela tela, npm run tomadas'],
   /*
    * **Vazia às 01:08 de 22/09, e a primeira linha durou cinco minutos.**
    *

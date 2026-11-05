@@ -75,7 +75,8 @@ export const MENU_ORDER: Readonly<Record<string, string>> = Object.freeze({
   'Malha e regras': 'malha e pesos · regras · parâmetros · física e caminho',
   Animação: 'animações · duração · tocar e andar no tempo · chavear · apagar · marcas e eventos · em bloco',
   Skins: 'criar · editar · por imagem · promover e testar',
-  Entidades: 'trazer e pôr · slot · promover · visualizador',
+  // 05/11/2026: Entidades virou Tomadas (o pedido do Humberto pelo Diretor).
+  Tomadas: 'encaixar · tomada · trazer e pôr · slot · promover · visualizador',
   Partículas: 'o emissor vazio · os prontos · prender',
   Exibir: 'tema · o boneco e a cena · esconder e travar · cebola e referência · zoom · nomes',
   Janela: 'arranjos e arrumar · os painéis, na ordem da barra',

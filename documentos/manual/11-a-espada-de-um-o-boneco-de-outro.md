@@ -91,7 +91,7 @@ Agora o golpe:
 
 ### 2. Trazer a espada
 
-1. **Entidades → Trazer entidade de fora…**
+1. **Tomadas → Trazer entidade de fora…**
 2. Escolha só o `espada.bone`.
 3. O programa pergunta pela pasta dela: as imagens moram ao lado.
 4. Clique **Escolher a pasta de espada.bone…**
@@ -99,7 +99,7 @@ Agora o golpe:
 
 ![A pergunta: a espada pede o atlas dela, e o botão escolhe a pasta](imagens/11-4-pede-a-pasta.png)
 
-A espada entra na **Prateleira** da aba **Entidades**.
+A espada entra na **Prateleira** da aba **Tomadas**.
 
 ### 3. Pôr na mão
 
@@ -122,7 +122,7 @@ Com a espada escolhida, na ficha das **Propriedades**:
 
 ### 5. Responder à animação
 
-1. Na aba **Entidades**, no cartão **espada**, clique **anima ▾**.
+1. Na aba **Tomadas**, no cartão **espada**, clique **anima ▾**.
 2. Escolha **a de quem recebe**.
 
 ![O menu anima no cartão da espada, com a de quem recebe](imagens/11-6-a-de-quem-recebe.png)

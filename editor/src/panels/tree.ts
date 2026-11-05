@@ -8,6 +8,7 @@
  * Double click renames. The draw order lives in the Ordem tab.
  */
 
+import { itensDaTomada } from './tomadas.js';
 import type { Panel, DocChange, EditorDoc, Selection } from '../contract.js';
 import { emptySelection, registerPanel, corpoDe } from '../contract.js';
 import { appliedParents, appliedSlotBones, reparentExtra, runReparent } from '../doc/reparent.js';
@@ -765,6 +766,11 @@ class TreePanel implements Panel {
       return;
     }
 
+    // 05/11/2026: a linha de uma tomada — trocar ou tirar a peça.
+    if (row.kind === 'slot' && this.doc !== null) {
+      const slotDef = (corpoDe(this.doc).file.slots ?? []).find((sl) => sl.name === row.name);
+      if (slotDef !== undefined) items.push(...itensDaTomada(this.doc, { bone: slotDef.bone, slot: row.name }));
+    }
     if (row.kind === 'attachment' || row.attachment !== undefined) {
       item('Copiar posição no osso',
         'Copia onde o desenho está dentro do osso: x, y, giro e as duas escalas',
@@ -780,6 +786,8 @@ class TreePanel implements Panel {
     // Rodada 43, lote 4 (doc 51, `16`): o botão direito no osso só tinha
     // Substituir nomes e Renomear. As três que se fazem com a linha na mão.
     if (row.kind === 'bone') {
+      // 05/11/2026: as tomadas — encaixar um projeto neste osso, ou pôr a tomada.
+      if (this.doc !== null) items.push(...itensDaTomada(this.doc, { bone: row.name }));
       item('Novo osso filho', `Um osso novo, filho de ${row.name}`, 'novo-osso');
       item('Duplicar', 'Ctrl+D: o osso vem com os filhos e os desenhos, 20 px à direita', 'duplicar');
     }
